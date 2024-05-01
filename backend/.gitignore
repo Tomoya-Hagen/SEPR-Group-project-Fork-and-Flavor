@@ -7,6 +7,7 @@ log/
 ### Database-Files ###
 /database/
 *.mv.db
+*.lock.db
 
 ### Gradle ###
 .gradle
