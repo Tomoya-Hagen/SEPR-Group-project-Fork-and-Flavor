@@ -2,12 +2,17 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -48,4 +53,8 @@ public class Role {
     public int hashCode() {
         return Objects.hash(id, name);
     }
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "role_id",referencedColumnName = "id")
+    private List<UserRole> userRoles;
 }
