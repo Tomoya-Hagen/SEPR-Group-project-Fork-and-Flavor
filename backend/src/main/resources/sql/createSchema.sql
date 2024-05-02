@@ -32,14 +32,14 @@ CREATE TABLE IF NOT EXISTS "Recipe" (
 );
 
 CREATE TABLE IF NOT EXISTS "Ingredient" (
-	"id" uuid NOT NULL,
+	"id" INT NOT NULL,
 	"name" varchar(200) NOT NULL,
 	PRIMARY KEY("id")
 );
 
 CREATE TABLE IF NOT EXISTS "Recipe_Ingredient" (
 	"recipe_id" uuid NOT NULL,
-	"ingredient_id" uuid NOT NULL,
+	"ingredient_id" INT NOT NULL,
 	"amount" NUMERIC(5,2) NOT NULL,
 	"unit" varchar(10) NOT NULL,
 	PRIMARY KEY("recipe_id", "ingredient_id"),
@@ -85,15 +85,15 @@ CREATE TABLE IF NOT EXISTS "Recipe_Category" (
 );
 
 CREATE TABLE  IF NOT EXISTS "Allergen" (
-	"id" uuid NOT NULL,
+    "id" CHAR(1) NOT NULL,
 	"name" varchar(100) NOT NULL,
 	"description" text(65535),
 	PRIMARY KEY("id")
 );
 
 CREATE TABLE IF NOT EXISTS "Ingredient_Allergen" (
-	"ingredient_id" uuid NOT NULL,
-	"allergen_id" uuid NOT NULL,
+	"ingredient_id" INT NOT NULL,
+	"allergen_id" CHAR(1) NOT NULL,
 	PRIMARY KEY("ingredient_id", "allergen_id")
 );
 
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS "Nutrition" (
 );
 
 CREATE TABLE IF NOT EXISTS "Ingredient_Nutrition" (
-	"ingredient_id" uuid NOT NULL,
+	"ingredient_id" INT NOT NULL,
 	"nutrition_id" uuid NOT NULL,
 	"unit" VARCHAR(10),
 	"value" NUMERIC(5,2) NOT NULL,

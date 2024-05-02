@@ -1,4 +1,10 @@
 
+SET REFERENTIAL_INTEGRITY FALSE;
+
+DELETE FROM "Ingredient_Allergen" WHERE "Ingredient_Allergen"."ingredient_id" <= 190;
+DELETE FROM "Ingredient" WHERE "Ingredient"."id" <= 190;
+DELETE FROM "Allergen" WHERE "Allergen"."id" IN ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'L', 'M', 'N', 'O', 'P', 'R');
+
 INSERT INTO "Allergen" ("id", "name", "description") VALUES
     ('A', 'Glutenhaltiges Getreide', 'Weizen, Roggen, Gerste, Hafer, Dinkel, Kamut oder Hybridstämme davon'),
     ('B', 'Krebstiere', NULL),
@@ -276,4 +282,6 @@ INSERT INTO "Ingredient_Allergen" ("ingredient_id", "allergen_id") VALUES ('6', 
                                                                           ('178', 'G'),
                                                                           ('179', 'G'),
                                                                           ('190', 'A'),
-                                                                          ('190', 'P');                                                                          ;
+                                                                          ('190', 'P');
+
+SET REFERENTIAL_INTEGRITY TRUE;
