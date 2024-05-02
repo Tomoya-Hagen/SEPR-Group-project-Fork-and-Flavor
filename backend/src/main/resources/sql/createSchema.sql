@@ -98,18 +98,18 @@ CREATE TABLE IF NOT EXISTS "Ingredient_Allergen" (
 );
 
 CREATE TABLE IF NOT EXISTS "Nutrition" (
-	"id" uuid NOT NULL,
-	"name" varchar(100) NOT NULL,
+	"id" INT NOT NULL,
+	"name" varchar(1000) NOT NULL,
 	PRIMARY KEY("id")
 );
 
 CREATE TABLE IF NOT EXISTS "Ingredient_Nutrition" (
 	"ingredient_id" INT NOT NULL,
-	"nutrition_id" uuid NOT NULL,
+	"nutrition_id" INT NOT NULL,
 	"unit" VARCHAR(10),
 	"value" NUMERIC(5,2) NOT NULL,
 	PRIMARY KEY("ingredient_id", "nutrition_id"),
-    check ( "unit" IN ('sample')) /*Add units of nutritions*/
+    check ( "unit" IN ('', 'mg', 'g')) /*Add units of nutritions*/
 );
 
 CREATE TABLE IF NOT EXISTS "Verified" (
