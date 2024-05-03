@@ -72,7 +72,5 @@ spring:
       on-cloud-platform: kubernetes
   lifecycle:
     timeout-per-shutdown-phase: 30s
-  profiles:
-    active: generateData
 server:
   shutdown: graceful
