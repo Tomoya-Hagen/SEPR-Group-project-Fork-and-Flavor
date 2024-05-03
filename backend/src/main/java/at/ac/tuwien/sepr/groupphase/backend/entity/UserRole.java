@@ -1,17 +1,18 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+
 import java.util.Objects;
 
 @Entity
 @jakarta.persistence.Table(name = "User_Role", schema = "PUBLIC", catalog = "DB")
+@IdClass(Userrolepk.class)
 public class UserRole {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @jakarta.persistence.Column(name = "user_id")
+    @Column(name = "user_id")
     private long userId;
 
     public long getUserId() {
@@ -22,9 +23,8 @@ public class UserRole {
         this.userId = userId;
     }
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @jakarta.persistence.Column(name = "role_id")
+    @Column(name = "role_id")
     private long roleId;
 
     public long getRoleId() {
@@ -53,5 +53,29 @@ public class UserRole {
         return Objects.hash(userId, roleId);
     }
 
+    public static final class UserRoleBuilder {
+        private long userId;
+        private long roleId;
 
+        public UserRoleBuilder() {
+        }
+
+        public UserRoleBuilder withuserId(long id) {
+            this.userId = id;
+            return this;
+        }
+
+        public UserRoleBuilder withroleId(long id) {
+            this.roleId = id;
+            return this;
+        }
+
+
+        public UserRole build() {
+            UserRole userRole = new UserRole();
+            userRole.setRoleId(this.roleId);
+            userRole.setUserId(this.userId);
+            return userRole;
+        }
+    }
 }

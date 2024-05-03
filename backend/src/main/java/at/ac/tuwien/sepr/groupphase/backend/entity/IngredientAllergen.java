@@ -57,7 +57,7 @@ public class IngredientAllergen {
         return Objects.hash(ingredientId, allergenId);
     }
 
-    public class IngredientAllergenBuilder {
+    public static final class IngredientAllergenBuilder {
         private long ingredientId;
         private long allergenId;
 

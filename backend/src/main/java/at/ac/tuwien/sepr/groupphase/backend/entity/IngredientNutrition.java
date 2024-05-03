@@ -80,7 +80,7 @@ public class IngredientNutrition {
         return Objects.hash(ingredientId, nutritionId, unit, value);
     }
 
-    public class IngredientNutritionBuilder {
+    public static final class IngredientNutritionBuilder {
         private long ingredientId;
         private long nutritionId;
         private String unit;

@@ -61,4 +61,30 @@ public class Role {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private List<UserRole> userRoles;
+
+
+    public static final class RoleBuilder {
+        private long id;
+        private String name;
+
+        public RoleBuilder() {
+        }
+
+        public RoleBuilder withId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public RoleBuilder withroleId(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Role build() {
+            Role role = new Role();
+            role.setId(this.id);
+            role.setName(this.name);
+            return role;
+        }
+    }
 }

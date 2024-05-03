@@ -151,4 +151,48 @@ public class ApplicationUser {
         }
         return false;
     }
+
+
+    public static final class ApplicationUserBuilder {
+        private long id;
+        private String username;
+        private String email;
+        private String password;
+        private Boolean hasProfilePicture;
+
+        public ApplicationUserBuilder withid(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public ApplicationUserBuilder withusername(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public ApplicationUserBuilder withemail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public ApplicationUserBuilder withpassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public ApplicationUserBuilder withhasProfilePicture(Boolean hasProfilePicture) {
+            this.hasProfilePicture = hasProfilePicture;
+            return this;
+        }
+
+        public ApplicationUser build() {
+            ApplicationUser user = new ApplicationUser();
+            user.setId(this.id);
+            user.setUsername(this.username);
+            user.setEmail(this.email);
+            user.setPassword(this.password);
+            user.setHasProfilePicture(this.hasProfilePicture);
+            return user;
+        }
+    }
 }

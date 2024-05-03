@@ -73,7 +73,7 @@ public class Ingredient {
 
 
 
-    public class IngredientBuilder {
+    public static final class IngredientBuilder {
         private long id;
         private String name;
 

@@ -62,7 +62,7 @@ public class Nutrition {
     @JoinColumn(name = "nutrition_id", referencedColumnName = "id")
     private List<IngredientNutrition> ingredientNutritions;
 
-    public class NutritionBuilder {
+    public static final class NutritionBuilder {
         private long id;
         private String name;
 
