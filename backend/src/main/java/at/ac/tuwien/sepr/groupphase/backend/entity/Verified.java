@@ -53,8 +53,12 @@ public class Verified {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Verified verified = (Verified) o;
         return Objects.equals(id, verified.id) && Objects.equals(name, verified.name) && Objects.equals(type, verified.type);
     }
@@ -65,6 +69,6 @@ public class Verified {
     }
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "verified_id",referencedColumnName = "id")
+    @JoinColumn(name = "verified_id", referencedColumnName = "id")
     private List<RecipeVerified> recipesVerified;
 }

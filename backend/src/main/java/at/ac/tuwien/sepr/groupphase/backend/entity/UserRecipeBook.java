@@ -52,8 +52,12 @@ public class UserRecipeBook {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         UserRecipeBook that = (UserRecipeBook) o;
         return Objects.equals(userId, that.userId) && Objects.equals(recipeBookId, that.recipeBookId) && Objects.equals(permission, that.permission);
     }

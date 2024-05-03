@@ -12,7 +12,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "Ingredient_Allergen", schema = "PUBLIC", catalog = "DB")
-@IdClass(IngredientAllergenPK.class)
+@IdClass(Ingredientallergenpk.class)
 public class IngredientAllergen {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -42,8 +42,12 @@ public class IngredientAllergen {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         IngredientAllergen that = (IngredientAllergen) o;
         return Objects.equals(ingredientId, that.ingredientId) && Objects.equals(allergenId, that.allergenId);
     }

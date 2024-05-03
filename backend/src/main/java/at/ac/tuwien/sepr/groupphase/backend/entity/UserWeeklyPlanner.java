@@ -52,8 +52,12 @@ public class UserWeeklyPlanner {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         UserWeeklyPlanner that = (UserWeeklyPlanner) o;
         return Objects.equals(userId, that.userId) && Objects.equals(weeklyPlannerId, that.weeklyPlannerId) && Objects.equals(permission, that.permission);
     }

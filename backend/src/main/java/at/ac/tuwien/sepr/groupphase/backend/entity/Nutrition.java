@@ -43,8 +43,12 @@ public class Nutrition {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Nutrition nutrition = (Nutrition) o;
         return Objects.equals(id, nutrition.id) && Objects.equals(name, nutrition.name);
     }
@@ -55,7 +59,7 @@ public class Nutrition {
     }
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "nutrition_id",referencedColumnName = "id")
+    @JoinColumn(name = "nutrition_id", referencedColumnName = "id")
     private List<IngredientNutrition> ingredientNutritions;
 
     public class NutritionBuilder {

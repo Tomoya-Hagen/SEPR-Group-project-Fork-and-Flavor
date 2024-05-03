@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "Recipe_Recipe_Book", schema = "PUBLIC", catalog = "DB")
-@IdClass(RecipeRecipeBookPK.class)
+@IdClass(Reciperecipebookpk.class)
 public class RecipeRecipeBook {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -43,8 +43,12 @@ public class RecipeRecipeBook {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         RecipeRecipeBook that = (RecipeRecipeBook) o;
         return Objects.equals(recipeBookId, that.recipeBookId) && Objects.equals(recipeId, that.recipeId);
     }

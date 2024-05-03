@@ -77,8 +77,12 @@ public class WeeklyPlanner {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         WeeklyPlanner that = (WeeklyPlanner) o;
         return Objects.equals(id, that.id) && Objects.equals(userId, that.userId) && Objects.equals(date, that.date) && Objects.equals(daytime, that.daytime) && Objects.equals(recipeId, that.recipeId);
     }
@@ -89,6 +93,6 @@ public class WeeklyPlanner {
     }
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "weekly_planner_id",referencedColumnName = "id")
+    @JoinColumn(name = "weekly_planner_id", referencedColumnName = "id")
     private List<UserWeeklyPlanner> userWeeklyPlanners;
 }

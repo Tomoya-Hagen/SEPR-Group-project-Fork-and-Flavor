@@ -102,10 +102,18 @@ public class Recipe {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Recipe recipe = (Recipe) o;
-        return Objects.equals(id, recipe.id) && Objects.equals(name, recipe.name) && Objects.equals(description, recipe.description) && Objects.equals(numberOfServings, recipe.numberOfServings) && Objects.equals(forkedFrom, recipe.forkedFrom) && Objects.equals(ownerId, recipe.ownerId) && Objects.equals(isDraft, recipe.isDraft);
+        return Objects.equals(id, recipe.id)
+            && Objects.equals(name, recipe.name)
+            && Objects.equals(description, recipe.description)
+            && Objects.equals(numberOfServings, recipe.numberOfServings)
+            && Objects.equals(forkedFrom, recipe.forkedFrom) && Objects.equals(ownerId, recipe.ownerId) && Objects.equals(isDraft, recipe.isDraft);
     }
 
     @Override
@@ -114,46 +122,46 @@ public class Recipe {
     }
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id",referencedColumnName = "id")
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeRecipeBook> recipeRecipeBooks;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id",referencedColumnName = "id")
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<Favorite> favorites;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id",referencedColumnName = "id")
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<Cooked> cooked;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id",referencedColumnName = "id")
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<Rating> ratings;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id",referencedColumnName = "id")
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeStep> recipeSteps;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id",referencedColumnName = "id")
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeRecipeStep> recipeRecipeSteps;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id",referencedColumnName = "id")
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeCategory> recipeCategories;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id",referencedColumnName = "id")
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeVerified> recipesVerified;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id",referencedColumnName = "id")
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<WeeklyPlanner> weeklyPlanners;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id",referencedColumnName = "id")
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeIngredient> recipeIngredients;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "forked_from",referencedColumnName = "id")
-    private List<Recipe> forked_from;
+    @JoinColumn(name = "forked_from", referencedColumnName = "id")
+    private List<Recipe> forkedfrom;
 }

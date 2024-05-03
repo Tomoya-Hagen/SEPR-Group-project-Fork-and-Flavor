@@ -14,7 +14,7 @@ import java.math.BigInteger;
 import java.util.Objects;
 
 @Entity
-@IdClass(RatingPK.class)
+@IdClass(Ratingpk.class)
 public class Rating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -92,10 +92,19 @@ public class Rating {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Rating rating = (Rating) o;
-        return Objects.equals(userId, rating.userId) && Objects.equals(recipeId, rating.recipeId) && Objects.equals(cost, rating.cost) && Objects.equals(taste, rating.taste) && Objects.equals(easeOfPrep, rating.easeOfPrep) && Objects.equals(review, rating.review);
+        return Objects.equals(userId, rating.userId)
+            && Objects.equals(recipeId, rating.recipeId)
+            && Objects.equals(cost, rating.cost)
+            && Objects.equals(taste, rating.taste)
+            && Objects.equals(easeOfPrep, rating.easeOfPrep)
+            && Objects.equals(review, rating.review);
     }
 
     @Override

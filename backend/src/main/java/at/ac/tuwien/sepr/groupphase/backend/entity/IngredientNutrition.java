@@ -4,19 +4,16 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 @Table(name = "Ingredient_Nutrition", schema = "PUBLIC", catalog = "DB")
-@IdClass(IngredientNutritionPK.class)
+@IdClass(Ingredientnutritionpk.class)
 public class IngredientNutrition {
     @Id
     @Column(name = "ingredient_id")
@@ -68,8 +65,12 @@ public class IngredientNutrition {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         IngredientNutrition that = (IngredientNutrition) o;
         return Objects.equals(ingredientId, that.ingredientId) && Objects.equals(nutritionId, that.nutritionId) && Objects.equals(unit, that.unit) && Objects.equals(value, that.value);
     }

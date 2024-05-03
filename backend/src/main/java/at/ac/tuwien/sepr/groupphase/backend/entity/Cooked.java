@@ -13,7 +13,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@IdClass(CookedPK.class)
+@IdClass(Cookedpk.class)
 public class Cooked {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -55,8 +55,12 @@ public class Cooked {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Cooked cooked = (Cooked) o;
         return Objects.equals(userId, cooked.userId) && Objects.equals(recipeId, cooked.recipeId) && Objects.equals(date, cooked.date);
     }

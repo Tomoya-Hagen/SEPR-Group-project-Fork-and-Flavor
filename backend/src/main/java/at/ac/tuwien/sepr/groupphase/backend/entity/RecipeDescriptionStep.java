@@ -56,8 +56,12 @@ public class RecipeDescriptionStep {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         RecipeDescriptionStep that = (RecipeDescriptionStep) o;
         return Objects.equals(id, that.id) && Objects.equals(description, that.description) && Objects.equals(name, that.name);
     }

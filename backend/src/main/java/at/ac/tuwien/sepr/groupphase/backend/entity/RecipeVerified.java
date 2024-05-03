@@ -74,8 +74,12 @@ public class RecipeVerified {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         RecipeVerified that = (RecipeVerified) o;
         return Objects.equals(id, that.id) && Objects.equals(recipeId, that.recipeId) && Objects.equals(verifiedId, that.verifiedId) && Objects.equals(userId, that.userId) && Objects.equals(isExternal, that.isExternal);
     }

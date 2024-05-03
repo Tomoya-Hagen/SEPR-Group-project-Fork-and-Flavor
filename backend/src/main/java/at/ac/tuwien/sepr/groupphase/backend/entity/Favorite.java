@@ -11,7 +11,7 @@ import jakarta.persistence.IdClass;
 import java.util.Objects;
 
 @Entity
-@IdClass(FavoritePK.class)
+@IdClass(Favoritepk.class)
 public class Favorite {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -41,8 +41,12 @@ public class Favorite {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Favorite favorite = (Favorite) o;
         return Objects.equals(userId, favorite.userId) && Objects.equals(recipeId, favorite.recipeId);
     }

@@ -52,8 +52,12 @@ public class Allergen {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Allergen allergen = (Allergen) o;
         return Objects.equals(id, allergen.id) && Objects.equals(name, allergen.name) && Objects.equals(description, allergen.description);
     }
@@ -64,7 +68,7 @@ public class Allergen {
     }
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "allergen_id",referencedColumnName = "id")
+    @JoinColumn(name = "allergen_id", referencedColumnName = "id")
     private List<IngredientAllergen> ingredientAllergens;
 
 

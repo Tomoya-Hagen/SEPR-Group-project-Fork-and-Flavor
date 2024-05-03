@@ -43,8 +43,12 @@ public class Ingredient {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Ingredient that = (Ingredient) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }
@@ -55,15 +59,15 @@ public class Ingredient {
     }
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ingredient_id",referencedColumnName = "id")
+    @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
     private List<IngredientAllergen> ingredientAllergens;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ingredient_id",referencedColumnName = "id")
+    @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
     private List<IngredientNutrition> ingredientNutritions;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ingredient_id",referencedColumnName = "id")
+    @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
     private List<RecipeIngredient> recipeIngredients;
 
 

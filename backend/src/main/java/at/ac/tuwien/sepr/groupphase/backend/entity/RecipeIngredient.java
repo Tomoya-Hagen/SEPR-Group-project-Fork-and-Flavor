@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "Recipe_Ingredient", schema = "PUBLIC", catalog = "DB")
-@IdClass(RecipeIngredientPK.class)
+@IdClass(Recipeingredientpk.class)
 public class RecipeIngredient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -68,8 +68,12 @@ public class RecipeIngredient {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         RecipeIngredient that = (RecipeIngredient) o;
         return Objects.equals(recipeId, that.recipeId) && Objects.equals(ingredientId, that.ingredientId) && Objects.equals(amount, that.amount) && Objects.equals(unit, that.unit);
     }

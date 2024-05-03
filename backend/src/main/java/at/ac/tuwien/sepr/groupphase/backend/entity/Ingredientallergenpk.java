@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class IngredientAllergenPK implements Serializable {
+public class Ingredientallergenpk implements Serializable {
     @Column(name = "ingredient_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,9 +37,13 @@ public class IngredientAllergenPK implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        IngredientAllergenPK that = (IngredientAllergenPK) o;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Ingredientallergenpk that = (Ingredientallergenpk) o;
         return Objects.equals(ingredientId, that.ingredientId) && Objects.equals(allergenId, that.allergenId);
     }
 

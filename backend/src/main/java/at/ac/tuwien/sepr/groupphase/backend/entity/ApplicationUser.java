@@ -1,6 +1,18 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.CascadeType;
+
 
 import java.util.List;
 import java.util.Objects;
@@ -67,8 +79,12 @@ public class ApplicationUser {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ApplicationUser user = (ApplicationUser) o;
         return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(hasProfilePicture, user.hasProfilePicture);
     }
@@ -79,7 +95,7 @@ public class ApplicationUser {
     }
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<UserRole> userRoles;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -89,46 +105,46 @@ public class ApplicationUser {
     private List<Role> roles;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner_id",referencedColumnName = "id")
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private List<RecipeBook> recipeBooks;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<UserRecipeBook> userRecipeBooks;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<RecipeVerified> recipesVerified;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<Favorite> favorites;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<Cooked> cooked;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner_id",referencedColumnName = "id")
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private List<Recipe> recipes;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<Rating> ratings;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<WeeklyPlanner> weeklyPlanners;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<UserWeeklyPlanner> userWeeklyPlanners;
 
 
-    public boolean getAdmin(){
-        if(roles != null && !roles.isEmpty()){
-            for(Role role : roles){
-                if(role.getId() == 1){
+    public boolean getAdmin() {
+        if (roles != null && !roles.isEmpty()) {
+            for (Role role : roles) {
+                if (role.getId() == 1) {
                     return true;
                 }
             }

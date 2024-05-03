@@ -1,4 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -79,10 +80,18 @@ public class RecipeStep {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         RecipeStep that = (RecipeStep) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(recipeId, that.recipeId) && Objects.equals(stepNumber, that.stepNumber) && Objects.equals(descriptionRecipeStep.getId(), that.descriptionRecipeStep.getId()) && Objects.equals(recipeRecipeStep.getId(), that.recipeRecipeStep.getId());
+        return Objects.equals(id, that.id)
+            && Objects.equals(name, that.name)
+            && Objects.equals(recipeId, that.recipeId)
+            && Objects.equals(stepNumber, that.stepNumber)
+            && Objects.equals(descriptionRecipeStep.getId(), that.descriptionRecipeStep.getId()) && Objects.equals(recipeRecipeStep.getId(), that.recipeRecipeStep.getId());
     }
 
     @Override

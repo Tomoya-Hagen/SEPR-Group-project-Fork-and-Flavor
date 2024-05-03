@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class RatingPK implements Serializable {
+public class Cookedpk implements Serializable {
     @Column(name = "user_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,10 +37,14 @@ public class RatingPK implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RatingPK ratingPK = (RatingPK) o;
-        return Objects.equals(userId, ratingPK.userId) && Objects.equals(recipeId, ratingPK.recipeId);
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Cookedpk cookedpk = (Cookedpk) o;
+        return Objects.equals(userId, cookedpk.userId) && Objects.equals(recipeId, cookedpk.recipeId);
     }
 
     @Override

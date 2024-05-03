@@ -65,8 +65,12 @@ public class RecipeBook {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         RecipeBook that = (RecipeBook) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(ownerId, that.ownerId);
     }
@@ -77,10 +81,10 @@ public class RecipeBook {
     }
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_book_id",referencedColumnName = "id")
+    @JoinColumn(name = "recipe_book_id", referencedColumnName = "id")
     private List<UserRecipeBook> userRecipeBooks;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_book_id",referencedColumnName = "id")
+    @JoinColumn(name = "recipe_book_id", referencedColumnName = "id")
     private List<RecipeRecipeBook> recipeRecipeBooks;
 }

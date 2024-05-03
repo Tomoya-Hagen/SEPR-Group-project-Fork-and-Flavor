@@ -43,8 +43,12 @@ public class Role {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Role role = (Role) o;
         return Objects.equals(id, role.id) && Objects.equals(name, role.name);
     }
@@ -55,6 +59,6 @@ public class Role {
     }
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "role_id",referencedColumnName = "id")
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
     private List<UserRole> userRoles;
 }

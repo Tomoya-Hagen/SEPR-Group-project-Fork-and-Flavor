@@ -2,14 +2,12 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class IngredientNutritionPK implements Serializable {
+public class Ingredientnutritionpk implements Serializable {
     @Column(name = "ingredient_id")
     @Id
     private long ingredientId;
@@ -35,9 +33,13 @@ public class IngredientNutritionPK implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        IngredientNutritionPK that = (IngredientNutritionPK) o;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Ingredientnutritionpk that = (Ingredientnutritionpk) o;
         return Objects.equals(ingredientId, that.ingredientId) && Objects.equals(nutritionId, that.nutritionId);
     }
 

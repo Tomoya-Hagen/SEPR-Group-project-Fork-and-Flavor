@@ -9,22 +9,22 @@ import jakarta.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class CookedPK implements Serializable {
-    @Column(name = "user_id")
+public class Reciperecipebookpk implements Serializable {
+    @Column(name = "recipe_book_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long userId;
+    private long recipeBookId;
     @Column(name = "recipe_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long recipeId;
 
-    public long getUserId() {
-        return userId;
+    public long getRecipeBookId() {
+        return recipeBookId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setRecipeBookId(long recipeBookId) {
+        this.recipeBookId = recipeBookId;
     }
 
     public long getRecipeId() {
@@ -37,14 +37,18 @@ public class CookedPK implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CookedPK cookedPK = (CookedPK) o;
-        return Objects.equals(userId, cookedPK.userId) && Objects.equals(recipeId, cookedPK.recipeId);
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Reciperecipebookpk that = (Reciperecipebookpk) o;
+        return Objects.equals(recipeBookId, that.recipeBookId) && Objects.equals(recipeId, that.recipeId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, recipeId);
+        return Objects.hash(recipeBookId, recipeId);
     }
 }
