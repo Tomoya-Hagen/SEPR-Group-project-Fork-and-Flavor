@@ -1,10 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -36,6 +34,7 @@ public class UserRole {
         this.roleId = roleId;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -48,4 +47,6 @@ public class UserRole {
     public int hashCode() {
         return Objects.hash(userId, roleId);
     }
+
+
 }

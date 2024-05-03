@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,6 @@ public class CustomUserDetailService implements UserService {
             } else {
                 grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_USER");
             }
-
             return new User(applicationUser.getEmail(), applicationUser.getPassword(), grantedAuthorities);
         } catch (NotFoundException e) {
             throw new UsernameNotFoundException(e.getMessage(), e);
@@ -58,7 +58,7 @@ public class CustomUserDetailService implements UserService {
     @Override
     public ApplicationUser findApplicationUserByEmail(String email) {
         LOGGER.debug("Find application user by email");
-        ApplicationUser applicationUser = userRepository.findUserByEmail(email);
+        ApplicationUser applicationUser = userRepository.findFirstUserByEmail(email);
         if (applicationUser != null) {
             return applicationUser;
         }
