@@ -287,8 +287,8 @@ INSERT INTO "Ingredient_Allergen" ("ingredient_id", "allergen_id") VALUES ('6', 
                                                                           ('190', 'P');
 
 -- Inserting Nutrition data
-INSERT INTO Nutrition (id, name) VALUES
-                                     ('1', 'calories'),
+
+INSERT INTO Nutrition ("id", "name") VALUES ('1', 'calories'),
                                      ('2', 'serving_size'),
                                      ('3', 'fat_total'),
                                      ('4', 'fat_saturated'),
@@ -300,8 +300,10 @@ INSERT INTO Nutrition (id, name) VALUES
                                      ('10', 'fiber'),
                                      ('11', 'sugar');
 
+
 -- Inserting Ingredient_Nutrition data
-INSERT INTO Ingredient_Nutrition (ingredient_id, nutrition_id, unit, value) VALUES  ('1', '1', '', 50.8),
+
+INSERT INTO Ingredient_Nutrition ("ingredient_id", "nutrition_id", "unit", "value") VALUES  ('1', '1', '', 50.8),
 ('1', '2', 'g', 100.0),
 ('1', '3', 'g', 0.1),
 ('1', '4', 'g', 0.0),
