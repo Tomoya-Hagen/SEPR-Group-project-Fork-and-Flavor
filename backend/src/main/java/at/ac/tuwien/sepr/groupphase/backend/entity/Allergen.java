@@ -75,7 +75,7 @@ public class Allergen {
 
 
 
-    public class AllergenBuilder {
+    public static final class AllergenBuilder {
         private long id;
         private String name;
         private String description;
