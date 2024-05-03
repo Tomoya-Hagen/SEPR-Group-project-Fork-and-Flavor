@@ -57,4 +57,30 @@ public class Nutrition {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "nutrition_id",referencedColumnName = "id")
     private List<IngredientNutrition> ingredientNutritions;
+
+    public class NutritionBuilder {
+        private long id;
+        private String name;
+
+        public NutritionBuilder() {
+        }
+
+        public NutritionBuilder withId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public NutritionBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+
+        public Nutrition build() {
+            Nutrition nutrition = new Nutrition();
+            nutrition.setId(this.id);
+            nutrition.setName(this.name);
+            return nutrition;
+        }
+    }
 }

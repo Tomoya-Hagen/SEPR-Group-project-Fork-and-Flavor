@@ -66,5 +66,48 @@ public class Allergen {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "allergen_id",referencedColumnName = "id")
     private List<IngredientAllergen> ingredientAllergens;
+
+
+
+
+
+    public class AllergenBuilder {
+        private long id;
+        private String name;
+        private String description;
+        private List<IngredientAllergen> ingredientAllergens;
+
+        public AllergenBuilder() {
+        }
+
+        public AllergenBuilder withId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public AllergenBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public AllergenBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public AllergenBuilder withIngredientAllergens(List<IngredientAllergen> ingredientAllergens) {
+            this.ingredientAllergens = ingredientAllergens;
+            return this;
+        }
+
+        public Allergen build() {
+            Allergen allergen = new Allergen();
+            allergen.setId(this.id);
+            allergen.setName(this.name);
+            allergen.setDescription(this.description);
+            return allergen;
+        }
+    }
 }
+
 

@@ -77,9 +77,16 @@ public class ApplicationUser {
     public int hashCode() {
         return Objects.hash(id, username, email, password, hasProfilePicture);
     }
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id",referencedColumnName = "id")
     private List<UserRole> userRoles;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_role",
+        joinColumns = { @JoinColumn(name = "user_id") },
+        inverseJoinColumns = { @JoinColumn(name = "role_id") })
+    private List<Role> roles;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "owner_id",referencedColumnName = "id")
@@ -119,9 +126,9 @@ public class ApplicationUser {
 
 
     public boolean getAdmin(){
-        if(userRoles != null && !userRoles.isEmpty()){
-            for(UserRole role : userRoles){
-                if(role.getRoleId() == 0){
+        if(roles != null && !roles.isEmpty()){
+            for(Role role : roles){
+                if(role.getId() == 1){
                     return true;
                 }
             }

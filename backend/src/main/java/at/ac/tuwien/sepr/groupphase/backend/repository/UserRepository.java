@@ -16,8 +16,8 @@ public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
      * @return ordered list of al message entries
      */
     @Query("SELECT DISTINCT ApplicationUser FROM ApplicationUser ApplicationUser " +
-        "JOIN FETCH ApplicationUser.userRoles ur " +
-//        "LEFT JOIN Role on ur.roleId=Role.id " +
+        "JOIN FETCH ApplicationUser.roles " +
         "WHERE ApplicationUser.email = :email")
     ApplicationUser findFirstUserByEmail(@Param("email") String email);
+
 }

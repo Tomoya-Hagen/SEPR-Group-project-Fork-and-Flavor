@@ -52,4 +52,29 @@ public class IngredientAllergen {
     public int hashCode() {
         return Objects.hash(ingredientId, allergenId);
     }
+
+    public class IngredientAllergenBuilder {
+        private long ingredientId;
+        private long allergenId;
+
+        public IngredientAllergenBuilder() {
+        }
+
+        public IngredientAllergenBuilder withIngredientId(long ingredientId) {
+            this.ingredientId = ingredientId;
+            return this;
+        }
+
+        public IngredientAllergenBuilder withAllergenId(long allergenId) {
+            this.allergenId = allergenId;
+            return this;
+        }
+
+        public IngredientAllergen build() {
+            IngredientAllergen ingredientAllergen = new IngredientAllergen();
+            ingredientAllergen.setIngredientId(this.ingredientId);
+            ingredientAllergen.setAllergenId(this.allergenId);
+            return ingredientAllergen;
+        }
+    }
 }

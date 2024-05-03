@@ -65,4 +65,33 @@ public class Ingredient {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "ingredient_id",referencedColumnName = "id")
     private List<RecipeIngredient> recipeIngredients;
+
+
+
+
+    public class IngredientBuilder {
+        private long id;
+        private String name;
+
+        public IngredientBuilder() {
+        }
+
+        public IngredientBuilder withId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public IngredientBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Ingredient build() {
+            Ingredient ingredient = new Ingredient();
+            ingredient.setId(this.id);
+            ingredient.setName(this.name);
+            return ingredient;
+        }
+    }
 }
+

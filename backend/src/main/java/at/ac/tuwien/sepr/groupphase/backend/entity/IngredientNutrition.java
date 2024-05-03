@@ -78,5 +78,44 @@ public class IngredientNutrition {
     public int hashCode() {
         return Objects.hash(ingredientId, nutritionId, unit, value);
     }
+
+    public class IngredientNutritionBuilder {
+        private long ingredientId;
+        private long nutritionId;
+        private String unit;
+        private BigDecimal value;
+
+        public IngredientNutritionBuilder() {
+        }
+
+        public IngredientNutritionBuilder withIngredientId(long ingredientId) {
+            this.ingredientId = ingredientId;
+            return this;
+        }
+
+        public IngredientNutritionBuilder withNutritionId(long nutritionId) {
+            this.nutritionId = nutritionId;
+            return this;
+        }
+
+        public IngredientNutritionBuilder withUnit(String unit) {
+            this.unit = unit;
+            return this;
+        }
+
+        public IngredientNutritionBuilder withValue(BigDecimal value) {
+            this.value = value;
+            return this;
+        }
+
+        public IngredientNutrition build() {
+            IngredientNutrition ingredientNutrition = new IngredientNutrition();
+            ingredientNutrition.setIngredientId(this.ingredientId);
+            ingredientNutrition.setNutritionId(this.nutritionId);
+            ingredientNutrition.setUnit(this.unit);
+            ingredientNutrition.setValue(this.value);
+            return ingredientNutrition;
+        }
+    }
 }
 
