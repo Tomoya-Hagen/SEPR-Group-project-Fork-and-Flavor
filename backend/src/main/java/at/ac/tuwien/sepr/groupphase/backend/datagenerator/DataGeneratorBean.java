@@ -12,8 +12,8 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Component;
 
 /**
- * This component is only created, if the profile {@code datagen} is active
- * You can activate this profile by adding {@code -Dspring.profiles.active=datagen} to your maven command line
+ * This component is only created, if the profile {@code datagen} is active.
+ * You can activate this profile by adding {@code -Dspring.profiles.active=datagen} to your maven command line.
  */
 @Component
 @Profile("datagen")
