@@ -1,36 +1,42 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
-import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Allergen {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
-    @Basic
+    private Long id;
+
     @Column(name = "name")
     private String name;
-    @Basic
+
     @Column(name = "description")
     private String description;
 
-    public long getId() {
+    // New field for storing single character values like 'A' or 'F'
+    @Column(name = "type", length = 1)  // Ensure column is only one character long
+    private String type;
+
+    @ManyToMany(mappedBy = "allergens")
+    private Set<Ingredient> ingredients = new HashSet<>();
+
+    // Getters and setters
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -50,68 +56,19 @@ public class Allergen {
         this.description = description;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Allergen allergen = (Allergen) o;
-        return Objects.equals(id, allergen.id) && Objects.equals(name, allergen.name) && Objects.equals(description, allergen.description);
+    public String getType() {
+        return type;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, description);
+    public void setType(String type) {
+        this.type = type;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "allergen_id", referencedColumnName = "id")
-    private List<IngredientAllergen> ingredientAllergens;
+    public Set<Ingredient> getIngredients() {
+        return ingredients;
+    }
 
-
-
-
-
-    public static final class AllergenBuilder {
-        private long id;
-        private String name;
-        private String description;
-        private List<IngredientAllergen> ingredientAllergens;
-
-        public AllergenBuilder() {
-        }
-
-        public AllergenBuilder withId(long id) {
-            this.id = id;
-            return this;
-        }
-
-        public AllergenBuilder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public AllergenBuilder withDescription(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public AllergenBuilder withIngredientAllergens(List<IngredientAllergen> ingredientAllergens) {
-            this.ingredientAllergens = ingredientAllergens;
-            return this;
-        }
-
-        public Allergen build() {
-            Allergen allergen = new Allergen();
-            allergen.setId(this.id);
-            allergen.setName(this.name);
-            allergen.setDescription(this.description);
-            return allergen;
-        }
+    public void setIngredients(Set<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
 }
-
-
