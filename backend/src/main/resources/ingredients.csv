@@ -1,31 +1,30 @@
 'Ananas',
-'Ei',C
-'Nudeln',AC
 'Backkakao',
 'Backpulver',
 'Basilikum',
 'Basmatireis',
-'Bergkäse',
+'Bergkäse',G
 'Blattspinat',
-'Blätterteig glutenfrei',
+'Blätterteig glutenfrei',A
 'Bratschinken',
 'Bratöl',
 'brauner Zucker',
 'Braunhirse',
 'Brokkoli',
-'Butter',
-'Cashewkerne',
+'Butter',G
+'Cashewkerne',H
 'Champignon',
-'Cheddar',
+'Cheddar',G
 'Chillipulver',
 'Chremespinat gefroren',
-'Dosen-Thunfisch',
-'Dotter',
-'Eckerlkäse',
-'Eierlikör',
-'Eiweiß',
-'Emmentaler',
-'Erbsen',
+'Dosen-Thunfisch',D
+'Dotter',C
+'Eckerlkäse',G
+'Ei',C
+'Eierlikör',C
+'Eiweiß',C
+'Emmentaler',G
+'Erbsen',H
 'Erdmandel',
 'Erdnüsse',
 'Erdäpfel',
@@ -34,15 +33,15 @@
 'Frankfurter',
 'frischer Koriander',
 'frisches Basilikum Blatt',
-'Frischkäse',
-'gefrorene Schupfnudeln',
+'Frischkäse',G
+'gefrorene Schupfnudeln',AC
 'gefrorener Dill',
 'Gemüsebrühe',
 'geriebene Gewürznelken',
 'Germ',
 'geschnittene Tomaten (Dose',
-'Gouda',
-'Gries',
+'Gouda',G
+'Gries',ACG
 'Grillgemüse gefroren',
 'große Tomaten',
 'Haferflocken',
@@ -55,7 +54,7 @@
 'Ingwer',
 'Italienische Gewürzmischung',
 'Jalapeno',
-'Joghurt',
+'Joghurt',G
 'Jungzwiebel',
 'Kaffee',
 'Kakao',
@@ -77,31 +76,31 @@
 'Kümmel',
 'Kürbis',
 'Kürbiskernöl',
-'Käse',
-'Lachs',
+'Käse',G
+'Lachs',D
 'Lauch',
 'Lauch/Jungzwiebel',
 'Lebkuchengewürz',
 'Limetten',
 'Lorbeerblatt',
 'Löskaffeepulver',
-'Magertopfen',
+'Magertopfen',G
 'Mais',
 'Maiskolben',
 'Maizena',
 'Majoran ',
-'Mandeln',
-'Mandlen gemahlen',
-'Mascarpone',
-'Mayonnaise',
-'Mehl',
+'Mandeln',H
+'Mandlen gemahlen',H
+'Mascarpone',G
+'Mayonnaise',CM
+'Mehl',A
 'Mehl Glutenfrei',
-'Mehl griffig',
-'Milch',
+'Mehl griffig',A
+'Milch',G
 'Milchreis Reis',
-'Milchschokolade',
+'Milchschokolade',G
 'milde rote Pfefferschoten',
-'Mozzarella',
+'Mozzarella',G
 'Muskatnuss',
 'Olivenöl',
 'Orange',
@@ -109,22 +108,22 @@
 'Paprika',
 'Paprika Rot',
 'Paprikapulver',
-'Parmesan',
-'Pepper Jack',
+'Parmesan',CG
+'Pepper Jack',G
 'Petersilie',
 'Pinienkerne',
-'Pizzakäse',
-'Pizzateig',
+'Pizzakäse',G
+'Pizzateig',A
 'Proteinpulver',
 'Puderzucker',
 'Putengeschnetzeltes',
 'Quinoa',
-'Rahm',
+'Rahm',G
 'Reis',
 'Reis Vollkorn',
 'Rindfleisch',
 'Risottoreis',
-'Roggenmehl',
+'Roggenmehl',A
 'Rohrzucker',
 'Rosmarin',
 'rote Zwiebel',
@@ -132,9 +131,9 @@
 'Rum',
 'Salbei',
 'Salz',
-'Sauce Tartare',
-'Sauerrahm',
-'Schafkäse',
+'Sauce Tartare',M
+'Sauerrahm',G
+'Schafkäse',G
 'Scharfmacher',
 'Schinken',
 'Schlagobers',
@@ -142,16 +141,16 @@
 'Schwammerl',
 'schwarzer Pfeffer',
 'Schweinsbraten',
-'Semmelbrösel',
-'Senf mild',
-'Sesam',
-'Sesamöl',
-'Sojasauce',
-'Sour Creme',
-'Spaghetti',
+'Semmelbrösel',A
+'Senf mild',M
+'Sesam',N
+'Sesamöl',N
+'Sojasauce',F
+'Sour Creme',EGMO
+'Spaghetti',ACL
 'Speck',
 'Speisesoda',
-'Sriracha Sauce',
+'Sriracha Sauce',MF
 'Staubzucker',
 'Steak',
 'Stärkemehl',
@@ -160,24 +159,24 @@
 'Süßkartoffel',
 'Tabasco',
 'Thymian',
-'Tofu',
+'Tofu',F
 'Tomaten',
 'Tomatenmark',
 'Tomatensauce',
-'Tunfisch',
+'Tunfisch',D
 'Vanilleextrakt',
 'Vanilleschote',
 'Vanillezucker',
 'Wacholderbeeren',
-'Walnüsse',
+'Walnüsse',H
 'Wasser',
-'weiße Schokolade',
+'weiße Schokolade',G
 'weißer Pfeffer',
 'Weißwein',
-'Wraps',
+'Wraps',A
 'Wurst',
-'Yoghurt',
-'Zartbitter Schokolade',
+'Yoghurt',G
+'Zartbitter Schokolade',G
 'Zartweizen',
 'Zimt',
 'Zitrone',
@@ -188,3 +187,4 @@
 'Zucchini',
 'Zucker',
 'Zwiebel',
+'Nudeln',APC
