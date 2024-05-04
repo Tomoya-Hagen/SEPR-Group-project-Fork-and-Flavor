@@ -32,7 +32,7 @@ public class UserDataGenerator {
     @PostConstruct
     private void generateMessage() {
 
-        if(!userRepository.findAll().isEmpty()) {
+        if (!userRepository.findAll().isEmpty()) {
             return;
         }
 
