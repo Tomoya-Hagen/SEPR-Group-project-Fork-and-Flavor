@@ -30,7 +30,9 @@ public class NutritionDataGenerator implements CommandLineRunner {
             reader.readLine(); // Skip header if your CSV has one
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",", -1);
-                if (parts.length < 3) continue; // Ensure there are enough parts
+                if (parts.length < 3) {
+                    continue;
+                }
 
                 Nutrition nutrition = new Nutrition();
                 nutrition.setName(parts[0].trim().replace("\"", ""));

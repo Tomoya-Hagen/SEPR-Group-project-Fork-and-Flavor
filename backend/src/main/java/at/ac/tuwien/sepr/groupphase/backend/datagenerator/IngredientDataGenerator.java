@@ -17,7 +17,11 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 @Component
 @Order(3)
@@ -49,7 +53,9 @@ public class IngredientDataGenerator implements CommandLineRunner {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",", -1);
-                if (parts.length > 12) continue; // skip if the format does not match
+                if (parts.length > 12) {
+                    continue;
+                }
 
                 String name = parts[0].trim().replace("'", "");
                 Optional<Ingredient> existingIngredient = ingredientRepository.findByName(name);
