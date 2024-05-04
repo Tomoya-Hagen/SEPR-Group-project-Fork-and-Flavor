@@ -32,6 +32,9 @@ public class UserDataGenerator {
     @PostConstruct
     private void generateMessage() {
 
+        if (!userRepository.findAll().isEmpty()) {
+            return;
+        }
 
         Role.RoleBuilder rb = new Role.RoleBuilder();
         Role r = rb.withId(1).withroleId("Admin").build();
