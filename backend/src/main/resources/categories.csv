@@ -1,0 +1,14 @@
+Name,Type
+Hautpspeise,MAIN_COURSE
+Nachspeise,DESSERT
+Beilage,SIDE_DISH
+Frühstück,BREAKFAST
+Snack,SNACK
+Mehlspeise,BAKED_GOOD
+Vorspeise,APPETIZER
+Glutenfrei,
+Vegetarisch,
+Vegan,
+Laktosefrei,
+Nussfrei,
+Fleisch,

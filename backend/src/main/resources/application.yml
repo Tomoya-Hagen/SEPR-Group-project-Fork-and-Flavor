@@ -8,7 +8,7 @@ logging:
 
 spring:
   datasource:
-    url: "jdbc:h2:./db;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'classpath:sql/createSchema.sql'"
+    url: "jdbc:h2:./database/db;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1;"
     username: "username"
     password: "password"
     driver-class-name: org.h2.Driver
