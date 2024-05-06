@@ -1,12 +1,14 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserRegisterDtoMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.UsernameException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ public class CustomUserDetailService implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
+    private final UserValidator userValidator = new UserValidator();
+    private final UserRegisterDtoMapper userRegisterDtoMapper = new UserRegisterDtoMapper();
 
     @Autowired
     public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer) {
@@ -81,5 +85,29 @@ public class CustomUserDetailService implements UserService {
             return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
         }
         throw new BadCredentialsException("Username or password is incorrect or account is locked");
+    }
+
+    @Override
+    public String register(UserRegisterDto userRegisterDto) {
+        LOGGER.debug("Register a new user");
+        userValidator.validateForCreate(userRegisterDto);
+
+        UserDetails userDetails = loadUserByUsername(userRegisterDto.getUsername());
+        if (userDetails != null) {
+            throw new UsernameException("Username already exists");
+        }
+
+        userDetails = loadUserByUsername(userRegisterDto.getEmail());
+        if (userDetails != null) {
+            throw new UsernameException("Email already exists");
+        }
+
+        ApplicationUser applicationUser = new ApplicationUser();
+        applicationUser.setEmail(userRegisterDto.getEmail());
+        applicationUser.setUsername(userRegisterDto.getUsername());
+        applicationUser.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
+        userRepository.save(applicationUser);
+
+        return login(userRegisterDtoMapper.toUserLoginDto(userRegisterDto));
     }
 }
