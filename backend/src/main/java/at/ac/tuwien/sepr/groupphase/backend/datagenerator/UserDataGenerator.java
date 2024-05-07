@@ -43,7 +43,7 @@ public class UserDataGenerator {
         UserRole ur = urrb.withroleId(1).withuserId(1).build();
 
         ApplicationUser.ApplicationUserBuilder aub = new ApplicationUser.ApplicationUserBuilder();
-        ApplicationUser au = aub.withemail("admin@email.com").withpassword(passwordEncoder.encode("password")).withid(1).withusername("admin").withhasProfilePicture(false).build();
+        ApplicationUser au = aub.withEmail("admin@email.com").withPassword(passwordEncoder.encode("password")).withid(1).withUsername("admin").withhasProfilePicture(false).build();
 
         roleRepository.save(r);
         userRepository.save(au);

@@ -4,9 +4,10 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserRegisterDtoMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.UsernameException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
@@ -33,12 +34,14 @@ public class CustomUserDetailService implements UserService {
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator userValidator = new UserValidator();
     private final UserRegisterDtoMapper userRegisterDtoMapper = new UserRegisterDtoMapper();
+    private final UserRoleRepository userRoleRepository;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @Override
@@ -92,21 +95,21 @@ public class CustomUserDetailService implements UserService {
         LOGGER.debug("Register a new user");
         userValidator.validateForCreate(userRegisterDto);
 
-        UserDetails userDetails = loadUserByUsername(userRegisterDto.getUsername());
-        if (userDetails != null) {
-            throw new UsernameException("Username already exists");
-        }
+        // Todo: Einfach alle Usernames counten und nicht die lange funktion aufrufen
 
-        userDetails = loadUserByUsername(userRegisterDto.getEmail());
-        if (userDetails != null) {
-            throw new UsernameException("Email already exists");
-        }
+        // Todo: Einfach alle Email Adressen counten und nicht die lange funktion aufrufen
 
-        ApplicationUser applicationUser = new ApplicationUser();
-        applicationUser.setEmail(userRegisterDto.getEmail());
-        applicationUser.setUsername(userRegisterDto.getUsername());
-        applicationUser.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
-        userRepository.save(applicationUser);
+        ApplicationUser applicationUser = new ApplicationUser.ApplicationUserBuilder()
+            .withEmail(userRegisterDto.getEmail())
+            .withUsername(userRegisterDto.getUsername())
+            .withPassword(passwordEncoder.encode(userRegisterDto.getPassword()))
+            .withhasProfilePicture(false)
+            .build();
+        ApplicationUser returnedUser = userRepository.save(applicationUser);
+
+        UserRole.UserRoleBuilder urrb = new UserRole.UserRoleBuilder();
+        UserRole ur = urrb.withroleId(1).withuserId(returnedUser.getId()).build();
+        userRoleRepository.save(ur);
 
         return login(userRegisterDtoMapper.toUserLoginDto(userRegisterDto));
     }

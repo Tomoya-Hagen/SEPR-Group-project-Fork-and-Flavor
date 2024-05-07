@@ -160,22 +160,25 @@ public class ApplicationUser {
         private String password;
         private Boolean hasProfilePicture;
 
+        public ApplicationUserBuilder() {
+        }
+
         public ApplicationUserBuilder withid(long id) {
             this.id = id;
             return this;
         }
 
-        public ApplicationUserBuilder withusername(String username) {
+        public ApplicationUserBuilder withUsername(String username) {
             this.username = username;
             return this;
         }
 
-        public ApplicationUserBuilder withemail(String email) {
+        public ApplicationUserBuilder withEmail(String email) {
             this.email = email;
             return this;
         }
 
-        public ApplicationUserBuilder withpassword(String password) {
+        public ApplicationUserBuilder withPassword(String password) {
             this.password = password;
             return this;
         }
