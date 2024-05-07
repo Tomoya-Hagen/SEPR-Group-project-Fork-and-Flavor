@@ -3,7 +3,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Globals} from "../global/globals";
 import {tap} from "rxjs/operators";
-import {AuthRequest} from "../dtos/auth-request";
+import {NewUserRequest} from "../dtos/new-user-request";
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +17,10 @@ export class RegisterService {
   /**
    * Register the user. If it was successful, a valid JWT token will be stored
    *
-   * @param authRequest User data
+   * @param newUserRequest User data
    */
-  registerUser(authRequest: AuthRequest): Observable<string> {
-    return this.httpClient.post(this.authBaseUri, authRequest, {responseType: 'text'})
+  registerUser(newUserRequest: NewUserRequest): Observable<string> {
+    return this.httpClient.post(this.authBaseUri, newUserRequest, {responseType: 'text'})
       .pipe(
         tap((authResponse: string) => this.setToken(authResponse))
       );
