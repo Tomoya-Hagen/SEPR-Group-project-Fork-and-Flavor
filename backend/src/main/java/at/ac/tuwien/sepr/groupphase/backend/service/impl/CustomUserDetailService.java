@@ -5,11 +5,14 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserRegisterDtoMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserRole;
+import at.ac.tuwien.sepr.groupphase.backend.exception.EmailException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.UsernameException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import jakarta.validation.constraints.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,9 +98,13 @@ public class CustomUserDetailService implements UserService {
         LOGGER.debug("Register a new user");
         userValidator.validateForCreate(userRegisterDto);
 
-        // Todo: Einfach alle Usernames counten und nicht die lange funktion aufrufen
+        if (userRepository.existsByUsername(userRegisterDto.getUsername())) {
+            throw new UsernameException("Username already exists");
+        }
 
-        // Todo: Einfach alle Email Adressen counten und nicht die lange funktion aufrufen
+        if (userRepository.existsByEmail(userRegisterDto.getEmail())) {
+            throw new EmailException("Email already exists");
+        }
 
         ApplicationUser applicationUser = new ApplicationUser.ApplicationUserBuilder()
             .withEmail(userRegisterDto.getEmail())

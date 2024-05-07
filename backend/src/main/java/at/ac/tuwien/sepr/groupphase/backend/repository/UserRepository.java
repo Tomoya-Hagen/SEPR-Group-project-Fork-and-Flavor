@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
 
@@ -19,5 +21,19 @@ public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
         + "JOIN FETCH ApplicationUser.roles "
         + "WHERE ApplicationUser.email = :email")
     ApplicationUser findFirstUserByEmail(@Param("email") String email);
+
+    /**
+     * Find first User entrie via username.
+     *
+     * @return boolean if user exists
+     */
+    Boolean existsByUsername(String username);
+
+    /**
+     * Find first User entrie via email.
+     *
+     * @return boolean if user exists
+     */
+    Boolean existsByEmail(String email);
 
 }
