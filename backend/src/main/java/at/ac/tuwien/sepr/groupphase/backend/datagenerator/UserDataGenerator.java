@@ -39,6 +39,9 @@ public class UserDataGenerator {
         Role.RoleBuilder rb = new Role.RoleBuilder();
         Role r = rb.withId(1).withroleId("Admin").build();
 
+        Role.RoleBuilder rb2 = new Role.RoleBuilder();
+        Role r2 = rb2.withId(2).withroleId("User").build();
+
         UserRole.UserRoleBuilder urrb = new UserRole.UserRoleBuilder();
         UserRole ur = urrb.withroleId(1).withuserId(1).build();
 

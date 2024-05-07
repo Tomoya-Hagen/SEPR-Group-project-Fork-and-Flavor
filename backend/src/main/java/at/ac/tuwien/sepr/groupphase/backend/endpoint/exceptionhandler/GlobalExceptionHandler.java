@@ -56,6 +56,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         body.put("Validation errors", errors);
 
         return new ResponseEntity<>(body.toString(), headers, status);
-
     }
 }

@@ -164,4 +164,146 @@ public class Recipe {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "forked_from", referencedColumnName = "id")
     private List<Recipe> forkedfrom;
+
+
+    public static final class RecipeBuilder {
+        private long id;
+        private String name;
+        private String description;
+        private Short numberOfServings;
+        private long forkedFrom;
+        private long ownerId;
+        private Boolean isDraft;
+        private List<RecipeRecipeBook> recipeRecipeBooks;
+        private List<Favorite> favorites;
+        private List<Cooked> cooked;
+        private List<Rating> ratings;
+        private List<RecipeStep> recipeSteps;
+        private List<RecipeRecipeStep> recipeRecipeSteps;
+        private List<RecipeCategory> recipeCategories;
+        private List<RecipeVerified> recipesVerified;
+        private List<WeeklyPlanner> weeklyPlanners;
+        private List<RecipeIngredient> recipeIngredients;
+        private List<Recipe> forkedfrom;
+
+        private RecipeBuilder() {
+        }
+
+        public static RecipeBuilder aRecipe() {
+            return new RecipeBuilder();
+        }
+
+        public RecipeBuilder withId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public RecipeBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public RecipeBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public RecipeBuilder withNumberOfServings(Short numberOfServings) {
+            this.numberOfServings = numberOfServings;
+            return this;
+        }
+
+        public RecipeBuilder withForkedFrom(long forkedFrom) {
+            this.forkedFrom = forkedFrom;
+            return this;
+        }
+
+        public RecipeBuilder withOwnerId(long ownerId) {
+            this.ownerId = ownerId;
+            return this;
+        }
+
+        public RecipeBuilder withIsDraft(Boolean isDraft) {
+            this.isDraft = isDraft;
+            return this;
+        }
+
+        public RecipeBuilder withRecipeRecipeBooks(List<RecipeRecipeBook> recipeRecipeBooks) {
+            this.recipeRecipeBooks = recipeRecipeBooks;
+            return this;
+        }
+
+        public RecipeBuilder withFavorites(List<Favorite> favorites) {
+            this.favorites = favorites;
+            return this;
+        }
+
+        public RecipeBuilder withCooked(List<Cooked> cooked) {
+            this.cooked = cooked;
+            return this;
+        }
+
+        public RecipeBuilder withRatings(List<Rating> ratings) {
+            this.ratings = ratings;
+            return this;
+        }
+
+        public RecipeBuilder withRecipeSteps(List<RecipeStep> recipeSteps) {
+            this.recipeSteps = recipeSteps;
+            return this;
+        }
+
+        public RecipeBuilder withRecipeRecipeSteps(List<RecipeRecipeStep> recipeRecipeSteps) {
+            this.recipeRecipeSteps = recipeRecipeSteps;
+            return this;
+        }
+
+        public RecipeBuilder withRecipeCategories(List<RecipeCategory> recipeCategories) {
+            this.recipeCategories = recipeCategories;
+            return this;
+        }
+
+        public RecipeBuilder withRecipesVerified(List<RecipeVerified> recipesVerified) {
+            this.recipesVerified = recipesVerified;
+            return this;
+        }
+
+        public RecipeBuilder withWeeklyPlanners(List<WeeklyPlanner> weeklyPlanners) {
+            this.weeklyPlanners = weeklyPlanners;
+            return this;
+        }
+
+        public RecipeBuilder withRecipeIngredients(List<RecipeIngredient> recipeIngredients) {
+            this.recipeIngredients = recipeIngredients;
+            return this;
+        }
+
+        public RecipeBuilder withForkedfrom(List<Recipe> forkedfrom) {
+            this.forkedfrom = forkedfrom;
+            return this;
+        }
+
+        public Recipe build() {
+            Recipe recipe = new Recipe();
+            recipe.setId(id);
+            recipe.setName(name);
+            recipe.setDescription(description);
+            recipe.setNumberOfServings(numberOfServings);
+            recipe.setForkedFrom(forkedFrom);
+            recipe.setOwnerId(ownerId);
+            recipe.recipeSteps = this.recipeSteps;
+            recipe.favorites = this.favorites;
+            recipe.cooked = this.cooked;
+            recipe.recipeRecipeSteps = this.recipeRecipeSteps;
+            recipe.isDraft = this.isDraft;
+            recipe.recipeRecipeBooks = this.recipeRecipeBooks;
+            recipe.ratings = this.ratings;
+            recipe.recipeIngredients = this.recipeIngredients;
+            recipe.forkedfrom = this.forkedfrom;
+            recipe.recipesVerified = this.recipesVerified;
+            recipe.weeklyPlanners = this.weeklyPlanners;
+            recipe.recipeCategories = this.recipeCategories;
+            return recipe;
+        }
+    }
 }
