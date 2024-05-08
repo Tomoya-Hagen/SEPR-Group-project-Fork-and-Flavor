@@ -29,7 +29,8 @@ public class FullRecipeService implements RecipeService {
     @Override
     public DetailedRecipeDto createRecipe(RecipeCreateDto recipeDto) {
         LOGGER.debug("Publish new message {}", recipeDto);
-        Recipe recipe = recipeMapper.recipeCreateDtoToRecipe(recipeDto, recipeRepository.findMaxId());
+        Recipe recipe = recipeMapper.recipeCreateDtoToRecipe(recipeDto, recipeRepository.findMaxId() + 1);
+
         recipe = recipeRepository.save(recipe);
         DetailedRecipeDto detailedRecipeDto = recipeMapper.recipeToDetailedRecipeDto(recipe);
         return detailedRecipeDto;

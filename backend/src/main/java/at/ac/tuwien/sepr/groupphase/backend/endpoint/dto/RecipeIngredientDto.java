@@ -3,39 +3,40 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class RecipeIngredientDto {
-    @NotNull(message = "Id must not be null")
-    private int id;
+    @NotNull(message = "ingredientId must not be null")
+    private long ingredientId;
     @NotNull(message = "Amount must not be null")
-    private int amount;
+    private BigDecimal amount;
     @NotNull(message = "String must not be null")
-    private String unit;
+    private long unit;
 
-
-
-    public int getId() {
-        return id;
+    @NotNull(message = "ingredientid must not be null")
+    public long getIngredientId() {
+        return ingredientId;
     }
 
-    public void setId( int id) {
-        this.id = id;
+    public void setIngredientId(long ingredientId) {
+        this.ingredientId = ingredientId;
     }
 
-    public int getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount( int amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public String getUnit() {
+
+    public long getUnit() {
         return unit;
     }
 
-    public void setUnit(String unit) {
+    public void setUnit(long unit) {
         this.unit = unit;
     }
 
@@ -48,19 +49,18 @@ public class RecipeIngredientDto {
             return false;
         }
         RecipeIngredientDto that = (RecipeIngredientDto) o;
-        return id == that.id && amount == that.amount && Objects.equals(unit, that.unit);
+        return ingredientId == that.ingredientId && unit == that.unit && Objects.equals(amount, that.amount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, amount, unit);
+        return Objects.hash(ingredientId, amount, unit);
     }
 
-
     public static final class RecipeIngredientDtoBuilder {
-        private int id;
-        private int amount;
-        private String unit;
+        private long ingredientId;
+        private BigDecimal amount;
+        private long unit;
 
         private RecipeIngredientDtoBuilder() {
         }
@@ -69,24 +69,24 @@ public class RecipeIngredientDto {
             return new RecipeIngredientDtoBuilder();
         }
 
-        public RecipeIngredientDtoBuilder withId(int id) {
-            this.id = id;
+        public RecipeIngredientDtoBuilder withIngredientId(long ingredientId) {
+            this.ingredientId = ingredientId;
             return this;
         }
 
-        public RecipeIngredientDtoBuilder withAmount(int amount) {
+        public RecipeIngredientDtoBuilder withAmount(BigDecimal amount) {
             this.amount = amount;
             return this;
         }
 
-        public RecipeIngredientDtoBuilder withUnit(String unit) {
+        public RecipeIngredientDtoBuilder withUnit(long unit) {
             this.unit = unit;
             return this;
         }
 
         public RecipeIngredientDto build() {
             RecipeIngredientDto recipeIngredientDto = new RecipeIngredientDto();
-            recipeIngredientDto.setId(id);
+            recipeIngredientDto.setIngredientId(ingredientId);
             recipeIngredientDto.setAmount(amount);
             recipeIngredientDto.setUnit(unit);
             return recipeIngredientDto;
