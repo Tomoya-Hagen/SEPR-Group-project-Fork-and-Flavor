@@ -60,38 +60,46 @@ public class UserRegisterDto {
 
     @Override
     public String toString() {
-        return "UserLoginDto{"
+        return "UserRegisterDto{"
             + "email='" + email + '\''
             + ", password='" + password + '\''
+            + ", username='" + username + '\''
             + '}';
     }
 
 
-    public static final class UserLoginDtoBuilder {
+    public static final class UserRegisterDtoBuilder {
         private String email;
         private String password;
+        private String username;
 
-        private UserLoginDtoBuilder() {
+        private UserRegisterDtoBuilder() {
         }
 
-        public static UserLoginDtoBuilder anUserLoginDto() {
-            return new UserLoginDtoBuilder();
+        public static UserRegisterDtoBuilder anUserRegisterDto() {
+            return new UserRegisterDtoBuilder();
         }
 
-        public UserLoginDtoBuilder withEmail(String email) {
+        public UserRegisterDtoBuilder withEmail(String email) {
             this.email = email;
             return this;
         }
 
-        public UserLoginDtoBuilder withPassword(String password) {
+        public UserRegisterDtoBuilder withPassword(String password) {
             this.password = password;
             return this;
         }
 
-        public UserLoginDto build() {
-            UserLoginDto userRegisterDto = new UserLoginDto();
+        public UserRegisterDtoBuilder withUsername(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public UserRegisterDto build() {
+            UserRegisterDto userRegisterDto = new UserRegisterDto();
             userRegisterDto.setEmail(email);
             userRegisterDto.setPassword(password);
+            userRegisterDto.setUsername(username);
             return userRegisterDto;
         }
     }

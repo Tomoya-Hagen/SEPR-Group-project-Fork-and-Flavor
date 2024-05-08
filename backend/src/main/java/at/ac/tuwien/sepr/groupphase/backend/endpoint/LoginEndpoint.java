@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,5 +23,11 @@ public class LoginEndpoint {
     @PostMapping
     public String login(@RequestBody UserLoginDto userLoginDto) {
         return userService.login(userLoginDto);
+    }
+
+    @PermitAll
+    @PostMapping("/register")
+    public String register(@RequestBody UserRegisterDto userRegisterDto) {
+        return userService.register(userRegisterDto);
     }
 }
