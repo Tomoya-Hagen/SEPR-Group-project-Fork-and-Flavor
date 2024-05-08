@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@DynamicUpdate
 public class Recipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -161,6 +163,10 @@ public class Recipe {
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeStep> recipeSteps;
 
+    public void setRecipeSteps(List<RecipeStep> recipeSteps) {
+        this.recipeSteps = recipeSteps;
+    }
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeRecipeStep> recipeRecipeSteps;
@@ -176,6 +182,10 @@ public class Recipe {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeIngredient> recipeIngredients;
+
+    public void setIngredients(List<RecipeIngredient> recipeIngredients) {
+        this.recipeIngredients = recipeIngredients;
+    }
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "forked_from", referencedColumnName = "id")

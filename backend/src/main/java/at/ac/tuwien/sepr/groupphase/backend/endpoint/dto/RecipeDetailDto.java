@@ -1,0 +1,57 @@
+package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
+
+import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
+import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+import java.util.List;
+import java.util.Set;
+
+/**
+ * Record to hold RecipeDetails
+ *
+ * @param id ID of the recipe
+ * @param name name of the recipe
+ * @param description description of the recipe
+ * @param numberOfServings number of servings of the recipe
+ * @param categories categories the recipe belongs to
+ * @param isDraft boolean that indicates whether this recipe is a draft
+ * @param ingredients ingredients of the recipe
+ * @param forkedFrom indicates which recipe this one was forked from
+ * @param recipeSteps steps that the recipe requires
+ */
+public record RecipeDetailDto (
+
+    @NotNull
+    Long id,
+
+    @NotNull
+    @Size(min = 1, max = 50)
+    String name,
+
+    @NotNull
+    @Size(min = 1, max = 5000)
+    String description,
+
+    @NotNull
+    Short numberOfServings,
+
+    @NotNull
+    Set<Category> categories,
+
+    @NotNull
+    Boolean isDraft,
+
+    @NotNull
+    List<RecipeIngredient> ingredients,
+
+    @NotNull
+    Recipe forkedFrom,
+
+    @NotNull
+    List<RecipeStep> recipeSteps
+)
+{}
