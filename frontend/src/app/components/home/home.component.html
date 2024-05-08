@@ -1,11 +1,51 @@
 <div class="jumbotron mt-5">
-  <h1 class="display-4">Welcome to the SE PR group phase!</h1>
+  <h1 class="display-4" style="text-align:center">Welcome to Fork & Flavour!</h1>
   <hr class="my-4">
-  <a *ngIf="!authService.isLoggedIn()" class="btn btn-primary btn-lg" routerLink="/login" role="button">Login</a>
-  <div *ngIf="authService.isLoggedIn()">
-    <p>Check out the latest message from the SE PR group phase.</p>
-    <p class="lead">
-      <a class="btn btn-primary btn-lg" routerLink="/message" role="button">Message</a>
-    </p>
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    <div class="col">
+      <div class="card">
+        <img src="https://api.campbellsmeat.com/wp-content/uploads/2020/10/1602145295bolog-1.png" class="card-img-top" alt="Hollywood Sign on The Hill"/>
+        <div class="card-body">
+          <h5 class="card-title">Spaghetti bolognese</h5>
+          <p class="card-text">
+            Weitere Details......
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <img src="https://rezeto.com/wp-content/uploads/2020/07/Pizzaschnecken.jpg" class="card-img-top" alt="Skyscrapers"/>
+        <div class="card-body">
+          <h5 class="card-title">Pizzaschnecken</h5>
+          <p class="card-text">
+            Weitere Details......
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <img src="https://images.eatsmarter.de/sites/default/files/styles/facebook/public/kuerbiscremesuppe-mit-dziugas-piquant-671567.png" class="card-img-top" alt="Palm Springs Road"/>
+        <div class="card-body">
+          <h5 class="card-title">Kürbiscremesuppe</h5>
+          <p class="card-text">
+            Weitere Details......
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <img src="https://rezepte.lidl.at/var/site/storage/images/_aliases/960x540/1/8/2/4/2834281-1-ger-AT/72d17a34e04e-soufflierter-karamellisierter-kaiserschmarrn_header_1440x495.png" class="card-img-top" alt="Los Angeles Skyscrapers"/>
+        <div class="card-body">
+          <h5 class="card-title">Kaiserschmarrn</h5>
+          <p class="card-text">
+            Weitere Details......
+          </p>
+        </div>
+      </div>
+    </div>
+
   </div>
-</div>
+  </div>

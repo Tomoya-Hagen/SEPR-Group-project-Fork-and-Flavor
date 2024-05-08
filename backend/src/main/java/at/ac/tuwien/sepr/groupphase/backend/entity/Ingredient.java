@@ -1,37 +1,51 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 
-import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
-import java.util.List;
-import java.util.Objects;
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Ingredient {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
+    private Long id;
 
-    public long getId() {
+    @Column(name = "name")
+    private String name;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "ingredient_allergen",
+        joinColumns = @JoinColumn(name = "ingredient_id"),
+        inverseJoinColumns = @JoinColumn(name = "allergen_id")
+    )
+    private Set<Allergen> allergens = new HashSet<>();
+
+    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<IngredientNutrition> nutritionData = new HashSet<>();
+
+    // Getters and setters
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
-
-    @Basic
-    @Column(name = "name")
-    private String name;
 
     public String getName() {
         return name;
@@ -41,61 +55,19 @@ public class Ingredient {
         this.name = name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Ingredient that = (Ingredient) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name);
+    public Set<Allergen> getAllergens() {
+        return allergens;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
+    public void setAllergens(Set<Allergen> allergens) {
+        this.allergens = allergens;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
-    private List<IngredientAllergen> ingredientAllergens;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
-    private List<IngredientNutrition> ingredientNutritions;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
-    private List<RecipeIngredient> recipeIngredients;
-
-
-
-
-    public static final class IngredientBuilder {
-        private long id;
-        private String name;
-
-        public IngredientBuilder() {
-        }
-
-        public IngredientBuilder withId(long id) {
-            this.id = id;
-            return this;
-        }
-
-        public IngredientBuilder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Ingredient build() {
-            Ingredient ingredient = new Ingredient();
-            ingredient.setId(this.id);
-            ingredient.setName(this.name);
-            return ingredient;
-        }
+    public void addNutritionData(Nutrition nutrition, BigDecimal value) {
+        IngredientNutrition ingredientNutrition = new IngredientNutrition();
+        ingredientNutrition.setIngredient(this);
+        ingredientNutrition.setNutrition(nutrition);
+        ingredientNutrition.setValue(value);
+        this.nutritionData.add(ingredientNutrition);
     }
 }
-

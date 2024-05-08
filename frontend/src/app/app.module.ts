@@ -21,6 +21,7 @@ import {httpInterceptorProviders} from './interceptors';
     HomeComponent,
     LoginComponent,
     MessageComponent,
+
   ],
   imports: [
     BrowserModule,

@@ -8,10 +8,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Recipe {
@@ -88,6 +92,22 @@ public class Recipe {
         this.ownerId = ownerId;
     }
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+        name = "recipe_categories",
+        joinColumns = @JoinColumn(name = "recipe_id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories = new HashSet<>();
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
+
     @Basic
     @Column(name = "is_draft")
     private Boolean isDraft;
@@ -144,10 +164,6 @@ public class Recipe {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeRecipeStep> recipeRecipeSteps;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<RecipeCategory> recipeCategories;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
