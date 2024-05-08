@@ -70,13 +70,13 @@ public class Recipe {
 
     @Basic
     @Column(name = "forked_from")
-    private long forkedFrom;
+    private Long forkedFrom;
 
-    public long getForkedFrom() {
+    public Long getForkedFrom() {
         return forkedFrom;
     }
 
-    public void setForkedFrom(long forkedFrom) {
+    public void setForkedFrom(Long forkedFrom) {
         this.forkedFrom = forkedFrom;
     }
 
@@ -181,13 +181,92 @@ public class Recipe {
     @JoinColumn(name = "forked_from", referencedColumnName = "id")
     private List<Recipe> forkedfrom;
 
+    public List<RecipeRecipeBook> getRecipeRecipeBooks() {
+        return recipeRecipeBooks;
+    }
+
+    public void setRecipeRecipeBooks(List<RecipeRecipeBook> recipeRecipeBooks) {
+        this.recipeRecipeBooks = recipeRecipeBooks;
+    }
+
+    public List<Favorite> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(List<Favorite> favorites) {
+        this.favorites = favorites;
+    }
+
+    public List<Cooked> getCooked() {
+        return cooked;
+    }
+
+    public void setCooked(List<Cooked> cooked) {
+        this.cooked = cooked;
+    }
+
+    public List<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<Rating> ratings) {
+        this.ratings = ratings;
+    }
+
+    public List<RecipeStep> getRecipeSteps() {
+        return recipeSteps;
+    }
+
+    public void setRecipeSteps(List<RecipeStep> recipeSteps) {
+        this.recipeSteps = recipeSteps;
+    }
+
+    public List<RecipeRecipeStep> getRecipeRecipeSteps() {
+        return recipeRecipeSteps;
+    }
+
+    public void setRecipeRecipeSteps(List<RecipeRecipeStep> recipeRecipeSteps) {
+        this.recipeRecipeSteps = recipeRecipeSteps;
+    }
+
+    public List<RecipeVerified> getRecipesVerified() {
+        return recipesVerified;
+    }
+
+    public void setRecipesVerified(List<RecipeVerified> recipesVerified) {
+        this.recipesVerified = recipesVerified;
+    }
+
+    public List<WeeklyPlanner> getWeeklyPlanners() {
+        return weeklyPlanners;
+    }
+
+    public void setWeeklyPlanners(List<WeeklyPlanner> weeklyPlanners) {
+        this.weeklyPlanners = weeklyPlanners;
+    }
+
+    public List<RecipeIngredient> getRecipeIngredients() {
+        return recipeIngredients;
+    }
+
+    public void setRecipeIngredients(List<RecipeIngredient> recipeIngredients) {
+        this.recipeIngredients = recipeIngredients;
+    }
+
+    public List<Recipe> getForkedfrom() {
+        return forkedfrom;
+    }
+
+    public void setForkedfrom(List<Recipe> forkedfrom) {
+        this.forkedfrom = forkedfrom;
+    }
 
     public static final class RecipeBuilder {
         private long id;
         private String name;
         private String description;
         private Short numberOfServings;
-        private long forkedFrom;
+        private Long forkedFrom;
         private long ownerId;
         private Boolean isDraft;
         private List<RecipeRecipeBook> recipeRecipeBooks;
@@ -196,7 +275,6 @@ public class Recipe {
         private List<Rating> ratings;
         private List<RecipeStep> recipeSteps;
         private List<RecipeRecipeStep> recipeRecipeSteps;
-        private List<RecipeCategory> recipeCategories;
         private List<RecipeVerified> recipesVerified;
         private List<WeeklyPlanner> weeklyPlanners;
         private List<RecipeIngredient> recipeIngredients;
@@ -229,7 +307,7 @@ public class Recipe {
             return this;
         }
 
-        public RecipeBuilder withForkedFrom(long forkedFrom) {
+        public RecipeBuilder withForkedFrom(Long forkedFrom) {
             this.forkedFrom = forkedFrom;
             return this;
         }
@@ -274,11 +352,6 @@ public class Recipe {
             return this;
         }
 
-        public RecipeBuilder withRecipeCategories(List<RecipeCategory> recipeCategories) {
-            this.recipeCategories = recipeCategories;
-            return this;
-        }
-
         public RecipeBuilder withRecipesVerified(List<RecipeVerified> recipesVerified) {
             this.recipesVerified = recipesVerified;
             return this;
@@ -318,7 +391,6 @@ public class Recipe {
             recipe.forkedfrom = this.forkedfrom;
             recipe.recipesVerified = this.recipesVerified;
             recipe.weeklyPlanners = this.weeklyPlanners;
-            recipe.recipeCategories = this.recipeCategories;
             return recipe;
         }
     }

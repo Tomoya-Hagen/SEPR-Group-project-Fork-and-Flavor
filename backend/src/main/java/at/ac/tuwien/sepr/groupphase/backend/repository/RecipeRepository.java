@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
-    @Query("SELECT MAX(id) FROM Recipe")
+    @Query("SELECT COALESCE(MAX(id), 0) FROM Recipe")
     Long findMaxId();
 }

@@ -6,7 +6,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeIngredientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
-import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeCategory;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeDescriptionStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
@@ -24,15 +23,12 @@ public interface RecipeMapper  {
     DetailedRecipeDto recipeToDetailedRecipeDto(Recipe recipe);
 
     default Recipe recipeCreateDtoToRecipe(RecipeCreateDto recipeCreateDto, long id) throws RecipeStepNotParsableException {
-        List<RecipeCategory> recipeCategoryList =recipeCategoryDtoToRecipeCategory(recipeCreateDto.getRecipeCategories());
-        recipeCategoryList.forEach(obj -> obj.setRecipeId(id));
         List<RecipeStep> recipeStepList = new ArrayList<>();
         for(RecipeStepDto recipeStepDto : recipeCreateDto.getRecipeSteps()){
             RecipeStep recipeStep = new RecipeStep();
             recipeStep.setName(recipeStepDto.getName());
             recipeStep.setRecipeId(id);
             recipeStep.setStepNumber(recipeStepDto.getStepNumber());
-
             if(!recipeStepDto.isCorrect()){
                 throw new RecipeStepNotParsableException();
             }
@@ -60,7 +56,6 @@ public interface RecipeMapper  {
             .withNumberOfServings(recipeCreateDto.getNumberOfServings())
             .withOwnerId(recipeCreateDto.getOwnerId())
             .withRecipeIngredients(recipeIngredientList)
-            .withRecipeCategories(recipeCategoryList)
             .withRecipeSteps(recipeStepList);
 
             return recipeBuilder.build();
@@ -68,6 +63,4 @@ public interface RecipeMapper  {
 
 
     List<RecipeIngredient> recipeIngredientDtoToRecipeIngredientDto(List<RecipeIngredientDto> recipeIngredientDto);
-    List<RecipeCategory>  recipeCategoryDtoToRecipeCategory(List<RecipeCategoryDto> recipeCategoryDto);
-    List<RecipeStep> recipeStepToRecipeStepDto (List<RecipeStepDto> recipeStepDto);
 }
