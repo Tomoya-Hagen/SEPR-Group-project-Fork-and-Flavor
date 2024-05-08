@@ -92,7 +92,7 @@ public class Recipe {
         this.ownerId = ownerId;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
         name = "recipe_categories",
         joinColumns = @JoinColumn(name = "recipe_id"),
