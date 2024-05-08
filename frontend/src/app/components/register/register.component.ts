@@ -62,5 +62,8 @@ export class RegisterComponent implements OnInit {
   onSubmit(): void {
   }
 
+  goToLogin(): void {
+    this.router.navigate(['/login']);
+  }
 
 }

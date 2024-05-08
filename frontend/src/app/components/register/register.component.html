@@ -1,15 +1,45 @@
-<form [formGroup]="registerForm" (ngSubmit)="registerNewUser()">
-  <div>
-    <label for="username">Username:</label>
-    <input id="username" type="text" formControlName="username" maxlength="255">
+<div class="pt-5">
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <div class="card rounded-0">
+        <div class="card-header">
+          <h3 class="mb-0">Register</h3>
+        </div>
+
+        <div class="card-body">
+          <form class="form" [formGroup]="registerForm" (ngSubmit)="registerNewUser()">
+
+            <div class="form-group">
+              <label for="username">Username:</label>
+              <input type="text" id="username" formControlName="username" class="form-control" placeholder="Enter username" maxlength="255">
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" formControlName="email" class="form-control" placeholder="Enter email" maxlength="255">
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="password" id="password" formControlName="password" class="form-control" placeholder="Password" maxlength="255" minlength="8">
+            </div>
+
+            <button type="submit" class="btn btn-success mt-3 float-right">Register</button>
+          </form>
+        </div>
+      </div>
+
+      <br>
+
+      <div class="card rounded-0">
+        <div class="card-header">
+          <h3 class="mb-0">Already have a user?</h3>
+        </div>
+
+        <button type="button" (click)="goToLogin()" class="btn btn-success m-3 w-25">Login</button>
+
+      </div>
+
+    </div>
   </div>
-  <div>
-    <label for="email">Email:</label>
-    <input id="email" type="email" formControlName="email" maxlength="255">
-  </div>
-  <div>
-    <label for="password">Password:</label>
-    <input id="password" type="password" formControlName="password" maxlength="255" minlength="8"><br>
-  </div>
-  <button type="submit">Register</button>
-</form>
+</div>
