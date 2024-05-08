@@ -61,4 +61,47 @@ public class IngredientNutrition {
     public void setValue(BigDecimal nutritionValue) {  // Method name updated
         this.nutritionValue = nutritionValue;
     }
+
+    public static final class IngredientNutritionBuilder {
+        private Long id;
+        private Ingredient ingredient;
+        private Nutrition nutrition;
+        private BigDecimal nutritionValue;
+
+        private IngredientNutritionBuilder() {
+        }
+
+        public static IngredientNutritionBuilder anIngredientNutrition() {
+            return new IngredientNutritionBuilder();
+        }
+
+        public IngredientNutritionBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public IngredientNutritionBuilder withIngredient(Ingredient ingredient) {
+            this.ingredient = ingredient;
+            return this;
+        }
+
+        public IngredientNutritionBuilder withNutrition(Nutrition nutrition) {
+            this.nutrition = nutrition;
+            return this;
+        }
+
+        public IngredientNutritionBuilder withValue(BigDecimal nutritionValue) {  // Method name updated
+            this.nutritionValue = nutritionValue;
+            return this;
+        }
+
+        public IngredientNutrition build() {
+            IngredientNutrition ingredientNutrition = new IngredientNutrition();
+            ingredientNutrition.setId(id);
+            ingredientNutrition.setIngredient(ingredient);
+            ingredientNutrition.setNutrition(nutrition);
+            return ingredientNutrition;
+        }
+    }
+
 }

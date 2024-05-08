@@ -64,10 +64,47 @@ public class Ingredient {
     }
 
     public void addNutritionData(Nutrition nutrition, BigDecimal value) {
-        IngredientNutrition ingredientNutrition = new IngredientNutrition();
-        ingredientNutrition.setIngredient(this);
-        ingredientNutrition.setNutrition(nutrition);
-        ingredientNutrition.setValue(value);
+        IngredientNutrition ingredientNutrition = IngredientNutrition.IngredientNutritionBuilder.anIngredientNutrition()
+            .withIngredient(this)
+            .withNutrition(nutrition)
+            .withValue(value)
+            .build();
         this.nutritionData.add(ingredientNutrition);
+    }
+
+    public static final class IngredientBuilder {
+        private Long id;
+        private String name;
+        private Set<Allergen> allergens;
+
+        private IngredientBuilder() {
+        }
+
+        public static IngredientBuilder anIngredient() {
+            return new IngredientBuilder();
+        }
+
+        public IngredientBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public IngredientBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public IngredientBuilder withAllergens(Set<Allergen> allergens) {
+            this.allergens = allergens;
+            return this;
+        }
+
+        public Ingredient build() {
+            Ingredient ingredient = new Ingredient();
+            ingredient.setId(id);
+            ingredient.setName(name);
+            ingredient.setAllergens(allergens);
+            return ingredient;
+        }
     }
 }

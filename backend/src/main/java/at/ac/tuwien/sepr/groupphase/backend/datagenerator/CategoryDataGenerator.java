@@ -39,9 +39,10 @@ public class CategoryDataGenerator implements CommandLineRunner {
                     String type = fields.get(1).trim();
                     Optional<Category> existingCategory = categoryRepository.findByNameAndType(name, type);
                     if (!existingCategory.isPresent()) {
-                        Category category = new Category();
-                        category.setName(name);
-                        category.setType(type);
+                        Category category = Category.CategoryBuilder.aCategory()
+                            .withName(name)
+                            .withType(type)
+                            .build();
                         categoryRepository.save(category);
                     }
                 }
