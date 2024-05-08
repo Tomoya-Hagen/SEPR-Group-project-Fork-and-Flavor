@@ -38,10 +38,11 @@ public class AllergenDataGenerator implements CommandLineRunner {
                     String type = fields.get(0).trim();
                     Optional<Allergen> existingAllergen = allergenRepository.findByType(type);
                     if (!existingAllergen.isPresent()) {
-                        Allergen allergen = new Allergen();
-                        allergen.setType(type);
-                        allergen.setName(fields.get(1).trim());
-                        allergen.setDescription(fields.get(2).trim().isEmpty() ? null : fields.get(2).trim());
+                        Allergen allergen = Allergen.AllergenBuilder.anAllergen()
+                            .withType(type)
+                            .withName(fields.get(1).trim())
+                            .withDescription(fields.get(2).trim().isEmpty() ? null : fields.get(2).trim())
+                            .build();
                         allergenRepository.save(allergen);
                     }
                 }
