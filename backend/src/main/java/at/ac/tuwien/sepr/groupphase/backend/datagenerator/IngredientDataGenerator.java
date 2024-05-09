@@ -7,7 +7,6 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.AllergenRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.IngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.NutritionRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
@@ -27,17 +26,23 @@ import java.util.Set;
 @Order(3)
 public class IngredientDataGenerator implements CommandLineRunner {
 
-    @Autowired
     private IngredientRepository ingredientRepository;
 
-    @Autowired
     private AllergenRepository allergenRepository;
 
-    @Autowired
     private NutritionRepository nutritionRepository;
 
-    @Autowired
     private ResourceLoader resourceLoader;
+
+    public IngredientDataGenerator(IngredientRepository ingredientRepository,
+                                   AllergenRepository allergenRepository,
+                                   NutritionRepository nutritionRepository,
+                                   ResourceLoader resourceLoader) {
+        this.ingredientRepository = ingredientRepository;
+        this.allergenRepository = allergenRepository;
+        this.nutritionRepository = nutritionRepository;
+        this.resourceLoader = resourceLoader;
+    }
 
     private static final String[] NUTRITION_NAMES = {
         "Calories", "Fat Total", "Fat Saturated", "Protein", "Sodium",
