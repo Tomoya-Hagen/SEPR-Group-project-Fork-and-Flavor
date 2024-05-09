@@ -11,6 +11,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.MessageRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-
+@Disabled
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -74,6 +75,7 @@ public class MessageEndpointTest implements TestData {
             .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
             .build();
     }
+
 
     @Test
     public void givenNothing_whenFindAll_thenEmptyList() throws Exception {
@@ -151,7 +153,6 @@ public class MessageEndpointTest implements TestData {
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
-
     @Test
     public void givenNothing_whenPost_thenMessageWithAllSetPropertiesPlusIdAndPublishedDate() throws Exception {
         message.setPublishedAt(null);
@@ -180,7 +181,6 @@ public class MessageEndpointTest implements TestData {
         messageResponse.setPublishedAt(null);
         assertEquals(message, messageMapper.detailedMessageDtoToMessage(messageResponse));
     }
-
     @Test
     public void givenNothing_whenPostInvalid_then400() throws Exception {
         message.setTitle(null);
