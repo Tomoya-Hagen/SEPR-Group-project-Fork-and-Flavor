@@ -12,7 +12,6 @@ import java.util.Objects;
 @Entity
 @jakarta.persistence.Table(name = "User_Weekly_Planner", schema = "PUBLIC", catalog = "DB")
 public class UserWeeklyPlanner {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @jakarta.persistence.Column(name = "user_id")
     private long userId;
@@ -25,7 +24,6 @@ public class UserWeeklyPlanner {
         this.userId = userId;
     }
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @jakarta.persistence.Column(name = "weekly_planner_id")
     private long weeklyPlannerId;

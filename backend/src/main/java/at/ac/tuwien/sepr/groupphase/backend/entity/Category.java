@@ -56,16 +56,9 @@ public class Category {
         this.type = type;
     }
 
-    @ManyToMany(mappedBy = "categories")
-    private Set<Recipe> recipes = new HashSet<>();
-
-    public Set<Recipe> getRecipes() {
-        return recipes;
-    }
-
-    public void setRecipes(Set<Recipe> recipes) {
-        this.recipes = recipes;
-    }
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private List<RecipeCategory> recipeCategories;
 
     @Override
     public boolean equals(Object o) {

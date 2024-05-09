@@ -12,6 +12,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -70,13 +71,13 @@ public class Recipe {
 
     @Basic
     @Column(name = "forked_from")
-    private long forkedFrom;
+    private Long forkedFrom;
 
     public long getForkedFrom() {
         return forkedFrom;
     }
 
-    public void setForkedFrom(long forkedFrom) {
+    public void setForkedFrom(Long forkedFrom) {
         this.forkedFrom = forkedFrom;
     }
 
@@ -94,17 +95,17 @@ public class Recipe {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-        name = "recipe_categories",
+        name = "recipe_category",
         joinColumns = @JoinColumn(name = "recipe_id"),
         inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private Set<Category> categories = new HashSet<>();
+    private List<Category> categories = new ArrayList<>();
 
-    public Set<Category> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(Set<Category> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 
@@ -180,4 +181,20 @@ public class Recipe {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "forked_from", referencedColumnName = "id")
     private List<Recipe> forkedfrom;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+    private List<RecipeCategory> recipeCategories;
+
+    public void setRecipeSteps(List<RecipeStep> recipeSteps) {
+        this.recipeSteps = recipeSteps;
+    }
+
+    public void setRecipeIngredients(List<RecipeIngredient> recipeIngredients) {
+        this.recipeIngredients = recipeIngredients;
+    }
+
+    public void setRecipeCategories(List<RecipeCategory> recipeCategories) {
+        this.recipeCategories = recipeCategories;
+    }
 }

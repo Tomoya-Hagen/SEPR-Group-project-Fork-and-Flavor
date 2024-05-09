@@ -12,7 +12,6 @@ import java.util.Objects;
 @Entity
 @jakarta.persistence.Table(name = "User_Recipe_Book", schema = "PUBLIC", catalog = "DB")
 public class UserRecipeBook {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @jakarta.persistence.Column(name = "user_id")
     private long userId;
@@ -25,7 +24,6 @@ public class UserRecipeBook {
         this.userId = userId;
     }
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @jakarta.persistence.Column(name = "recipe_book_id")
     private long recipeBookId;

@@ -12,11 +12,9 @@ import java.util.Objects;
 public class Recipeingredientpk implements Serializable {
     @Column(name = "recipe_id")
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long recipeId;
     @Column(name = "ingredient_id")
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long ingredientId;
 
     public long getRecipeId() {

@@ -1,29 +1,22 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
-
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class Reciperecipebookpk implements Serializable {
-    @Column(name = "recipe_book_id")
+@Entity
+@Table(name = "Recipe_Category", schema = "PUBLIC", catalog = "DB")
+@IdClass(Recipecategorypk.class)
+public class RecipeCategory {
     @Id
-    private long recipeBookId;
     @Column(name = "recipe_id")
-    @Id
     private long recipeId;
-
-    public long getRecipeBookId() {
-        return recipeBookId;
-    }
-
-    public void setRecipeBookId(long recipeBookId) {
-        this.recipeBookId = recipeBookId;
-    }
 
     public long getRecipeId() {
         return recipeId;
@@ -31,6 +24,18 @@ public class Reciperecipebookpk implements Serializable {
 
     public void setRecipeId(long recipeId) {
         this.recipeId = recipeId;
+    }
+
+    @Id
+    @Column(name = "category_id")
+    private long categoryId;
+
+    public long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(long ingredientId) {
+        this.categoryId = ingredientId;
     }
 
     @Override
@@ -41,12 +46,12 @@ public class Reciperecipebookpk implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Reciperecipebookpk that = (Reciperecipebookpk) o;
-        return Objects.equals(recipeBookId, that.recipeBookId) && Objects.equals(recipeId, that.recipeId);
+        RecipeCategory that = (RecipeCategory) o;
+        return Objects.equals(recipeId, that.recipeId) && Objects.equals(categoryId, that.categoryId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipeBookId, recipeId);
+        return Objects.hash(recipeId, categoryId);
     }
 }

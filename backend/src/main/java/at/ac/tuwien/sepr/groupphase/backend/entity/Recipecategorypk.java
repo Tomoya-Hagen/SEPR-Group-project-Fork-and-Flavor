@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,21 +8,13 @@ import jakarta.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Reciperecipebookpk implements Serializable {
-    @Column(name = "recipe_book_id")
-    @Id
-    private long recipeBookId;
+public class Recipecategorypk implements Serializable {
     @Column(name = "recipe_id")
     @Id
     private long recipeId;
-
-    public long getRecipeBookId() {
-        return recipeBookId;
-    }
-
-    public void setRecipeBookId(long recipeBookId) {
-        this.recipeBookId = recipeBookId;
-    }
+    @Column(name = "category_id")
+    @Id
+    private long categoryId;
 
     public long getRecipeId() {
         return recipeId;
@@ -31,6 +22,14 @@ public class Reciperecipebookpk implements Serializable {
 
     public void setRecipeId(long recipeId) {
         this.recipeId = recipeId;
+    }
+
+    public long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(long ingredientId) {
+        this.categoryId = ingredientId;
     }
 
     @Override
@@ -41,12 +40,14 @@ public class Reciperecipebookpk implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Reciperecipebookpk that = (Reciperecipebookpk) o;
-        return Objects.equals(recipeBookId, that.recipeBookId) && Objects.equals(recipeId, that.recipeId);
+        Recipecategorypk that = (Recipecategorypk) o;
+        return Objects.equals(recipeId, that.recipeId) && Objects.equals(categoryId, that.categoryId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipeBookId, recipeId);
+        return Objects.hash(recipeId, categoryId);
     }
 }
+
+
