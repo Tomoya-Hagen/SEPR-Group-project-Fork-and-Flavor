@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
+import at.ac.tuwien.sepr.groupphase.backend.entity.IngredientNutrition;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Nutrition;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergenRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.IngredientRepository;
@@ -18,6 +19,7 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -26,22 +28,26 @@ import java.util.Set;
 @Order(3)
 public class IngredientDataGenerator implements CommandLineRunner {
 
-    private IngredientRepository ingredientRepository;
+    private final IngredientRepository ingredientRepository;
 
-    private AllergenRepository allergenRepository;
+    private final AllergenRepository allergenRepository;
 
-    private NutritionRepository nutritionRepository;
+    private final NutritionRepository nutritionRepository;
 
-    private ResourceLoader resourceLoader;
+    private final ResourceLoader resourceLoader;
+
+//    private final IngredientNutritionRepository ingredientNutritionRepository;
 
     public IngredientDataGenerator(IngredientRepository ingredientRepository,
                                    AllergenRepository allergenRepository,
                                    NutritionRepository nutritionRepository,
                                    ResourceLoader resourceLoader) {
+        //                                 IngredientNutritionRepository ingredientNutritionRepository) {
         this.ingredientRepository = ingredientRepository;
         this.allergenRepository = allergenRepository;
         this.nutritionRepository = nutritionRepository;
         this.resourceLoader = resourceLoader;
+//        this.ingredientNutritionRepository = ingredientNutritionRepository;
     }
 
     private static final String[] NUTRITION_NAMES = {
@@ -71,7 +77,7 @@ public class IngredientDataGenerator implements CommandLineRunner {
                     // Handle allergens if any
                     if (!parts[1].trim().isEmpty()) {
                         Set<Allergen> allergens = findAllergensByCodes(parts[1].trim().replace("'", ""));
-                        ingredient.setAllergens(allergens);
+                        ingredient.setAllergens(allergens.stream().toList());
                     }
 
                     if (parts.length == 12) {
@@ -81,7 +87,7 @@ public class IngredientDataGenerator implements CommandLineRunner {
                             if (!value.isEmpty()) {
                                 Nutrition nutrition = nutritionMap.get(NUTRITION_NAMES[i]);
                                 if (nutrition != null) {
-                                    ingredient.addNutritionData(nutrition, new BigDecimal(value));
+                                    addNutritionData(ingredient, nutrition, new BigDecimal(value));
                                 }
                             }
                         }
@@ -106,5 +112,15 @@ public class IngredientDataGenerator implements CommandLineRunner {
             optionalAllergen.ifPresent(allergens::add);
         }
         return allergens;
+    }
+
+    public void addNutritionData(Ingredient ingredient, Nutrition nutrition, BigDecimal value) {
+        IngredientNutrition newNutrition = new IngredientNutrition();
+        newNutrition.setNutrition(nutrition);
+        newNutrition.setIngredient(ingredient);
+        newNutrition.setValue(value);
+        List<IngredientNutrition> nutritions = ingredient.getNutritions();
+        nutritions.add(newNutrition);
+        ingredient.setNutritions(nutritions);
     }
 }
