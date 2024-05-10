@@ -118,6 +118,10 @@ public class CustomUserDetailService implements UserService {
         UserRole ur = urrb.withroleId(2).withuserId(returnedUser.getId()).build();
         userRoleRepository.save(ur);
 
+        // Ensure the user is persisted
+        userRepository.flush();
+        userRoleRepository.flush();
+
         return login(userRegisterDtoMapper.toUserLoginDto(userRegisterDto));
     }
 }
