@@ -9,44 +9,63 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.UserRoleRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
 import jakarta.annotation.PostConstruct;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Profile("generateData")
 @Component
 public class UserDataGenerator {
 
+    // Autowired dependencies
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserDataGenerator(UserRoleRepository userRoleRepository, RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserDataGenerator(UserRoleRepository userRoleRepository, RoleRepository roleRepository,
+                             UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
+   @PostConstruct
+    public void init() {
+        generateTestData();
+    }
 
-    @PostConstruct
-    private void generateMessage() {
+    public void generateTestData() {
+        String[] roles = {"Admin", "User", "Contributor", "Cook", "StarCook"};
+        String[] usernames = {"admin", "user", "contributor", "cook", "starcook"};
+        String[] emails = {"admin@email.com", "user@email.com", "contributor@email.com", "cook@email.com", "starcook@email.com"};
 
-        if (!userRepository.findAll().isEmpty()) {
-            return;
+        // Create and save roles
+        List<Role> savedRoles = new ArrayList<>();
+        for (int i = 0; i < roles.length; i++) {
+            Role role = new Role.RoleBuilder().withroleId(roles[i]).build();
+            savedRoles.add(roleRepository.save(role));
         }
 
-        Role.RoleBuilder rb = new Role.RoleBuilder();
-        Role r = rb.withId(1).withroleId("Admin").build();
+        // Create and save users and their roles
+        for (int i = 0; i < usernames.length; i++) {
+            // Check if a user with the same username already exists
+            if (!userRepository.existsByUsername(usernames[i])) {
+                ApplicationUser user = new ApplicationUser.ApplicationUserBuilder()
+                    .withEmail(emails[i])
+                    .withPassword(passwordEncoder.encode("password"))
+                    .withUsername(usernames[i])
+                    .withhasProfilePicture(false)
+                    .build();
+                ApplicationUser savedUser = userRepository.save(user);
 
-        UserRole.UserRoleBuilder urrb = new UserRole.UserRoleBuilder();
-        UserRole ur = urrb.withroleId(1).withuserId(1).build();
-
-        ApplicationUser.ApplicationUserBuilder aub = new ApplicationUser.ApplicationUserBuilder();
-        ApplicationUser au = aub.withEmail("admin@email.com").withPassword(passwordEncoder.encode("password")).withid(1).withUsername("admin").withhasProfilePicture(false).build();
-
-        roleRepository.save(r);
-        userRepository.save(au);
-        userRoleRepository.save(ur);
-    }
-}
+                UserRole userRole = new UserRole.UserRoleBuilder()
+                    .withroleId(savedRoles.get(i).getId())
+                    .withuserId(savedUser.getId())
+                    .build();
+                userRoleRepository.save(userRole);
+            }
+        }
+}}
