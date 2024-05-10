@@ -16,7 +16,6 @@ import java.util.Objects;
 @Table(name = "Recipe_Ingredient", schema = "PUBLIC", catalog = "DB")
 @IdClass(Recipeingredientpk.class)
 public class RecipeIngredient {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "recipe_id")
     private long recipeId;
@@ -29,7 +28,6 @@ public class RecipeIngredient {
         this.recipeId = recipeId;
     }
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "ingredient_id")
     private long ingredientId;
