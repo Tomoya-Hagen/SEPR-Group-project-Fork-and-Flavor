@@ -13,7 +13,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -42,9 +41,7 @@ public class RecipeBook {
         inverseJoinColumns = @JoinColumn(name = "recipe_id")
     )
     private List<Recipe> recipes = new ArrayList<>();
-    public long getId() {
-        return id;
-    }
+
 
     public void setId(long id) {
         this.id = id;

@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -43,6 +42,7 @@ public class RecipeVerified {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "verified_id", nullable = false)
     private Verified verified;
+
     public Verified getVerified() {
         return verified;
     }
@@ -55,9 +55,7 @@ public class RecipeVerified {
     @JoinColumn(name = "user_id", nullable = false)
     private ApplicationUser user;
 
-    public ApplicationUser getUser() {
-        return user;
-    }
+
 
     public void setUser(ApplicationUser user) {
         this.user = user;

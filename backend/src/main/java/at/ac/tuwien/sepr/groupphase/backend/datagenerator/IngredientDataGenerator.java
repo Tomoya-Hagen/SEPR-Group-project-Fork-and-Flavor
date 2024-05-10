@@ -36,18 +36,14 @@ public class IngredientDataGenerator implements CommandLineRunner {
 
     private final ResourceLoader resourceLoader;
 
-//    private final IngredientNutritionRepository ingredientNutritionRepository;
-
     public IngredientDataGenerator(IngredientRepository ingredientRepository,
                                    AllergenRepository allergenRepository,
                                    NutritionRepository nutritionRepository,
                                    ResourceLoader resourceLoader) {
-        //                                 IngredientNutritionRepository ingredientNutritionRepository) {
         this.ingredientRepository = ingredientRepository;
         this.allergenRepository = allergenRepository;
         this.nutritionRepository = nutritionRepository;
         this.resourceLoader = resourceLoader;
-//        this.ingredientNutritionRepository = ingredientNutritionRepository;
     }
 
     private static final String[] NUTRITION_NAMES = {
