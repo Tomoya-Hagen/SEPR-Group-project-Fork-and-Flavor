@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserRegisterDtoMapper;
+import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.EmailException;
@@ -114,7 +115,7 @@ public class CustomUserDetailService implements UserService {
         ApplicationUser returnedUser = userRepository.save(applicationUser);
 
         UserRole.UserRoleBuilder urrb = new UserRole.UserRoleBuilder();
-        UserRole ur = urrb.withroleId(1).withuserId(returnedUser.getId()).build();
+        UserRole ur = urrb.withroleId(2).withuserId(returnedUser.getId()).build();
         userRoleRepository.save(ur);
 
         return login(userRegisterDtoMapper.toUserLoginDto(userRegisterDto));
