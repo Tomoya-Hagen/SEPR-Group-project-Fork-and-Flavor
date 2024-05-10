@@ -3,7 +3,10 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepr.groupphase.backend.exception.EmailException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.UsernameException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.impl.CustomUserDetailService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
@@ -18,7 +21,9 @@ import org.springframework.test.annotation.DirtiesContext;
 
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Transactional
@@ -36,6 +41,8 @@ class CustomUserDetailServiceTest implements TestData {
 
     @Autowired
     private UserDataGenerator userDataGenerator;
+    @Autowired
+    private UserRoleRepository userRoleRepository;
 
     @BeforeEach
     void before() {
@@ -61,6 +68,37 @@ class CustomUserDetailServiceTest implements TestData {
             () -> assertTrue(userRepository.existsByEmail(validUser.getEmail())),
             () -> assertTrue(userRepository.existsByUsername(validUser.getUsername()))
         );
+    }
+
+    @Test
+    public void registerInvalidUserEmail() throws Exception {
+        UserRegisterDto invalidUser = new UserRegisterDto();
+        invalidUser.setEmail("invalidEmail");
+        invalidUser.setPassword("password");
+        invalidUser.setUsername("invaliduser");
+
+        assertThrowsExactly(EmailException.class, () -> customUserDetailService.register(invalidUser));
+    }
+
+
+    @Test
+    public void registerUserWithDuplicateEmail() throws Exception {
+        UserRegisterDto invalidUser = new UserRegisterDto();
+        invalidUser.setEmail("admin@email.com");
+        invalidUser.setPassword("password");
+        invalidUser.setUsername("invaliduser");
+
+        assertThrowsExactly(EmailException.class, () -> customUserDetailService.register(invalidUser));
+    }
+
+    @Test
+    public void registerUserWithDuplicateUsername() throws Exception {
+        UserRegisterDto invalidUser = new UserRegisterDto();
+        invalidUser.setEmail("administrator@email.com");
+        invalidUser.setPassword("password");
+        invalidUser.setUsername("admin");
+
+        assertThrowsExactly(UsernameException.class, () -> customUserDetailService.register(invalidUser));
     }
 
 
