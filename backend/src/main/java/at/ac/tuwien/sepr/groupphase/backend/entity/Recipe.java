@@ -4,6 +4,7 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,6 +27,105 @@ public class Recipe {
     @Column(name = "id")
     private long id;
 
+    @Basic
+    @Column(name = "name")
+    private String name;
+
+    @Basic
+    @Column(name = "description")
+    private String description;
+
+    @Basic
+    @Column(name = "number_of_servings")
+    private Short numberOfServings;
+
+    @Basic
+    @Column(name = "forked_from")
+    private Long forkedFrom;
+
+    @Basic
+    @Column(name = "owner_id")
+    private long ownerId;
+
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "recipe_category",
+        joinColumns = @JoinColumn(name = "recipe_id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories = new ArrayList<>();
+
+    @Basic
+    @Column(name = "is_draft")
+    private Boolean isDraft;
+
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "favorite",
+        joinColumns = @JoinColumn(name = "recipe_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<ApplicationUser> favorites;
+
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "recipe_recipe_book",
+        joinColumns = @JoinColumn(name = "recipe_id"),
+        inverseJoinColumns = @JoinColumn(name = "recipe_book_id")
+    )
+    private List<RecipeBook> recipeBooks;
+
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+    private List<Cooked> cooked;
+
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+    private List<Rating> ratings;
+
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+    private List<RecipeStep> recipeSteps;
+
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+    private List<RecipeRecipeStep> recipeRecipeSteps;
+
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+    private List<RecipeVerified> recipesVerified;
+
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+    private List<WeeklyPlanner> weeklyPlanners;
+
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+    private List<RecipeIngredient> ingredients;
+
+
+
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "forked_from", referencedColumnName = "id")
+    private List<Recipe> forkedfrom;
+
+    public void setRecipeSteps(List<RecipeStep> recipeSteps) {
+        this.recipeSteps = recipeSteps;
+    }
+
+    public void setIngredients(List<RecipeIngredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public List<RecipeIngredient> getIngredients() {
+        return ingredients;
+    }
+
+    public List<RecipeStep> getRecipeSteps() {
+        return recipeSteps;
+    }
+
+
     public long getId() {
         return id;
     }
@@ -32,10 +133,6 @@ public class Recipe {
     public void setId(long id) {
         this.id = id;
     }
-
-    @Basic
-    @Column(name = "name")
-    private String name;
 
     public String getName() {
         return name;
@@ -45,10 +142,6 @@ public class Recipe {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "description")
-    private String description;
-
     public String getDescription() {
         return description;
     }
@@ -56,10 +149,6 @@ public class Recipe {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    @Basic
-    @Column(name = "number_of_servings")
-    private Short numberOfServings;
 
     public Short getNumberOfServings() {
         return numberOfServings;
@@ -69,10 +158,6 @@ public class Recipe {
         this.numberOfServings = numberOfServings;
     }
 
-    @Basic
-    @Column(name = "forked_from")
-    private Long forkedFrom;
-
     public long getForkedFrom() {
         return forkedFrom;
     }
@@ -80,10 +165,6 @@ public class Recipe {
     public void setForkedFrom(Long forkedFrom) {
         this.forkedFrom = forkedFrom;
     }
-
-    @Basic
-    @Column(name = "owner_id")
-    private long ownerId;
 
     public long getOwnerId() {
         return ownerId;
@@ -93,14 +174,6 @@ public class Recipe {
         this.ownerId = ownerId;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-        name = "recipe_category",
-        joinColumns = @JoinColumn(name = "recipe_id"),
-        inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private List<Category> categories = new ArrayList<>();
-
     public List<Category> getCategories() {
         return categories;
     }
@@ -108,10 +181,6 @@ public class Recipe {
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
-
-    @Basic
-    @Column(name = "is_draft")
-    private Boolean isDraft;
 
     public Boolean getDraft() {
         return isDraft;
@@ -140,61 +209,5 @@ public class Recipe {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description, numberOfServings, forkedFrom, ownerId, isDraft);
-    }
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<RecipeRecipeBook> recipeRecipeBooks;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<Favorite> favorites;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<Cooked> cooked;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<Rating> ratings;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<RecipeStep> recipeSteps;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<RecipeRecipeStep> recipeRecipeSteps;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<RecipeVerified> recipesVerified;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<WeeklyPlanner> weeklyPlanners;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<RecipeIngredient> recipeIngredients;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "forked_from", referencedColumnName = "id")
-    private List<Recipe> forkedfrom;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<RecipeCategory> recipeCategories;
-
-    public void setRecipeSteps(List<RecipeStep> recipeSteps) {
-        this.recipeSteps = recipeSteps;
-    }
-
-    public void setRecipeIngredients(List<RecipeIngredient> recipeIngredients) {
-        this.recipeIngredients = recipeIngredients;
-    }
-
-    public void setRecipeCategories(List<RecipeCategory> recipeCategories) {
-        this.recipeCategories = recipeCategories;
     }
 }

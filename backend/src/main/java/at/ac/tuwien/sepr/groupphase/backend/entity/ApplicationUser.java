@@ -1,19 +1,20 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -94,52 +95,51 @@ public class ApplicationUser {
         return Objects.hash(id, username, email, password, hasProfilePicture);
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private List<UserRole> userRoles;
-
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "user_role",
-        joinColumns = { @JoinColumn(name = "user_id") },
-        inverseJoinColumns = { @JoinColumn(name = "role_id") })
-    private List<Role> roles;
+        joinColumns = {@JoinColumn(name = "user_id")},
+        inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    private List<Role> roles = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private List<RecipeBook> recipeBooks;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private List<UserRecipeBook> userRecipeBooks;
-
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<RecipeVerified> recipesVerified;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private List<Favorite> favorites;
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "favorite",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "recipe_id")
+    )
+    private List<Recipe> favorites;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<Cooked> cooked;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private List<Recipe> recipes;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<Rating> ratings;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<WeeklyPlanner> weeklyPlanners;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private List<UserWeeklyPlanner> userWeeklyPlanners;
+    List<UserWeeklyPlanner> userWeeklyPlanners;
 
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    List<UserRecipeBook> userRecipeBooks = new ArrayList<>();
 
     public boolean getAdmin() {
         if (roles != null && !roles.isEmpty()) {
@@ -152,6 +152,9 @@ public class ApplicationUser {
         return false;
     }
 
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
 
     public static final class ApplicationUserBuilder {
         private long id;
@@ -159,6 +162,7 @@ public class ApplicationUser {
         private String email;
         private String password;
         private Boolean hasProfilePicture;
+        private List<Role> roles;
 
         public ApplicationUserBuilder withid(long id) {
             this.id = id;
@@ -185,6 +189,11 @@ public class ApplicationUser {
             return this;
         }
 
+        public ApplicationUserBuilder withRoles(List<Role> roles) {
+            this.roles = roles;
+            return this;
+        }
+
         public ApplicationUser build() {
             ApplicationUser user = new ApplicationUser();
             user.setId(this.id);
@@ -192,6 +201,7 @@ public class ApplicationUser {
             user.setEmail(this.email);
             user.setPassword(this.password);
             user.setHasProfilePicture(this.hasProfilePicture);
+            user.setRoles(this.roles);
             return user;
         }
     }

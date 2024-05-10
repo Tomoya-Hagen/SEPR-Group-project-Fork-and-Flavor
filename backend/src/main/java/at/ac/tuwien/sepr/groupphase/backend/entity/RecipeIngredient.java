@@ -3,22 +3,26 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Recipe_Ingredient", schema = "PUBLIC", catalog = "DB")
-@IdClass(Recipeingredientpk.class)
+@Table(name = "Recipe_Ingredient", schema = "PUBLIC", catalog = "DB",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"recipe_id", "ingredient_id"})})
 public class RecipeIngredient {
-    public RecipeIngredient(long recipeId, long ingredientId, BigDecimal amount, long unit) {
-        this.recipeId = recipeId;
-        this.ingredientId = ingredientId;
+    public RecipeIngredient(Recipe recipe, Ingredient ingredient, BigDecimal amount, long unit) {
+        this.recipe = recipe;
+        this.ingredient = ingredient;
         this.unit = unit;
         this.amount = amount;
     }
@@ -27,28 +31,33 @@ public class RecipeIngredient {
 
     }
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "recipe_id")
-    private long recipeId;
+    @Column(name = "id")
+    private long id;
 
-    public long getRecipeId() {
-        return recipeId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipe_id", nullable = false)
+    private Recipe recipe;
+
+    public Recipe getRecipe() {
+        return recipe;
     }
 
-    public void setRecipeId(long recipeId) {
-        this.recipeId = recipeId;
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
     }
 
-    @Id
-    @Column(name = "ingredient_id")
-    private long ingredientId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ingredient_id", nullable = false)
+    private Ingredient ingredient;
 
-    public long getIngredientId() {
-        return ingredientId;
+    public Ingredient getIngredient() {
+        return ingredient;
     }
 
-    public void setIngredientId(long ingredientId) {
-        this.ingredientId = ingredientId;
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
     }
 
     @Basic
@@ -84,11 +93,11 @@ public class RecipeIngredient {
             return false;
         }
         RecipeIngredient that = (RecipeIngredient) o;
-        return Objects.equals(recipeId, that.recipeId) && Objects.equals(ingredientId, that.ingredientId) && Objects.equals(amount, that.amount) && Objects.equals(unit, that.unit);
+        return Objects.equals(recipe, that.recipe) && Objects.equals(ingredient, that.ingredient) && Objects.equals(amount, that.amount) && Objects.equals(unit, that.unit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipeId, ingredientId, amount, unit);
+        return Objects.hash(recipe, ingredient, amount, unit);
     }
 }

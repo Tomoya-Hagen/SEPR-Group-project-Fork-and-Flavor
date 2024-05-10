@@ -4,6 +4,7 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,6 +30,24 @@ public class RecipeStep {
     @Basic
     @Column(name = "step_number")
     private Integer stepNumber;
+
+    public RecipeStep(String name, RecipeDescriptionStep descriptionRecipeStep, long recipeId, int stepNumber) {
+        this.name = name;
+        this.descriptionRecipeStep = descriptionRecipeStep;
+        this.recipeId = recipeId;
+        this.stepNumber = stepNumber;
+    }
+
+    public RecipeStep(String name, RecipeRecipeStep recipeRecipeStep, long recipeId, int stepNumber) {
+        this.name = name;
+        this.recipeRecipeStep = recipeRecipeStep;
+        this.recipeId = recipeId;
+        this.stepNumber = stepNumber;
+    }
+
+    public RecipeStep() {
+
+    }
 
     public long getId() {
         return id;
@@ -99,10 +118,10 @@ public class RecipeStep {
         return Objects.hash(id, name, recipeId, stepNumber, descriptionRecipeStep.getId(), recipeRecipeStep.getId());
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "step_recipe_id")
     private RecipeRecipeStep recipeRecipeStep;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "step_description_id")
     private RecipeDescriptionStep descriptionRecipeStep;
 }

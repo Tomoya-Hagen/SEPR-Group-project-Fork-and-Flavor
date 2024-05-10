@@ -3,37 +3,41 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 import java.util.Objects;
 
 @Entity
-@jakarta.persistence.Table(name = "User_Recipe_Book", schema = "PUBLIC", catalog = "DB")
+@Table(name = "User_Recipe_Book", schema = "PUBLIC", catalog = "DB")
 public class UserRecipeBook {
     @Id
-    @jakarta.persistence.Column(name = "user_id")
-    private long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private ApplicationUser user;
 
-    public long getUserId() {
-        return userId;
+    public ApplicationUser getUser() {
+        return user;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUser(ApplicationUser user) {
+        this.user = user;
     }
 
     @Id
-    @jakarta.persistence.Column(name = "recipe_book_id")
-    private long recipeBookId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipe_book_id", nullable = false)
+    private RecipeBook recipeBook;
 
-    public long getRecipeBookId() {
-        return recipeBookId;
+    public RecipeBook getRecipeBook() {
+        return recipeBook;
     }
 
-    public void setRecipeBookId(long recipeBookId) {
-        this.recipeBookId = recipeBookId;
+    public void setRecipeBook(RecipeBook recipeBook) {
+        this.recipeBook = recipeBook;
     }
 
     @Basic
@@ -57,11 +61,11 @@ public class UserRecipeBook {
             return false;
         }
         UserRecipeBook that = (UserRecipeBook) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(recipeBookId, that.recipeBookId) && Objects.equals(permission, that.permission);
+        return Objects.equals(user, that.user) && Objects.equals(recipeBook, that.recipeBook) && Objects.equals(permission, that.permission);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, recipeBookId, permission);
+        return Objects.hash(user, recipeBook, permission);
     }
 }

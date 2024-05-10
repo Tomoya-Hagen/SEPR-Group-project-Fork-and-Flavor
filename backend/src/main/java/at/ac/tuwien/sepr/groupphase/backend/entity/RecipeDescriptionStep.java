@@ -2,18 +2,15 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -24,11 +21,8 @@ public class RecipeDescriptionStep {
     @Column(name = "id")
     private long id;
     @Basic
-    @Column(name = "description")
+    @Column(name = "description", length = 10000)
     private String description;
-    @Basic
-    @Column(name = "name")
-    private String name;
 
     public long getId() {
         return id;
@@ -46,12 +40,11 @@ public class RecipeDescriptionStep {
         this.description = description;
     }
 
-    public String getName() {
-        return name;
+    public RecipeDescriptionStep() {
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public RecipeDescriptionStep(String description) {
+        this.description = description;
     }
 
     @Override
@@ -63,12 +56,12 @@ public class RecipeDescriptionStep {
             return false;
         }
         RecipeDescriptionStep that = (RecipeDescriptionStep) o;
-        return Objects.equals(id, that.id) && Objects.equals(description, that.description) && Objects.equals(name, that.name);
+        return Objects.equals(id, that.id) && Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, name);
+        return Objects.hash(id, description);
     }
 
     @OneToOne(mappedBy = "descriptionRecipeStep")

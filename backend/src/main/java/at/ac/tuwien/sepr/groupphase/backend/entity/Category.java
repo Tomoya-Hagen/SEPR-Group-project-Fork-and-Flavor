@@ -5,6 +5,7 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -56,10 +57,6 @@ public class Category {
         this.type = type;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private List<RecipeCategory> recipeCategories;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -77,4 +74,11 @@ public class Category {
         return Objects.hash(id, name, type);
     }
 
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "recipe_category",
+        joinColumns = @JoinColumn(name = "category_id"),
+        inverseJoinColumns = @JoinColumn(name = "recipe_id")
+    )
+    private List<Recipe> recipes;
 }

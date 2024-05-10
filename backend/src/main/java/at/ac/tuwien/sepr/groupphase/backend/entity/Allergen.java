@@ -1,14 +1,19 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,8 +33,13 @@ public class Allergen {
     @Column(name = "type", length = 1)  // Ensure column is only one character long
     private String type;
 
-    @ManyToMany(mappedBy = "allergens")
-    private Set<Ingredient> ingredients = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "ingredient_allergen",
+        joinColumns = @JoinColumn(name = "allergen_id"),
+        inverseJoinColumns = @JoinColumn(name = "ingredient_id")
+    )
+    private List<Ingredient> ingredients;
 
     // Getters and setters
     public Long getId() {
@@ -64,11 +74,11 @@ public class Allergen {
         this.type = type;
     }
 
-    public Set<Ingredient> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Set<Ingredient> ingredients) {
+    public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 }

@@ -1,43 +1,52 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
-import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@jakarta.persistence.Table(name = "User_Weekly_Planner", schema = "PUBLIC", catalog = "DB")
+@Table(name = "User_Weekly_Planner", schema = "PUBLIC", catalog = "DB")
 public class UserWeeklyPlanner {
     @Id
-    @jakarta.persistence.Column(name = "user_id")
-    private long userId;
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-    public long getUserId() {
-        return userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private ApplicationUser user;
+
+    public ApplicationUser getUser() {
+        return user;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUser(ApplicationUser user) {
+        this.user = user;
     }
 
-    @Id
-    @jakarta.persistence.Column(name = "weekly_planner_id")
-    private long weeklyPlannerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "weekly_planner_id", nullable = false)
+    private WeeklyPlanner weeklyPlanner;
 
-    public long getWeeklyPlannerId() {
-        return weeklyPlannerId;
+    public WeeklyPlanner getWeeklyPlanner() {
+        return weeklyPlanner;
     }
 
-    public void setWeeklyPlannerId(long weeklyPlannerId) {
-        this.weeklyPlannerId = weeklyPlannerId;
+    public void setWeeklyPlanner(WeeklyPlanner weeklyPlanner) {
+        this.weeklyPlanner = weeklyPlanner;
     }
 
     @Basic
-    @jakarta.persistence.Column(name = "permission")
+    @Column(name = "permission")
     private String permission;
 
     public String getPermission() {
@@ -57,11 +66,11 @@ public class UserWeeklyPlanner {
             return false;
         }
         UserWeeklyPlanner that = (UserWeeklyPlanner) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(weeklyPlannerId, that.weeklyPlannerId) && Objects.equals(permission, that.permission);
+        return Objects.equals(user, that.user) && Objects.equals(weeklyPlanner, that.weeklyPlanner) && Objects.equals(permission, that.permission);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, weeklyPlannerId, permission);
+        return Objects.hash(user, weeklyPlanner, permission);
     }
 }

@@ -13,9 +13,8 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Ingredient {
@@ -27,16 +26,22 @@ public class Ingredient {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(
         name = "ingredient_allergen",
         joinColumns = @JoinColumn(name = "ingredient_id"),
         inverseJoinColumns = @JoinColumn(name = "allergen_id")
     )
-    private Set<Allergen> allergens = new HashSet<>();
+    private List<Allergen> allergens = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<IngredientNutrition> nutritionData = new HashSet<>();
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
+    private List<IngredientNutrition> nutritions = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
+
+    private List<RecipeIngredient> recipes = new ArrayList<>();
 
     // Getters and setters
     public Long getId() {
@@ -55,19 +60,19 @@ public class Ingredient {
         this.name = name;
     }
 
-    public Set<Allergen> getAllergens() {
+    public List<Allergen> getAllergens() {
         return allergens;
     }
 
-    public void setAllergens(Set<Allergen> allergens) {
+    public void setAllergens(List<Allergen> allergens) {
         this.allergens = allergens;
     }
 
-    public void addNutritionData(Nutrition nutrition, BigDecimal value) {
-        IngredientNutrition ingredientNutrition = new IngredientNutrition();
-        ingredientNutrition.setIngredient(this);
-        ingredientNutrition.setNutrition(nutrition);
-        ingredientNutrition.setValue(value);
-        this.nutritionData.add(ingredientNutrition);
+    public List<IngredientNutrition> getNutritions() {
+        return nutritions;
+    }
+
+    public void setNutritions(List<IngredientNutrition> nutritions) {
+        this.nutritions = nutritions;
     }
 }
