@@ -36,4 +36,11 @@ public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
      */
     Boolean existsByEmail(String email);
 
+    /**
+     * Find first User entrie via email.
+     *
+     * @return ordered list of al message entries
+     */
+    Long findFirstByEmail(String email);
+
 }
