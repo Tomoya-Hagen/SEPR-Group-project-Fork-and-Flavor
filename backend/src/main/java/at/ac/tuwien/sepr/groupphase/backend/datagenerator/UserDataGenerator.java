@@ -32,7 +32,7 @@ public class UserDataGenerator {
         this.passwordEncoder = passwordEncoder;
     }
 
-   @PostConstruct
+    @PostConstruct
     public void init() {
         generateTestData();
     }
@@ -68,4 +68,5 @@ public class UserDataGenerator {
                 userRoleRepository.save(userRole);
             }
         }
-}}
+    }
+}
