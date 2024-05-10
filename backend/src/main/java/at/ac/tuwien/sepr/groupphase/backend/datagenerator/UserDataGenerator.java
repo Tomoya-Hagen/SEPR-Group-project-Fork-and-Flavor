@@ -44,8 +44,8 @@ public class UserDataGenerator {
 
         // Create and save roles
         List<Role> savedRoles = new ArrayList<>();
-        for (int i = 0; i < roles.length; i++) {
-            Role role = new Role.RoleBuilder().withroleId(roles[i]).build();
+        for (String s : roles) {
+            Role role = new Role.RoleBuilder().withroleId(s).build();
             savedRoles.add(roleRepository.save(role));
         }
 
