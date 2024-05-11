@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -14,7 +15,9 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Optional;
 
+@Profile("generateData")
 @Component
+@Order(3)
 public class CategoryDataGenerator extends DataGenerator implements CommandLineRunner {
 
     private final CategoryRepository categoryRepository;

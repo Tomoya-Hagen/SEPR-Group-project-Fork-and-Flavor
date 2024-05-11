@@ -9,6 +9,8 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.IngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -18,8 +20,8 @@ import java.util.List;
 
 @Profile("generateData")
 @Component
-@Order(2)
-public class RecipeDataGenerator {
+@Order(5)
+public class RecipeDataGenerator extends DataGenerator implements CommandLineRunner {
 
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
@@ -33,8 +35,9 @@ public class RecipeDataGenerator {
         this.ingredientRepository = ingredientRepository;
     }
 
-    @PostConstruct
-    private void generateRecipes() {
+    @Transactional
+    @Override
+    public void run(String... args) throws Exception  {
         ApplicationUser user = new ApplicationUser();
         user.setId(1);
         Recipe riceRecipe = new Recipe();
@@ -43,6 +46,7 @@ public class RecipeDataGenerator {
         riceRecipe.setNumberOfServings((short) 1);
         riceRecipe.setForkedFrom(null);
         riceRecipe.setOwner(user);
+        var x = categoryRepository.findAll();
         riceRecipe.setCategories(List.of(
             categoryRepository.findByNameAndType("Beilage", "SIDE_DISH").get()
         ));

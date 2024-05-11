@@ -9,6 +9,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.IngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.NutritionRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -24,7 +25,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+@Profile("generateData")
 @Component
+@Order(4)
 public class IngredientDataGenerator implements CommandLineRunner {
 
     private final IngredientRepository ingredientRepository;
