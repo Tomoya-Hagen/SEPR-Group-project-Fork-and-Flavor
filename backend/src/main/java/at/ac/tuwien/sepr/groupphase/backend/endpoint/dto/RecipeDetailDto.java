@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.Nutrition;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public record RecipeDetailDto(
@@ -11,11 +12,11 @@ public record RecipeDetailDto(
     Short numberOfServings,
     long forkedFromId,
     long ownerId,
-    List<CategoryDetailDto> categories,
+    ArrayList<CategoryDetailDto> categories,
     boolean isDraft,
-    List<RecipeStepDetailDto> recipeSteps,
-    List<IngredientDetailDto> ingredients,
-    List<AllergenDetailDto> allergens,
-    List<NutritionDetailDto> nutritions
+    ArrayList<RecipeStepDetailDto> recipeSteps,
+    ArrayList<IngredientDetailDto> ingredients,
+    ArrayList<AllergenDetailDto> allergens,
+    ArrayList<NutritionDetailDto> nutritions
 ) {
 }

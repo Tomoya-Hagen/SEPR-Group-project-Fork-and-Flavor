@@ -112,8 +112,6 @@ class RecipeRepositoryShould extends TestBase {
         Optional<Recipe> recipe = recipeRepository.getRecipeById(eggFriedRiceRecipe.getId());
         Assertions.assertNotNull(recipe);
         Recipe newRecipe = recipe.get();
-        List<Ingredient> ingredients = ingredientRepository.findAll();
-        List<RecipeIngredient> recipes = ingredients.get(4).getRecipesIngredients();
         Assertions.assertAll(
             () -> Assertions.assertEquals(newRecipe.getName(), eggFriedRiceRecipe.getName()),
             () -> Assertions.assertEquals(
