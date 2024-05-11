@@ -5,7 +5,6 @@ import at.ac.tuwien.sepr.groupphase.backend.datagenerator.CategoryDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.IngredientDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.NutritionDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserDataGenerator;
-import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeCategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeIngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -29,8 +28,6 @@ public abstract class TestBase {
     @Autowired
     private RecipeRepository recipeRepository;
     @Autowired
-    private RecipeCategoryRepository recipeCategoryRepository;
-    @Autowired
     private RecipeIngredientRepository recipeIngredientRepository;
 
     @BeforeEach
@@ -43,7 +40,6 @@ public abstract class TestBase {
 
     @AfterEach
     public void tearDownDb() {
-        recipeCategoryRepository.deleteAll();
         recipeIngredientRepository.deleteAll();
         recipeRepository.deleteAll();
     }
