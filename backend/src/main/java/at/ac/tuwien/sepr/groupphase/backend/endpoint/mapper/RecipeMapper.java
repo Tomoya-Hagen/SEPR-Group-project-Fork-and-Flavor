@@ -12,6 +12,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import org.mapstruct.Mapper;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public interface RecipeMapper  {
 
     DetailedRecipeDto recipeToDetailedRecipeDto(Recipe recipe);
 
-    default Recipe recipeCreateDtoToRecipe(RecipeCreateDto recipeCreateDto, long id) throws RecipeStepNotParsableException {
+    default Recipe recipeCreateDtoToRecipe(RecipeCreateDto recipeCreateDto, long id) throws RecipeStepNotParsableException, RecipeStepSelfReferenceException {
         List<RecipeStep> recipeStepList = new ArrayList<>();
         for(RecipeStepDto recipeStepDto : recipeCreateDto.getRecipeSteps()){
             RecipeStep recipeStep = new RecipeStep();
@@ -34,7 +35,7 @@ public interface RecipeMapper  {
             recipeStep.setRecipeId(id);
             recipeStep.setStepNumber(recipeStepDto.getStepNumber());
             if(!recipeStepDto.isCorrect()){
-                throw new RecipeStepNotParsableException();
+                throw new RecipeStepNotParsableException("The steps in the Recipe are not formated correct!");
             }
             if(recipeStepDto.isWhichstep()){
                 RecipeDescriptionStep recipeDescriptionStep = new RecipeDescriptionStep();
@@ -43,6 +44,9 @@ public interface RecipeMapper  {
                 recipeStep.setStepDescription(recipeDescriptionStep);
             }
             else {
+                if(recipeStepDto.getRecipeId() == id){
+                    throw new RecipeStepSelfReferenceException("A step references it's own recipe!");
+                }
                 RecipeRecipeStep recipeRecipeStep = new RecipeRecipeStep();
                 recipeRecipeStep.setName(recipeStepDto.getRecipename());
                 recipeRecipeStep.setRecipeId(recipeStepDto.getRecipeId());

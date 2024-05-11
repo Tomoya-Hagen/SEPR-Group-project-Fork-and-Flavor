@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.exceptionhandler;
 
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -57,4 +59,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(body.toString(), headers, status);
     }
+
+
+    @ExceptionHandler(value = {RecipeStepNotParsableException.class})
+    public ResponseEntity<Object> handleRecipeStepNotParsableException(RecipeStepNotParsableException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return new ResponseEntity<Object>(ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(value = {RecipeStepSelfReferenceException.class})
+    public ResponseEntity<Object> handleRecipeStepSelfReferenceException(RecipeStepSelfReferenceException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return new ResponseEntity<Object>(ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
 }

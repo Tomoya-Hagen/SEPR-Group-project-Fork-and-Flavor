@@ -12,7 +12,7 @@ public class RecipeStepNotParsableException extends RuntimeException{
         super(message, cause);
     }
 
-    public RecipeStepNotParsableException(Throwable cause) {
-        super(cause);
+    public RecipeStepNotParsableException(Exception e) {
+        super(e);
     }
 }

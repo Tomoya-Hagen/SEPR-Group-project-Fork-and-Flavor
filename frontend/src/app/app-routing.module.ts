@@ -7,14 +7,16 @@ import {MessageComponent} from './components/message/message.component';
 import {RecipebookComponent} from "./components/recipebook/recipebook.component";
 import {WeekplanComponent} from "./components/weekplan/weekplan.component";
 import {RecipeComponent} from "./components/recipe/recipe.component";
+import {RecipeCreateComponent} from "./components/recipe/recipe-create/recipe-create.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
   {path: 'recipe', component: RecipeComponent},
+  {path: 'recipecreate', component: RecipeCreateComponent},
   {path: 'recipebook', component: RecipebookComponent},
-  {path: 'weekplan', component: WeekplanComponent}
+  {path: 'weekplan', component: WeekplanComponent},
 ];
 
 @NgModule({

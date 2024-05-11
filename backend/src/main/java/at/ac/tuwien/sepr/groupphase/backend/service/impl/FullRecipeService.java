@@ -7,6 +7,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeDescriptionStepRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeIngredientRepository;
@@ -14,6 +16,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRecipeStepRepositor
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeStepRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -45,14 +48,16 @@ public class FullRecipeService implements RecipeService {
     }
 
     @Override
-    public DetailedRecipeDto createRecipe(RecipeCreateDto recipeDto) {
+    public DetailedRecipeDto createRecipe(RecipeCreateDto recipeDto) throws RecipeStepNotParsableException, RecipeStepSelfReferenceException {
         LOGGER.debug("Publish new message {}", recipeDto);
+
         Recipe recipe = recipeMapper.recipeCreateDtoToRecipe(recipeDto, recipeRepository.findMaxId() + 1);
 
         Set<Category> categories = new HashSet<>();
         for (RecipeCategoryDto category : recipeDto.getRecipeCategories()) {
-            Optional<Category> optionalCategory = categoryRepository.findById((long)category.getCategoryId());
-            optionalCategory.ifPresent(categories::add);
+            Category c = new Category();
+            c.setId(category.getCategoryId());
+            categories.add(c);
         }
 
         recipe.setCategories(categories);
@@ -61,16 +66,15 @@ public class FullRecipeService implements RecipeService {
         var recipeStep = recipe.getRecipeSteps();
 
         recipe.setRecipeIngredients(null);
+
         recipe.setRecipeSteps(null);
 
-        recipeRepository.save(recipe);
+        long i = recipeRepository.save(recipe);
 
         recipeIngredientRepository.saveAll(recipeIng);
 
         recipeStepRepository.saveAll(recipeStep);
 
-
-        DetailedRecipeDto detailedRecipeDto = recipeMapper.recipeToDetailedRecipeDto(recipe);
-        return detailedRecipeDto;
+        return recipeMapper.recipeToDetailedRecipeDto(recipe);
     }
 }

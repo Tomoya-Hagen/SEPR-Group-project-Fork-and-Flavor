@@ -12,6 +12,7 @@ import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
+import {AutocompleteComponent} from "./components/autocomplete/autocomplete.component";
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import {httpInterceptorProviders} from './interceptors';
     HomeComponent,
     LoginComponent,
     MessageComponent,
-
+    AutocompleteComponent
   ],
   imports: [
     BrowserModule,
@@ -32,6 +33,9 @@ import {httpInterceptorProviders} from './interceptors';
     FormsModule,
   ],
   providers: [httpInterceptorProviders],
+  exports: [
+    AutocompleteComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
