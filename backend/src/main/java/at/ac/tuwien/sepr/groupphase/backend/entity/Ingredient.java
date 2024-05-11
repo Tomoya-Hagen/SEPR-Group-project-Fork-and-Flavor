@@ -40,7 +40,7 @@ public class Ingredient {
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
 
-    private List<RecipeIngredient> recipes = new ArrayList<>();
+    private List<RecipeIngredient> recipesIngredients = new ArrayList<>();
 
     // Getters and setters
     public Long getId() {
@@ -73,5 +73,9 @@ public class Ingredient {
 
     public void setNutritions(List<IngredientNutrition> nutritions) {
         this.nutritions = nutritions;
+    }
+
+    public List<RecipeIngredient> getRecipesIngredients() {
+        return recipesIngredients;
     }
 }

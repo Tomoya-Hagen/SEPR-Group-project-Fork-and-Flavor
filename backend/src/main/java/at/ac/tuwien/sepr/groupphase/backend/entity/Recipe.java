@@ -11,7 +11,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,9 +41,10 @@ public class Recipe {
     @Column(name = "forked_from")
     private Long forkedFrom;
 
-    @Basic
-    @Column(name = "owner_id")
-    private long ownerId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private ApplicationUser owner;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(
@@ -85,25 +88,24 @@ public class Recipe {
 
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<RecipeRecipeStep> recipeRecipeSteps;
+    private List<RecipeRecipeStep> recipeRecipeSteps = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<RecipeVerified> recipesVerified;
+    private List<RecipeVerified> recipesVerified = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<WeeklyPlanner> weeklyPlanners;
+    private List<WeeklyPlanner> weeklyPlanners = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeIngredient> ingredients;
 
 
-
     @OneToMany(cascade = CascadeType.MERGE)
     @JoinColumn(name = "forked_from", referencedColumnName = "id")
-    private List<Recipe> forkedfrom;
+    private List<Recipe> forkedfrom = new ArrayList<>();
 
     public void setRecipeSteps(List<RecipeStep> recipeSteps) {
         this.recipeSteps = recipeSteps;
@@ -162,12 +164,12 @@ public class Recipe {
         this.forkedFrom = forkedFrom;
     }
 
-    public long getOwnerId() {
-        return ownerId;
+    public ApplicationUser getOwner() {
+        return owner;
     }
 
-    public void setOwnerId(long ownerId) {
-        this.ownerId = ownerId;
+    public void setOwner(ApplicationUser owner) {
+        this.owner = owner;
     }
 
     public List<Category> getCategories() {
@@ -199,11 +201,11 @@ public class Recipe {
             && Objects.equals(name, recipe.name)
             && Objects.equals(description, recipe.description)
             && Objects.equals(numberOfServings, recipe.numberOfServings)
-            && Objects.equals(forkedFrom, recipe.forkedFrom) && Objects.equals(ownerId, recipe.ownerId) && Objects.equals(isDraft, recipe.isDraft);
+            && Objects.equals(forkedFrom, recipe.forkedFrom) && Objects.equals(owner, recipe.owner) && Objects.equals(isDraft, recipe.isDraft);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, numberOfServings, forkedFrom, ownerId, isDraft);
+        return Objects.hash(id, name, description, numberOfServings, forkedFrom, owner, isDraft);
     }
 }

@@ -10,26 +10,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
 import java.util.Objects;
 
 @Entity
 @Table(name = "Recipe_Description_Step", schema = "PUBLIC", catalog = "DB")
-public class RecipeDescriptionStep {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id")
-    private long id;
+public class RecipeDescriptionStep extends RecipeStep {
     @Basic
     @Column(name = "description", length = 10000)
     private String description;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getDescription() {
         return description;
@@ -42,7 +31,8 @@ public class RecipeDescriptionStep {
     public RecipeDescriptionStep() {
     }
 
-    public RecipeDescriptionStep(String description) {
+    public RecipeDescriptionStep(String description, String name, Recipe recipe, int stepNumber) {
+        super(name, recipe, stepNumber);
         this.description = description;
     }
 
@@ -55,16 +45,12 @@ public class RecipeDescriptionStep {
             return false;
         }
         RecipeDescriptionStep that = (RecipeDescriptionStep) o;
-        return Objects.equals(id, that.id) && Objects.equals(description, that.description);
+        return Objects.equals(getId(), that.getId()) && Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description);
+        return Objects.hash(getId(), description);
     }
-
-    @OneToOne(mappedBy = "descriptionRecipeStep")
-    @JoinColumn(referencedColumnName = "id")
-    private RecipeStep descriptionRecipeStep;
 }
 
