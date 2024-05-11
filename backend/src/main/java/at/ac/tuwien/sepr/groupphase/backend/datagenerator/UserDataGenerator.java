@@ -23,6 +23,7 @@ import java.util.List;
 
 @Profile("generateData")
 @Component
+@Order(1)
 public class UserDataGenerator {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;

@@ -25,7 +25,6 @@ import java.util.Optional;
 import java.util.Set;
 
 @Component
-@Order(3)
 public class IngredientDataGenerator implements CommandLineRunner {
 
     private final IngredientRepository ingredientRepository;

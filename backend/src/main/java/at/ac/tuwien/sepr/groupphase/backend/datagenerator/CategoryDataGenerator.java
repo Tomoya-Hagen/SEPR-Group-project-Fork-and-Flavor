@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-@Order(4)
 public class CategoryDataGenerator extends DataGenerator implements CommandLineRunner {
 
     private final CategoryRepository categoryRepository;

@@ -12,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 @Component
-@Order(2)
 public class NutritionDataGenerator implements CommandLineRunner {
 
     private final NutritionRepository nutritionRepository;

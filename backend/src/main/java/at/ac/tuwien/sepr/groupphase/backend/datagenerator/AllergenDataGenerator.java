@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-@Order(1)
 public class AllergenDataGenerator extends DataGenerator implements CommandLineRunner {
 
     private final AllergenRepository allergenRepository;
