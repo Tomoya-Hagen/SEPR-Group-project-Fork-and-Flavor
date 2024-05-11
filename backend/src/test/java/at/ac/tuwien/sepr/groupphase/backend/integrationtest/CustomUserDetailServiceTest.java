@@ -6,7 +6,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.EmailException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.UsernameException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.impl.CustomUserDetailService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
@@ -21,7 +20,6 @@ import org.springframework.test.annotation.DirtiesContext;
 
 
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -41,8 +39,6 @@ class CustomUserDetailServiceTest implements TestData {
 
     @Autowired
     private UserDataGenerator userDataGenerator;
-    @Autowired
-    private UserRoleRepository userRoleRepository;
 
     @BeforeEach
     void before() {

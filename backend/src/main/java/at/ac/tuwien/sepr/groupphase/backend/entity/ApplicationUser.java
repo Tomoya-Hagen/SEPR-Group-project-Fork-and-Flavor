@@ -163,6 +163,10 @@ public class ApplicationUser {
         public ApplicationUserBuilder() {
         }
 
+        public static ApplicationUserBuilder anApplicationUser() {
+            return new ApplicationUserBuilder();
+        }
+
         public ApplicationUserBuilder withid(long id) {
             this.id = id;
             return this;

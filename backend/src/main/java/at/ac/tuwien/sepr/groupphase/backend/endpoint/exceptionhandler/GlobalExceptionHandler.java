@@ -65,12 +65,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {EmailException.class})
     public ResponseEntity<Object> handleEmailException(EmailException ex, WebRequest request) {
         LOGGER.warn(ex.getMessage());
+        if (ex.getMessage().contains("Email already exists")) {
+            return new ResponseEntity<Object>(ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<Object>(ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {UsernameException.class})
     public ResponseEntity<Object> handleUsernameException(UsernameException ex, WebRequest request) {
         LOGGER.warn(ex.getMessage());
+        if (ex.getMessage().contains("Username already exists")) {
+            return new ResponseEntity<Object>(ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<Object>(ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
