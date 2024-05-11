@@ -37,9 +37,9 @@ public class Recipe {
     @Column(name = "number_of_servings")
     private Short numberOfServings;
 
-    @Basic
-    @Column(name = "forked_from")
-    private Long forkedFrom;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "forked_from")
+    private Recipe forkedFrom;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -156,11 +156,11 @@ public class Recipe {
         this.numberOfServings = numberOfServings;
     }
 
-    public long getForkedFrom() {
+    public Recipe getForkedFrom() {
         return forkedFrom;
     }
 
-    public void setForkedFrom(Long forkedFrom) {
+    public void setForkedFrom(Recipe forkedFrom) {
         this.forkedFrom = forkedFrom;
     }
 
