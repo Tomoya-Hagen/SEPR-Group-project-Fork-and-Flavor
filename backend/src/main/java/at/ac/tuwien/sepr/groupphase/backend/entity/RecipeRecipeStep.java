@@ -13,7 +13,7 @@ import java.util.Objects;
 public class RecipeRecipeStep extends RecipeStep {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipe_recipe_id", nullable = false)
+    @JoinColumn(name = "recipe_recipe_id")
     private Recipe recipeRecipe;
 
     public Recipe getRecipeRecipe() {

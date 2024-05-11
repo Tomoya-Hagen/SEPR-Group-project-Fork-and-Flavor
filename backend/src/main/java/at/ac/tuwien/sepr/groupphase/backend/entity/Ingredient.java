@@ -33,11 +33,11 @@ public class Ingredient {
     )
     private List<Allergen> allergens = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
     private List<IngredientNutrition> nutritions = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
 
     private List<RecipeIngredient> recipesIngredients = new ArrayList<>();

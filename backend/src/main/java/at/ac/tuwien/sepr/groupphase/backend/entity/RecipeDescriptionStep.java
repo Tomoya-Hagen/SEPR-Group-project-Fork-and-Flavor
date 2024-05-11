@@ -31,7 +31,7 @@ public class RecipeDescriptionStep extends RecipeStep {
     public RecipeDescriptionStep() {
     }
 
-    public RecipeDescriptionStep(String description, String name, Recipe recipe, int stepNumber) {
+    public RecipeDescriptionStep(String name, String description, Recipe recipe, int stepNumber) {
         super(name, recipe, stepNumber);
         this.description = description;
     }

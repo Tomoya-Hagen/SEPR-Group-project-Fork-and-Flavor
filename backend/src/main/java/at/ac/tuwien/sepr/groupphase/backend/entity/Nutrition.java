@@ -60,7 +60,7 @@ public class Nutrition {
         this.unit = unit;
     }
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "nutrition_id", referencedColumnName = "id")
     private List<IngredientNutrition> ingredients = new ArrayList<>();
 

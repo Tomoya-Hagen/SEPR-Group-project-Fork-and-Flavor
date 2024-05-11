@@ -88,7 +88,7 @@ public class RecipeBook {
         return Objects.hash(id, name, description, ownerId);
     }
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_book_id", referencedColumnName = "id")
     private List<UserRecipeBook> users;
 }

@@ -74,36 +74,36 @@ public class Recipe {
     )
     private List<RecipeBook> recipeBooks;
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<Cooked> cooked;
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<Rating> ratings;
 
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeStep> recipeSteps;
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeRecipeStep> recipeRecipeSteps = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeVerified> recipesVerified = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<WeeklyPlanner> weeklyPlanners = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeIngredient> ingredients;
 
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "forked_from", referencedColumnName = "id")
     private List<Recipe> forkedfrom = new ArrayList<>();
 

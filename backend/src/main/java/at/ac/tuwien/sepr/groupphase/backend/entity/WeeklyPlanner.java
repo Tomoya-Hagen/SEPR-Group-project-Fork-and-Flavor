@@ -93,7 +93,7 @@ public class WeeklyPlanner {
         return Objects.hash(id, user, date, daytime, recipe);
     }
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "weekly_planner_id", referencedColumnName = "id")
     private List<UserWeeklyPlanner> userWeeklyPlanners;
 }

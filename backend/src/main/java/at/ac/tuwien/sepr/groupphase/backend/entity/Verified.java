@@ -67,7 +67,7 @@ public class Verified {
         return Objects.hash(id, name, type);
     }
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "verified_id", referencedColumnName = "id")
     private List<RecipeVerified> recipesVerified;
 
