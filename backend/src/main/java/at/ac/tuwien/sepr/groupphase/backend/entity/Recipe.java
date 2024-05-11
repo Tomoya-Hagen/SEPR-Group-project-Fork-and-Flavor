@@ -13,6 +13,9 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import org.hibernate.Hibernate;
+import org.hibernate.proxy.HibernateProxy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,8 +90,8 @@ public class Recipe {
     private List<RecipeStep> recipeSteps;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<RecipeRecipeStep> recipeRecipeSteps = new ArrayList<>();
+    @JoinColumn(name = "recipe_recipe_id", referencedColumnName = "id")
+    private List<RecipeStep> recipeRecipeSteps = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
@@ -165,6 +168,17 @@ public class Recipe {
     }
 
     public ApplicationUser getOwner() {
+
+        if (owner == null) {
+            throw new
+                NullPointerException("Entity passed for initialization is null");
+        }
+
+        Hibernate.initialize(owner);
+        if (owner instanceof HibernateProxy) {
+            owner = (ApplicationUser) ((HibernateProxy) owner).getHibernateLazyInitializer()
+                .getImplementation();
+        }
         return owner;
     }
 

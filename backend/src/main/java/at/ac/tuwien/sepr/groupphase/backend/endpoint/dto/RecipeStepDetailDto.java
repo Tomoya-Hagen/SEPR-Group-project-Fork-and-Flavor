@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
-public class RecipeStepDetailDto {
+public abstract class RecipeStepDetailDto {
     private long id;
     private String name;
     private int stepNumber;

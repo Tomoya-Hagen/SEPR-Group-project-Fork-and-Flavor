@@ -14,7 +14,6 @@ import jakarta.persistence.Table;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Recipe_Description_Step", schema = "PUBLIC", catalog = "DB")
 public class RecipeDescriptionStep extends RecipeStep {
     @Basic
     @Column(name = "description", length = 10000)

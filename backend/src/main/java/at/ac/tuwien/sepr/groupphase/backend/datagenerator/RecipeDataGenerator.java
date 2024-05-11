@@ -8,7 +8,6 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.IngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -37,7 +36,7 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
 
     @Transactional
     @Override
-    public void run(String... args) throws Exception  {
+    public void run(String... args) throws Exception {
         ApplicationUser user = new ApplicationUser();
         user.setId(1);
         Recipe riceRecipe = new Recipe();
@@ -51,8 +50,8 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
             categoryRepository.findByNameAndType("Beilage", "SIDE_DISH").get()
         ));
         riceRecipe.setIngredients(
-            List.of(new RecipeIngredient(riceRecipe, ingredientRepository.findByName("Basmatireis").get(), BigDecimal.ONE, 1),
-                new RecipeIngredient(riceRecipe, ingredientRepository.findByName("Salz").get(), BigDecimal.ONE, 1)
+            List.of(new RecipeIngredient(riceRecipe, ingredientRepository.findByName("Basmatireis").get(), BigDecimal.valueOf(1), 1),
+                new RecipeIngredient(riceRecipe, ingredientRepository.findByName("Salz").get(), BigDecimal.valueOf(2), 1)
             ));
         riceRecipe.setRecipeSteps(List.of(
             new RecipeDescriptionStep("Wasser kochen", "Einen Topf mit Wasser befüllen. Reichlich salzen und das Wasser zum Kochen bringen.", riceRecipe, 1),
@@ -76,15 +75,15 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
         eggFriedRiceRecipe.setNumberOfServings((short) 1);
         eggFriedRiceRecipe.setIngredients(List.of(
             new RecipeIngredient(eggFriedRiceRecipe,
-                ingredientRepository.findByName("Zwiebel").get(), BigDecimal.ONE, 1),
+                ingredientRepository.findByName("Zwiebel").get(), BigDecimal.valueOf(3), 1),
             new RecipeIngredient(eggFriedRiceRecipe,
-                ingredientRepository.findByName("Ei").get(), BigDecimal.ONE, 1),
+                ingredientRepository.findByName("Ei").get(), BigDecimal.valueOf(4), 1),
             new RecipeIngredient(eggFriedRiceRecipe,
-                ingredientRepository.findByName("Knoblauch").get(), BigDecimal.ONE, 1),
+                ingredientRepository.findByName("Knoblauch").get(), BigDecimal.valueOf(5), 1),
             new RecipeIngredient(eggFriedRiceRecipe,
-                ingredientRepository.findByName("Jungzwiebel").get(), BigDecimal.ONE, 1),
+                ingredientRepository.findByName("Jungzwiebel").get(), BigDecimal.valueOf(6), 1),
             new RecipeIngredient(eggFriedRiceRecipe,
-                ingredientRepository.findByName("Sesamöl").get(), BigDecimal.ONE, 1)
+                ingredientRepository.findByName("Sesamöl").get(), BigDecimal.valueOf(7), 1)
         ));
         eggFriedRiceRecipe.setRecipeSteps(List.of(
             new RecipeRecipeStep("Reis kochen eigentlich sollte er ein Tag alt sein aber das ist ein Beispiel",
