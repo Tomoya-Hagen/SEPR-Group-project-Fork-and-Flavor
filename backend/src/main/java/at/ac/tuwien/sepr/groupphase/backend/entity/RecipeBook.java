@@ -84,7 +84,15 @@ public class RecipeBook {
     @JoinColumn(name = "recipe_book_id", referencedColumnName = "id")
     private List<UserRecipeBook> userRecipeBooks;
 
+    public void setUserRecipeBooks(List<UserRecipeBook> userRecipeBooks) {
+        this.userRecipeBooks = userRecipeBooks;
+    }
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_book_id", referencedColumnName = "id")
     private List<RecipeRecipeBook> recipeRecipeBooks;
+
+    public void setRecipeRecipeBooks(List<RecipeRecipeBook> recipeRecipeBooks) {
+        this.recipeRecipeBooks = recipeRecipeBooks;
+    }
 }

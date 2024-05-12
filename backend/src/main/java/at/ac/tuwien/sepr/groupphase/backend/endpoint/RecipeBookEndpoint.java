@@ -1,0 +1,43 @@
+package at.ac.tuwien.sepr.groupphase.backend.endpoint;
+
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
+import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.lang.invoke.MethodHandles;
+
+@RestController
+@RequestMapping(path = RecipeBookEndpoint.BASE_PATH)
+public class RecipeBookEndpoint {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    static final String BASE_PATH = "/recipeBook";
+    RecipeBookService recipeBookService;
+
+    @Autowired
+    public RecipeBookEndpoint(RecipeBookService service) {
+        this.recipeBookService = service;
+    }
+
+    @PostMapping
+    public ResponseEntity<RecipeBook> createRecipe(@RequestBody RecipeBookCreateDto recipeBook) {
+        LOGGER.trace("Creating recipe book: {}", recipeBook);
+        LOGGER.debug("Body of request: {}", recipeBook);
+
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(recipeBookService.createRecipeBook(recipeBook));
+        } catch (Exception e) {
+            LOGGER.warn("Error creating recipe book: {}", recipeBook, e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
+    }
+}
