@@ -32,10 +32,10 @@ public class RecipeEndpoint {
     }
 
     @PermitAll
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/details/{id}")
     @Operation(summary = "Get recipe details by id")
     public RecipeDetailDto findBy(@PathVariable(name = "id") Long id) {
-        LOGGER.info("GET /api/v1/recipe/{}", id);
+        LOGGER.info("GET /api/v1/recipe/details/{}", id);
         try {
             return recipeService.getRecipeDetailDtoById(id);
         } catch (NotFoundException e) {

@@ -36,5 +36,7 @@ public interface RecipeMapper {
         return recipeListDtos;
     }
 
+    @Mapping(source = "recipe.name", target = "name")
+    @Mapping(source = "recipe.description", target = "description")
     RecipeListDto recipeAndAverageRatingToRecipeListDto(Recipe recipe, long rating);
 }

@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest
 @ActiveProfiles({"test", "generateData"})
@@ -60,7 +61,7 @@ class RecipeServiceShould {
                 , actualIngredients.toArray()),
             () -> Assertions.assertEquals(5, recipe.recipeSteps().size()),
             () -> Assertions.assertEquals(2, recipe.allergens().size()),
-            () -> Assertions.assertEquals(new BigDecimal("1366.40"),recipe.nutritions().stream().filter(n->n.id() == 1).findFirst().get().value()));
+            () -> Assertions.assertEquals(new BigDecimal("1366.40"), recipe.nutritions().stream().filter(n -> n.id() == 1).findFirst().get().value()));
     }
 
     @Test
@@ -72,25 +73,25 @@ class RecipeServiceShould {
     @Test
     void ReturnAListOfOneRecipeListDtoFromGetAllFromPageOneWithStepOne() {
         List<RecipeListDto> expectedRecipeListDtos = List.of(
-            new RecipeListDto(1,"Reis",0));
-        List<RecipeListDto> recipes = recipeService.getRecipesFromPageInSteps(1,1);
+            new RecipeListDto(1, "Reis", "So muss Reis schmecken!", 0));
+        List<RecipeListDto> recipes = recipeService.getRecipesFromPageInSteps(1, 1);
         Assertions.assertEquals(1, recipes.size());
-        Assertions.assertEquals(expectedRecipeListDtos,recipes);
+        Assertions.assertEquals(expectedRecipeListDtos, recipes);
     }
 
     @Test
     void ReturnAListOfTwoRecipeListDtoFromGetAllFromPageOneWithStepThree() {
         List<RecipeListDto> expectedRecipeListDtos = List.of(
-            new RecipeListDto(1,"Reis",0),
-            new RecipeListDto(2,"Egg Fried Rice", 0));
-        List<RecipeListDto> recipes = recipeService.getRecipesFromPageInSteps(1,3);
+            new RecipeListDto(1, "Reis", "So muss Reis schmecken!", 0),
+            new RecipeListDto(2, "Egg Fried Rice", "Ein schnelles asiatisches Gericht.", 0));
+        List<RecipeListDto> recipes = recipeService.getRecipesFromPageInSteps(1, 3);
         Assertions.assertEquals(2, recipes.size());
-        Assertions.assertEquals(expectedRecipeListDtos,recipes);
+        Assertions.assertEquals(expectedRecipeListDtos, recipes);
     }
 
     @Test
     void ReturnAnEmptyListOfRecipeListDtoFromGetAllFromPageTwoWithStepTwo() {
-        List<RecipeListDto> recipes = recipeService.getRecipesFromPageInSteps(2,2);
+        List<RecipeListDto> recipes = recipeService.getRecipesFromPageInSteps(2, 2);
         Assertions.assertTrue(recipes.isEmpty());
     }
 }

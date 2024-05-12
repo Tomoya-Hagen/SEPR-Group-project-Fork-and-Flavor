@@ -10,7 +10,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDescriptionDe
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +24,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ class RecipeEndpointShould implements TestData {
             new IngredientDetailDto(58, "Jungzwiebel", new BigDecimal("6.00"), 1),
             new IngredientDetailDto(147, "SesamÃ¶l", new BigDecimal("7.00"), 1)));
         ingredientDetailDtos.sort(Comparator.comparing(IngredientDetailDto::id));
-        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI+"/{id}",2))
+        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI + "/details/{id}", 2))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -77,9 +77,10 @@ class RecipeEndpointShould implements TestData {
 
         Assertions.assertNotNull(recipeDetailDto);
         for (int i = 0; i < recipeDetailDto.recipeSteps().size(); i++) {
-            if (recipeDetailDto.recipeSteps().get(i) instanceof RecipeStepDescriptionDetailDto recipeStepDescriptionDetailDto){
+            if (recipeDetailDto.recipeSteps().get(i) instanceof RecipeStepDescriptionDetailDto recipeStepDescriptionDetailDto) {
                 recipeStepDescriptionDetailDto.setDescription(String.valueOf(StandardCharsets.ISO_8859_1.encode(recipeStepDescriptionDetailDto.getDescription())));
-            };
+            }
+            ;
         }
         ArrayList<IngredientDetailDto> actualIngredients = recipeDetailDto.ingredients();
         actualIngredients.sort(Comparator.comparing(IngredientDetailDto::id));
@@ -96,12 +97,12 @@ class RecipeEndpointShould implements TestData {
                 , actualIngredients.toArray()),
             () -> Assertions.assertEquals(5, recipeDetailDto.recipeSteps().size()),
             () -> Assertions.assertEquals(2, recipeDetailDto.allergens().size()),
-            () -> Assertions.assertEquals(new BigDecimal("1366.40"),recipeDetailDto.nutritions().stream().filter(n->n.id() == 1).findFirst().get().value()));
+            () -> Assertions.assertEquals(new BigDecimal("1366.40"), recipeDetailDto.nutritions().stream().filter(n -> n.id() == 1).findFirst().get().value()));
     }
 
     @Test
     void Return404StatusCodeIfNoRecipeWasFoundByTheGivenId() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI + "/{id}", -1)
+        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI + "/details/{id}", -1)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
@@ -112,8 +113,8 @@ class RecipeEndpointShould implements TestData {
     @Test
     void ReturnAListOfOneRecipeListDtoFromGetAllFromPageOneWithStepOne() throws Exception {
         List<RecipeListDto> expectedRecipeListDtos = List.of(
-            new RecipeListDto(1,"Reis",0));
-        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI+"/?page=1&step=1"))
+            new RecipeListDto(1, "Reis", "So muss Reis schmecken!", 0));
+        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI + "/?page=1&step=1"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -122,15 +123,15 @@ class RecipeEndpointShould implements TestData {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
         Assertions.assertEquals(1, recipes.size());
-        Assertions.assertEquals(expectedRecipeListDtos,recipes);
+        Assertions.assertEquals(expectedRecipeListDtos, recipes);
     }
 
     @Test
     void ReturnAListOfTwoRecipeListDtoFromGetAllFromPageOneWithStepThree() throws Exception {
         List<RecipeListDto> expectedRecipeListDtos = List.of(
-            new RecipeListDto(1,"Reis",0),
-            new RecipeListDto(2,"Egg Fried Rice", 0));
-        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI+"/?page=1&step=3"))
+            new RecipeListDto(1, "Reis", "So muss Reis schmecken!", 0),
+            new RecipeListDto(2, "Egg Fried Rice", "Ein schnelles asiatisches Gericht.", 0));
+        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI + "/?page=1&step=3"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -139,12 +140,12 @@ class RecipeEndpointShould implements TestData {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
         Assertions.assertEquals(2, recipes.size());
-        Assertions.assertEquals(expectedRecipeListDtos,recipes);
+        Assertions.assertEquals(expectedRecipeListDtos, recipes);
     }
 
     @Test
     void ReturnAnEmptyListOfRecipeListDtoFromGetAllFromPageTwoWithStepTwo() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI+"/?page=2&step=2"))
+        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI + "/?page=2&step=2"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
