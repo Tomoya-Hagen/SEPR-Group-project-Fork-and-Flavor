@@ -10,4 +10,16 @@ public class RecipeStepRecipeDetailDto extends RecipeStepDetailDto {
     public void setRecipe(RecipeDetailDto recipe) {
         this.recipe = recipe;
     }
+
+    public RecipeStepRecipeDetailDto(long id,
+                                     String name,
+                                     int stepNumber,
+                                     RecipeDetailDto recipe) {
+        super(id, name, stepNumber);
+        this.recipe = recipe;
+    }
+
+    public RecipeStepRecipeDetailDto() {
+
+    }
 }

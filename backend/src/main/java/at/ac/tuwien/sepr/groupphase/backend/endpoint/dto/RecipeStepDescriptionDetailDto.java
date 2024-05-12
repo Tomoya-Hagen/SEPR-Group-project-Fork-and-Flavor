@@ -10,4 +10,16 @@ public class RecipeStepDescriptionDetailDto extends RecipeStepDetailDto {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public RecipeStepDescriptionDetailDto(long id,
+                                          String name,
+                                          int stepNumber,
+                                          String description) {
+        super(id, name, stepNumber);
+        this.description = description;
+    }
+
+    public RecipeStepDescriptionDetailDto() {
+        super();
+    }
 }

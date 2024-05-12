@@ -5,8 +5,14 @@ import at.ac.tuwien.sepr.groupphase.backend.datagenerator.CategoryDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.IngredientDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.NutritionDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserDataGenerator;
+import at.ac.tuwien.sepr.groupphase.backend.repository.AllergenRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.IngredientNutritionRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.IngredientRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.NutritionRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeIngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeStepRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +35,18 @@ public abstract class TestBase {
     private RecipeRepository recipeRepository;
     @Autowired
     private RecipeIngredientRepository recipeIngredientRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private NutritionRepository nutritionRepository;
+    @Autowired
+    private AllergenRepository allergenRepository;
+    @Autowired
+    private RecipeStepRepository recipeStepRepository;
+    @Autowired
+    private IngredientNutritionRepository ingredientNutritionRepository;
+    @Autowired
+    private IngredientRepository ingredientRepository;
 
     @BeforeEach
     public void setupDb() throws Exception {
@@ -41,6 +59,12 @@ public abstract class TestBase {
     @AfterEach
     public void tearDownDb() {
         recipeIngredientRepository.deleteAll();
+        recipeStepRepository.deleteAll();
         recipeRepository.deleteAll();
+        categoryRepository.deleteAll();
+        allergenRepository.deleteAll();
+        ingredientNutritionRepository.deleteAll();
+        nutritionRepository.deleteAll();
+        ingredientRepository.deleteAll();
     }
 }
