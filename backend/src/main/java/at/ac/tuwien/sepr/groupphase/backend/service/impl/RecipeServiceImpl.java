@@ -1,11 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.IngredientNutrition;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Nutrition;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Rating;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +44,31 @@ public class RecipeServiceImpl implements RecipeService {
         HashMap<Nutrition, BigDecimal> nutritions = new HashMap<>();
         ArrayList<Allergen> allergens = new ArrayList<>();
         getRecipeDetails(recipe, ingredients, nutritions, allergens);
-        return recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner());
+        long rating = calculateAverageTasteRating(recipe.getRatings());
+        return recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
+    }
+
+    @Override
+    public ArrayList<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber) {
+        int from = ((pageNumber - 1) * stepNumber) + 1;
+        int to = pageNumber * stepNumber;
+        ArrayList<Recipe> recipes = (ArrayList<Recipe>) recipeRepository.getAllRecipesWithIdFromTo(from, to);
+        ArrayList<Long> ratings = new ArrayList<>();
+        for (Recipe recipe : recipes) {
+            ratings.add(calculateAverageTasteRating(recipe.getRatings()));
+        }
+        return recipeMapper.recipeListAndRatingListToListOfRecipeRatingDto(recipes, ratings);
+    }
+
+    private long calculateAverageTasteRating(List<Rating> ratings) {
+        long rating = 0;
+        if (!ratings.isEmpty()) {
+            for (Rating value : ratings) {
+                rating += value.getTaste().longValue();
+            }
+            rating /= ratings.size();
+        }
+        return rating;
     }
 
     private void getRecipeDetails(
@@ -55,7 +82,9 @@ public class RecipeServiceImpl implements RecipeService {
             updateMapOfNutritions(ingredient, nutritions);
             updateListOfAllergens(ingredient, allergens);
         }
-        for (RecipeStep recipeStep : recipe.getRecipeSteps()) {
+        List<RecipeStep> recipeSteps = recipe.getRecipeSteps();
+        recipeSteps.sort(Comparator.comparing(RecipeStep::getStepNumber));
+        for (RecipeStep recipeStep : recipeSteps) {
             if (recipeStep instanceof RecipeRecipeStep recipeRecipeStep) {
                 getRecipeDetails(recipeRecipeStep.getRecipeRecipe(), ingredients,
                     nutritions, allergens);

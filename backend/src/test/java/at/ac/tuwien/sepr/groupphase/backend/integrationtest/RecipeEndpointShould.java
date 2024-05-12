@@ -5,9 +5,9 @@ import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDescriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,9 +23,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -105,5 +107,51 @@ class RecipeEndpointShould implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
+
+    @Test
+    void ReturnAListOfOneRecipeListDtoFromGetAllFromPageOneWithStepOne() throws Exception {
+        List<RecipeListDto> expectedRecipeListDtos = List.of(
+            new RecipeListDto(1,"Reis",0));
+        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI+"/?page=1&step=1"))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        List<RecipeListDto> recipes = Arrays.stream(objectMapper.readValue(response.getContentAsString(),
+            RecipeListDto[].class)).toList();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+        Assertions.assertEquals(1, recipes.size());
+        Assertions.assertEquals(expectedRecipeListDtos,recipes);
+    }
+
+    @Test
+    void ReturnAListOfTwoRecipeListDtoFromGetAllFromPageOneWithStepThree() throws Exception {
+        List<RecipeListDto> expectedRecipeListDtos = List.of(
+            new RecipeListDto(1,"Reis",0),
+            new RecipeListDto(2,"Egg Fried Rice", 0));
+        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI+"/?page=1&step=3"))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        List<RecipeListDto> recipes = Arrays.stream(objectMapper.readValue(response.getContentAsString(),
+            RecipeListDto[].class)).toList();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+        Assertions.assertEquals(2, recipes.size());
+        Assertions.assertEquals(expectedRecipeListDtos,recipes);
+    }
+
+    @Test
+    void ReturnAnEmptyListOfRecipeListDtoFromGetAllFromPageTwoWithStepTwo() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI+"/?page=2&step=2"))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        List<RecipeListDto> recipes = Arrays.stream(objectMapper.readValue(response.getContentAsString(),
+            RecipeListDto[].class)).toList();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+        Assertions.assertTrue(recipes.isEmpty());
     }
 }

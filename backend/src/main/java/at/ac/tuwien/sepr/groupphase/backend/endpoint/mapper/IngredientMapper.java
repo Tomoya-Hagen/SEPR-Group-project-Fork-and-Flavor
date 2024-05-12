@@ -12,7 +12,7 @@ import java.util.HashMap;
 @Mapper
 public interface IngredientMapper {
 
-    default ArrayList<IngredientDetailDto> IngredientAndRecipeIngredientHashmapToIngredientDetailDtoList(HashMap<Ingredient, RecipeIngredient> ingredientRecipeIngredientHashMap) {
+    default ArrayList<IngredientDetailDto> ingredientAndRecipeIngredientHashmapToIngredientDetailDtoList(HashMap<Ingredient, RecipeIngredient> ingredientRecipeIngredientHashMap) {
         ArrayList<IngredientDetailDto> result = new ArrayList<>();
         for (Ingredient ingredient : ingredientRecipeIngredientHashMap.keySet()) {
             result.add(ingredientAndRecipeIngredientToIngredientDetailDto(ingredient,

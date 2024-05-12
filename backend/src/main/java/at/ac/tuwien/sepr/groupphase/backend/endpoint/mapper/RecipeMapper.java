@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
@@ -23,6 +24,17 @@ public interface RecipeMapper {
     @Mapping(source = "owner.id", target = "ownerId")
     @Mapping(source = "recipe.id", target = "id")
     @Mapping(source = "recipe.isDraft", target = "isDraft")
+    @Mapping(source = "recipe.forkedFrom.id", target = "forkedFromId")
     RecipeDetailDto recipeToRecipeDetailDto(Recipe recipe, HashMap<Ingredient,
-        RecipeIngredient> ingredients, HashMap<Nutrition, BigDecimal> nutritions, ArrayList<Allergen> allergens, ApplicationUser owner);
+        RecipeIngredient> ingredients, HashMap<Nutrition, BigDecimal> nutritions, ArrayList<Allergen> allergens, ApplicationUser owner, long rating);
+
+    default ArrayList<RecipeListDto> recipeListAndRatingListToListOfRecipeRatingDto(ArrayList<Recipe> recipes, ArrayList<Long> ratings) {
+        ArrayList<RecipeListDto> recipeListDtos = new ArrayList<>();
+        for (int i = 0; i < recipes.size(); i++) {
+            recipeListDtos.add(recipeAndAverageRatingToRecipeListDto(recipes.get(i), ratings.get(i)));
+        }
+        return recipeListDtos;
+    }
+
+    RecipeListDto recipeAndAverageRatingToRecipeListDto(Recipe recipe, long rating);
 }

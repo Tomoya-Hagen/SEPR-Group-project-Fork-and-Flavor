@@ -13,8 +13,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import org.hibernate.Hibernate;
-import org.hibernate.proxy.HibernateProxy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -209,5 +207,9 @@ public class Recipe {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description, numberOfServings, forkedFrom, owner, isDraft);
+    }
+
+    public List<Rating> getRatings() {
+        return ratings;
     }
 }

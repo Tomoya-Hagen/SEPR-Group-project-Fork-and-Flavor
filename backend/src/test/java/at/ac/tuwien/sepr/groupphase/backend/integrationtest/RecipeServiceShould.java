@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import jakarta.transaction.Transactional;
@@ -66,5 +67,30 @@ class RecipeServiceShould {
     void ReturnANotFoundExceptionIfNoRecipeWasFoundWithTheGivenId() {
         long recipeId = 2000;
         Assertions.assertThrows(NotFoundException.class, () -> recipeService.getRecipeDetailDtoById(recipeId));
+    }
+
+    @Test
+    void ReturnAListOfOneRecipeListDtoFromGetAllFromPageOneWithStepOne() {
+        List<RecipeListDto> expectedRecipeListDtos = List.of(
+            new RecipeListDto(1,"Reis",0));
+        List<RecipeListDto> recipes = recipeService.getRecipesFromPageInSteps(1,1);
+        Assertions.assertEquals(1, recipes.size());
+        Assertions.assertEquals(expectedRecipeListDtos,recipes);
+    }
+
+    @Test
+    void ReturnAListOfTwoRecipeListDtoFromGetAllFromPageOneWithStepThree() {
+        List<RecipeListDto> expectedRecipeListDtos = List.of(
+            new RecipeListDto(1,"Reis",0),
+            new RecipeListDto(2,"Egg Fried Rice", 0));
+        List<RecipeListDto> recipes = recipeService.getRecipesFromPageInSteps(1,3);
+        Assertions.assertEquals(2, recipes.size());
+        Assertions.assertEquals(expectedRecipeListDtos,recipes);
+    }
+
+    @Test
+    void ReturnAnEmptyListOfRecipeListDtoFromGetAllFromPageTwoWithStepTwo() {
+        List<RecipeListDto> recipes = recipeService.getRecipesFromPageInSteps(2,2);
+        Assertions.assertTrue(recipes.isEmpty());
     }
 }

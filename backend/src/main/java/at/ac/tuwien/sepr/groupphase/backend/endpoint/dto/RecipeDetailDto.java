@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public record RecipeDetailDto(
     long id,
+    long rating,
     String name,
     String description,
     Short numberOfServings,

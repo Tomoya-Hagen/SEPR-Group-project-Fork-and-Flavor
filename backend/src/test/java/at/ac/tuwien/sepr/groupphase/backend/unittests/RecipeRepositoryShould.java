@@ -59,11 +59,11 @@ class RecipeRepositoryShould {
             new RecipeDescriptionStep("Wasser kochen", "Einen Topf mit Wasser befüllen. Reichlich salzen und das Wasser zum Kochen bringen.", riceRecipe, 1),
             new RecipeDescriptionStep("Reis kochen", "Wenn das Wasser kocht, den Reis hinzugeben und 5-8 Minuten kochen. Zwischendurch umrühren. ", riceRecipe, 2),
             new RecipeDescriptionStep("Reis dämpfen",
-                    "Danach den Reis in ein Sieb abgießen, " +
-                        "den Topf 3 cm hoch mit Wasser befüllen und das Wasser zum Kochen bringen. " +
-                        "Das Sieb mit dem Reis auf den Topf hängen und mit Alufolie abdecken. " +
-                        "Die Temperatur kann nun auf ca. 1/3 der maximalen Temperatur reduziert werden. " +
-                        "Nach 10 minütigem Dämpfen ist der Reis locker und lecker und kann serviert werden. ",
+                "Danach den Reis in ein Sieb abgießen, " +
+                    "den Topf 3 cm hoch mit Wasser befüllen und das Wasser zum Kochen bringen. " +
+                    "Das Sieb mit dem Reis auf den Topf hängen und mit Alufolie abdecken. " +
+                    "Die Temperatur kann nun auf ca. 1/3 der maximalen Temperatur reduziert werden. " +
+                    "Nach 10 minütigem Dämpfen ist der Reis locker und lecker und kann serviert werden. ",
                 riceRecipe, 3)
         ));
         recipeRepository.save(riceRecipe);
@@ -89,20 +89,20 @@ class RecipeRepositoryShould {
         ));
         eggFriedRiceRecipe.setRecipeSteps(List.of(
             new RecipeRecipeStep("Reis kochen eigentlich sollte er ein Tag alt sein aber das ist ein Beispiel",
-                eggFriedRiceRecipe, 1,riceRecipe),
+                eggFriedRiceRecipe, 1, riceRecipe),
             new RecipeDescriptionStep("Gemüse hacken",
-                    "Frühlingszwiebel, Zwiebel, Knoblauch klein hacken.",
+                "Frühlingszwiebel, Zwiebel, Knoblauch klein hacken.",
                 eggFriedRiceRecipe, 2),
             new RecipeDescriptionStep("Gemüse anbraten",
-                    "Pflanzenöl im Wok erhitzen, Schalotten, Knoblauch und Chili hinzufügen und scharf anbraten.",
+                "Pflanzenöl im Wok erhitzen, Schalotten, Knoblauch und Chili hinzufügen und scharf anbraten.",
                 eggFriedRiceRecipe, 3),
             new RecipeDescriptionStep("Restliche Zutaten anbraten",
-                    "Ei hinzufügen und verrühren. Reis, Sesamöl, Sojasauce, " +
-                        "Glutamat und Pfeffer hinzufügen und weiter unter ständigem Rühren braten.",
+                "Ei hinzufügen und verrühren. Reis, Sesamöl, Sojasauce, " +
+                    "Glutamat und Pfeffer hinzufügen und weiter unter ständigem Rühren braten.",
                 eggFriedRiceRecipe, 4),
             new RecipeDescriptionStep("Servieren",
-                    " Wenn der gewünschte Bräunungsgrad erreicht ist, " +
-                        "Frühlingszwiebeln hinzufügen und servieren.",
+                " Wenn der gewünschte Bräunungsgrad erreicht ist, " +
+                    "Frühlingszwiebeln hinzufügen und servieren.",
                 eggFriedRiceRecipe, 5)
 
         ));
@@ -127,5 +127,28 @@ class RecipeRepositoryShould {
     void ReturnAnEmptyOptionalIfNoRecipeWithAGivenRecipeIdExists() {
         Optional<Recipe> recipe = recipeRepository.getRecipeById(-1000L);
         Assertions.assertFalse(recipe.isPresent());
+    }
+
+    @Test
+    void ReturnOneRecipeFromGetAllFromIdOneToOne() {
+        List<Recipe> recipes = recipeRepository.getAllRecipesWithIdFromTo(1, 1);
+        Assertions.assertEquals(1, recipes.size());
+        Assertions.assertEquals(recipeRepository.getRecipeById(1).orElseThrow(), recipes.getFirst());
+    }
+
+    @Test
+    void ReturnTwoRecipesFromGetAllFromIdOneToThree() {
+        List<Recipe> expectedRecipes = List.of(
+            recipeRepository.getRecipeById(1).orElseThrow(),
+            recipeRepository.getRecipeById(2).orElseThrow());
+        List<Recipe> recipes = recipeRepository.getAllRecipesWithIdFromTo(1, 3);
+        Assertions.assertEquals(2, recipes.size());
+        Assertions.assertEquals(expectedRecipes, recipes);
+    }
+
+    @Test
+    void ReturnNoRecipesFromGetAllFromIdThreeToFour() {
+        List<Recipe> recipes = recipeRepository.getAllRecipesWithIdFromTo(3, 4);
+        Assertions.assertTrue(recipes.isEmpty());
     }
 }
