@@ -45,23 +45,22 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
         riceRecipe.setNumberOfServings((short) 1);
         riceRecipe.setForkedFrom(null);
         riceRecipe.setOwner(user);
-        var x = categoryRepository.findAll();
         riceRecipe.setCategories(List.of(
-            categoryRepository.findByNameAndType("Beilage", "SIDE_DISH").get()
+            categoryRepository.findByNameAndType("Beilage", "SIDE_DISH").orElseThrow()
         ));
         riceRecipe.setIngredients(
-            List.of(new RecipeIngredient(riceRecipe, ingredientRepository.findByName("Basmatireis").get(), BigDecimal.valueOf(1), 1),
-                new RecipeIngredient(riceRecipe, ingredientRepository.findByName("Salz").get(), BigDecimal.valueOf(2), 1)
+            List.of(new RecipeIngredient(riceRecipe, ingredientRepository.findByName("Basmatireis").orElseThrow(), BigDecimal.valueOf(1), 1),
+                new RecipeIngredient(riceRecipe, ingredientRepository.findByName("Salz").orElseThrow(), BigDecimal.valueOf(2), 1)
             ));
         riceRecipe.setRecipeSteps(List.of(
             new RecipeDescriptionStep("Wasser kochen", "Einen Topf mit Wasser befüllen. Reichlich salzen und das Wasser zum Kochen bringen.", riceRecipe, 1),
             new RecipeDescriptionStep("Reis kochen", "Wenn das Wasser kocht, den Reis hinzugeben und 5-8 Minuten kochen. Zwischendurch umrühren. ", riceRecipe, 2),
             new RecipeDescriptionStep("Reis dämpfen",
-                "Danach den Reis in ein Sieb abgießen, " +
-                    "den Topf 3 cm hoch mit Wasser befüllen und das Wasser zum Kochen bringen. " +
-                    "Das Sieb mit dem Reis auf den Topf hängen und mit Alufolie abdecken. " +
-                    "Die Temperatur kann nun auf ca. 1/3 der maximalen Temperatur reduziert werden. " +
-                    "Nach 10 minütigem Dämpfen ist der Reis locker und lecker und kann serviert werden. ",
+                "Danach den Reis in ein Sieb abgießen, "
+                    + "den Topf 3 cm hoch mit Wasser befüllen und das Wasser zum Kochen bringen. "
+                    + "Das Sieb mit dem Reis auf den Topf hängen und mit Alufolie abdecken. "
+                    + "Die Temperatur kann nun auf ca. 1/3 der maximalen Temperatur reduziert werden. "
+                    + "Nach 10 minütigem Dämpfen ist der Reis locker und lecker und kann serviert werden. ",
                 riceRecipe, 3)
         ));
         recipeRepository.save(riceRecipe);
@@ -70,20 +69,20 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
         eggFriedRiceRecipe.setName("Egg Fried Rice");
         eggFriedRiceRecipe.setDescription("Ein schnelles asiatisches Gericht.");
         eggFriedRiceRecipe.setCategories(List.of(
-            categoryRepository.findByNameAndType("Hautpspeise", "MAIN_COURSE").get())
+            categoryRepository.findByNameAndType("Hautpspeise", "MAIN_COURSE").orElseThrow())
         );
         eggFriedRiceRecipe.setNumberOfServings((short) 1);
         eggFriedRiceRecipe.setIngredients(List.of(
             new RecipeIngredient(eggFriedRiceRecipe,
-                ingredientRepository.findByName("Zwiebel").get(), BigDecimal.valueOf(3), 1),
+                ingredientRepository.findByName("Zwiebel").orElseThrow(), BigDecimal.valueOf(3), 1),
             new RecipeIngredient(eggFriedRiceRecipe,
-                ingredientRepository.findByName("Ei").get(), BigDecimal.valueOf(4), 1),
+                ingredientRepository.findByName("Ei").orElseThrow(), BigDecimal.valueOf(4), 1),
             new RecipeIngredient(eggFriedRiceRecipe,
-                ingredientRepository.findByName("Knoblauch").get(), BigDecimal.valueOf(5), 1),
+                ingredientRepository.findByName("Knoblauch").orElseThrow(), BigDecimal.valueOf(5), 1),
             new RecipeIngredient(eggFriedRiceRecipe,
-                ingredientRepository.findByName("Jungzwiebel").get(), BigDecimal.valueOf(6), 1),
+                ingredientRepository.findByName("Jungzwiebel").orElseThrow(), BigDecimal.valueOf(6), 1),
             new RecipeIngredient(eggFriedRiceRecipe,
-                ingredientRepository.findByName("Sesamöl").get(), BigDecimal.valueOf(7), 1)
+                ingredientRepository.findByName("Sesamöl").orElseThrow(), BigDecimal.valueOf(7), 1)
         ));
         eggFriedRiceRecipe.setRecipeSteps(List.of(
             new RecipeRecipeStep("Reis kochen eigentlich sollte er ein Tag alt sein aber das ist ein Beispiel",
@@ -95,12 +94,12 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
                 "Pflanzenöl im Wok erhitzen, Schalotten, Knoblauch und Chili hinzufügen und scharf anbraten.",
                 eggFriedRiceRecipe, 3),
             new RecipeDescriptionStep("Restliche Zutaten anbraten",
-                "Ei hinzufügen und verrühren. Reis, Sesamöl, Sojasauce, " +
-                    "Glutamat und Pfeffer hinzufügen und weiter unter ständigem Rühren braten.",
+                "Ei hinzufügen und verrühren. Reis, Sesamöl, Sojasauce, "
+                    + "Glutamat und Pfeffer hinzufügen und weiter unter ständigem Rühren braten.",
                 eggFriedRiceRecipe, 4),
             new RecipeDescriptionStep("Servieren",
-                " Wenn der gewünschte Bräunungsgrad erreicht ist, " +
-                    "Frühlingszwiebeln hinzufügen und servieren.",
+                " Wenn der gewünschte Bräunungsgrad erreicht ist, "
+                    + "Frühlingszwiebeln hinzufügen und servieren.",
                 eggFriedRiceRecipe, 5)
 
         ));

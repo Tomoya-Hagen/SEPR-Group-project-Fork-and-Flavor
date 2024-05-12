@@ -13,7 +13,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -108,7 +107,7 @@ public class Recipe {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "forked_from", referencedColumnName = "id")
-    private List<Recipe> forkedfrom = new ArrayList<>();
+    private List<Recipe> recipesForkedFromThis = new ArrayList<>();
 
     public void setRecipeSteps(List<RecipeStep> recipeSteps) {
         this.recipeSteps = recipeSteps;

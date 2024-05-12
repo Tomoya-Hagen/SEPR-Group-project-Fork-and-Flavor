@@ -13,7 +13,6 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import org.springframework.web.bind.annotation.Mapping;
 
 @Entity
 @Table(name = "Recipe_Step", schema = "PUBLIC", catalog = "DB")

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/recipes")

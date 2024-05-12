@@ -16,12 +16,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @Disabled
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class MessageMappingTest implements TestData {
+class MessageMappingTest implements TestData {
 
     private final Message message = Message.MessageBuilder.aMessage()
         .withId(ID)
@@ -34,7 +36,7 @@ public class MessageMappingTest implements TestData {
     private MessageMapper messageMapper;
 
     @Test
-    public void givenNothing_whenMapDetailedMessageDtoToEntity_thenEntityHasAllProperties() {
+    void givenNothing_whenMapDetailedMessageDtoToEntity_thenEntityHasAllProperties() {
         DetailedMessageDto detailedMessageDto = messageMapper.messageToDetailedMessageDto(message);
         assertAll(
             () -> assertEquals(ID, detailedMessageDto.getId()),
@@ -46,7 +48,7 @@ public class MessageMappingTest implements TestData {
     }
 
     @Test
-    public void givenNothing_whenMapListWithTwoMessageEntitiesToSimpleDto_thenGetListWithSizeTwoAndAllProperties() {
+    void givenNothing_whenMapListWithTwoMessageEntitiesToSimpleDto_thenGetListWithSizeTwoAndAllProperties() {
         List<Message> messages = new ArrayList<>();
         messages.add(message);
         messages.add(message);

@@ -1,9 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepr.groupphase.backend.entity.Nutrition;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public record RecipeDetailDto(
     long id,
