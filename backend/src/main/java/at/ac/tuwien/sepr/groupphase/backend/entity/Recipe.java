@@ -167,17 +167,6 @@ public class Recipe {
     }
 
     public ApplicationUser getOwner() {
-
-        if (owner == null) {
-            throw new
-                NullPointerException("Entity passed for initialization is null");
-        }
-
-        Hibernate.initialize(owner);
-        if (owner instanceof HibernateProxy) {
-            owner = (ApplicationUser) ((HibernateProxy) owner).getHibernateLazyInitializer()
-                .getImplementation();
-        }
         return owner;
     }
 
@@ -193,11 +182,11 @@ public class Recipe {
         this.categories = categories;
     }
 
-    public Boolean getDraft() {
+    public Boolean getIsDraft() {
         return isDraft;
     }
 
-    public void setDraft(Boolean draft) {
+    public void setIsDraft(Boolean draft) {
         isDraft = draft;
     }
 

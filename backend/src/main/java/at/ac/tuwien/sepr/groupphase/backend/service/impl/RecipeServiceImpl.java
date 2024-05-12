@@ -41,7 +41,7 @@ public class RecipeServiceImpl implements RecipeService {
         HashMap<Nutrition, BigDecimal> nutritions = new HashMap<>();
         ArrayList<Allergen> allergens = new ArrayList<>();
         getRecipeDetails(recipe, ingredients, nutritions, allergens);
-        return recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens);
+        return recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner());
     }
 
     private void getRecipeDetails(

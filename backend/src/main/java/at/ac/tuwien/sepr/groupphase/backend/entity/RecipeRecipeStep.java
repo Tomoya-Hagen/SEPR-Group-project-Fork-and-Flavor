@@ -18,16 +18,6 @@ public class RecipeRecipeStep extends RecipeStep {
 
 
     public Recipe getRecipeRecipe() {
-        if (recipeRecipe == null) {
-            throw new
-                NullPointerException("Entity passed for initialization is null");
-        }
-
-        Hibernate.initialize(recipeRecipe);
-        if (recipeRecipe instanceof HibernateProxy) {
-            recipeRecipe = (Recipe) ((HibernateProxy) recipeRecipe).getHibernateLazyInitializer()
-                .getImplementation();
-        }
         return recipeRecipe;
     }
 

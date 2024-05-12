@@ -5,8 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
-import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDescriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -50,12 +50,9 @@ class RecipeEndpointShould implements TestData {
 
     @Autowired
     private SecurityProperties securityProperties;
-    @Autowired
-    private RecipeRepository recipeRepository;
 
     @Test
     void ReturnARecipeDetailDtoIfARecipeExistsByRecipeId() throws Exception {
-        List<Recipe> recipes = recipeRepository.findAll();
         ArrayList<IngredientDetailDto> ingredientDetailDtos = new java.util.ArrayList<>(List.of(
             new IngredientDetailDto(5, "Basmatireis", new BigDecimal("1.00"), 1),
             new IngredientDetailDto(133, "Salz", new BigDecimal("2.00"), 1),
@@ -63,21 +60,25 @@ class RecipeEndpointShould implements TestData {
             new IngredientDetailDto(23, "Ei", new BigDecimal("4.00"), 1),
             new IngredientDetailDto(68, "Knoblauch", new BigDecimal("5.00"), 1),
             new IngredientDetailDto(58, "Jungzwiebel", new BigDecimal("6.00"), 1),
-            new IngredientDetailDto(147, "Sesamöl", new BigDecimal("7.00"), 1)));
-
-        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI+"/{id}",2)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            new IngredientDetailDto(147, "SesamÃ¶l", new BigDecimal("7.00"), 1)));
+        ingredientDetailDtos.sort(Comparator.comparing(IngredientDetailDto::id));
+        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI+"/{id}",2))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-        objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY,true);
+
         RecipeDetailDto recipeDetailDto = objectMapper.readValue(response.getContentAsString(),
             RecipeDetailDto.class);
 
         Assertions.assertNotNull(recipeDetailDto);
+        for (int i = 0; i < recipeDetailDto.recipeSteps().size(); i++) {
+            if (recipeDetailDto.recipeSteps().get(i) instanceof RecipeStepDescriptionDetailDto recipeStepDescriptionDetailDto){
+                recipeStepDescriptionDetailDto.setDescription(String.valueOf(StandardCharsets.ISO_8859_1.encode(recipeStepDescriptionDetailDto.getDescription())));
+            };
+        }
         ArrayList<IngredientDetailDto> actualIngredients = recipeDetailDto.ingredients();
         actualIngredients.sort(Comparator.comparing(IngredientDetailDto::id));
         Assertions.assertAll(

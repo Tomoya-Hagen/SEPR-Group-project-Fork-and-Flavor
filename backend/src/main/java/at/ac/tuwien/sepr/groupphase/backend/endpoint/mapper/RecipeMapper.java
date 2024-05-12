@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Nutrition;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
@@ -19,6 +20,9 @@ public interface RecipeMapper {
     @Mapping(source = "ingredients", target = "ingredients")
     @Mapping(source = "nutritions", target = "nutritions")
     @Mapping(source = "allergens", target = "allergens")
+    @Mapping(source = "owner.id", target = "ownerId")
+    @Mapping(source = "recipe.id", target = "id")
+    @Mapping(source = "recipe.isDraft", target = "isDraft")
     RecipeDetailDto recipeToRecipeDetailDto(Recipe recipe, HashMap<Ingredient,
-        RecipeIngredient> ingredients, HashMap<Nutrition, BigDecimal> nutritions, ArrayList<Allergen> allergens);
+        RecipeIngredient> ingredients, HashMap<Nutrition, BigDecimal> nutritions, ArrayList<Allergen> allergens, ApplicationUser owner);
 }
