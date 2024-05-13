@@ -19,8 +19,15 @@ export class RecipeCreateComponent implements OnInit{
     ingredients: []
   }
 
+  ingredientChangeHandler(updatedIngredient: Ingredient, index: number) {
+    console.log(index);
+    this.recipe.ingredients[index] = updatedIngredient;
+    if(this.recipe.ingredients[this.recipe.ingredients.length-1].id != -1){
+      this.recipe.ingredients.push({name: "", id: -1});
+    }
+  }
+
   ingredientchange() {
-    console.log(this.recipe);
     this.recipe.ingredients.push({name: "", id: -1});
   }
 

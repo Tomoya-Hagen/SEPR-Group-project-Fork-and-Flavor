@@ -27,14 +27,9 @@ export class IngredientComponent {
 
   set Ingredient(value: Ingredient) {
     this.ingredient = value;
-    this.onIngredientChange();
+    this.ingredientChange.emit(this.ingredient)
   }
 
-  onIngredientChange() {
-    if(this.ingredient != null && this.ingredient.id != -1) {
-      this.ingredientChange.emit(this.Ingredient);
-    }
-  }
 
   public formatIngredient(ingredient: Ingredient | null): string {
     return ingredient?.name ?? '';
@@ -43,6 +38,5 @@ export class IngredientComponent {
   ingredientSuggestions = (input: string) => (input === '')
     ? of([])
     :  this.ingredientService.ingredientssByName(input, 5);
-
 
 }

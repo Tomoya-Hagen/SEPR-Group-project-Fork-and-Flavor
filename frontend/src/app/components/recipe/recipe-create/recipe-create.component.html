@@ -19,11 +19,21 @@
             </div>
           </div>
         </div>
-
-
-      <div *ngFor="let inneringredient of recipe.ingredients;let index = index">
-        <app-ingredient (ingredientChange)="ingredientchange()" [(ingredient)]="recipe.ingredients[index]"></app-ingredient>
+      <div class="col-md-12">
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input type="text" class="form-control" id="description" placeholder="Dies sind die besten Wraps meiner Oma. Wir aßen sie immer im jardín!">
+        </div>
       </div>
+
+
+      <div *ngFor="let inneringredient of recipe.ingredients; let index = index">
+        <app-ingredient
+          (ingredientChange)="ingredientChangeHandler($event, index)"
+          [(ingredient)]="recipe.ingredients[index]">
+        </app-ingredient>
+      </div>
+
 
 
       <div class="container m-5">
