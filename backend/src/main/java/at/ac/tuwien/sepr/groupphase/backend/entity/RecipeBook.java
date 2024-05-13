@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,6 @@ public class RecipeBook {
         inverseJoinColumns = @JoinColumn(name = "recipe_id")
     )
     private List<Recipe> recipes = new ArrayList<>();
-
 
     public void setId(long id) {
         this.id = id;
@@ -88,7 +88,9 @@ public class RecipeBook {
         return Objects.hash(id, name, description, ownerId);
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_book_id", referencedColumnName = "id")
-    private List<UserRecipeBook> users;
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "user_recipe_book",
+        joinColumns = {@JoinColumn(name = "recipe_book_id")},
+        inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    private List<ApplicationUser> editors = new ArrayList<>();
 }

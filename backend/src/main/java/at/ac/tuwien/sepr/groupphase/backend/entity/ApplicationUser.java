@@ -132,13 +132,12 @@ public class ApplicationUser {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<WeeklyPlanner> weeklyPlanners;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    List<UserWeeklyPlanner> userWeeklyPlanners;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    List<UserRecipeBook> userRecipeBooks = new ArrayList<>();
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "user_recipe_book",
+        joinColumns = {@JoinColumn(name = "user_id")},
+        inverseJoinColumns = {@JoinColumn(name = "recipe_book_id")})
+    private List<RecipeBook> editableRecipeBooks = new ArrayList<>();
 
     public boolean getAdmin() {
         if (roles != null && !roles.isEmpty()) {
