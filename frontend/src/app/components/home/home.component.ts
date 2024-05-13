@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../../services/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 import { RecipeService } from 'src/app/services/recipe.service';
 import { RecipeListDto } from 'src/app/dtos/recipe';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-home',
@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  steps = [10,25,50,100];
+  steps = [10, 25, 50, 100];
   bannerError: string | null = null;
   page = 0;
   step = 10;
@@ -29,15 +29,14 @@ export class HomeComponent implements OnInit {
     this.loadNextPage();
   }
 
-  loadPage(isNext:boolean) {
-    this.service.getListByPageAndStep(this.page,this.step)
+  loadPage(isNext: boolean) {
+    this.service.getListByPageAndStep(this.page, this.step)
       .subscribe({
         next: data => {
-          if(data.length == 0){
-            if(isNext){
+          if (data.length == 0) {
+            if (isNext) {
               this.nextButtonDisabled = true;
-            }
-            else{
+            } else {
               this.previousButtonDisabled = true;
             }
             return;
@@ -54,24 +53,24 @@ export class HomeComponent implements OnInit {
         }
       });
   }
-  loadNextPage(){
+  loadNextPage() {
     this.nextButtonDisabled = false;
     this.previousButtonDisabled = false;
-    this.page+=1;
+    this.page += 1;
     this.loadPage(true);
   }
 
-  loadPreviousPage(){
+  loadPreviousPage() {
     this.nextButtonDisabled = false;
     this.previousButtonDisabled = false;
-    this.page-=1;
+    this.page -= 1;
     this.loadPage(false)
   }
 
-  selectedStepChanged(){
-    let recipeNumber =this.step*this.page;
-    this.page=Math.floor(recipeNumber/this.step);
-    this.oldStep=this.step;
+  selectedStepChanged() {
+    let recipeNumber = this.step * this.page;
+    this.page = Math.floor(recipeNumber / this.step);
+    this.oldStep = this.step;
     this.loadPage(true);
   }
 }

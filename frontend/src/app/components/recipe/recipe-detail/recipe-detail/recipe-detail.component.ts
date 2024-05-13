@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ToastrService} from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { RecipeDetailDto } from 'src/app/dtos/recipe';
 import { RecipeService } from 'src/app/services/recipe.service';
 
@@ -39,13 +39,13 @@ export class RecipeDetailComponent {
   ) { }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params =>{
+    this.route.params.subscribe(params => {
       let observable = this.service.getRecipeDetailsBy(params['id']);
-      observable.subscribe({ 
+      observable.subscribe({
         next: data => {
           this.recipe = data;
           console.log(this.recipe);
-          
+
         },
         error: error => {
           console.error('Error fetching Horse', error);
@@ -54,7 +54,8 @@ export class RecipeDetailComponent {
             ? 'Is the backend up?'
             : error.message.message;
           this.notification.error(errorMessage, 'Could Not Fetch Horse');
-          this.router.navigate(['/horses'])}
+          this.router.navigate(['/horses'])
+        }
       });
     });
   }
