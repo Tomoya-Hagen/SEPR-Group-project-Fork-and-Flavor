@@ -1,15 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
-import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -92,7 +83,19 @@ public class RecipeBook {
     @JoinColumn(name = "recipe_book_id", referencedColumnName = "id")
     private List<RecipeRecipeBook> recipeRecipeBooks;
 
-    public void setRecipeRecipeBooks(List<RecipeRecipeBook> recipeRecipeBooks) {
-        this.recipeRecipeBooks = recipeRecipeBooks;
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "recipe_recipe_book",
+        joinColumns = @JoinColumn(name = "recipe_book_id"),
+        inverseJoinColumns = @JoinColumn(name = "recipe_id")
+    )
+    private List<Recipe> recipes;
+
+    public void setRecipes(List<Recipe> recipes) {
+        this.recipes = recipes;
+    }
+
+    public List<Recipe> getRecipes() {
+        return recipes;
     }
 }
