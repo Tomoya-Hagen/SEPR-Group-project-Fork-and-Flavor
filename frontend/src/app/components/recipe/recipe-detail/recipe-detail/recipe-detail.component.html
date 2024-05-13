@@ -1,21 +1,26 @@
 <div class="jumbotron mt-5">
-    <h1 class="display-4" style="text-align:center;margin-bottom: 5%;">{{recipe.name}}</h1>
-<div style="width: 50%; float:left">
-<p>{{recipe.description}}</p>
+  <h1 class="display-4" style="text-align:center;margin-bottom: 5%;">{{recipe.name}}</h1>
+  <div style="width: 50%; float:left">
+  <p>{{recipe.description}}</p>
 </div>
-<div class="mt-3" style="width: 50%; margin-left: auto;margin-right: 0;">
-<img src="https://api.campbellsmeat.com/wp-content/uploads/2020/10/1602145295bolog-1.png" class="card-img-top" alt="Hollywood Sign on The Hill"/>
-    <table class="table" style="margin-top: 5%;">
-        <tbody>
-            <tr *ngFor="let ingredient of recipe.ingredients" class="center-td">
-                <td>{{ingredient.name}}</td>
-                <td>{{ingredient.amount}} {{ingredient.unit}}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
-    <div ngxSlideItem class="slide" *ngFor = "let recipeStep of recipe.recipeSteps">
+  <div class="mt-3" style="width: 50%; margin-left: auto;margin-right: 0;">
+    <img src="https://api.campbellsmeat.com/wp-content/uploads/2020/10/1602145295bolog-1.png" class="card-img-top" alt="Hollywood Sign on The Hill"/>
+      <table class="table" style="margin-top: 5%;">
+          <tbody>
+              <tr *ngFor="let ingredient of recipe.ingredients" class="center-td">
+                  <td>{{ingredient.name}}</td>
+                  <td>{{ingredient.amount}} {{ingredient.unit}}</td>
+              </tr>
+          </tbody>
+      </table>
+  </div>
+
+  <ngx-slick-carousel class="carousel"
+                      #slickModal="slick-carousel"
+                      [config]="slideConfig">
+
+      <div ngxSlickItem class="slide" *ngFor = "let recipeStep of recipe.recipeSteps">
         <img src="https://api.campbellsmeat.com/wp-content/uploads/2020/10/1602145295bolog-1.png" class="card-img-top" alt="Hollywood Sign on The Hill"/>
-    </div> 
-</ngx-slick-carousel>
+      </div>
+  </ngx-slick-carousel>
+</div>
