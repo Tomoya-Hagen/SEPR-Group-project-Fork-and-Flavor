@@ -22,6 +22,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.L;
+import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.g;
+import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.mg;
+
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest
 @ActiveProfiles({"test", "generateData"})
@@ -36,13 +40,13 @@ class RecipeServiceShould {
     void ReturnARecipeDetailDtoIfARecipeWithTheGivenRecipeIdExists() {
         long recipeId = 2;
         ArrayList<IngredientDetailDto> ingredientDetailDtos = new java.util.ArrayList<>(List.of(
-            new IngredientDetailDto(5, "Basmatireis", new BigDecimal("1.00"), 1),
-            new IngredientDetailDto(133, "Salz", new BigDecimal("2.00"), 1),
-            new IngredientDetailDto(189, "Zwiebel", new BigDecimal("3.00"), 1),
-            new IngredientDetailDto(23, "Ei", new BigDecimal("4.00"), 1),
-            new IngredientDetailDto(68, "Knoblauch", new BigDecimal("5.00"), 1),
-            new IngredientDetailDto(58, "Jungzwiebel", new BigDecimal("6.00"), 1),
-            new IngredientDetailDto(147, "Sesamöl", new BigDecimal("7.00"), 1)));
+            new IngredientDetailDto(5, "Basmatireis", new BigDecimal("1.00"), mg.name()),
+            new IngredientDetailDto(133, "Salz", new BigDecimal("2.00"), L.name()),
+            new IngredientDetailDto(189, "Zwiebel", new BigDecimal("3.00"), mg.name()),
+            new IngredientDetailDto(23, "Ei", new BigDecimal("4.00"), g.name()),
+            new IngredientDetailDto(68, "Knoblauch", new BigDecimal("5.00"), g.name()),
+            new IngredientDetailDto(58, "Jungzwiebel", new BigDecimal("6.00"), mg.name()),
+            new IngredientDetailDto(147, "Sesamöl", new BigDecimal("7.00"), g.name())));
         ingredientDetailDtos.sort(Comparator.comparing(IngredientDetailDto::id));
         RecipeDetailDto recipe = recipeService.getRecipeDetailDtoById(recipeId);
         ArrayList<IngredientDetailDto> actualIngredients = recipe.ingredients();

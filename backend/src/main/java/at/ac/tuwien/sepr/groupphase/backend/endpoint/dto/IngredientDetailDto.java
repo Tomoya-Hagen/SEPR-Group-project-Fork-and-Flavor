@@ -6,6 +6,6 @@ public record IngredientDetailDto(
     long id,
     String name,
     BigDecimal amount,
-    long unit
+    String unit
 ) {
 }

@@ -3,7 +3,7 @@ import {AuthService} from '../../services/auth.service';
 import { RecipeService } from 'src/app/services/recipe.service';
 import { RecipeListDto } from 'src/app/dtos/recipe';
 import {Router} from '@angular/router';
-//import {ToastrService} from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
     public authService: AuthService,
     private service: RecipeService,
     private router: Router,
-//    private notification: ToastrService
+    private notification: ToastrService
   ) { }
 
   ngOnInit() {
@@ -40,10 +40,9 @@ export class HomeComponent implements OnInit {
             else{
               this.previousButtonDisabled = true;
             }
+            return;
           }
           this.recipes = data;
-          console.log(this.recipes);
-          
         },
         error: error => {
           console.error('Error fetching recipes', error);
@@ -51,17 +50,19 @@ export class HomeComponent implements OnInit {
           const errorMessage = error.status === 0
             ? 'Is the backend up?'
             : error.message.message;
- //         this.notification.error(errorMessage, 'Could Not Fetch Recipes');
+          this.notification.error(errorMessage, 'Could Not Fetch Recipes');
         }
       });
   }
   loadNextPage(){
     this.nextButtonDisabled = false;
+    this.previousButtonDisabled = false;
     this.page+=1;
     this.loadPage(true);
   }
 
   loadPreviousPage(){
+    this.nextButtonDisabled = false;
     this.previousButtonDisabled = false;
     this.page-=1;
     this.loadPage(false)

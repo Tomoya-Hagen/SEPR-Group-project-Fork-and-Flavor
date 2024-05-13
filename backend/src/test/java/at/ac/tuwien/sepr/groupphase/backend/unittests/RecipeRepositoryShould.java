@@ -52,8 +52,8 @@ class RecipeRepositoryShould {
             categoryRepository.findByNameAndType("Beilage", "SIDE_DISH").get()
         ));
         riceRecipe.setIngredients(
-            List.of(new RecipeIngredient(riceRecipe, ingredientRepository.findByName("Basmatireis").get(), BigDecimal.ONE, 1),
-                new RecipeIngredient(riceRecipe, ingredientRepository.findByName("Salz").get(), BigDecimal.ONE, 1)
+            List.of(new RecipeIngredient(riceRecipe, ingredientRepository.findByName("Basmatireis").get(), BigDecimal.ONE, RecipeIngredient.Unit.mg),
+                new RecipeIngredient(riceRecipe, ingredientRepository.findByName("Salz").get(), BigDecimal.ONE, RecipeIngredient.Unit.L)
             ));
         riceRecipe.setRecipeSteps(List.of(
             new RecipeDescriptionStep("Wasser kochen", "Einen Topf mit Wasser befüllen. Reichlich salzen und das Wasser zum Kochen bringen.", riceRecipe, 1),
@@ -77,15 +77,15 @@ class RecipeRepositoryShould {
         eggFriedRiceRecipe.setNumberOfServings((short) 1);
         eggFriedRiceRecipe.setIngredients(List.of(
             new RecipeIngredient(eggFriedRiceRecipe,
-                ingredientRepository.findByName("Zwiebel").get(), BigDecimal.ONE, 1),
+                ingredientRepository.findByName("Zwiebel").get(), BigDecimal.ONE, RecipeIngredient.Unit.mg),
             new RecipeIngredient(eggFriedRiceRecipe,
-                ingredientRepository.findByName("Ei").get(), BigDecimal.ONE, 1),
+                ingredientRepository.findByName("Ei").get(), BigDecimal.ONE, RecipeIngredient.Unit.g),
             new RecipeIngredient(eggFriedRiceRecipe,
-                ingredientRepository.findByName("Knoblauch").get(), BigDecimal.ONE, 1),
+                ingredientRepository.findByName("Knoblauch").get(), BigDecimal.ONE, RecipeIngredient.Unit.g),
             new RecipeIngredient(eggFriedRiceRecipe,
-                ingredientRepository.findByName("Jungzwiebel").get(), BigDecimal.ONE, 1),
+                ingredientRepository.findByName("Jungzwiebel").get(), BigDecimal.ONE, RecipeIngredient.Unit.mg),
             new RecipeIngredient(eggFriedRiceRecipe,
-                ingredientRepository.findByName("Sesamöl").get(), BigDecimal.ONE, 1)
+                ingredientRepository.findByName("Sesamöl").get(), BigDecimal.ONE, RecipeIngredient.Unit.g)
         ));
         eggFriedRiceRecipe.setRecipeSteps(List.of(
             new RecipeRecipeStep("Reis kochen eigentlich sollte er ein Tag alt sein aber das ist ein Beispiel",

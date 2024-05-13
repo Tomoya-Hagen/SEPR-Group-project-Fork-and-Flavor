@@ -31,6 +31,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.L;
+import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.g;
+import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.mg;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -56,13 +59,13 @@ class RecipeEndpointShould implements TestData {
     @Test
     void ReturnARecipeDetailDtoIfARecipeExistsByRecipeId() throws Exception {
         ArrayList<IngredientDetailDto> ingredientDetailDtos = new java.util.ArrayList<>(List.of(
-            new IngredientDetailDto(5, "Basmatireis", new BigDecimal("1.00"), 1),
-            new IngredientDetailDto(133, "Salz", new BigDecimal("2.00"), 1),
-            new IngredientDetailDto(189, "Zwiebel", new BigDecimal("3.00"), 1),
-            new IngredientDetailDto(23, "Ei", new BigDecimal("4.00"), 1),
-            new IngredientDetailDto(68, "Knoblauch", new BigDecimal("5.00"), 1),
-            new IngredientDetailDto(58, "Jungzwiebel", new BigDecimal("6.00"), 1),
-            new IngredientDetailDto(147, "SesamÃ¶l", new BigDecimal("7.00"), 1)));
+            new IngredientDetailDto(5, "Basmatireis", new BigDecimal("1.00"), mg.name()),
+            new IngredientDetailDto(133, "Salz", new BigDecimal("2.00"), L.name()),
+            new IngredientDetailDto(189, "Zwiebel", new BigDecimal("3.00"), mg.name()),
+            new IngredientDetailDto(23, "Ei", new BigDecimal("4.00"), g.name()),
+            new IngredientDetailDto(68, "Knoblauch", new BigDecimal("5.00"), g.name()),
+            new IngredientDetailDto(58, "Jungzwiebel", new BigDecimal("6.00"), mg.name()),
+            new IngredientDetailDto(147, "SesamÃ¶l", new BigDecimal("7.00"), g.name())));
         ingredientDetailDtos.sort(Comparator.comparing(IngredientDetailDto::id));
         MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI + "/details/{id}", 2))
             .andDo(print())

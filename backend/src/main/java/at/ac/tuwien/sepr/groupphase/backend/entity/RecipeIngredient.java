@@ -19,7 +19,14 @@ import java.util.Objects;
     uniqueConstraints = {
         @UniqueConstraint(columnNames = {"recipe_id", "ingredient_id"})})
 public class RecipeIngredient {
-    public RecipeIngredient(Recipe recipe, Ingredient ingredient, BigDecimal amount, long unit) {
+    public enum Unit {
+        mg,
+        g,
+        L,
+
+    }
+
+    public RecipeIngredient(Recipe recipe, Ingredient ingredient, BigDecimal amount, Unit unit) {
         this.recipe = recipe;
         this.ingredient = ingredient;
         this.unit = unit;
@@ -73,13 +80,13 @@ public class RecipeIngredient {
 
     @Basic
     @Column(name = "unit")
-    private long unit;
+    private Unit unit;
 
-    public long getUnit() {
+    public Unit getUnit() {
         return unit;
     }
 
-    public void setUnit(long unit) {
+    public void setUnit(Unit unit) {
         this.unit = unit;
     }
 

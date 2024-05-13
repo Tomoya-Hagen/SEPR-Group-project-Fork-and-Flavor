@@ -13,6 +13,9 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail/recipe-detail.component';
+import { ToastrModule } from 'ngx-toastr';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { SlickCarouselModule } from 'ngx-slick-carousel';
 
 @NgModule({
   declarations: [
@@ -32,6 +35,10 @@ import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-
     HttpClientModule,
     NgbModule,
     FormsModule,
+    ToastrModule.forRoot(),
+    // Needed for Toastr
+    BrowserAnimationsModule,
+    SlickCarouselModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
