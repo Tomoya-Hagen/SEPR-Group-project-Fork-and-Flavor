@@ -19,27 +19,21 @@
             </div>
           </div>
         </div>
-        <app-autocomplete
-          id="ingredient"
-          name="ingredient"
-          class="col-md-10 col-lg-8"
-          textInputClass="form-control"
-          valueNeedsToMatchSuggestion="true"
-          [(ngModel)]="ingredient"
-          [formatModel]="formatIngredient"
-          [suggestions]="ingredientSuggestions"
-        ></app-autocomplete>
 
-        <div class="form-group">
-          <label for="instructions">Instructions</label>
-          <textarea class="form-control" id="instructions" rows="5" placeholder="Enter instructions"></textarea>
-        </div>
+
+      <div *ngFor="let inneringredient of recipe.ingredients;let index = index">
+        <app-ingredient (ingredientChange)="ingredientchange()" [(ingredient)]="recipe.ingredients[index]"></app-ingredient>
+      </div>
+
+
+      <div class="container m-5">
         <button type="submit" class="btn btn-primary">Create Recipe</button>
+      </div>
     </div>
     <div class="col-md-6">
-      <h2>Preview</h2>
-      <div id="preview">
-        <!-- Preview of the recipe will appear here -->
+      <div class="form-group">
+        <label for="instructions">Instructions</label>
+        <textarea class="form-control" id="instructions" rows="5" placeholder="Enter instructions"></textarea>
       </div>
     </div>
   </div>

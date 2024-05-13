@@ -1,18 +1,11 @@
 import { Component, OnInit} from '@angular/core';
-import {AppModule} from "../../../app.module";
-import {Ingredient} from "../../../dtos/Ingredient";
 import {Recipe} from "../../../dtos/Recipe";
-import {FormsModule, NgForm, NgModel} from "@angular/forms";
-import {of} from "rxjs";
-import {IngredientService} from "../../../services/ingredient.service";
+import {NgForm} from "@angular/forms";
+import {IngredientComponent} from "./ingredient/ingredient.component";
+import {Ingredient} from "../../../dtos/Ingredient";
 
 @Component({
   selector: 'app-recipe-create',
-  standalone: true,
-  imports: [
-    AppModule,
-    FormsModule
-  ],
   templateUrl: './recipe-create.component.html',
   styleUrl: './recipe-create.component.scss'
 })
@@ -23,32 +16,21 @@ export class RecipeCreateComponent implements OnInit{
     description: '',
     servings: 0,
     ownerid: -1,
-    ingredients: null
-  }
-  ingredient: Ingredient = {
-    name: '',
-    id: 0
-  };
-
-  constructor(
-    private ingredientService: IngredientService
-  ){}
-
-
-  public formatIngredient(ingredient: Ingredient | null): string {
-    return ingredient?.name ?? '';
+    ingredients: []
   }
 
-  ingredientSuggestions = (input: string) => (input === '')
-    ? of([])
-    :  this.ingredientService.ingredientssByName(input, 5);
+  ingredientchange() {
+    console.log(this.recipe);
+    this.recipe.ingredients.push({name: "", id: -1});
+  }
 
 
   ngOnInit(): void {
-
+    this.recipe.ingredients.push({name: "", id: -1});
   }
 
   public onSubmit(form: NgForm): void {
 
+    console.log(this.recipe);
   }
 }

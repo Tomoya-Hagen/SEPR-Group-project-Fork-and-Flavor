@@ -13,6 +13,8 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {AutocompleteComponent} from "./components/autocomplete/autocomplete.component";
+import {RecipeCreateComponent} from "./components/recipe/recipe-create/recipe-create.component";
+import {IngredientComponent} from "./components/recipe/recipe-create/ingredient/ingredient.component";
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import {AutocompleteComponent} from "./components/autocomplete/autocomplete.comp
     HomeComponent,
     LoginComponent,
     MessageComponent,
-    AutocompleteComponent
+    AutocompleteComponent,
+    RecipeCreateComponent,
+    IngredientComponent
   ],
   imports: [
     BrowserModule,
