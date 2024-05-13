@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { RecipeDetailDto } from 'src/app/dtos/recipe';
@@ -9,7 +9,7 @@ import { RecipeService } from 'src/app/services/recipe.service';
   templateUrl: './recipe-detail.component.html',
   styleUrl: './recipe-detail.component.scss',
 })
-export class RecipeDetailComponent {
+export class RecipeDetailComponent implements OnInit{
   recipe: RecipeDetailDto = {
     id: 0,
     rating: 0,
@@ -31,6 +31,7 @@ export class RecipeDetailComponent {
     slidesToScroll: 1,
     dots: true
   }
+
   constructor(
     private service: RecipeService,
     private router: Router,
@@ -39,6 +40,7 @@ export class RecipeDetailComponent {
   ) { }
 
   ngOnInit(): void {
+
     this.route.params.subscribe(params => {
       let observable = this.service.getRecipeDetailsBy(params['id']);
       observable.subscribe({
