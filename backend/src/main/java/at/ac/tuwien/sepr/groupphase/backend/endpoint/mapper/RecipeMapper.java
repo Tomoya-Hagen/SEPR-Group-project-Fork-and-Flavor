@@ -5,6 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeIngredientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeDescriptionStep;
@@ -69,6 +70,13 @@ public interface RecipeMapper  {
             return recipeBuilder.build();
     };
 
-
     List<RecipeIngredient> recipeIngredientDtoToRecipeIngredientDto(List<RecipeIngredientDto> recipeIngredientDto);
+
+    default SimpleRecipeResultDto recipeToRecipeResultDto(Recipe r){
+        SimpleRecipeResultDto result = new SimpleRecipeResultDto();
+        result.setRecipeId(r.getId());
+        result.setWhichstep(false);
+        result.setRecipename(r.getName());
+        return result;
+    };
 }

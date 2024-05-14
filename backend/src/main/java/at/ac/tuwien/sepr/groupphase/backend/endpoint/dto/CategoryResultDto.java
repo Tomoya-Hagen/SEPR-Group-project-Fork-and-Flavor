@@ -2,14 +2,15 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
 import java.util.Objects;
 
-public class IngredientResultDto {
+public class CategoryResultDto {
+
     private Long id;
     private String name;
 
-    public IngredientResultDto() {
+    public CategoryResultDto() {
     }
 
-    public IngredientResultDto(Long id, String name) {
+    public CategoryResultDto(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -38,7 +39,7 @@ public class IngredientResultDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        IngredientResultDto that = (IngredientResultDto) o;
+        CategoryResultDto that = (CategoryResultDto) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }
 

@@ -1,4 +1,6 @@
 import {Ingredient} from "./Ingredient";
+import {Step} from "./Step";
+import {Category} from "./Category";
 
 export interface Recipe {
   name: string;
@@ -6,4 +8,7 @@ export interface Recipe {
   servings: number;
   ownerid: number;
   ingredients: Ingredient[];
+  steps: Step[]
+  category: Category[]
 }
+

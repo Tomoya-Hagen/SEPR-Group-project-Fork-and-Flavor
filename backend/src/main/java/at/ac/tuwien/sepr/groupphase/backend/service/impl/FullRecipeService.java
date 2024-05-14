@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
@@ -19,12 +21,14 @@ import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @Service
 public class FullRecipeService implements RecipeService {
@@ -69,12 +73,18 @@ public class FullRecipeService implements RecipeService {
 
         recipe.setRecipeSteps(null);
 
-        long i = recipeRepository.save(recipe);
+        recipeRepository.save(recipe);
 
         recipeIngredientRepository.saveAll(recipeIng);
 
         recipeStepRepository.saveAll(recipeStep);
 
         return recipeMapper.recipeToDetailedRecipeDto(recipe);
+    }
+
+    @Override
+    public Stream<SimpleRecipeResultDto> byname(String name, int limit) {
+        var x = recipeRepository.findByNameContainingWithLimit(name, PageRequest.of(0,limit)).stream().map(recipeMapper::recipeToRecipeResultDto);
+        return x;
     }
 }

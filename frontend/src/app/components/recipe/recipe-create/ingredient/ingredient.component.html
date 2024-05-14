@@ -17,14 +17,14 @@
     </div>
     <div class="col-md-3">
       <div class="form-group">
-        <label for="amount">Servings</label>
-        <input type="number" class="form-control" id="amount" placeholder="6">
+        <label for="amount">Amount</label>
+        <input [(ngModel)]="Ingredient.amount" name="amount" type="number" class="form-control" id="amount" placeholder="6">
       </div>
     </div>
     <div class="col-md-3">
       <div class="form-group">
-        <label for="unit">Name</label>
-        <input type="text" class="form-control" id="unit" placeholder="g">
+        <label for="unit">Unit</label>
+        <input [(ngModel)]="Ingredient.unit" name="unit" type="text" class="form-control" id="unit" placeholder="g">
       </div>
     </div>
   </div>

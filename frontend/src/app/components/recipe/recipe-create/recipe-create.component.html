@@ -1,51 +1,108 @@
 <form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
-<div class="container mt-5">
-  <h1 class="text-center mb-4">Recipe Creator</h1>
-  <div class="row">
-    <div class="col-md-6">
-        <div class="container p-0">
-          <div class="row">
-            <div class="col-md-9">
-              <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Wraps de mi abuela">
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Recipe Creator</h1>
+    <div class="row">
+      <div class="col-md-6 border-top rounded-top-1 border-end rounded-end-1">
+        <div class="container">
+            <div class="row">
+              <div class="col-md-9">
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input [(ngModel)]="recipe.name" name="name" type="text" class="form-control" id="name" placeholder="Wraps de mi abuela">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="servings">Servings</label>
+                  <input [(ngModel)]="recipe.servings" name="servings"  type="number" class="form-control" id="servings" placeholder="6">
+                </div>
               </div>
             </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="servings">Servings</label>
-                <input type="number" class="form-control" id="servings" placeholder="6">
+          </div>
+        <div class="col-md-12 p-1 border-bottom rounded-bottom-1">
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input [(ngModel)]="recipe.description" name="description" type="text" class="form-control" id="description" placeholder="Dies sind die besten Wraps meiner Oma. Wir aßen sie immer im jardín!">
+          </div>
+        </div>
+        <div class="col-md-12 p-1 border-top rounded-top-1">
+          <div class="row">
+            <div class="col-md-8 border-end rounded-end-1">
+              <div class="col-md-12" *ngFor="let inneringredient of recipe.ingredients; let i = index">
+                <app-ingredient
+                  (ingredientChange)="ingredientChangeHandler($event, i)"
+                  [(ingredient)]="recipe.ingredients[i]">
+                </app-ingredient>
+              </div>
+            </div>
+            <div class="col-md-4 border-start rounded-start-1">
+              <div class="col-md-12" *ngFor="let incategory of recipe.category; let i = index">
+                <div class="form-group">
+                  <label for="incategory{{i}}">Category</label>
+                  <app-autocomplete
+                    id="incategory{{i}}"
+                    name="incategory{{i}}"
+                    class="col-md-10 col-lg-8"
+                    textInputClass="form-control"
+                    valueNeedsToMatchSuggestion="true"
+                    [(ngModel)]="recipe.category[i]"
+                    [formatModel]="formatCategory"
+                    [suggestions]="categorySuggestions"
+                    (ngModelChange)="categorychanged(i)"
+                  ></app-autocomplete>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      <div class="col-md-12">
-        <div class="form-group">
-          <label for="description">Description</label>
-          <input type="text" class="form-control" id="description" placeholder="Dies sind die besten Wraps meiner Oma. Wir aßen sie immer im jardín!">
+      </div>
+      <div class="col-md-6 border-top rounded-top-1 border-start rounded-start-1">
+        <div *ngFor="let step of recipe.steps; let i = index">
+          <div id="fullrecipestep{{i}}">
+            <div class="form-group">
+              <label for="stepname{{i}}">Step-Name</label>
+              <input type="text" class="form-control" id="stepname{{i}}" placeholder="Enter Name" [(ngModel)]="step.name" name="stepname{{i}}">
+            </div>
+            <div class="row">
+              <div class="form-group"
+                   [ngClass]="recipe.steps[i].whichstep === null ? 'col-md-9' : 'col-md-12'"
+                   *ngIf="recipe.steps[i].whichstep === null ? true : recipe.steps[i].whichstep"
+              >
+                <label for="instructions{{i}}">Instructions</label>
+                <textarea
+                  [(ngModel)]="step.description"
+                  (ngModelChange)="textareachange(i)"
+                  name="instructions{{i}}"
+                  id="instructions{{i}}"
+                  class="form-control"
+                  rows="5" placeholder="Enter instructions"
+                ></textarea>
+              </div>
+
+              <div class="form-group"
+                   [ngClass]="recipe.steps[i].whichstep === null ? 'col-md-3' : 'col-md-12'"
+                   *ngIf="recipe.steps[i].whichstep === null ? true : !recipe.steps[i].whichstep">
+                <label for="recipestep{{i}}">Recipe Instruction</label>
+                <app-autocomplete
+                  id="recipestep{{i}}"
+                  name="recipestep{{i}}"
+                  class="col-md-10 col-lg-8"
+                  textInputClass="form-control"
+                  valueNeedsToMatchSuggestion="true"
+                  [(ngModel)]="recipe.steps[i]"
+                  [formatModel]="formatRecipeStep"
+                  [suggestions]="recipeStepSuggestions"
+                  (ngModelChange)="stepchanged(i)"
+                ></app-autocomplete>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-
-      <div *ngFor="let inneringredient of recipe.ingredients; let index = index">
-        <app-ingredient
-          (ingredientChange)="ingredientChangeHandler($event, index)"
-          [(ingredient)]="recipe.ingredients[index]">
-        </app-ingredient>
-      </div>
-
-
 
       <div class="container m-5">
         <button type="submit" class="btn btn-primary">Create Recipe</button>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="form-group">
-        <label for="instructions">Instructions</label>
-        <textarea class="form-control" id="instructions" rows="5" placeholder="Enter instructions"></textarea>
-      </div>
-    </div>
   </div>
-</div>
 </form>
