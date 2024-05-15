@@ -6,7 +6,6 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRoleRepository;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
@@ -14,7 +13,6 @@ import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
-@Profile("generateData")
 @Component
 public class UserDataGenerator {
 

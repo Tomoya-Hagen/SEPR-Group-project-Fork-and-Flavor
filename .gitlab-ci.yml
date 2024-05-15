@@ -41,7 +41,7 @@ e2e-test:
     - npm run start &
     - cd ../backend
     - mvn -B clean install -DskipTests
-    - java -jar -Dspring.profiles.active=generateData target/*.jar &
+    - java -jar target/*.jar &
     - sleep 30
     - cd ../e2e
     - npm ci --legacy-peer-deps

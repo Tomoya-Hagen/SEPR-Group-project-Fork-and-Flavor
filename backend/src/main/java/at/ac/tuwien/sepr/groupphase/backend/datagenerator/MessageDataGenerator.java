@@ -4,14 +4,12 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Message;
 import at.ac.tuwien.sepr.groupphase.backend.repository.MessageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 
-@Profile("generateData")
 @Component
 public class MessageDataGenerator {
 
