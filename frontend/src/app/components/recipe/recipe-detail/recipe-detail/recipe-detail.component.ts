@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { RecipeDetailDto } from 'src/app/dtos/recipe';
+import { RecipeStepDetailDto } from 'src/app/dtos/recipe-step';
 import { RecipeService } from 'src/app/services/recipe.service';
 
 @Component({
@@ -25,11 +26,14 @@ export class RecipeDetailComponent implements OnInit{
     allergens: [],
     nutritions: []
   };
+  returnClass = true;
   bannerError: string | null = null;
   slideConfig = {
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    dots: true
+    "slidesToShow": 1,
+    "slidesToScroll": 1,
+    "dots": true,
+    "arrows" : true,
+    "infinite" : false
   }
 
   constructor(
@@ -46,19 +50,32 @@ export class RecipeDetailComponent implements OnInit{
       observable.subscribe({
         next: data => {
           this.recipe = data;
-          console.log(this.recipe);
-
         },
         error: error => {
-          console.error('Error fetching Horse', error);
-          this.bannerError = 'Could not fetch horse: ' + error.message;
+          console.error('Error fetching Recipe', error);
+          this.bannerError = 'Could not fetch recipe: ' + error.message;
           const errorMessage = error.status === 0
             ? 'Is the backend up?'
             : error.message.message;
-          this.notification.error(errorMessage, 'Could Not Fetch Horse');
-          this.router.navigate(['/horses'])
+          this.notification.error(errorMessage, 'Could Not Fetch Recipe');
+          this.router.navigate([''])
         }
       });
     });
+  }
+
+  isRecipeDescriptionStep(recipeStep: RecipeStepDetailDto) :boolean{
+    if(recipeStep.hasOwnProperty('description')) {
+        return true;
+    } else {
+        return false;
+    }
+  }
+
+  isCategoriesNotEmpty(): boolean{
+    return this.recipe.categories.length != 0;
+  }
+  isAllergensNotEmpty(): boolean{
+    return this.recipe.allergens.length != 0;
   }
 }

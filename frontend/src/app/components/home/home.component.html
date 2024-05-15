@@ -25,7 +25,7 @@
         weiter
       </button>
       <select [(ngModel)]="step" (change)="selectedStepChanged()">
-        <option *ngFor="let step of steps" value="{{step}}">{{step}}</option>
+        <option *ngFor="let step of steps" value="{{step}}">Show {{step}} items</option>
       </select>
     </div>
   </div>

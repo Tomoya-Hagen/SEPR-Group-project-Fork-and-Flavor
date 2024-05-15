@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  steps = [10, 25, 50, 100];
+  steps = [1, 10, 25, 50, 100];
   bannerError: string | null = null;
   page = 0;
   step = 10;
