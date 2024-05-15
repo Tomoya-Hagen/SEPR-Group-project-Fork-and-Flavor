@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,63 +9,59 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.sql.Date;
 
 @Entity
-@Table(name = "Weekly_Planner", schema = "PUBLIC", catalog = "DB")
+@Table(name = "Weekly_Planner", schema = "PUBLIC", catalog = "DB",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"cook_date", "daytime", "recipe_book_id"})}
+)
 public class WeeklyPlanner {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
     private long id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    private ApplicationUser owner;
+    @Basic
+    @Column(name = "cook_date")
+    private Date date;
+    @Basic
+    @Column(name = "daytime")
+    private Date daytime;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipe_id", nullable = false)
+    private Recipe recipe;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_book_id", nullable = false)
     private RecipeBook recipeBook;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "weekly_planner_id", referencedColumnName = "id")
-    private List<WeeklyPlannerItem> weeklyPlannerItems = new ArrayList<>();
 
-    public long getId() {
-        return id;
+    public Date getDate() {
+        return date;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public ApplicationUser getOwner() {
-        return owner;
+    public Date getDaytime() {
+        return daytime;
     }
 
-    public void setUserId(ApplicationUser owner) {
-        this.owner = owner;
+    public void setDaytime(Date daytime) {
+        this.daytime = daytime;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        WeeklyPlanner that = (WeeklyPlanner) o;
-        return Objects.equals(id, that.id) && Objects.equals(owner, that.owner);
+    public Recipe getRecipe() {
+        return recipe;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, owner);
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
     }
+
+
 }

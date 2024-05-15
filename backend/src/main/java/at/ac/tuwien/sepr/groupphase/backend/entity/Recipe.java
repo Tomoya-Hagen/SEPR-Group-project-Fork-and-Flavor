@@ -97,7 +97,7 @@ public class Recipe {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<WeeklyPlannerItem> weeklyPlannerItems = new ArrayList<>();
+    private List<WeeklyPlanner> weeklyPlanner = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")

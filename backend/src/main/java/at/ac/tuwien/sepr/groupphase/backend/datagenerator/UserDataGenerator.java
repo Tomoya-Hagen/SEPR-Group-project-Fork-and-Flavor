@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
-@Profile("generateData")
 @Component
 @Order(1)
 public class UserDataGenerator {

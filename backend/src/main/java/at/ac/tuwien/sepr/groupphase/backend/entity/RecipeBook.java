@@ -43,6 +43,10 @@ public class RecipeBook {
     )
     private List<Recipe> recipes = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "recipe_book_id", referencedColumnName = "id")
+    private List<WeeklyPlanner> weeklyPlanner;
+
     public void setId(long id) {
         this.id = id;
     }

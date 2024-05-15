@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Profile("generateData")
 @Component
 @Order(5)
 public class RecipeDataGenerator extends DataGenerator implements CommandLineRunner {

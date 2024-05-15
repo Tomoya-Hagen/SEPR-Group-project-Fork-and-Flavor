@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-@Profile("generateData")
 @Component
 @Order(4)
 public class IngredientDataGenerator implements CommandLineRunner {

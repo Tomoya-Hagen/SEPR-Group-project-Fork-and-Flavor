@@ -15,7 +15,6 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Optional;
 
-@Profile("generateData")
 @Component
 @Order(3)
 public class CategoryDataGenerator extends DataGenerator implements CommandLineRunner {

@@ -128,11 +128,6 @@ public class ApplicationUser {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<Rating> ratings;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private List<WeeklyPlanner> weeklyPlanners;
-
-
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "user_recipe_book",
         joinColumns = {@JoinColumn(name = "user_id")},

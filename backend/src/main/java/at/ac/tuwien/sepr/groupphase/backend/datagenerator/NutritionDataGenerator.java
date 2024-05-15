@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-@Profile("generateData")
 @Component
 @Order(2)
 public class NutritionDataGenerator implements CommandLineRunner {

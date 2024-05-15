@@ -15,7 +15,6 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Optional;
 
-@Profile("generateData")
 @Component
 @Order(1)
 public class AllergenDataGenerator extends DataGenerator implements CommandLineRunner {
