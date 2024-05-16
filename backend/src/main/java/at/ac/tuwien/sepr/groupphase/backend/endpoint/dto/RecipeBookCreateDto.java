@@ -1,8 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
-import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeBook;
-import at.ac.tuwien.sepr.groupphase.backend.entity.UserRecipeBook;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
