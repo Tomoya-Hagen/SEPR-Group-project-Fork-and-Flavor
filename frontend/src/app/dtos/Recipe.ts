@@ -6,9 +6,9 @@ export interface Recipe {
   name: string;
   description: string;
   servings: number;
-  ownerid: number;
+  ownerId: number;
   ingredients: Ingredient[];
   steps: Step[]
-  category: Category[]
+  categories: Category[]
 }
 

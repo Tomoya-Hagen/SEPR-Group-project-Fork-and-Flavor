@@ -10,6 +10,7 @@ import {Step} from "../../../dtos/Step";
 import {SimpleRecipe} from "../../../dtos/SimpleRecipe";
 import {SimpleCategory} from "../../../dtos/SimpleCategory";
 import {CategoryService} from "../../../services/CategoryService";
+import {DetailedRecipeDto} from "../../../dtos/DetailedRecipeDto";
 
 @Component({
   selector: 'app-recipe-create',
@@ -18,14 +19,16 @@ import {CategoryService} from "../../../services/CategoryService";
 })
 export class RecipeCreateComponent implements OnInit{
 
+  error = false;
+  errorMessage = '';
   recipe: Recipe = {
     name: '',
     description: '',
     servings: 0,
-    ownerid: -1,
+    ownerId: -1,
     ingredients: [],
     steps: [],
-    category: []
+    categories: []
   }
 
   constructor(
@@ -45,25 +48,48 @@ export class RecipeCreateComponent implements OnInit{
   ngOnInit(): void {
     this.recipe.ingredients.push({name: "", id: -1,amount: 0, unit:"g"});
     this.recipe.steps.push(new Step());
-    this.recipe.category.push({id: 0, name: ""});
+    this.recipe.categories.push({id: 0});
     console.log(this.recipe.steps);
   }
 
   public onSubmit(form: NgForm): void {
     this.recipe.steps.pop();
-    this.recipe.category.pop();
+    this.recipe.categories.pop();
     this.recipe.ingredients.pop();
     this.recipe.steps.forEach(step => {
       if(step.description){
         delete step.recipeId;
       }
     })
-    this.recipe.category.forEach(cat => {
-      delete cat.name;
-    })
     console.log(this.recipe);
+    let retrecipe = this.recipeService.createRecipe(this.recipe);
+
+    this.recipeService.createRecipe(this.recipe).subscribe({
+        next: (detrecipe: DetailedRecipeDto) => {
+          console.log(detrecipe)
+        },
+        error: error => {
+          this.defaultServiceErrorHandling(error);
+        }
+      }
+    );
+    console.log(retrecipe);
   }
 
+
+  private defaultServiceErrorHandling(error: any) {
+    console.log(error);
+    this.error = true;
+    if (typeof error.error === 'object') {
+      this.errorMessage = error.error.error;
+    } else {
+      this.errorMessage = error.error;
+    }
+  }
+
+  vanishError() {
+    this.error = false;
+  }
 
 
   public textareachange(index : number) : void{
@@ -107,13 +133,57 @@ export class RecipeCreateComponent implements OnInit{
     :  this.categoryService.categoryByName(input, 5);
 
   public categorychanged(index: number):void{
-    console.log(this.recipe.category)
-    if(this.recipe.category[index] == null){
-      this.recipe.category[index] = {id: 0, name: ""}
+    console.log(this.recipe.categories)
+    if(this.recipe.categories[index] == null){
+      this.recipe.categories[index] = {id: 0}
     }
-    if(this.recipe.category[index].id != 0 && this.recipe.category.length -1 == index){
-      this.recipe.category.push({id: 0, name: ""});
+    if(this.recipe.categories[index].id != 0 && this.recipe.categories.length -1 == index){
+      this.recipe.categories.push({id: 0});
     }
+  }
+
+  public fill() {
+    let rec = {
+      name: "A",
+      description: "B",
+      servings: 1,
+      ownerId: 1,
+      ingredients: [
+        {
+          id: 1,
+          name: "Ananas",
+          amount: 5,
+          unit: "g"
+        },
+        {
+          id: 133,
+          name: "Salz",
+          amount: 10,
+          unit: "kg"
+        }
+      ],
+      steps: [
+        {
+          name: "1",
+          description: "1",
+          whichstep: true,
+        },
+        {
+          recipeId: 2,
+          whichstep: false,
+          name: "2"
+        }
+      ],
+      categories: [
+        {
+          id: 2
+        },
+        {
+          id: 6
+        }
+      ]
+    }
+    this.recipe=rec;
   }
 }
 

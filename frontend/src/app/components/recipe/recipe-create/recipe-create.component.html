@@ -36,7 +36,7 @@
               </div>
             </div>
             <div class="col-md-4 border-start rounded-start-1">
-              <div class="col-md-12" *ngFor="let incategory of recipe.category; let i = index">
+              <div class="col-md-12" *ngFor="let incategory of recipe.categories; let i = index">
                 <div class="form-group">
                   <label for="incategory{{i}}">Category</label>
                   <app-autocomplete
@@ -45,7 +45,7 @@
                     class="col-md-10 col-lg-8"
                     textInputClass="form-control"
                     valueNeedsToMatchSuggestion="true"
-                    [(ngModel)]="recipe.category[i]"
+                    [(ngModel)]="recipe.categories[i]"
                     [formatModel]="formatCategory"
                     [suggestions]="categorySuggestions"
                     (ngModelChange)="categorychanged(i)"
@@ -103,6 +103,11 @@
       <div class="container m-5">
         <button type="submit" class="btn btn-primary">Create Recipe</button>
       </div>
+
+      <div *ngIf="false" class="container m-5">
+        <a (click)="fill()" class="btn btn-primary">Fill</a>
+      </div>
+
     </div>
   </div>
 </form>

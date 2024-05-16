@@ -2,8 +2,8 @@
 
 export class Step {
   name: string;
-  description: string;
-  recipeId: number;
+  description?: string;
+  recipeId?: number;
   whichstep: boolean;
 
   constructor() {
