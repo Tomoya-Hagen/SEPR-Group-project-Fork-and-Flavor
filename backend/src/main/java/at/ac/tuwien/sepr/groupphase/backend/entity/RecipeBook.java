@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import jakarta.persistence.*;
 
 import java.util.List;

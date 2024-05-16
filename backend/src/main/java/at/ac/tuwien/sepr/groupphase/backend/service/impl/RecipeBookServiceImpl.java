@@ -1,14 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeBookMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
-import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -39,12 +38,12 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         recipeBook.setName(recipeBookCreateDto.name());
         recipeBook.setDescription(recipeBookCreateDto.description());
         recipeBook.setOwnerId(recipeBookCreateDto.ownerId());
-        List<Long> userIds = recipeBookCreateDto.userIds();
-        List<ApplicationUser> users = new ArrayList<>();
-        for (Long userId: userIds) {
-            users.add(userRepository.getById(userId));
+        List<UserListDto> users = recipeBookCreateDto.users();
+        List<ApplicationUser> result = new ArrayList<>();
+        for (UserListDto user: users) {
+            result.add(userRepository.getById(user.id()));
         }
-        recipeBook.setUsers(users);
+        recipeBook.setUsers(result);
         recipeBook.setRecipes(recipeMapper.ListOfRecipeListDtoToRecipeList(recipeBookCreateDto.recipes()));
         return recipeRepository.save(recipeBook);
     }
