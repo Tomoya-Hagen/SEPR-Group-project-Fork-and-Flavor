@@ -16,6 +16,13 @@ import java.util.Objects;
 @Table(name = "Recipe_Ingredient", schema = "PUBLIC", catalog = "DB")
 @IdClass(Recipeingredientpk.class)
 public class RecipeIngredient {
+    public enum Unit {
+        mg,
+        g,
+        L,
+
+    }
+
     @Id
     @Column(name = "recipe_id")
     private long recipeId;
@@ -54,13 +61,13 @@ public class RecipeIngredient {
 
     @Basic
     @Column(name = "unit")
-    private long unit;
+    private Unit  unit;
 
-    public long getUnit() {
+    public Unit  getUnit() {
         return unit;
     }
 
-    public void setUnit(long unit) {
+    public void setUnit(Unit  unit) {
         this.unit = unit;
     }
 

@@ -17,11 +17,15 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeIngredientRepositor
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRecipeStepRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeStepRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -40,15 +44,17 @@ public class FullRecipeService implements RecipeService {
     private final RecipeIngredientRepository recipeIngredientRepository;
     private final RecipeMapper recipeMapper;
     private final RecipeStepRepository recipeStepRepository;
+    private final UserRepository userRepository;
 
     public FullRecipeService(RecipeRepository recipeRepository, RecipeMapper recipeMapper,
                              CategoryRepository categoryRepository, RecipeIngredientRepository recipeIngredientRepository,
-                             RecipeStepRepository recipeStepRepository) {
+                             RecipeStepRepository recipeStepRepository, UserRepository userRepository) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
         this.categoryRepository = categoryRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.recipeStepRepository = recipeStepRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -58,9 +64,9 @@ public class FullRecipeService implements RecipeService {
         Recipe recipe = recipeMapper.recipeCreateDtoToRecipe(recipeDto, recipeRepository.findMaxId() + 1);
 
         Set<Category> categories = new HashSet<>();
-        for (RecipeCategoryDto category : recipeDto.getRecipeCategories()) {
+        for (RecipeCategoryDto category : recipeDto.getCategories()) {
             Category c = new Category();
-            c.setId(category.getCategoryId());
+            c.setId(category.getId());
             categories.add(c);
         }
 
@@ -73,6 +79,12 @@ public class FullRecipeService implements RecipeService {
 
         recipe.setRecipeSteps(null);
 
+        var auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long ownerid = 0;
+        if(auth instanceof String) {
+            ownerid = userRepository.findFirstUserByEmail((String) auth).getId();
+        }
+        recipe.setOwnerId(ownerid);
         recipeRepository.save(recipe);
 
         recipeIngredientRepository.saveAll(recipeIng);

@@ -7,20 +7,22 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class RecipeIngredientDto {
-    @NotNull(message = "ingredientId must not be null")
-    private long ingredientId;
-    @NotNull(message = "Amount must not be null")
-    private BigDecimal amount;
-    @NotNull(message = "String must not be null")
-    private long unit;
 
-    @NotNull(message = "ingredientid must not be null")
-    public long getIngredientId() {
-        return ingredientId;
+    @NotNull(message = "ingredientId must not be null")
+    private long id;
+
+    @NotNull(message = "amount must not be null")
+    private BigDecimal amount;
+
+    @NotNull(message = "unit must not be null")
+    private String unit;
+
+    public long getId() {
+        return id;
     }
 
-    public void setIngredientId(long ingredientId) {
-        this.ingredientId = ingredientId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public BigDecimal getAmount() {
@@ -31,12 +33,11 @@ public class RecipeIngredientDto {
         this.amount = amount;
     }
 
-
-    public long getUnit() {
+    public String getUnit() {
         return unit;
     }
 
-    public void setUnit(long unit) {
+    public void setUnit(String unit) {
         this.unit = unit;
     }
 
@@ -49,18 +50,19 @@ public class RecipeIngredientDto {
             return false;
         }
         RecipeIngredientDto that = (RecipeIngredientDto) o;
-        return ingredientId == that.ingredientId && unit == that.unit && Objects.equals(amount, that.amount);
+        return id == that.id && Objects.equals(unit, that.unit) && Objects.equals(amount, that.amount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ingredientId, amount, unit);
+        return Objects.hash(id, amount, unit);
     }
 
+
     public static final class RecipeIngredientDtoBuilder {
-        private long ingredientId;
+        private long id;
         private BigDecimal amount;
-        private long unit;
+        private String unit;
 
         private RecipeIngredientDtoBuilder() {
         }
@@ -69,8 +71,8 @@ public class RecipeIngredientDto {
             return new RecipeIngredientDtoBuilder();
         }
 
-        public RecipeIngredientDtoBuilder withIngredientId(long ingredientId) {
-            this.ingredientId = ingredientId;
+        public RecipeIngredientDtoBuilder withId(long id) {
+            this.id = id;
             return this;
         }
 
@@ -79,14 +81,14 @@ public class RecipeIngredientDto {
             return this;
         }
 
-        public RecipeIngredientDtoBuilder withUnit(long unit) {
+        public RecipeIngredientDtoBuilder withUnit(String unit) {
             this.unit = unit;
             return this;
         }
 
         public RecipeIngredientDto build() {
             RecipeIngredientDto recipeIngredientDto = new RecipeIngredientDto();
-            recipeIngredientDto.setIngredientId(ingredientId);
+            recipeIngredientDto.setId(id);
             recipeIngredientDto.setAmount(amount);
             recipeIngredientDto.setUnit(unit);
             return recipeIngredientDto;

@@ -5,15 +5,16 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class RecipeCategoryDto {
-    @NotNull(message = "categoryId must not be null")
-    int categoryId;
 
-    public int getCategoryId() {
-        return categoryId;
+    @NotNull(message = "categoryId must not be null")
+    int id;
+
+    public int getId() {
+        return id;
     }
 
-    public void setCategoryId(int id) {
-        this.categoryId = id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
@@ -25,17 +26,16 @@ public class RecipeCategoryDto {
             return false;
         }
         RecipeCategoryDto that = (RecipeCategoryDto) o;
-        return categoryId == that.categoryId;
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(categoryId);
+        return Objects.hashCode(id);
     }
 
-
     public static final class RecipeCategoryDtoBuilder {
-        private int categoryId;
+        private int id;
 
         private RecipeCategoryDtoBuilder() {
         }
@@ -44,15 +44,17 @@ public class RecipeCategoryDto {
             return new RecipeCategoryDtoBuilder();
         }
 
-        public RecipeCategoryDtoBuilder withId(int categoryId) {
-            this.categoryId = categoryId;
+        public RecipeCategoryDtoBuilder withId(int id) {
+            this.id = id;
             return this;
         }
 
         public RecipeCategoryDto build() {
             RecipeCategoryDto recipeCategoryDto = new RecipeCategoryDto();
-            recipeCategoryDto.setCategoryId(categoryId);
+            recipeCategoryDto.setId(id);
             return recipeCategoryDto;
         }
     }
 }
+
+

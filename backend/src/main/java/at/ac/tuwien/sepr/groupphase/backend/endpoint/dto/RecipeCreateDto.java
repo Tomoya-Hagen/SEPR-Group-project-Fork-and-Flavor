@@ -14,15 +14,15 @@ public class RecipeCreateDto {
     @Size(max = 500)
     private String description;
     @NotNull(message = "Number of servings must not be null")
-    private Short numberOfServings;
+    private Short servings;
     @NotNull(message = "User must not be null")
     private int ownerId;
     @NotNull(message = "Recipe steps must not be null")
-    private List<RecipeStepDto> recipeSteps;
+    private List<RecipeStepDto> steps;
     @NotNull(message = "Recipe categories must not be null")
-    private List<RecipeCategoryDto> recipeCategories;
+    private List<RecipeCategoryDto> categories;
     @NotNull(message = "Recipe ingredients must not be null")
-    private List<RecipeIngredientDto> recipeIngredients;
+    private List<RecipeIngredientDto> ingredients;
 
     public String getName() {
         return name;
@@ -40,12 +40,12 @@ public class RecipeCreateDto {
         this.description = description;
     }
 
-    public Short getNumberOfServings() {
-        return numberOfServings;
+    public Short getServings() {
+        return servings;
     }
 
-    public void setNumberOfServings(Short numberOfServings) {
-        this.numberOfServings = numberOfServings;
+    public void setServings(Short servings) {
+        this.servings = servings;
     }
 
     public int getOwnerId() {
@@ -56,28 +56,28 @@ public class RecipeCreateDto {
         this.ownerId = ownerId;
     }
 
-    public  List<RecipeStepDto> getRecipeSteps() {
-        return recipeSteps;
+    public List<RecipeStepDto> getSteps() {
+        return steps;
     }
 
-    public void setRecipeSteps(List<RecipeStepDto> recipeSteps) {
-        this.recipeSteps = recipeSteps;
+    public void setSteps(List<RecipeStepDto> steps) {
+        this.steps = steps;
     }
 
-    public List<RecipeCategoryDto> getRecipeCategories() {
-        return recipeCategories;
+    public List<RecipeCategoryDto> getCategories() {
+        return categories;
     }
 
-    public void setRecipeCategories( List<RecipeCategoryDto> recipeCategories) {
-        this.recipeCategories = recipeCategories;
+    public void setCategories(List<RecipeCategoryDto> categories) {
+        this.categories = categories;
     }
 
-    public  List<RecipeIngredientDto> getRecipeIngredients() {
-        return recipeIngredients;
+    public List<RecipeIngredientDto> getIngredients() {
+        return ingredients;
     }
 
-    public void setRecipeIngredients( List<RecipeIngredientDto> recipeIngredients) {
-        this.recipeIngredients = recipeIngredients;
+    public void setIngredients(List<RecipeIngredientDto> ingredients) {
+        this.ingredients = ingredients;
     }
 
     @Override
@@ -89,29 +89,23 @@ public class RecipeCreateDto {
             return false;
         }
         RecipeCreateDto that = (RecipeCreateDto) o;
-        return Objects.equals(name, that.name)
-            && Objects.equals(description, that.description)
-            && Objects.equals(numberOfServings, that.numberOfServings)
-            && Objects.equals(ownerId, that.ownerId)
-            && Objects.equals(recipeSteps, that.recipeSteps)
-            && Objects.equals(recipeCategories, that.recipeCategories)
-            && Objects.equals(recipeIngredients, that.recipeIngredients);
+        return ownerId == that.ownerId && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(servings, that.servings) && Objects.equals(steps, that.steps) && Objects.equals(categories, that.categories) && Objects.equals(ingredients, that.ingredients);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, numberOfServings, ownerId, recipeSteps, recipeCategories, recipeIngredients);
+        return Objects.hash(name, description, servings, ownerId, steps, categories, ingredients);
     }
 
 
     public static final class RecipeCreateDtoBuilder {
         private String name;
         private String description;
-        private Short numberOfServings;
+        private Short servings;
         private int ownerId;
-        private List<RecipeStepDto> recipeSteps;
-        private List<RecipeCategoryDto> recipeCategories;
-        private List<RecipeIngredientDto> recipeIngredients;
+        private List<RecipeStepDto> steps;
+        private List<RecipeCategoryDto> categories;
+        private List<RecipeIngredientDto> ingredients;
 
         private RecipeCreateDtoBuilder() {
         }
@@ -130,28 +124,28 @@ public class RecipeCreateDto {
             return this;
         }
 
-        public RecipeCreateDtoBuilder withNumberOfServings(Short numberOfServings) {
-            this.numberOfServings = numberOfServings;
+        public RecipeCreateDtoBuilder withServings(Short servings) {
+            this.servings = servings;
             return this;
         }
 
-        public RecipeCreateDtoBuilder withOwnerId(int user) {
+        public RecipeCreateDtoBuilder withOwnerId(int ownerId) {
             this.ownerId = ownerId;
             return this;
         }
 
-        public RecipeCreateDtoBuilder withRecipeSteps(List<RecipeStepDto> recipeSteps) {
-            this.recipeSteps = recipeSteps;
+        public RecipeCreateDtoBuilder withSteps(List<RecipeStepDto> steps) {
+            this.steps = steps;
             return this;
         }
 
-        public RecipeCreateDtoBuilder withRecipeCategories(List<RecipeCategoryDto> recipeCategories) {
-            this.recipeCategories = recipeCategories;
+        public RecipeCreateDtoBuilder withCategories(List<RecipeCategoryDto> categories) {
+            this.categories = categories;
             return this;
         }
 
-        public RecipeCreateDtoBuilder withRecipeIngredients(List<RecipeIngredientDto> recipeIngredients) {
-            this.recipeIngredients = recipeIngredients;
+        public RecipeCreateDtoBuilder withIngredients(List<RecipeIngredientDto> ingredients) {
+            this.ingredients = ingredients;
             return this;
         }
 
@@ -159,11 +153,11 @@ public class RecipeCreateDto {
             RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
             recipeCreateDto.setName(name);
             recipeCreateDto.setDescription(description);
-            recipeCreateDto.setNumberOfServings(numberOfServings);
+            recipeCreateDto.setServings(servings);
             recipeCreateDto.setOwnerId(ownerId);
-            recipeCreateDto.setRecipeSteps(recipeSteps);
-            recipeCreateDto.setRecipeCategories(recipeCategories);
-            recipeCreateDto.setRecipeIngredients(recipeIngredients);
+            recipeCreateDto.setSteps(steps);
+            recipeCreateDto.setCategories(categories);
+            recipeCreateDto.setIngredients(ingredients);
             return recipeCreateDto;
         }
     }
