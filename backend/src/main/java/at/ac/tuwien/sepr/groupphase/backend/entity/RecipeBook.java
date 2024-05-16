@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -73,10 +74,10 @@ public class RecipeBook {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_book_id", referencedColumnName = "id")
-    private List<UserRecipeBook> userRecipeBooks;
+    private List<ApplicationUser> users;
 
-    public void setUserRecipeBooks(List<UserRecipeBook> userRecipeBooks) {
-        this.userRecipeBooks = userRecipeBooks;
+    public void setUsers(List<ApplicationUser> users) {
+        this.users = users;
     }
 
     @OneToMany(cascade = CascadeType.ALL)

@@ -12,7 +12,7 @@ import java.util.List;
  * @param name
  * @param description
  * @param ownerId
- * @param userRecipeBooks
+ * @param userIds
  */
 public record RecipeBookCreateDto (
     @NotNull
@@ -29,7 +29,7 @@ public record RecipeBookCreateDto (
     Long ownerId,
 
     @NotNull
-    List<UserRecipeBookDto> userRecipeBooks,
+    List<Long> userIds,
 
     @NotNull
     List<RecipeListDto> recipes
