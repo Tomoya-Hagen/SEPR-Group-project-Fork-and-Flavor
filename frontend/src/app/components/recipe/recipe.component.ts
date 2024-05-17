@@ -1,7 +1,10 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
+import {debounceTime, Subject} from "rxjs";
+import {RecipeList, RecipeSearch} from "../../dtos/recipe";
+import {RecipeService} from "../../services/recipe.service";
 
 export interface RecipeData{
   id: string;
@@ -31,7 +34,7 @@ const NAMES: string[] = [
   styleUrl: './recipe.component.scss'
 })
 
-export class RecipeComponent implements AfterViewInit {
+export class RecipeComponent implements AfterViewInit, OnInit {
   displayedColumns: string[] = ['name'];
   dataSource: MatTableDataSource<RecipeData>;
   clickedRows = new Set<RecipeData>();
@@ -39,9 +42,16 @@ export class RecipeComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() {
-    const recipes = Array.from({length: 20}, (_, k) => createNewRecipe(k + 1));
-    this.dataSource = new MatTableDataSource(recipes);
+  searchParams: RecipeSearch = {};
+  recipes: RecipeList[] = [];
+  searchChangedObservable = new Subject<void>();
+
+  constructor(
+    private service: RecipeService,
+  ) {
+    const recipesExample = Array.from({length: 15}, (_, k) => createNewRecipe(k + 1));
+    this.dataSource = new MatTableDataSource(recipesExample);
+
   }
 
   ngAfterViewInit() {
@@ -57,7 +67,29 @@ export class RecipeComponent implements AfterViewInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  ngOnInit(): void {
+    this.reload();
+    this.searchChangedObservable
+      .pipe(debounceTime(300))
+      .subscribe({next: () => this.reload()});
+  }
+
+  reload() {
+    this.service.search(this.searchParams)
+      .subscribe({
+        next: data => {
+          this.recipes = data;
+          this.ngAfterViewInit();
+        }
+      });
+  }
+
+  searchChanged(): void {
+    this.searchChangedObservable.next();
+  }
 }
+
 
 /** Builds and returns a new User. */
 function createNewRecipe(id: number): RecipeData {

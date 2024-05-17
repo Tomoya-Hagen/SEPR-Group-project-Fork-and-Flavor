@@ -9,7 +9,10 @@
           <hr class="my-4">
 
           <mat-form-field>
-            <input style="text-align:center" matInput (keyup)="applyFilter($event)" placeholder="Suche" #input>
+            <input style="text-align:center" matInput (keyup)="applyFilter($event)" placeholder="Suche" #input
+                   [(ngModel)]="searchParams.name"
+                   (ngModelChange)="searchChanged()"
+            >
           </mat-form-field>
 
           <div class="mat-elevation-z8">
