@@ -11,7 +11,6 @@ import jakarta.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 
-@Profile("generateData")
 @Component
 public class MessageDataGenerator {
 
@@ -29,7 +28,7 @@ public class MessageDataGenerator {
 
     @PostConstruct
     private void generateMessage() {
-        if (messageRepository.findAll().size() > 0) {
+        if (!messageRepository.findAll().isEmpty()) {
             LOGGER.debug("message already generated");
         } else {
             LOGGER.debug("generating {} message entries", NUMBER_OF_MESSAGES_TO_GENERATE);

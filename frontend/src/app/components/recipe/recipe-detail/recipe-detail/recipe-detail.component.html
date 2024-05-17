@@ -1,0 +1,64 @@
+<div class="jumbotron mt-5">
+  <h1 class="display-4" *ngIf="!recipe.isDraft" style="text-align:center;margin-bottom: 5%;">{{recipe.name}}</h1>
+  <h1 class="display-4" *ngIf="recipe.isDraft" style="text-align:center;margin-bottom: 5%;">{{recipe.name}} (Template)</h1>
+  <div style="width: 50%; float:left">
+    <div style="margin-bottom: 2%;">
+      <h4>Rating: </h4>
+      {{recipe.rating}}/5 <!--Entwurf-->
+    </div>
+    <div style="margin-bottom: 2%;">
+      <h4>Number of servings: </h4>
+      {{recipe.numberOfServings}}
+    </div>
+    <div style="margin-bottom: 5%;" *ngIf="isCategoriesNotEmpty()">
+      <h4>Categories:</h4>
+      <div *ngFor="let category of recipe.categories">
+        {{category.name}}
+      </div>
+    </div>
+    <div style="margin-bottom: 5%;" *ngIf="isAllergensNotEmpty()">
+      <h4>Allergens:</h4>
+      <div *ngFor="let allergen of recipe.allergens">
+        {{allergen.name}}
+      </div>
+    </div>
+  <h4>Description:</h4>
+  <p>{{recipe.description}}</p>
+</div>
+  <div class="mt-3" style="width: 50%; margin-bottom: 5%; margin-left: auto;margin-right: 0;">
+    <img src="https://api.campbellsmeat.com/wp-content/uploads/2020/10/1602145295bolog-1.png" class="card-img-top" alt="Hollywood Sign on The Hill"/>
+      <table class="table" style="margin-top: 5%;">
+          <tbody>
+            <h4>Ingredients:</h4>
+              <tr *ngFor="let ingredient of recipe.ingredients" class="center-td">
+                  <td>{{ingredient.name}}</td>
+                  <td>{{ingredient.amount}} {{ingredient.unit}}</td>
+              </tr>
+          </tbody>
+      </table>
+      <table class="table" style="margin-top: 5%;">
+        <h4>Nutritions:</h4>
+        <tbody>
+            <tr *ngFor="let nutrition of recipe.nutritions" class="center-td">
+                <td>{{nutrition.name}}</td>
+                <td>{{nutrition.value}} {{nutrition.unit}}</td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
+
+  <ngx-slick-carousel class="carousel"
+                      #slickModal="slick-carousel"
+                      [config]="slideConfig">
+
+      <div style="width: 60%; align-items: center;" ngxSlickItem class="slide" *ngFor = "let recipeStep of recipe.recipeSteps">
+        <div *ngIf="isRecipeDescriptionStep(recipeStep)">
+          <h4 style="text-align: center;margin-bottom: 2.5%;">{{recipeStep.name}}</h4>
+          <p style="text-align: center;">{{recipeStep.description}}</p>
+        </div>
+        <div *ngIf="!isRecipeDescriptionStep(recipeStep)">
+          <h1 style="text-align: center;margin-bottom: 2.5%;">{{recipeStep.name}}</h1>
+        </div>
+      </div>
+  </ngx-slick-carousel>
+</div>
