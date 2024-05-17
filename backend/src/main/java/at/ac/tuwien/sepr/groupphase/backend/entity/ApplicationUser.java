@@ -160,9 +160,6 @@ public class ApplicationUser {
         private String password;
         private Boolean hasProfilePicture;
 
-        public ApplicationUserBuilder() {
-        }
-
         public static ApplicationUserBuilder anApplicationUser() {
             return new ApplicationUserBuilder();
         }
