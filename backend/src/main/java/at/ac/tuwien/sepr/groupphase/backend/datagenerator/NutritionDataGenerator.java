@@ -37,11 +37,11 @@ public class NutritionDataGenerator implements CommandLineRunner {
                 if (parts.length < 3) {
                     continue;
                 }
-
-                Nutrition nutrition = new Nutrition();
-                nutrition.setName(parts[0].trim().replace("\"", ""));
-                nutrition.setDescription(parts[1].trim().replace("\"", ""));
-                nutrition.setUnit(parts[2].trim().replace("\"", ""));
+                Nutrition nutrition = Nutrition.NutritionBuilder.aNutrition()
+                    .withName(parts[0].trim().replace("\"", ""))
+                    .withDescription(parts[1].trim().replace("\"", ""))
+                    .withUnit(parts[2].trim().replace("\"", ""))
+                    .build();
                 nutritionRepository.save(nutrition);
             }
         }
