@@ -4,7 +4,6 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergenRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;

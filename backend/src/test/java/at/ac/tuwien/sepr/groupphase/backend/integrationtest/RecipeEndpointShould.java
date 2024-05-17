@@ -92,7 +92,7 @@ class RecipeEndpointShould implements TestData {
             () -> Assertions.assertEquals(
                 1, recipeDetailDto.categories().size()),
             () -> Assertions.assertArrayEquals(new CategoryDetailDto[]{
-                new CategoryDetailDto(2, "Hautpspeise", "MAIN_COURSE")}, recipeDetailDto.categories().toArray()),
+                new CategoryDetailDto(1, "Hautpspeise", "MAIN_COURSE")}, recipeDetailDto.categories().toArray()),
             () -> Assertions.assertEquals(1, recipeDetailDto.ownerId()),
             () -> Assertions.assertEquals("Ein schnelles asiatisches Gericht.", recipeDetailDto.description()),
             () -> Assertions.assertEquals(1, recipeDetailDto.numberOfServings().intValue()),

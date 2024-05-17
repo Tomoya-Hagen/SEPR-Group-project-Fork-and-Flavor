@@ -57,7 +57,7 @@ class RecipeServiceShould {
             () -> Assertions.assertEquals(
                 1, recipe.categories().size()),
             () -> Assertions.assertArrayEquals(new CategoryDetailDto[]{
-                new CategoryDetailDto(2, "Hautpspeise", "MAIN_COURSE")}, recipe.categories().toArray()),
+                new CategoryDetailDto(1, "Hautpspeise", "MAIN_COURSE")}, recipe.categories().toArray()),
             () -> Assertions.assertEquals(1, recipe.ownerId()),
             () -> Assertions.assertEquals("Ein schnelles asiatisches Gericht.", recipe.description()),
             () -> Assertions.assertEquals(1, recipe.numberOfServings().intValue()),

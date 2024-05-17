@@ -80,6 +80,7 @@ public class Category {
         inverseJoinColumns = @JoinColumn(name = "recipe_id")
     )
     private List<Recipe> recipes;
+
     public static final class CategoryBuilder {
         private long id;
         private String name;
