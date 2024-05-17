@@ -68,22 +68,6 @@ public class UserValidator {
             throw new PasswordException("Password must not contain spaces");
         }
 
-        /* if (!user.password().matches(".*[0-9].*")) {
-            throw new PasswordException("Password must contain at least one number");
-        }
-
-        if (!user.password().matches(".*[a-z].*")) {
-            throw new PasswordException("Password must contain at least one lowercase letter");
-        }
-
-        if (!user.password().matches(".*[A-Z].*")) {
-            throw new PasswordException("Password must contain at least one uppercase letter");
-        }
-
-        if (!user.password().matches(".*[!@#$%^&*].*")) {
-            throw new PasswordException("Password must contain at least one special character");
-        }*/
-
         if (user.password().contains(user.username())) {
             throw new PasswordException("Password must not contain the username");
         }
