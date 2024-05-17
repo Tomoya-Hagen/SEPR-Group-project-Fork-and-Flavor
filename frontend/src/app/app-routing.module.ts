@@ -7,11 +7,13 @@ import {MessageComponent} from './components/message/message.component';
 import {RecipebookComponent} from "./components/recipebook/recipebook.component";
 import {WeekplanComponent} from "./components/weekplan/weekplan.component";
 import {RecipeComponent} from "./components/recipe/recipe.component";
+import {RegisterComponent} from "./components/register/register.component";
 import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail/recipe-detail.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
+  {path: 'register', component: RegisterComponent},
   {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
   {path: 'recipe', children: [
     {path: '', component: RecipeComponent},

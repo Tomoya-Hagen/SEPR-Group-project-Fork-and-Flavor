@@ -16,6 +16,7 @@ import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-
 import { ToastrModule } from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
+import {RegisterComponent} from "./components/register/register.component";
 
 @NgModule({
   declarations: [
@@ -25,8 +26,8 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
     HomeComponent,
     LoginComponent,
     MessageComponent,
-    RecipeDetailComponent
-
+    RecipeDetailComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
