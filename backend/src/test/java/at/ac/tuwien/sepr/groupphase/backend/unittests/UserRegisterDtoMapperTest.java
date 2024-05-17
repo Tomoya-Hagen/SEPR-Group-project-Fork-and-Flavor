@@ -22,11 +22,11 @@ class UserRegisterDtoMapperTest implements TestData {
     @Autowired
     private UserRegisterDtoMapper userRegisterDtoMapper;
 
-    private final UserRegisterDto userRegisterDto = UserRegisterDto.UserRegisterDtoBuilder.anUserRegisterDto()
-        .withEmail("email@email.com")
-        .withPassword("password")
-        .withUsername("username")
-        .build();
+    private final UserRegisterDto userRegisterDto = new UserRegisterDto(
+        "email@email.com",
+        "password",
+        "username"
+    );
 
     @Test
     void toUserLoginDto() {

@@ -99,18 +99,18 @@ public class CustomUserDetailService implements UserService {
         LOGGER.debug("Register a new user");
         userValidator.validateForCreate(userRegisterDto);
 
-        if (userRepository.existsByUsername(userRegisterDto.getUsername())) {
+        if (userRepository.existsByUsername(userRegisterDto.username())) {
             throw new UsernameException("Username already exists");
         }
 
-        if (userRepository.existsByEmail(userRegisterDto.getEmail())) {
+        if (userRepository.existsByEmail(userRegisterDto.email())) {
             throw new EmailException("Email already exists");
         }
 
         ApplicationUser applicationUser = new ApplicationUser.ApplicationUserBuilder()
-            .withEmail(userRegisterDto.getEmail())
-            .withUsername(userRegisterDto.getUsername())
-            .withPassword(passwordEncoder.encode(userRegisterDto.getPassword()))
+            .withEmail(userRegisterDto.email())
+            .withUsername(userRegisterDto.username())
+            .withPassword(passwordEncoder.encode(userRegisterDto.password()))
             .withhasProfilePicture(false)
             .build();
         ApplicationUser returnedUser = userRepository.save(applicationUser);

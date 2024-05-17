@@ -36,27 +36,29 @@ class CustomUserDetailServiceTest implements TestData {
 
     @Test
     public void registerValidUser() throws Exception {
-        UserRegisterDto validUser = new UserRegisterDto();
-        validUser.setEmail("validuser@email.com");
-        validUser.setPassword("password");
-        validUser.setUsername("validuser");
+        UserRegisterDto validUser = new UserRegisterDto(
+            "validuser@email.com",
+            "password",
+            "validuser"
+        );
 
         String response = customUserDetailService.register(validUser);
 
         assertAll(
             () -> assertNotNull(response),
             () -> assertTrue(response.contains("Bearer")),
-            () -> assertTrue(userRepository.existsByEmail(validUser.getEmail())),
-            () -> assertTrue(userRepository.existsByUsername(validUser.getUsername()))
+            () -> assertTrue(userRepository.existsByEmail(validUser.email())),
+            () -> assertTrue(userRepository.existsByUsername(validUser.username()))
         );
     }
 
     @Test
     public void registerInvalidUserEmail() throws Exception {
-        UserRegisterDto invalidUser = new UserRegisterDto();
-        invalidUser.setEmail("invalidEmail");
-        invalidUser.setPassword("password");
-        invalidUser.setUsername("invaliduser");
+        UserRegisterDto invalidUser = new UserRegisterDto(
+            "invalidEmail",
+            "password",
+            "invaliduser"
+        );
 
         assertThrowsExactly(EmailException.class, () -> customUserDetailService.register(invalidUser));
     }
@@ -64,20 +66,22 @@ class CustomUserDetailServiceTest implements TestData {
 
     @Test
     public void registerUserWithDuplicateEmail() throws Exception {
-        UserRegisterDto invalidUser = new UserRegisterDto();
-        invalidUser.setEmail("admin@email.com");
-        invalidUser.setPassword("password");
-        invalidUser.setUsername("invaliduser");
+        UserRegisterDto invalidUser = new UserRegisterDto(
+            "admin@email.com",
+            "password",
+            "invaliduser"
+        );
 
         assertThrowsExactly(EmailException.class, () -> customUserDetailService.register(invalidUser));
     }
 
     @Test
     public void registerUserWithDuplicateUsername() throws Exception {
-        UserRegisterDto invalidUser = new UserRegisterDto();
-        invalidUser.setEmail("administrator@email.com");
-        invalidUser.setPassword("password");
-        invalidUser.setUsername("admin");
+        UserRegisterDto invalidUser = new UserRegisterDto(
+            "administrator@email.com",
+            "password",
+            "admin"
+        );
 
         assertThrowsExactly(UsernameException.class, () -> customUserDetailService.register(invalidUser));
     }

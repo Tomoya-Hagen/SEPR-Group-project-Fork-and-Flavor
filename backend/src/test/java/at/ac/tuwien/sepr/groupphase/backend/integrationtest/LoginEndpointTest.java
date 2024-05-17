@@ -47,10 +47,11 @@ public class LoginEndpointTest implements TestData {
 
     @Test
     public void registerValidUser() throws Exception {
-        UserRegisterDto validUser = new UserRegisterDto();
-        validUser.setEmail("validuser@email.com");
-        validUser.setPassword("password");
-        validUser.setUsername("validuser");
+        UserRegisterDto validUser = new UserRegisterDto(
+            "validuser@email.com",
+            "password",
+            "validuser"
+        );
 
         MvcResult mvcResult = this.mockMvc.perform(post(ENDPOINT+"/register")
             .contentType(MediaType.APPLICATION_JSON)
@@ -64,17 +65,18 @@ public class LoginEndpointTest implements TestData {
         assertAll(
             () -> assertNotNull(response),
             () -> assertTrue(response.getContentAsString().contains("Bearer")),
-            () -> assertTrue(userRepository.existsByEmail(validUser.getEmail())),
-            () -> assertTrue(userRepository.existsByUsername(validUser.getUsername()))
+            () -> assertTrue(userRepository.existsByEmail(validUser.email())),
+            () -> assertTrue(userRepository.existsByUsername(validUser.username()))
         );
     }
 
     @Test
     public void registerInvalidUserEmail() throws Exception {
-        UserRegisterDto invalidUser = new UserRegisterDto();
-        invalidUser.setEmail("invalidEmail");
-        invalidUser.setPassword("password");
-        invalidUser.setUsername("invaliduser");
+        UserRegisterDto invalidUser = new UserRegisterDto(
+            "invalidEmail",
+            "password",
+            "invaliduser"
+        );
 
         mockMvc.perform(post(ENDPOINT + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -93,10 +95,11 @@ public class LoginEndpointTest implements TestData {
         userRepository.save(user1);
         userRepository.flush();
 
-        UserRegisterDto user2 = new UserRegisterDto();
-        user2.setEmail("duplicate@email.com");
-        user2.setPassword("password2");
-        user2.setUsername("user2");
+        UserRegisterDto user2 = new UserRegisterDto(
+            "duplicate@email.com",
+            "password2",
+            "user2"
+        );
 
         mockMvc.perform(post(ENDPOINT + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -115,10 +118,11 @@ public class LoginEndpointTest implements TestData {
         userRepository.save(user1);
         userRepository.flush();
 
-        UserRegisterDto user2 = new UserRegisterDto();
-        user2.setEmail("af4w23wr@email.com");
-        user2.setPassword("password2");
-        user2.setUsername("user1");
+        UserRegisterDto user2 = new UserRegisterDto(
+            "af4w23wr@email.com",
+            "password2",
+            "user1"
+        );
 
         mockMvc.perform(post(ENDPOINT + "/register")
                 .contentType(MediaType.APPLICATION_JSON)
