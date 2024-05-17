@@ -3,14 +3,13 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserRegisterDtoMapper;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepr.groupphase.backend.entity.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.exception.EmailException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.UsernameException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
@@ -37,15 +36,15 @@ public class CustomUserDetailService implements UserService {
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator userValidator = new UserValidator();
     private final UserRegisterDtoMapper userRegisterDtoMapper;
-    private final UserRoleRepository userRoleRepository;
+    private final RoleRepository rolesRepository;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserRegisterDtoMapper userRegisterDtoMapper, UserRoleRepository userRoleRepository) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
         this.userRegisterDtoMapper = userRegisterDtoMapper;
-        this.userRoleRepository = userRoleRepository;
+        this.rolesRepository = rolesRepository;
     }
 
     @Override
@@ -112,16 +111,12 @@ public class CustomUserDetailService implements UserService {
             .withUsername(userRegisterDto.username())
             .withPassword(passwordEncoder.encode(userRegisterDto.password()))
             .withhasProfilePicture(false)
+            .withRoles(List.of(rolesRepository.findByName("User")))
             .build();
-        ApplicationUser returnedUser = userRepository.save(applicationUser);
-
-        UserRole.UserRoleBuilder urrb = new UserRole.UserRoleBuilder();
-        UserRole ur = urrb.withroleId(2).withuserId(returnedUser.getId()).build();
-        userRoleRepository.save(ur);
+        userRepository.save(applicationUser);
 
         // Ensure the user is persisted
         userRepository.flush();
-        userRoleRepository.flush();
 
         return login(userRegisterDtoMapper.toUserLoginDto(userRegisterDto));
     }

@@ -2,35 +2,29 @@ package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Role;
-import at.ac.tuwien.sepr.groupphase.backend.entity.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import jakarta.annotation.PostConstruct;
-import org.springframework.core.annotation.Order;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRoleRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import jakarta.annotation.PostConstruct;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Order(1)
 public class UserDataGenerator {
 
-    private final UserRoleRepository userRoleRepository;
+    // Autowired dependencies
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserDataGenerator(UserRoleRepository userRoleRepository, RoleRepository roleRepository,
+    public UserDataGenerator(RoleRepository roleRepository,
                              UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-
 
     @PostConstruct
     public void init() {
@@ -53,19 +47,17 @@ public class UserDataGenerator {
         for (int i = 0; i < usernames.length; i++) {
             // Check if a user with the same username already exists
             if (!userRepository.existsByUsername(usernames[i])) {
+                List<Role> userRoles = new ArrayList<>();
+                userRoles.add(savedRoles.get(i));
                 ApplicationUser user = new ApplicationUser.ApplicationUserBuilder()
                     .withEmail(emails[i])
                     .withPassword(passwordEncoder.encode("password"))
                     .withUsername(usernames[i])
                     .withhasProfilePicture(false)
+                    .withRoles(userRoles)
                     .build();
-                ApplicationUser savedUser = userRepository.save(user);
+                userRepository.save(user);
 
-                UserRole userRole = new UserRole.UserRoleBuilder()
-                    .withroleId(savedRoles.get(i).getId())
-                    .withuserId(savedUser.getId())
-                    .build();
-                userRoleRepository.save(userRole);
             }
         }
     }
