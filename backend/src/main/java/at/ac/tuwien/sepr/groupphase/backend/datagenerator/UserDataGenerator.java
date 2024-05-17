@@ -5,18 +5,19 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Role;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
+import org.springframework.core.annotation.Order;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRoleRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import jakarta.annotation.PostConstruct;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Order(1)
 public class UserDataGenerator {
 
-    // Autowired dependencies
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
@@ -29,6 +30,7 @@ public class UserDataGenerator {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
 
     @PostConstruct
     public void init() {

@@ -2,8 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.Nutrition;
 import at.ac.tuwien.sepr.groupphase.backend.repository.NutritionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -16,11 +16,15 @@ import java.io.InputStreamReader;
 @Order(2)
 public class NutritionDataGenerator implements CommandLineRunner {
 
-    @Autowired
-    private NutritionRepository nutritionRepository;
+    private final NutritionRepository nutritionRepository;
 
-    @Autowired
-    private ResourceLoader resourceLoader;
+    private final ResourceLoader resourceLoader;
+
+    public NutritionDataGenerator(NutritionRepository nutritionRepository,
+                                 ResourceLoader resourceLoader) {
+        this.nutritionRepository = nutritionRepository;
+        this.resourceLoader = resourceLoader;
+    }
 
     @Override
     public void run(String... args) throws Exception {
@@ -33,11 +37,11 @@ public class NutritionDataGenerator implements CommandLineRunner {
                 if (parts.length < 3) {
                     continue;
                 }
-
-                Nutrition nutrition = new Nutrition();
-                nutrition.setName(parts[0].trim().replace("\"", ""));
-                nutrition.setDescription(parts[1].trim().replace("\"", ""));
-                nutrition.setUnit(parts[2].trim().replace("\"", ""));
+                Nutrition nutrition = Nutrition.NutritionBuilder.aNutrition()
+                    .withName(parts[0].trim().replace("\"", ""))
+                    .withDescription(parts[1].trim().replace("\"", ""))
+                    .withUnit(parts[2].trim().replace("\"", ""))
+                    .build();
                 nutritionRepository.save(nutrition);
             }
         }
