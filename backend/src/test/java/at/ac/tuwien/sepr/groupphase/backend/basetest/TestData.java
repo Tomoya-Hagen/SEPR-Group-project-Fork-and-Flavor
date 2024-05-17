@@ -30,4 +30,12 @@ public interface TestData {
         }
     };
 
+    List<String> RECIPES = new ArrayList<>() {
+        {
+            add("Spaghetti Bolognese");
+            add("Schnitzel");
+            add("Kaiserschmarrn");
+            add("Eierreis");
+        }
+    };
 }
