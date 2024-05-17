@@ -66,7 +66,7 @@ public class LoginEndpointTest implements TestData {
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(validUser)))
             .andDo(print())
-            .andExpect(status().isOk())
+            .andExpect(status().isCreated())
             .andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
