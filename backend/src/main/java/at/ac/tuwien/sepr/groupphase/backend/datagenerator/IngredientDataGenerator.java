@@ -68,8 +68,9 @@ public class IngredientDataGenerator implements CommandLineRunner {
                 String name = parts[0].trim().replace("'", "");
                 Optional<Ingredient> existingIngredient = ingredientRepository.findByName(name);
                 if (!existingIngredient.isPresent()) {
-                    Ingredient ingredient = new Ingredient();
-                    ingredient.setName(name);
+                    Ingredient ingredient = Ingredient.IngredientBuilder.anIngredient()
+                        .withName(name)
+                        .build();
 
                     // Handle allergens if any
                     if (!parts[1].trim().isEmpty()) {
