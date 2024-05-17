@@ -1,13 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
-import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,14 +44,6 @@ public class LoginEndpointTest implements TestData {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Autowired
-    private UserDataGenerator userDataGenerator;
-
-    @BeforeEach
-    public void beforeEach() {
-        userDataGenerator.generateTestData();
-    }
 
     @Test
     public void registerValidUser() throws Exception {
