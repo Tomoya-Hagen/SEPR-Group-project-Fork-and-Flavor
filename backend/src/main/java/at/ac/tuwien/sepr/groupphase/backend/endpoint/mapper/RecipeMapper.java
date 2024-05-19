@@ -33,18 +33,33 @@ public interface RecipeMapper {
         ArrayList<RecipeListDto> recipeListDtos = new ArrayList<>();
         for (int i = 0; i < recipes.size(); i++) {
             recipeListDtos.add(recipeAndAverageRatingToRecipeListDto(recipes.get(i), ratings.get(i)));
+        }
+        return recipeListDtos;
+    }
+
     @Mapping(source = "recipeListDto.id", target = "id")
     default List<Recipe> ListOfRecipeListDtoToRecipeList(List<RecipeListDto> recipeListDto) {
         List<Recipe> recipeList = new ArrayList<>();
         for (RecipeListDto recipeListDto1 : recipeListDto) {
             recipeList.add(recipeListDtoToRecipe(recipeListDto1));
         }
-        return recipeListDtos;
         return recipeList;
     }
 
     @Mapping(source = "recipe.name", target = "name")
     @Mapping(source = "recipe.description", target = "description")
     RecipeListDto recipeAndAverageRatingToRecipeListDto(Recipe recipe, long rating);
+
     Recipe recipeListDtoToRecipe(RecipeListDto recipeListDto);
+
+    default List<RecipeListDto> recipesToRecipeListDto(List<Recipe> recipes) {
+        List<RecipeListDto> recipeList = new ArrayList<>();
+        for (Recipe recipe : recipes) {
+            recipeList.add(recipeAndAverageRatingToRecipeListDto(recipe, 0));
+        }
+        return recipeList;
+    }
+
 }
+
+

@@ -8,16 +8,12 @@ import java.util.List;
 /**
  * Dto for creating recipe books
  *
- * @param id
  * @param name
  * @param description
  * @param ownerId
  * @param users
  */
 public record RecipeBookCreateDto (
-    @NotNull
-    Long id,
-
     @NotNull
     @Size(min = 1, max = 100)
     String name,

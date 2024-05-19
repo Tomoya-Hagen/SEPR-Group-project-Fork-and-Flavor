@@ -34,7 +34,6 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     public RecipeBook createRecipeBook(RecipeBookCreateDto recipeBookCreateDto) {
         LOGGER.trace("createRecipeBook({})", recipeBookCreateDto);
         RecipeBook recipeBook = new RecipeBook();
-        recipeBook.setId(recipeBookCreateDto.id());
         recipeBook.setName(recipeBookCreateDto.name());
         recipeBook.setDescription(recipeBookCreateDto.description());
         recipeBook.setOwnerId(recipeBookCreateDto.ownerId());

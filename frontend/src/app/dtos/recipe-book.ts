@@ -1,5 +1,4 @@
 import {userListDto} from "../dtos/user";
-import {Recipe} from "../dtos/recipe";
 import {RecipeListDto} from "../dtos/recipe"
 
 export interface RecipeBook {
@@ -8,11 +7,10 @@ export interface RecipeBook {
     description: string,
     ownerId: number,
     users: userListDto[],
-    recipes: Recipe[]
+    recipes: RecipeListDto[]
 }
 
 export interface RecipeBookCreateDto {
-    id: number,
     name: string,
     description: string,
     ownerId: number,

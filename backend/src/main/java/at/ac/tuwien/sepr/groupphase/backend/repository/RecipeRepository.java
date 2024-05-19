@@ -17,6 +17,9 @@ import java.util.Optional;
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     Optional<Recipe> getRecipeById(@Param("id") long id);
 
+    @Query("select r from Recipe r where r.id in :ids")
+    List<Recipe> getRecipeByIds(@Param("ids") List<Long> ids);
+
     @Query("select r from Recipe r where r.id between :#{#from} and :#{#to} order by r.id")
     List<Recipe> getAllRecipesWithIdFromTo(@Param("from") int from, @Param("to") int to);
 }
