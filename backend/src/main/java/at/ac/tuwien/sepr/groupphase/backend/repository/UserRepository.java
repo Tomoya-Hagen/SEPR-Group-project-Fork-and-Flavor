@@ -6,12 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
 
 
     /**
-     * Find first User entrie via email.
+     * Find first User entry via email.
      *
      * @return ordered list of al message entries
      */
@@ -19,5 +21,8 @@ public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
         + "JOIN FETCH ApplicationUser.roles "
         + "WHERE ApplicationUser.email = :email")
     ApplicationUser findFirstUserByEmail(@Param("email") String email);
+
+    @Query("SELECT u FROM ApplicationUser u WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :username, '%'))")
+    List<ApplicationUser> findByNameContainingIgnoreCase(@Param("username") String name);
 
 }

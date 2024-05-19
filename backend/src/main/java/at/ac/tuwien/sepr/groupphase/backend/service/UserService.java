@@ -1,10 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
@@ -20,6 +23,7 @@ public interface UserService extends UserDetailsService {
      */
     @Override
     UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
+
 
     /**
      * Find an application user based on the email address.
@@ -37,4 +41,13 @@ public interface UserService extends UserDetailsService {
      * @throws org.springframework.security.authentication.BadCredentialsException if credentials are bad
      */
     String login(UserLoginDto userLoginDto);
+
+    /**
+     * find limited numbers users using names
+     *
+     * @param name the name to look for
+     * @param limit the number of users to get
+     * @return a list of found users
+     */
+    List<UserListDto> findUsersByName(String name, int limit);
 }
