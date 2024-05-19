@@ -3,8 +3,14 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserRegisterDtoMapper;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.exception.EmailException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.UsernameException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -31,13 +37,19 @@ public class CustomUserDetailService implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
+    private final UserValidator userValidator = new UserValidator();
+    private final UserRegisterDtoMapper userRegisterDtoMapper;
+    private final RoleRepository rolesRepository;
     private final UserMapper userMapper;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserMapper userMapper) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserMapper userMapper,
+    UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
+        this.userRegisterDtoMapper = userRegisterDtoMapper;
+        this.rolesRepository = rolesRepository;
         this.userMapper = userMapper;
     }
 
@@ -91,5 +103,33 @@ public class CustomUserDetailService implements UserService {
     public List<UserListDto> findUsersByName(String name, int limit) {
         List<ApplicationUser> users = userRepository.findByNameContainingIgnoreCase(name);
         return userMapper.userListToUserListDtoList(users);
+    }
+
+    @Override
+    public String register(UserRegisterDto userRegisterDto) {
+        LOGGER.debug("Register a new user");
+        userValidator.validateForCreate(userRegisterDto);
+
+        if (userRepository.existsByUsername(userRegisterDto.username())) {
+            throw new UsernameException("Username already exists");
+        }
+
+        if (userRepository.existsByEmail(userRegisterDto.email())) {
+            throw new EmailException("Email already exists");
+        }
+
+        ApplicationUser applicationUser = new ApplicationUser.ApplicationUserBuilder()
+            .withEmail(userRegisterDto.email())
+            .withUsername(userRegisterDto.username())
+            .withPassword(passwordEncoder.encode(userRegisterDto.password()))
+            .withhasProfilePicture(false)
+            .withRoles(List.of(rolesRepository.findByName("User")))
+            .build();
+        userRepository.save(applicationUser);
+
+        // Ensure the user is persisted
+        userRepository.flush();
+
+        return login(userRegisterDtoMapper.toUserLoginDto(userRegisterDto));
     }
 }

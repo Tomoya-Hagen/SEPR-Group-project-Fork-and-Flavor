@@ -2,12 +2,12 @@ package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
+import at.ac.tuwien.sepr.groupphase.backend.entity.IngredientNutrition;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Nutrition;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergenRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.IngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.NutritionRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
@@ -19,25 +19,32 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 @Component
-@Order(3)
+@Order(4)
 public class IngredientDataGenerator implements CommandLineRunner {
 
-    @Autowired
-    private IngredientRepository ingredientRepository;
+    private final IngredientRepository ingredientRepository;
 
-    @Autowired
-    private AllergenRepository allergenRepository;
+    private final AllergenRepository allergenRepository;
 
-    @Autowired
-    private NutritionRepository nutritionRepository;
+    private final NutritionRepository nutritionRepository;
 
-    @Autowired
-    private ResourceLoader resourceLoader;
+    private final ResourceLoader resourceLoader;
+
+    public IngredientDataGenerator(IngredientRepository ingredientRepository,
+                                   AllergenRepository allergenRepository,
+                                   NutritionRepository nutritionRepository,
+                                   ResourceLoader resourceLoader) {
+        this.ingredientRepository = ingredientRepository;
+        this.allergenRepository = allergenRepository;
+        this.nutritionRepository = nutritionRepository;
+        this.resourceLoader = resourceLoader;
+    }
 
     private static final String[] NUTRITION_NAMES = {
         "Calories", "Fat Total", "Fat Saturated", "Protein", "Sodium",
@@ -67,7 +74,7 @@ public class IngredientDataGenerator implements CommandLineRunner {
                     // Handle allergens if any
                     if (!parts[1].trim().isEmpty()) {
                         Set<Allergen> allergens = findAllergensByCodes(parts[1].trim().replace("'", ""));
-                        ingredient.setAllergens(allergens);
+                        ingredient.setAllergens(allergens.stream().toList());
                     }
 
                     if (parts.length == 12) {
@@ -77,7 +84,7 @@ public class IngredientDataGenerator implements CommandLineRunner {
                             if (!value.isEmpty()) {
                                 Nutrition nutrition = nutritionMap.get(NUTRITION_NAMES[i]);
                                 if (nutrition != null) {
-                                    ingredient.addNutritionData(nutrition, new BigDecimal(value));
+                                    addNutritionData(ingredient, nutrition, new BigDecimal(value));
                                 }
                             }
                         }
@@ -102,5 +109,15 @@ public class IngredientDataGenerator implements CommandLineRunner {
             optionalAllergen.ifPresent(allergens::add);
         }
         return allergens;
+    }
+
+    public void addNutritionData(Ingredient ingredient, Nutrition nutrition, BigDecimal value) {
+        IngredientNutrition newNutrition = new IngredientNutrition();
+        newNutrition.setNutrition(nutrition);
+        newNutrition.setIngredient(ingredient);
+        newNutrition.setValue(value);
+        List<IngredientNutrition> nutritions = ingredient.getNutritions();
+        nutritions.add(newNutrition);
+        ingredient.setNutritions(nutritions);
     }
 }

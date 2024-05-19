@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
 
@@ -21,6 +23,27 @@ public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
         + "JOIN FETCH ApplicationUser.roles "
         + "WHERE ApplicationUser.email = :email")
     ApplicationUser findFirstUserByEmail(@Param("email") String email);
+
+    /**
+     * Find first User entrie via username.
+     *
+     * @return boolean if user exists
+     */
+    Boolean existsByUsername(String username);
+
+    /**
+     * Find first User entrie via email.
+     *
+     * @return boolean if user exists
+     */
+    Boolean existsByEmail(String email);
+
+    /**
+     * Find first User entrie via email.
+     *
+     * @return ordered list of al message entries
+     */
+    Long findFirstByEmail(String email);
 
     @Query("SELECT u FROM ApplicationUser u WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :username, '%'))")
     List<ApplicationUser> findByNameContainingIgnoreCase(@Param("username") String name);

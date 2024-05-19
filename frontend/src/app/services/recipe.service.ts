@@ -3,6 +3,10 @@ import { Injectable } from '@angular/core';
 import { Recipe } from '../dtos/recipe';
 import { Observable, catchError } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import {environment} from '../../environments/environment';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import { RecipeDetailDto, RecipeListDto } from '../dtos/recipe';
 
 const baseUri = environment.backendUrl + '/recipes';
 
@@ -11,8 +15,8 @@ const baseUri = environment.backendUrl + '/recipes';
  * It operates on the REST API.
  */
 @Injectable({
-    providedIn: 'root'
-  })
+  providedIn: 'root'
+})
 export class RecipeService {
 
     constructor(
@@ -32,5 +36,16 @@ export class RecipeService {
             })
         );
     }
+  public getListByPageAndStep(page:number, step: number): Observable<RecipeListDto[]> {
+    return this.http.get<RecipeListDto[]>(
+      baseUri+"/?page="+page+"&step="+step
+    );
+  }
 
+
+  public getRecipeDetailsBy(recipeId: number): Observable<RecipeDetailDto> {
+    return this.http.get<RecipeDetailDto>(
+      baseUri+"/details/"+recipeId
+    );
+  }
 }

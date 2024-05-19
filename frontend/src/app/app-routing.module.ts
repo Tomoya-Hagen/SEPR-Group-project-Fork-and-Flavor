@@ -8,18 +8,24 @@ import {RecipebookComponent} from "./components/recipebook/recipebook.component"
 import {WeekplanComponent} from "./components/weekplan/weekplan.component";
 import {RecipeComponent} from "./components/recipe/recipe.component";
 import { RecipebookCreateEditComponent, RecipeBookCreateEditMode } from './components/recipebook/recipebook-create-edit/recipebook-create-edit.component';
+import {RegisterComponent} from "./components/register/register.component";
+import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail/recipe-detail.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
+  {path: 'register', component: RegisterComponent},
   {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
-  {path: 'recipe', component: RecipeComponent},
+  {path: 'recipe', children: [
+      {path: '', component: RecipeComponent},
+      {path: 'details/:id', component: RecipeDetailComponent}
+    ]},
   {path: 'recipebook', children: [
     {path: '', component: RecipebookComponent},
     {path: 'create', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.create}},
     {path: 'edit/:id', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.edit}},
   ]},
-  {path: 'weekplan', component: WeekplanComponent}
+  {path: 'weekplan', component: WeekplanComponent},
 ];
 
 @NgModule({

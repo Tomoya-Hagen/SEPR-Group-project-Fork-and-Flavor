@@ -2,6 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
+
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
@@ -15,6 +16,11 @@ import { RecipebookComponent } from './components/recipebook/recipebook.componen
 import { RecipebookCreateEditComponent } from './components/recipebook/recipebook-create-edit/recipebook-create-edit.component';
 import { RecipeComponent } from './components/recipe/recipe.component';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail/recipe-detail.component';
+import { ToastrModule } from 'ngx-toastr';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { SlickCarouselModule } from 'ngx-slick-carousel';
+import {RegisterComponent} from "./components/register/register.component";
 
 @NgModule({
   declarations: [
@@ -25,6 +31,8 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
     HomeComponent,
     LoginComponent,
     MessageComponent,
+    RecipeDetailComponent,
+    RegisterComponent,
     RecipeComponent,
     RecipebookComponent,
     RecipebookCreateEditComponent,
@@ -36,6 +44,10 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
     HttpClientModule,
     NgbModule,
     FormsModule,
+    ToastrModule.forRoot(),
+    // Needed for Toastr
+    BrowserAnimationsModule,
+    SlickCarouselModule
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
