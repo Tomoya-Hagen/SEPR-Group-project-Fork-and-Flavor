@@ -7,13 +7,18 @@ import {MessageComponent} from './components/message/message.component';
 import {RecipebookComponent} from "./components/recipebook/recipebook.component";
 import {WeekplanComponent} from "./components/weekplan/weekplan.component";
 import {RecipeComponent} from "./components/recipe/recipe.component";
+import { RecipebookCreateEditComponent, RecipeBookCreateEditMode } from './components/recipebook/recipebook-create-edit/recipebook-create-edit.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
   {path: 'recipe', component: RecipeComponent},
-  {path: 'recipebook', component: RecipebookComponent},
+  {path: 'recipebook', children: [
+    {path: '', component: RecipebookComponent},
+    {path: 'create', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.create}},
+    {path: 'edit/:id', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.edit}},
+  ]},
   {path: 'weekplan', component: WeekplanComponent}
 ];
 

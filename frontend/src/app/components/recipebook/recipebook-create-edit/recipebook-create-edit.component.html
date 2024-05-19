@@ -1,0 +1,53 @@
+<h1 class="display-1">{{ heading }}</h1>
+
+<form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input  type="text" 
+            id="name"
+            name="name" 
+            placeholder="Name for the recipe book"
+            [class]="dynamicCssClassesForInput(nameModel)" 
+            [(ngModel)]="recipeBook.name" 
+            #nameModel="ngModel"
+            required
+          >
+    <div class="invalid-feedback">
+      Name is required
+    </div>  
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea id="description" 
+              class="form-control"
+              placeholder="Enter a description for the recipe book" 
+              [(ngModel)]="recipeBook.description" 
+              name="description" >
+    </textarea>
+  </div>
+  
+  <div class="form-group">
+    <label for="recipes">Select Recipes</label>
+      <app-autocomplete 
+        id="recipes" 
+        name="recipes" 
+        [(ngModel)]="recipeBook.recipes" 
+        [suggestions]="recipeSuggestions">
+      </app-autocomplete>
+      <!-- <label [for]="recipe.id">{{ recipe.name }}</label> -->
+  </div>
+
+  <div class="form-group">
+    <label for="users">Select Users</label>
+      <app-autocomplete 
+        id="users"
+        name="users"
+        [(ngModel)]="recipeBook.users"
+        [suggestions]="userSuggestions">
+      </app-autocomplete>
+      <!-- <label [for]="user.id">{{ recipe.name }}</label> -->
+  </div>
+
+  <button type="submit" class="btn btn-primary" [routerLink]="['/recipebook']">{{ submitButtonText }}</button>
+</form>
+
