@@ -1,15 +1,17 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 public class Allergen {
@@ -24,12 +26,16 @@ public class Allergen {
     @Column(name = "description")
     private String description;
 
-    // New field for storing single character values like 'A' or 'F'
-    @Column(name = "type", length = 1)  // Ensure column is only one character long
+    @Column(name = "type", length = 1)
     private String type;
 
-    @ManyToMany(mappedBy = "allergens")
-    private Set<Ingredient> ingredients = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "ingredient_allergen",
+        joinColumns = @JoinColumn(name = "allergen_id"),
+        inverseJoinColumns = @JoinColumn(name = "ingredient_id")
+    )
+    private List<Ingredient> ingredients;
 
     // Getters and setters
     public Long getId() {
@@ -64,11 +70,55 @@ public class Allergen {
         this.type = type;
     }
 
-    public Set<Ingredient> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Set<Ingredient> ingredients) {
+    public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
+
+    public static final class AllergenBuilder {
+        private Long id;
+        private String name;
+        private String description;
+        private String type;
+
+        private AllergenBuilder() {
+        }
+
+        public static AllergenBuilder anAllergen() {
+            return new AllergenBuilder();
+        }
+
+        public AllergenBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public AllergenBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public AllergenBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public AllergenBuilder withType(String type) {
+            this.type = type;
+            return this;
+        }
+
+        public Allergen build() {
+            Allergen allergen = new Allergen();
+            allergen.setId(id);
+            allergen.setName(name);
+            allergen.setDescription(description);
+            allergen.setType(type);
+            return allergen;
+        }
+    }
+
 }

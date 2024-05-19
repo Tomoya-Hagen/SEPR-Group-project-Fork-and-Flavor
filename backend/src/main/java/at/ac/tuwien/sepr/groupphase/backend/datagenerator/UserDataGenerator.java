@@ -2,54 +2,63 @@ package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Role;
-import at.ac.tuwien.sepr.groupphase.backend.entity.UserRole;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRoleRepository;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
 import jakarta.annotation.PostConstruct;
 
-@Profile("generateData")
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class UserDataGenerator {
 
-    private final UserRoleRepository userRoleRepository;
+    // Autowired dependencies
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserDataGenerator(UserRoleRepository userRoleRepository, RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRoleRepository = userRoleRepository;
+    public UserDataGenerator(RoleRepository roleRepository,
+                             UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-
     @PostConstruct
-    private void generateMessage() {
+    public void init() {
+        generateTestData();
+    }
 
-        if (!userRepository.findAll().isEmpty()) {
-            return;
+    public void generateTestData() {
+        String[] roles = {"Admin", "User", "Contributor", "Cook", "StarCook"};
+        String[] usernames = {"admin", "user", "contributor", "cook", "starcook"};
+        String[] emails = {"admin@email.com", "user@email.com", "contributor@email.com", "cook@email.com", "starcook@email.com"};
+
+        // Create and save roles
+        List<Role> savedRoles = new ArrayList<>();
+        for (String s : roles) {
+            Role role = new Role.RoleBuilder().withroleId(s).build();
+            savedRoles.add(roleRepository.save(role));
         }
 
-        Role.RoleBuilder rb = new Role.RoleBuilder();
-        Role r = rb.withId(1).withroleId("Admin").build();
+        // Create and save users and their roles
+        for (int i = 0; i < usernames.length; i++) {
+            // Check if a user with the same username already exists
+            if (!userRepository.existsByUsername(usernames[i])) {
+                List<Role> userRoles = new ArrayList<>();
+                userRoles.add(savedRoles.get(i));
+                ApplicationUser user = new ApplicationUser.ApplicationUserBuilder()
+                    .withEmail(emails[i])
+                    .withPassword(passwordEncoder.encode("password"))
+                    .withUsername(usernames[i])
+                    .withhasProfilePicture(false)
+                    .withRoles(userRoles)
+                    .build();
+                userRepository.save(user);
 
-        Role.RoleBuilder rb2 = new Role.RoleBuilder();
-        Role r2 = rb2.withId(2).withroleId("User").build();
-
-        UserRole.UserRoleBuilder urrb = new UserRole.UserRoleBuilder();
-        UserRole ur = urrb.withroleId(1).withuserId(1).build();
-
-        ApplicationUser.ApplicationUserBuilder aub = new ApplicationUser.ApplicationUserBuilder();
-        ApplicationUser au = aub.withemail("admin@email.com").withpassword(passwordEncoder.encode("password")).withid(1).withusername("admin").withhasProfilePicture(false).build();
-
-        roleRepository.save(r);
-        userRepository.save(au);
-        userRoleRepository.save(ur);
+            }
+        }
     }
 }

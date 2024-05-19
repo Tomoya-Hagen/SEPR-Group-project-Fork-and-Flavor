@@ -15,6 +15,11 @@ import {httpInterceptorProviders} from './interceptors';
 import {AutocompleteComponent} from "./components/autocomplete/autocomplete.component";
 import {RecipeCreateComponent} from "./components/recipe/recipe-create/recipe-create.component";
 import {IngredientComponent} from "./components/recipe/recipe-create/ingredient/ingredient.component";
+import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail/recipe-detail.component';
+import { ToastrModule } from 'ngx-toastr';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { SlickCarouselModule } from 'ngx-slick-carousel';
+import {RegisterComponent} from "./components/register/register.component";
 
 @NgModule({
   declarations: [
@@ -26,7 +31,9 @@ import {IngredientComponent} from "./components/recipe/recipe-create/ingredient/
     MessageComponent,
     AutocompleteComponent,
     RecipeCreateComponent,
-    IngredientComponent
+    IngredientComponent,
+    RecipeDetailComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
@@ -35,6 +42,10 @@ import {IngredientComponent} from "./components/recipe/recipe-create/ingredient/
     HttpClientModule,
     NgbModule,
     FormsModule,
+    ToastrModule.forRoot(),
+    // Needed for Toastr
+    BrowserAnimationsModule,
+    SlickCarouselModule
   ],
   providers: [httpInterceptorProviders],
   exports: [

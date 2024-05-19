@@ -1,6 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.exceptionhandler;
 
+import at.ac.tuwien.sepr.groupphase.backend.exception.EmailException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.PasswordException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.UsernameException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import org.slf4j.Logger;
@@ -71,5 +74,30 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         LOGGER.warn(ex.getMessage());
         return new ResponseEntity<Object>(ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = {EmailException.class})
+    public ResponseEntity<Object> handleEmailException(EmailException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        if (ex.getMessage().contains("Email already exists")) {
+            return new ResponseEntity<Object>(ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<Object>(ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {UsernameException.class})
+    public ResponseEntity<Object> handleUsernameException(UsernameException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        if (ex.getMessage().contains("Username already exists")) {
+            return new ResponseEntity<Object>(ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<Object>(ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {PasswordException.class})
+    public ResponseEntity<Object> handlePasswordException(PasswordException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return new ResponseEntity<Object>(ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
 
 }

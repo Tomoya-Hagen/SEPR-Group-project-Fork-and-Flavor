@@ -12,56 +12,5 @@ import java.math.BigInteger;
 import java.util.List;
 
 @Repository
-public class RecipeStepRepository{
-
-    private final String tablename = "RECIPE_STEP";
-
-    private RecipeRecipeStepRepository recipeStepRepository;
-    private RecipeDescriptionStepRepository descriptionStepRepository;
-
-    public RecipeStepRepository(RecipeRecipeStepRepository recipeStepRepository, RecipeDescriptionStepRepository descriptionStepRepository) {
-        this.recipeStepRepository = recipeStepRepository;
-        this.descriptionStepRepository = descriptionStepRepository;
-    }
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Transactional
-    public void saveAll(List<RecipeStep> steps) {
-        for (RecipeStep step : steps) {
-            Long recid = null;
-            Long descid = null;
-
-            if(step.getStepDescription() != null && step.getStepRecipe() == null){
-                entityManager.createNativeQuery("INSERT INTO RECIPE_DESCRIPTION_STEP (NAME,DESCRIPTION) VALUES (?,?)",BigInteger.class)
-                    .setParameter(1, step.getStepDescription().getName())
-                    .setParameter(2, step.getStepDescription().getDescription())
-                    .executeUpdate();
-
-                descid = descriptionStepRepository.findMaxId();
-            }
-            else {
-                entityManager.createNativeQuery("INSERT INTO RECIPE_RECIPE_STEP (NAME,RECIPE_ID) VALUES (?,?)",BigInteger.class)
-                    .setParameter(1, step.getStepRecipe().getName())
-                    .setParameter(2, step.getStepRecipe().getRecipeId())
-                    .executeUpdate();
-                recid = recipeStepRepository.findMaxId();
-            }
-
-
-
-            entityManager.createNativeQuery(String.format("INSERT INTO %s (NAME,RECIPE_ID,STEP_NUMBER,STEP_DESCRIPTION_ID,STEP_RECIPE_ID) VALUES (?,?,?,?,?)", tablename))
-                .setParameter(1,step.getName())
-                .setParameter(2,step.getRecipeId())
-                .setParameter(3,step.getStepNumber())
-                .setParameter(4,descid)
-                .setParameter(5,recid)
-                .executeUpdate();
-
-        }
-
-
-    }
-
+public interface RecipeStepRepository extends JpaRepository<RecipeStep, Long> {
 }

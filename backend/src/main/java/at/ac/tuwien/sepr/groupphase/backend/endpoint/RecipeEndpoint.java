@@ -16,18 +16,21 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 import java.util.stream.Stream;
 
 @RestController
-@RequestMapping(value = "/api/v1/recipe")
+@RequestMapping(value = "/api/v1/recipes")
 public class RecipeEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -37,6 +40,28 @@ public class RecipeEndpoint {
     @Autowired
     public RecipeEndpoint(RecipeService recipeService) {
         this.recipeService = recipeService;
+    }
+
+    @PermitAll
+    @GetMapping(value = "/details/{id}")
+    @Operation(summary = "Get recipe details by id")
+    public RecipeDetailDto findBy(@PathVariable(name = "id") Long id) {
+        LOGGER.info("GET /api/v1/recipe/details/{}", id);
+        try {
+            return recipeService.getRecipeDetailDtoById(id);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no recipe found by the given is", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+    }
+
+    @PermitAll
+    @GetMapping("/")
+    @Operation(summary = "Get a list of recipes")
+    public List<RecipeListDto> getListByPageAndStep(@RequestParam(name = "page") int page, @RequestParam(name = "step") int step) {
+        LOGGER.info("GET /api/v1/recipe?page={}&step={}", page, step);
+        return recipeService.getRecipesFromPageInSteps(page, step);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -49,10 +74,15 @@ public class RecipeEndpoint {
 
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping
+    @GetMapping("/ingredients")
     @Operation(summary = "Getting ingredients", security = @SecurityRequirement(name = "apiKey"))
     public Stream<SimpleRecipeResultDto> get(@RequestParam("name") String name, @RequestParam("limit") int limit) {
         LOGGER.info("POST /api/v1/recipe params: {} {}", name , limit);
         return recipeService.byname(name,limit);
     }
+
+    private void logClientError(HttpStatus status, String message, Exception e) {
+        LOGGER.warn("{} {}: {}: {}", status.value(), message, e.getClass().getSimpleName(), e.getMessage());
+    }
+
 }
