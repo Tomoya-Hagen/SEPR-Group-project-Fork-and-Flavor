@@ -9,6 +9,9 @@ import {WeekplanComponent} from "./components/weekplan/weekplan.component";
 import {RecipeComponent} from "./components/recipe/recipe.component";
 import {RegisterComponent} from "./components/register/register.component";
 import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail/recipe-detail.component';
+import {
+  RecipebookDetailComponent
+} from "./components/recipebook/recipe-book-detail/recipebook-detail/recipebook-detail.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -19,7 +22,10 @@ const routes: Routes = [
     {path: '', component: RecipeComponent},
     {path: 'details/:id', component: RecipeDetailComponent}
   ]},
-  {path: 'recipebook', component: RecipebookComponent},
+  {path: 'recipebook', children:[
+      {path: '', component: RecipebookComponent},
+      {path: ':id/details', component: RecipebookDetailComponent}
+    ]},
   {path: 'weekplan', component: WeekplanComponent},
 ];
 

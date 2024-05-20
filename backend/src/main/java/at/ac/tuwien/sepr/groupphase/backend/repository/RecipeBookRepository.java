@@ -10,5 +10,4 @@ import org.springframework.stereotype.Repository;
 @DynamicInsert
 @DynamicUpdate
 public interface RecipeBookRepository extends JpaRepository<RecipeBook, Long> {
-    //Optional<RecipeBook> getRecipeById(@Param("id") long id);
 }

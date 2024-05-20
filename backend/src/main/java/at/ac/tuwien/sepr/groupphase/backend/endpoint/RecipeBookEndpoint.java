@@ -45,7 +45,7 @@ public class RecipeBookEndpoint {
     }
 
     @PermitAll
-    @GetMapping("/")
+    @GetMapping("")
     @Operation(summary = "Get a list of all recipe books")
     public List<RecipeBookListDto> getRecipeBookList() {
         LOGGER.info("GET /api/v1/recipebook");

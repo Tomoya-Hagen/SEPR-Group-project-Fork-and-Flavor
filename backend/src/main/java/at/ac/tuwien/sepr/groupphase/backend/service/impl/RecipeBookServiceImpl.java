@@ -10,7 +10,7 @@ import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 @Transactional
 @Service
@@ -26,7 +26,8 @@ public class RecipeBookServiceImpl implements RecipeBookService {
 
     @Override
     public RecipeBookDetailDto getRecipeBookDetailDtoById(long id) throws NotFoundException {
-        return null;
+        RecipeBook recipeBook = recipeBookRepository.findById(id).orElseThrow(NotFoundException::new);
+        return recipeBookMapper.recipeBookToRecipeBookDetailDto(recipeBook);
     }
 
     @Override
