@@ -1,11 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Recipe } from '../dtos/recipe';
 import { Observable, catchError } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import {environment} from '../../environments/environment';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
 import { RecipeDetailDto, RecipeListDto } from '../dtos/recipe';
 
 const baseUri = environment.backendUrl + '/recipes';
@@ -24,11 +20,11 @@ export class RecipeService {
     ) { }
 
 
-    recipesByName(name: string, limit: number): Observable<Recipe[]> {
+    recipesByName(name: string, limit: number): Observable<RecipeListDto[]> {
         let params = new HttpParams();
         params = params.append('name', name);
         params = params.append('limit', limit.toString());
-        return this.http.get<Recipe[]>(baseUri, { params })
+        return this.http.get<RecipeListDto[]>(baseUri, { params })
         .pipe(
             catchError((error) => {
                 console.error(error);
