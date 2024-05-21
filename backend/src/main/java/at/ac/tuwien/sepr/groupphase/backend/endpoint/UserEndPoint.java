@@ -27,8 +27,8 @@ public class UserEndPoint {
 
     @GetMapping
     public ResponseEntity<List<UserListDto>> getUsers(String name, int limit) {
-        LOGGER.info("Getting {} using {}",limit, name);
-        LOGGER.debug("Retrieving {} users using {}",limit, name);
+        LOGGER.info("Getting {} using {}", limit, name);
+        LOGGER.debug("Retrieving {} users using {}", limit, name);
         return ResponseEntity.ok(userService.findUsersByName(name, limit));
     }
 }

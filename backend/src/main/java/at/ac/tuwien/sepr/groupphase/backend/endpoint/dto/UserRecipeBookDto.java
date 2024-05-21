@@ -12,6 +12,5 @@ public record UserRecipeBookDto(
 
     @NotNull
     String permission
-)
-{
+) {
 }

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Interface for repository of recipe books
+ * Interface for repository of recipe books.
  */
 @Repository
 @DynamicInsert

@@ -6,14 +6,14 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 /**
- * Dto for creating recipe books
+ * Dto for creating recipe books.
  *
- * @param name
- * @param description
- * @param ownerId
- * @param users
+ * @param name the name of the recipe to be created
+ * @param description the corresponding description
+ * @param ownerId the ID of the recipe's owner
+ * @param users users that can interact with the recipe book
  */
-public record RecipeBookCreateDto (
+public record RecipeBookCreateDto(
     @NotNull
     @Size(min = 1, max = 100)
     String name,

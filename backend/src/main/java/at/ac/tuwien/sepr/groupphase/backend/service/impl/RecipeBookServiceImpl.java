@@ -39,11 +39,11 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         recipeBook.setOwnerId(recipeBookCreateDto.ownerId());
         List<UserListDto> users = recipeBookCreateDto.users();
         List<ApplicationUser> result = new ArrayList<>();
-        for (UserListDto user: users) {
+        for (UserListDto user : users) {
             result.add(userRepository.getById(user.id()));
         }
         recipeBook.setUsers(result);
-        recipeBook.setRecipes(recipeMapper.ListOfRecipeListDtoToRecipeList(recipeBookCreateDto.recipes()));
+        recipeBook.setRecipes(recipeMapper.listOfRecipeListDtoToRecipeList(recipeBookCreateDto.recipes()));
         return recipeRepository.save(recipeBook);
     }
 

@@ -46,7 +46,7 @@ public interface UserService extends UserDetailsService {
     String login(UserLoginDto userLoginDto);
 
     /**
-     * find limited numbers users using names
+     * find limited numbers users using names.
      *
      * @param name the name to look for
      * @param limit the number of users to get

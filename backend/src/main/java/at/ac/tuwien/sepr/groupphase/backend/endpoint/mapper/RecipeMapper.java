@@ -38,7 +38,7 @@ public interface RecipeMapper {
     }
 
     @Mapping(source = "recipeListDto.id", target = "id")
-    default List<Recipe> ListOfRecipeListDtoToRecipeList(List<RecipeListDto> recipeListDto) {
+    default List<Recipe> listOfRecipeListDtoToRecipeList(List<RecipeListDto> recipeListDto) {
         List<Recipe> recipeList = new ArrayList<>();
         for (RecipeListDto recipeListDto1 : recipeListDto) {
             recipeList.add(recipeListDtoToRecipe(recipeListDto1));

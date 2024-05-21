@@ -27,7 +27,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -44,7 +43,7 @@ public class CustomUserDetailService implements UserService {
 
     @Autowired
     public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserMapper userMapper,
-    UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository) {
+        UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
