@@ -20,7 +20,7 @@ import java.lang.invoke.MethodHandles;
 @RequestMapping(path = RecipeBookEndpoint.BASE_PATH)
 public class RecipeBookEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    static final String BASE_PATH = "/recipeBook";
+    static final String BASE_PATH = "/api/v1/recipeBook";
     RecipeBookService recipeBookService;
 
     @Autowired
