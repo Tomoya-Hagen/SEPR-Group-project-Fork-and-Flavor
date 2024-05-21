@@ -12,6 +12,7 @@
           [(ngModel)]="Ingredient"
           [formatModel]="formatIngredient"
           [suggestions]="ingredientSuggestions"
+          (ngModelChange)="ingredientchanged()"
         ></app-autocomplete>
       </div>
     </div>
