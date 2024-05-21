@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {environment} from '../../environments/environment';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import { RecipeDetailDto } from '../dtos/recipe';
-import {RecipeBookListDto} from "../dtos/recipe-book";
+import {RecipeBookListDto, RecipeBookSearch} from "../dtos/recipe-book";
 
 const baseUri = environment.backendUrl + '/recipebook';
 @Injectable({
@@ -24,7 +24,19 @@ export class RecipeBookService {
 
   public getRecipeDetailsBy(recipeId: number): Observable<RecipeDetailDto> {
     return this.http.get<RecipeDetailDto>(
-      baseUri+"/details/"+recipeId
+      baseUri+"/"+recipeId+"/details"
     );
   }
+
+  public search(searchParams: RecipeBookSearch): Observable<RecipeBookListDto[]> {
+    if (searchParams.name) {
+      delete searchParams.name;
+    }
+    let params = new HttpParams();
+    if (searchParams.name) {
+      params = params.append('name', searchParams.name);
+    }
+    return this.http.get<RecipeBookListDto[]>(baseUri+"/search", {params});
+  }
+
 }

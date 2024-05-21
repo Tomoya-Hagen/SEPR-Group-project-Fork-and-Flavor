@@ -4,6 +4,8 @@
     <div class="row row-cols-1 row-cols-md-2 g-4">
       <div class="search-recipe">
         <input class="form-control" type="text" name="search" autocomplete="off"
+               [(ngModel)]="name.name"
+               (ngModelChange)="searchChanged()"
                placeholder="&#61442;  Start searching for recipe books">
       </div>
     </div>

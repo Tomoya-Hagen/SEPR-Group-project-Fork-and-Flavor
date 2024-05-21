@@ -16,3 +16,7 @@ export interface RecipeBookListDto {
   ownerId: number,
   description: string
 }
+
+export interface RecipeBookSearch {
+  name?: string;
+}

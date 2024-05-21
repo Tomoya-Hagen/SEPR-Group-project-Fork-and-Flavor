@@ -35,4 +35,10 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         List<RecipeBook> allRecipeBooks = recipeBookRepository.findAll();
         return recipeBookMapper.recipeBookListToRecipeBookListDto(allRecipeBooks);
     }
+
+    @Override
+    public List<RecipeBookListDto> searchRecipeBooks(String name) throws NotFoundException {
+        List<RecipeBook> searchedRecipeBooks = recipeBookRepository.search(name);
+        return recipeBookMapper.recipeBookListToRecipeBookListDto(searchedRecipeBooks);
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -31,10 +32,10 @@ public class RecipeBookEndpoint {
     }
 
     @PermitAll
-    @GetMapping(value = "/details/{id}")
+    @GetMapping(value = "{id}/details")
     @Operation(summary = "Get recipe details by id")
     public RecipeBookDetailDto findBy(@PathVariable(name = "id") Long id) {
-        LOGGER.info("GET /api/v1/recipebook/details/{}", id);
+        LOGGER.info("GET /api/v1/recipebook/{}/details", id);
         try {
             return recipeBookService.getRecipeBookDetailDtoById(id);
         } catch (NotFoundException e) {
@@ -50,6 +51,14 @@ public class RecipeBookEndpoint {
     public List<RecipeBookListDto> getRecipeBookList() {
         LOGGER.info("GET /api/v1/recipebook");
         return recipeBookService.getRecipeBooks();
+    }
+
+    @PermitAll
+    @GetMapping("/search")
+    @Operation(summary = "Get a list of the searched recipe books")
+    public List<RecipeBookListDto> search(@RequestParam(name = "name") String name) {
+        LOGGER.info("GET /api/v1/recipebook/search");
+        return recipeBookService.searchRecipeBooks(name);
     }
 
     private void logClientError(HttpStatus status, String message, Exception e) {

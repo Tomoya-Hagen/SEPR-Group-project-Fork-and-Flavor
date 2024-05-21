@@ -12,4 +12,6 @@ public interface RecipeBookService {
     RecipeBookDetailDto getRecipeBookDetailDtoById(long id) throws NotFoundException;
 
     List<RecipeBookListDto> getRecipeBooks();
+
+    List<RecipeBookListDto> searchRecipeBooks(String name) throws NotFoundException;
 }
