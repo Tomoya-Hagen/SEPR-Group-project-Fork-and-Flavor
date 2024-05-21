@@ -11,6 +11,9 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
+import jakarta.validation.Validator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,9 @@ public class RecipeBookServiceTest {
     @Autowired
     private RecipeMapper recipeMapper;
 
+    @Autowired
+    private Validator validator;
+
     @Test
     public void createRecipeBookSuccessfully() {
         List<UserListDto> userRecipeBooks = new ArrayList<>();
@@ -53,8 +59,54 @@ public class RecipeBookServiceTest {
 
         assertAll(
             () -> assertNotNull(recipeBook),
-            () -> assertEquals(1L, recipeBook.getRecipes().getFirst().getId())
-
+            () -> assertEquals(1L, recipeBook.getRecipes().getFirst().getId()),
+            () -> assertEquals("Fast Food", recipeBook.getName()),
+            () -> assertEquals("This recipe contains fast food dishes", recipeBook.getDescription()),
+            () -> assertEquals(1L, recipeBook.getOwnerId()),
+            () -> assertEquals(2, recipeBook.getRecipes().size())
         );
+    }
+
+    @Test
+    public void recipeCreationFailsIfNameIsNull() {
+        List<UserListDto> users = new ArrayList<>();
+        UserListDto userListDto = new UserListDto(3L, "Admin");
+        List<Recipe> recipes = recipeRepository.getRecipeByIds(List.of(2L, 3L));
+        users.add(userListDto);
+        RecipeBookCreateDto createDto = new RecipeBookCreateDto(null, "This recipe harms your lungs",
+            1L, users, recipeMapper.recipesToRecipeListDto(recipes));
+        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
+            validate(createDto);
+            recipeBookService.createRecipeBook(createDto);
+        });
+
+        assertTrue(exception.getMessage().contains("name"));
+    }
+
+    @Test
+    public void recipeCreationFailsIfNameTooLong() {
+        List<UserListDto> users = new ArrayList<>();
+        UserListDto userListDto = new UserListDto(4L, "User");
+        users.add(userListDto);
+        List<Recipe> recipes = recipeRepository.getRecipeByIds(List.of(2L, 3L));
+        List<RecipeListDto> recipeListDtos = recipeMapper.recipesToRecipeListDto(recipes);
+
+        String longName = "a".repeat(101);
+        RecipeBookCreateDto createDto = new RecipeBookCreateDto(longName, "This recipe will not be created.",
+            2L, users, recipeListDtos);
+
+        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
+            validate(createDto);
+            recipeBookService.createRecipeBook(createDto);
+        });
+
+        assertTrue(exception.getMessage().contains("size must be between 1 and 100"));
+    }
+
+
+    private void validate(@Valid RecipeBookCreateDto createDto) {
+        validator.validate(createDto).forEach(violation -> {
+            throw new ConstraintViolationException("Validation failed for " + violation.getPropertyPath() + ": " + violation.getMessage(), null);
+        });
     }
 }
