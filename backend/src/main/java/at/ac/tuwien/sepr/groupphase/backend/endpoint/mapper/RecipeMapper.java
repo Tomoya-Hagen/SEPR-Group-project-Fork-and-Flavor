@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Nutrition;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
@@ -26,7 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@Mapper
 @Mapper(uses = {RecipeStepMapper.class, CategoryMapper.class, AllergenMapper.class,
     IngredientMapper.class, NutritionMapper.class})
 public interface RecipeMapper {
@@ -57,49 +58,63 @@ public interface RecipeMapper {
     DetailedRecipeDto recipeToDetailedRecipeDto(Recipe recipe);
 
     default Recipe recipeCreateDtoToRecipe(RecipeCreateDto recipeCreateDto, long id) throws RecipeStepNotParsableException, RecipeStepSelfReferenceException {
+        Recipe current = new Recipe();
+        current.setId(id);
+        ApplicationUser owner = new ApplicationUser();
+        owner.setId(recipeCreateDto.getOwnerId());
+
+
         List<RecipeStep> recipeStepList = new ArrayList<>();
         int i = 1;
         for (RecipeStepDto recipeStepDto : recipeCreateDto.getSteps()) {
-            RecipeStep recipeStep = new RecipeStep();
-            recipeStep.setName(recipeStepDto.getName());
-            recipeStep.setRecipeId(id);
-            recipeStep.setStepNumber(i);
+            RecipeStep recipeStep;
             if (!recipeStepDto.isCorrect()) {
                 throw new RecipeStepNotParsableException("The steps in the Recipe are not formated correct!");
             }
             if (recipeStepDto.isWhichstep()) {
-                RecipeDescriptionStep recipeDescriptionStep = new RecipeDescriptionStep();
-                recipeDescriptionStep.setDescription(recipeStepDto.getDescription());
-                recipeDescriptionStep.setName(recipeStepDto.getName());
-                recipeStep.setStepDescription(recipeDescriptionStep);
+                recipeStep = new RecipeDescriptionStep(recipeStepDto.getName(),recipeStepDto.getDescription(),current,i);
+
             } else {
                 if (recipeStepDto.getRecipeId() == id) {
                     throw new RecipeStepSelfReferenceException("A step references it's own recipe!");
                 }
-                RecipeRecipeStep recipeRecipeStep = new RecipeRecipeStep();
-                recipeRecipeStep.setName(recipeStepDto.getName());
-                recipeRecipeStep.setRecipeId(recipeStepDto.getRecipeId());
-                recipeStep.setStepRecipe(recipeRecipeStep);
+                Recipe reciper = new Recipe();
+                reciper.setId(recipeStepDto.getRecipeId());
+                recipeStep = new RecipeRecipeStep(recipeStepDto.getName(),current,i,reciper);
             }
             recipeStepList.add(recipeStep);
             i++;
 
         }
-        List<RecipeIngredient> recipeIngredientList = recipeIngredientDtoToRecipeIngredientDto(recipeCreateDto.getIngredients());
-        recipeIngredientList.forEach(obj -> obj.setRecipeId(id));
+        List<RecipeIngredient> recipeIngredientList = new ArrayList<>();
+        for(RecipeIngredientDto recipeIngredient : recipeCreateDto.getIngredients()) {
+            Ingredient ingredient = new Ingredient();
+            ingredient.setId(recipeIngredient.getId());
+            RecipeIngredient.Unit u =  RecipeIngredient.getUnitFromString(recipeIngredient.getUnit());
+            RecipeIngredient recieing = new RecipeIngredient(current,ingredient,recipeIngredient.getAmount(),u);
+            recipeIngredientList.add(recieing);
+        }
 
-        Recipe.RecipeBuilder recipeBuilder = Recipe.RecipeBuilder.aRecipe();
-        recipeBuilder.withName(recipeCreateDto.getName())
-            .withDescription(recipeCreateDto.getDescription())
-            .withNumberOfServings(recipeCreateDto.getServings())
-            .withOwnerId(recipeCreateDto.getOwnerId())
-            .withRecipeIngredients(recipeIngredientList)
-            .withRecipeSteps(recipeStepList);
+        List<Category> categoryList = new ArrayList<>();
+        for(RecipeCategoryDto categoryDto: recipeCreateDto.getCategories()){
+            Category category = new Category();
+            category.setId(categoryDto.getId());
+            categoryList.add(category);
+        }
 
-        return recipeBuilder.build();
+        Recipe ret = new Recipe();
+        ret.setId(id);
+        ret.setName(recipeCreateDto.getName());
+        ret.setDescription(recipeCreateDto.getDescription());
+        ret.setNumberOfServings(recipeCreateDto.getServings());
+        ret.setOwner(owner);
+        ret.setIngredients(recipeIngredientList);
+        ret.setRecipeSteps(recipeStepList);
+        ret.setCategories(categoryList);
+
+        return ret;
     }
 
-    ;
 
     List<RecipeIngredient> recipeIngredientDtoToRecipeIngredientDto(List<RecipeIngredientDto> recipeIngredientDto);
 

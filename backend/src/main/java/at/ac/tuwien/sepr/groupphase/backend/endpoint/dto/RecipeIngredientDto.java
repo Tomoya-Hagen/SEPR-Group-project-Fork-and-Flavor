@@ -17,6 +17,15 @@ public class RecipeIngredientDto {
     @NotNull(message = "unit must not be null")
     private String unit;
 
+    public RecipeIngredientDto(long id, BigDecimal amount, String unit) {
+        this.id = id;
+        this.amount = amount;
+        this.unit = unit;
+    }
+
+    public RecipeIngredientDto() {
+    }
+
     public long getId() {
         return id;
     }

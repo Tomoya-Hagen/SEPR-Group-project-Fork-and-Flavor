@@ -3,7 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Message} from '../dtos/message';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
-import {Ingredient} from "../dtos/Ingredient";
+import {IngredientDetailDto} from "../dtos/ingredient";
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +16,12 @@ export class IngredientService {
   }
 
 
-  public ingredientssByName(name: string, limit: number | undefined): Observable<Ingredient[]> {
+  public ingredientssByName(name: string, limit: number | undefined): Observable<IngredientDetailDto[]> {
     let params = new HttpParams();
     params = params.append("name", name);
     if (limit != null) {
       params = params.append("limit", limit);
     }
-    return this.httpClient.get<Ingredient[]>(this.ingredientBaseUri, { params });
+    return this.httpClient.get<IngredientDetailDto[]>(this.ingredientBaseUri, { params });
   }
 }

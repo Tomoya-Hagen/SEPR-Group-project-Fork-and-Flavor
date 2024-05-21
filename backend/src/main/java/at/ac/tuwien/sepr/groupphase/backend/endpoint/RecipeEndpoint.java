@@ -3,10 +3,14 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,13 +73,14 @@ public class RecipeEndpoint {
     @Operation(summary = "Create a new Recipe", security = @SecurityRequirement(name = "apiKey"))
     public DetailedRecipeDto createnew(@Valid @RequestBody RecipeCreateDto recipeDto) {
         LOGGER.info("POST /api/v1/recipe body: {}", recipeDto);
-        return recipeService.createRecipe(recipeDto);
+        var auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return recipeService.createRecipe(recipeDto,(String) auth);
     }
 
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/ingredients")
-    @Operation(summary = "Getting ingredients", security = @SecurityRequirement(name = "apiKey"))
+    @GetMapping("/simple")
+    @Operation(summary = "Getting simple recipes", security = @SecurityRequirement(name = "apiKey"))
     public Stream<SimpleRecipeResultDto> get(@RequestParam("name") String name, @RequestParam("limit") int limit) {
         LOGGER.info("POST /api/v1/recipe params: {} {}", name , limit);
         return recipeService.byname(name,limit);

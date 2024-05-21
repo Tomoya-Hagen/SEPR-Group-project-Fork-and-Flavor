@@ -1,16 +1,16 @@
 import { Component, OnInit} from '@angular/core';
-import {Recipe} from "../../../dtos/Recipe";
-import {NgForm} from "@angular/forms";
+import {Recipe} from "../../../dtos/recipe";
+import {AbstractControl, NgForm, ValidationErrors, ValidatorFn} from "@angular/forms";
 import {IngredientComponent} from "./ingredient/ingredient.component";
-import {Ingredient} from "../../../dtos/Ingredient";
 import {of} from "rxjs";
 import {IngredientService} from "../../../services/ingredient.service";
-import {RecipeService} from "../../../services/RecipeService";
+import {RecipeService} from "../../../services/recipe.service";
 import {Step} from "../../../dtos/Step";
 import {SimpleRecipe} from "../../../dtos/SimpleRecipe";
 import {SimpleCategory} from "../../../dtos/SimpleCategory";
 import {CategoryService} from "../../../services/CategoryService";
 import {DetailedRecipeDto} from "../../../dtos/DetailedRecipeDto";
+import {IngredientDetailDto} from "../../../dtos/ingredient";
 
 @Component({
   selector: 'app-recipe-create',
@@ -30,6 +30,8 @@ export class RecipeCreateComponent implements OnInit{
     steps: [],
     categories: []
   }
+  ingbool = false;
+  stepbool = false;
 
   constructor(
     private recipeService: RecipeService,
@@ -37,10 +39,17 @@ export class RecipeCreateComponent implements OnInit{
 
   ){}
 
-  ingredientChangeHandler(updatedIngredient: Ingredient, index: number) {
+  ingredientChangeHandler(updatedIngredient: IngredientDetailDto, index: number) {
+    console.log(this.recipe.ingredients)
     this.recipe.ingredients[index] = updatedIngredient;
     if(this.recipe.ingredients[this.recipe.ingredients.length-1].id != -1){
-      this.recipe.ingredients.push({name: "", id: -1,amount: 0, unit:"g"});
+      this.recipe.ingredients.push({name: "", id: -1,amount: null, unit:null});
+    }
+    if(this.recipe.ingredients.length > 1 && this.recipe.ingredients.slice(0, -1).every(obj => obj != null && obj.id !== -1 && obj.id !== 0)){
+      this.ingbool = true;
+    }
+    else {
+      this.ingbool = false;
     }
   }
 
@@ -49,10 +58,10 @@ export class RecipeCreateComponent implements OnInit{
     this.recipe.ingredients.push({name: "", id: -1,amount: 0, unit:"g"});
     this.recipe.steps.push(new Step());
     this.recipe.categories.push({id: 0});
-    console.log(this.recipe.steps);
   }
 
   public onSubmit(form: NgForm): void {
+    console.log(this.recipe);
     this.recipe.steps.pop();
     this.recipe.categories.pop();
     this.recipe.ingredients.pop();
@@ -61,19 +70,16 @@ export class RecipeCreateComponent implements OnInit{
         delete step.recipeId;
       }
     })
-    console.log(this.recipe);
     let retrecipe = this.recipeService.createRecipe(this.recipe);
 
     this.recipeService.createRecipe(this.recipe).subscribe({
         next: (detrecipe: DetailedRecipeDto) => {
-          console.log(detrecipe)
         },
         error: error => {
           this.defaultServiceErrorHandling(error);
         }
       }
     );
-    console.log(retrecipe);
   }
 
 
@@ -93,7 +99,6 @@ export class RecipeCreateComponent implements OnInit{
 
 
   public textareachange(index : number) : void{
-    console.log(this.recipe.steps[index].description);
     if(!this.recipe.steps[index].description){
       this.recipe.steps[index].whichstep = null;
     }
@@ -116,6 +121,13 @@ export class RecipeCreateComponent implements OnInit{
     if(this.recipe.steps[index].recipeId != 0 && this.recipe.steps.length -1 == index){
       this.recipe.steps.push(new Step());
     }
+
+    if(this.recipe.steps.length > 1 && this.recipe.steps.slice(0, -1).every(obj => obj != null && obj.whichstep != null)){
+      this.stepbool = true;
+    }
+    else {
+      this.stepbool = false;
+    }
   }
 
   recipeStepSuggestions = (input: string) => (input === '')
@@ -133,7 +145,6 @@ export class RecipeCreateComponent implements OnInit{
     :  this.categoryService.categoryByName(input, 5);
 
   public categorychanged(index: number):void{
-    console.log(this.recipe.categories)
     if(this.recipe.categories[index] == null){
       this.recipe.categories[index] = {id: 0}
     }
@@ -185,5 +196,9 @@ export class RecipeCreateComponent implements OnInit{
     }
     this.recipe=rec;
   }
+
+
 }
+
+
 

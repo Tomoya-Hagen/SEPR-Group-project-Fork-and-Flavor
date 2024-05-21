@@ -9,6 +9,13 @@ public class RecipeCategoryDto {
     @NotNull(message = "categoryId must not be null")
     int id;
 
+    public RecipeCategoryDto() {
+    }
+
+    public RecipeCategoryDto(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

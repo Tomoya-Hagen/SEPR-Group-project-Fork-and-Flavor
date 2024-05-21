@@ -23,9 +23,10 @@ public interface RecipeService {
      * Creates a new recipe entry.
      *
      * @param recipe to create
+     *  usermail for owner
      * @return created recipe entry
      */
-    DetailedRecipeDto createRecipe(RecipeCreateDto recipe);
+    DetailedRecipeDto createRecipe(RecipeCreateDto recipe, String usermail);
 
     /**
      * Find all recipes having a name like name.
@@ -38,6 +39,6 @@ public interface RecipeService {
 
     RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException;
 
-    <RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber);
+    List<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber);
 
 }

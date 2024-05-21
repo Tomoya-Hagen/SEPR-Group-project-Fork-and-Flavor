@@ -2,8 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
-import {Ingredient} from "../dtos/Ingredient";
-import {SimpleRecipe} from "../dtos/SimpleRecipe";
 import {SimpleCategory} from "../dtos/SimpleCategory";
 
 @Injectable({

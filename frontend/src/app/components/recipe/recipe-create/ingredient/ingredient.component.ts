@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Ingredient} from "../../../../dtos/Ingredient";
+import {IngredientDetailDto} from "../../../../dtos/ingredient";
 import {of} from "rxjs";
 import {IngredientService} from "../../../../services/ingredient.service";
 
@@ -12,26 +12,26 @@ import {IngredientService} from "../../../../services/ingredient.service";
 export class IngredientComponent {
 
   @Input()
-  ingredient: Ingredient;
+  ingredient: IngredientDetailDto;
 
   @Output()
-  ingredientChange: EventEmitter<Ingredient> = new EventEmitter<Ingredient>();
+  ingredientChange: EventEmitter<IngredientDetailDto> = new EventEmitter<IngredientDetailDto>();
 
   constructor(
     private ingredientService: IngredientService
   ){}
 
-  get Ingredient(): Ingredient {
+  get Ingredient(): IngredientDetailDto {
     return this.ingredient;
   }
 
-  set Ingredient(value: Ingredient) {
+  set Ingredient(value: IngredientDetailDto) {
     this.ingredient = value;
     this.ingredientChange.emit(this.ingredient)
   }
 
 
-  public formatIngredient(ingredient: Ingredient | null): string {
+  public formatIngredient(ingredient: IngredientDetailDto | null): string {
     return ingredient?.name ?? '';
   }
 
@@ -39,4 +39,10 @@ export class IngredientComponent {
     ? of([])
     :  this.ingredientService.ingredientssByName(input, 5);
 
+
+  public ingredientchanged():void{
+    if(this.Ingredient == null){
+      this.Ingredient = {id: 0, unit: "", name: "", amount: null};
+    }
+  }
 }

@@ -2,32 +2,30 @@
   <div class="container mt-5">
     <h1 class="text-center mb-4">Recipe Creator</h1>
     <div class="row">
-      <div class="col-md-6 border-top rounded-top-1 border-end rounded-end-1">
-        <div class="container">
+      <div class="col-md-6 border">
             <div class="row">
               <div class="col-md-9">
                 <div class="form-group">
                   <label for="name">Name</label>
-                  <input [(ngModel)]="recipe.name" name="name" type="text" class="form-control" id="name" placeholder="Wraps de mi abuela">
+                  <input [(ngModel)]="recipe.name" name="name" type="text" class="form-control" id="name" placeholder="Wraps de mi abuela" required>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="form-group">
                   <label for="servings">Servings</label>
-                  <input [(ngModel)]="recipe.servings" name="servings"  type="number" class="form-control" id="servings" placeholder="6">
+                  <input [(ngModel)]="recipe.servings" name="servings"  type="number" class="form-control" id="servings" placeholder="6" required>
                 </div>
               </div>
             </div>
-          </div>
-        <div class="col-md-12 p-1 border-bottom rounded-bottom-1">
+        <div class="col-md-12 p-1">
           <div class="form-group">
             <label for="description">Description</label>
-            <input [(ngModel)]="recipe.description" name="description" type="text" class="form-control" id="description" placeholder="Dies sind die besten Wraps meiner Oma. Wir aßen sie immer im jardín!">
+            <input [(ngModel)]="recipe.description" name="description" type="text" class="form-control" id="description" placeholder="Dies sind die besten Wraps meiner Oma. Wir aßen sie immer im jardín!" required>
           </div>
         </div>
-        <div class="col-md-12 p-1 border-top rounded-top-1">
+        <div class="col-md-12 p-1 border" >
           <div class="row">
-            <div class="col-md-8 border-end rounded-end-1">
+            <div class="col-md-8 overflow-auto" style="height: 30vh">
               <div class="col-md-12" *ngFor="let inneringredient of recipe.ingredients; let i = index">
                 <app-ingredient
                   (ingredientChange)="ingredientChangeHandler($event, i)"
@@ -35,7 +33,7 @@
                 </app-ingredient>
               </div>
             </div>
-            <div class="col-md-4 border-start rounded-start-1">
+            <div class="col-md-4 overflow-auto" style="height: 30vh">
               <div class="col-md-12" *ngFor="let incategory of recipe.categories; let i = index">
                 <div class="form-group">
                   <label for="incategory{{i}}">Category</label>
@@ -56,7 +54,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6 border-top rounded-top-1 border-start rounded-start-1">
+      <div class="col-md-6 border overflow-auto" style="height: 60vh">
         <div *ngFor="let step of recipe.steps; let i = index">
           <div id="fullrecipestep{{i}}">
             <div class="form-group">
@@ -100,12 +98,8 @@
         </div>
       </div>
 
-      <div class="container m-5">
-        <button type="submit" class="btn btn-primary">Create Recipe</button>
-      </div>
-
-      <div *ngIf="false" class="container m-5">
-        <a (click)="fill()" class="btn btn-primary">Fill</a>
+      <div class="cbutton" style="top: 145px">
+        <button [disabled]="!(stepbool && ingbool)" type="submit" class="btn btn-primary">Create Recipe</button>
       </div>
 
     </div>

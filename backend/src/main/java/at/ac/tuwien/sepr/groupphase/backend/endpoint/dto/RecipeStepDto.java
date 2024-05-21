@@ -16,6 +16,16 @@ public class RecipeStepDto {
     @NotNull(message = "whichstep must not be null")
     private boolean whichstep;
 
+    public RecipeStepDto() {
+    }
+
+    public RecipeStepDto(String name, String description, long recipeId, boolean whichstep) {
+        this.name = name;
+        this.description = description;
+        this.recipeId = recipeId;
+        this.whichstep = whichstep;
+    }
+
     public boolean isCorrect(){
         if((whichstep && description != null && recipeId == 0) || (!whichstep && description == null && recipeId != 0)){
             return true;

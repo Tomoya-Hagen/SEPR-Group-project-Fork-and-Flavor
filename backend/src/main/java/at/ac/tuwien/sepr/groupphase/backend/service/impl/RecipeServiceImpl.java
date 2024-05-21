@@ -1,9 +1,14 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.IngredientNutrition;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Nutrition;
@@ -13,28 +18,47 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeIngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeStepRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @Transactional
 @Service
 public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
     private final RecipeMapper recipeMapper;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
-                             RecipeMapper recipeMapper) {
+                             RecipeMapper recipeMapper, UserRepository userRepository,
+                             CategoryRepository categoryRepository) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
+        this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -58,6 +82,31 @@ public class RecipeServiceImpl implements RecipeService {
             ratings.add(calculateAverageTasteRating(recipe.getRatings()));
         }
         return recipeMapper.recipeListAndRatingListToListOfRecipeRatingDto(recipes, ratings);
+    }
+
+    @Override
+    public DetailedRecipeDto createRecipe(RecipeCreateDto recipeDto, String usermail) throws RecipeStepNotParsableException, RecipeStepSelfReferenceException {
+        LOGGER.debug("Publish new message {}", recipeDto);
+
+        Recipe recipe = recipeMapper.recipeCreateDtoToRecipe(recipeDto, recipeRepository.findMaxId() + 1);
+
+        List<Category> categories = new ArrayList<>();
+        for(Category category : recipe.getCategories()) {
+            categories.add(categoryRepository.getById(category.getId()));
+        }
+        recipe.setCategories(categories);
+
+        ApplicationUser owner = userRepository.findFirstUserByEmail(usermail);
+        recipe.setOwner(owner);
+        recipeRepository.save(recipe);
+
+        return recipeMapper.recipeToDetailedRecipeDto(recipe);
+    }
+
+    @Override
+    public Stream<SimpleRecipeResultDto> byname(String name, int limit) {
+        var x = recipeRepository.findByNameContainingWithLimit(name, PageRequest.of(0,limit)).stream().map(recipeMapper::recipeToRecipeResultDto);
+        return x;
     }
 
     private long calculateAverageTasteRating(List<Rating> ratings) {
