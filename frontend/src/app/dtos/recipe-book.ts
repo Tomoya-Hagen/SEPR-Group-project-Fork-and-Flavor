@@ -1,7 +1,7 @@
 import {userListDto} from "./user";
 import {RecipeListDto} from "./recipe"
 
-export interface RecipeBook {
+export interface RecipeBookDetailDto {
   id: number,
   name: string,
   description: string,

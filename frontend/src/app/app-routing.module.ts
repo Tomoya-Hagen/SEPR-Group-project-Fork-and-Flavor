@@ -24,8 +24,8 @@ const routes: Routes = [
   ]},
   {path: 'recipebook', children:[
       {path: '', component: RecipebookComponent},
-      {path: ':id/details', component: RecipebookDetailComponent}
-    ]},
+      {path: 'details/:id', component: RecipebookDetailComponent}
+  ]},
   {path: 'weekplan', component: WeekplanComponent},
 ];
 

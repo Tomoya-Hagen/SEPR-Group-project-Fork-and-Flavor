@@ -75,6 +75,14 @@ public class RecipeBook {
         this.ownerId = ownerId;
     }
 
+    public List<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(List<Recipe> recipes) {
+        this.recipes = recipes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -97,4 +105,6 @@ public class RecipeBook {
         joinColumns = {@JoinColumn(name = "recipe_book_id")},
         inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<ApplicationUser> editors = new ArrayList<>();
+
+
 }

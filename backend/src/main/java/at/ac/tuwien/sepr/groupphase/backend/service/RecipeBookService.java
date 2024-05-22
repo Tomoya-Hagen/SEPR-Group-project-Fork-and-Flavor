@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -14,4 +15,6 @@ public interface RecipeBookService {
     List<RecipeBookListDto> getRecipeBooks();
 
     List<RecipeBookListDto> searchRecipeBooks(String name) throws NotFoundException;
+
+    List<RecipeBookListDto> getRecipesFromPageInSteps(int page, int step);
 }

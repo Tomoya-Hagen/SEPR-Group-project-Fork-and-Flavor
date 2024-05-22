@@ -3,7 +3,7 @@ import {environment} from '../../environments/environment';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import { RecipeDetailDto } from '../dtos/recipe';
-import {RecipeBookListDto, RecipeBookSearch} from "../dtos/recipe-book";
+import {RecipeBookDetailDto, RecipeBookListDto, RecipeBookSearch} from "../dtos/recipe-book";
 
 const baseUri = environment.backendUrl + '/recipebook';
 @Injectable({
@@ -15,15 +15,15 @@ export class RecipeBookService {
     private http: HttpClient) {
   }
 
-  public getAllRecipeBooks(): Observable<RecipeBookListDto[]> {
+  public getAllRecipeBooksBySteps(page: number, step: number): Observable<RecipeBookListDto[]> {
     return this.http.get<RecipeBookListDto[]>(
-      baseUri
+      baseUri+"/?page="+page+"&step="+step
     );
   }
 
 
-  public getRecipeDetailsBy(recipeId: number): Observable<RecipeDetailDto> {
-    return this.http.get<RecipeDetailDto>(
+  public getRecipeBookDetailsBy(recipeId: number): Observable<RecipeBookDetailDto> {
+    return this.http.get<RecipeBookDetailDto>(
       baseUri+"/"+recipeId+"/details"
     );
   }

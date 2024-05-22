@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,6 +52,14 @@ public class RecipeBookEndpoint {
     public List<RecipeBookListDto> getRecipeBookList() {
         LOGGER.info("GET /api/v1/recipebook");
         return recipeBookService.getRecipeBooks();
+    }
+
+    @PermitAll
+    @GetMapping("/")
+    @Operation(summary = "Get a list of recipe books")
+    public List<RecipeBookListDto> getListByPageAndStep(@RequestParam(name = "page") int page, @RequestParam(name = "step") int step) {
+        LOGGER.info("GET /api/v1/recipebook?page={}&step={}", page, step);
+        return recipeBookService.getRecipesFromPageInSteps(page, step);
     }
 
     @PermitAll
