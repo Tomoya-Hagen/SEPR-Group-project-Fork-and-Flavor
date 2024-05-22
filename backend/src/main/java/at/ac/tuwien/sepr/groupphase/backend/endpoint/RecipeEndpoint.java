@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,5 +57,12 @@ public class RecipeEndpoint {
 
     private void logClientError(HttpStatus status, String message, Exception e) {
         LOGGER.warn("{} {}: {}: {}", status.value(), message, e.getClass().getSimpleName(), e.getMessage());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<RecipeListDto>> getRecipesByNames(@RequestParam(name = "name") String name, @RequestParam(name = "limit") int limit) {
+        LOGGER.info("Getting {} using {}", limit, name);
+        LOGGER.debug("Retrieving {} recipes using {}", limit, name);
+        return ResponseEntity.ok(recipeService.getRecipesByNames(name, limit));
     }
 }

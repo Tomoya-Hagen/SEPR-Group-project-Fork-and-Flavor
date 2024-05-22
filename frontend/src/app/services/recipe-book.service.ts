@@ -4,7 +4,7 @@ import { RecipeBook } from '../dtos/recipe-book';
 import { Observable, catchError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-const baseUri = environment.backendUrl + '/recipebooks';
+const baseUri = environment.backendUrl + '/recipebook';
 
 /**
  * Service for handling recipe books.

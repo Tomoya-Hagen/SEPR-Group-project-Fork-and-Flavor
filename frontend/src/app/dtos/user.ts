@@ -1,5 +1,5 @@
 
-export interface userListDto {
+export interface UserListDto {
     id: number;
     name: string;
 }

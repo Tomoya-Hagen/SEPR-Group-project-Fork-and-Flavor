@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import java.util.Optional;
-
 @Repository
 public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
 
@@ -45,7 +43,7 @@ public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
      */
     Long findFirstByEmail(String email);
 
-    @Query("SELECT u FROM ApplicationUser u WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :username, '%'))")
-    List<ApplicationUser> findByNameContainingIgnoreCase(@Param("username") String name);
+    @Query("SELECT u FROM ApplicationUser u WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :username, '%')) ORDER BY u.id LIMIT :limit")
+    List<ApplicationUser> findByNamesContainingIgnoreCase(@Param("username") String name, @Param("limit") int limit);
 
 }

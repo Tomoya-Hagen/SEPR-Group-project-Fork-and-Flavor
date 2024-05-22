@@ -11,7 +11,6 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
 
-    @Mapping(source = "user.id", target = "id")
     default List<UserListDto> userListToUserListDtoList(List<ApplicationUser> users) {
         List<UserListDto> userListDtos = new ArrayList<>();
         for (ApplicationUser user : users) {
@@ -20,5 +19,7 @@ public interface UserMapper {
         return userListDtos;
     }
 
+    @Mapping(source = "user.id", target = "id")
+    @Mapping(source = "user.username", target = "name")
     UserListDto userToUserListDto(ApplicationUser user);
 }

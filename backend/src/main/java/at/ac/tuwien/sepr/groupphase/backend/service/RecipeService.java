@@ -12,4 +12,6 @@ public interface RecipeService {
     RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException;
 
     List<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber);
+
+    List<RecipeListDto> getRecipesByNames(String name, int limit);
 }

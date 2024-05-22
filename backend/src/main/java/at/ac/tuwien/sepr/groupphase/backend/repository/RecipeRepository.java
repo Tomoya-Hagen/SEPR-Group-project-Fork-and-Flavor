@@ -22,4 +22,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     @Query("select r from Recipe r where r.id between :#{#from} and :#{#to} order by r.id")
     List<Recipe> getAllRecipesWithIdFromTo(@Param("from") int from, @Param("to") int to);
+
+    @Query("SELECT r FROM Recipe r WHERE LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%')) ORDER BY r.id LIMIT :limit")
+    List<Recipe> findByNamesContainingIgnoreCase(@Param("name") String name, @Param("limit") int limit);
 }

@@ -60,6 +60,12 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeMapper.recipeListAndRatingListToListOfRecipeRatingDto(recipes, ratings);
     }
 
+    @Override
+    public List<RecipeListDto> getRecipesByNames(String name, int limit) {
+        List<Recipe> recipes = recipeRepository.findByNamesContainingIgnoreCase(name, limit);
+        return recipeMapper.recipesToRecipeListDto(recipes);
+    }
+
     private long calculateAverageTasteRating(List<Rating> ratings) {
         long rating = 0;
         if (!ratings.isEmpty()) {

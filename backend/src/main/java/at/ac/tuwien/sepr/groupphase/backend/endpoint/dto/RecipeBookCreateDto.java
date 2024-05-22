@@ -19,6 +19,7 @@ public record RecipeBookCreateDto(
     String name,
 
     @NotNull
+    @Size(min = 1, max = 300) // adjust later
     String description,
 
     @NotNull

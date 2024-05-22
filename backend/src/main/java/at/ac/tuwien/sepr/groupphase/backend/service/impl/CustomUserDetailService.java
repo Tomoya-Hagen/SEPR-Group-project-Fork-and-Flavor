@@ -100,7 +100,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public List<UserListDto> findUsersByName(String name, int limit) {
-        List<ApplicationUser> users = userRepository.findByNameContainingIgnoreCase(name);
+        List<ApplicationUser> users = userRepository.findByNamesContainingIgnoreCase(name, limit);
         return userMapper.userListToUserListDtoList(users);
     }
 

@@ -32,8 +32,12 @@
         id="recipes"
         name="recipes"
         [(ngModel)]="recipeBook.recipes"
+        textInputClass="form-control"
         [class]="'autocomplete-spacing'"
-        [suggestions]="recipeSuggestions">
+        [formatModel]="formatRecipeName"
+        valueNeedsToMatchSuggestion="true"
+        [suggestions]="recipeSuggestions"
+        (ngModelChange)="addRecipe($event)">
       </app-autocomplete>
   </div>
 
@@ -43,11 +47,15 @@
         id="users"
         name="users"
         [(ngModel)]="recipeBook.users"
+        textInputClass="form-control"
         [class]="'autocomplete-spacing'"
-        [suggestions]="userSuggestions">
+        [formatModel]="formatUserName"
+        valueNeedsToMatchSuggestion="true"
+        [suggestions]="userSuggestions"
+        (ngModelChange)="addUser($event)">
       </app-autocomplete>
   </div>
 
-  <button type="submit" class="btn btn-primary" [routerLink]="['/recipebook']">{{ submitButtonText }}</button>
+  <button [disabled]="!form.valid" type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
 </form>
 
