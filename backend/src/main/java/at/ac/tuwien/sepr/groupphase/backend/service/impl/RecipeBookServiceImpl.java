@@ -31,12 +31,12 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     }
 
     @Override
-    public RecipeBook createRecipeBook(@Valid RecipeBookCreateDto recipeBookCreateDto) {
+    public RecipeBook createRecipeBook(@Valid RecipeBookCreateDto recipeBookCreateDto, Long ownerId) {
         LOGGER.trace("createRecipeBook({})", recipeBookCreateDto);
         RecipeBook recipeBook = new RecipeBook();
         recipeBook.setName(recipeBookCreateDto.name());
         recipeBook.setDescription(recipeBookCreateDto.description());
-        recipeBook.setOwnerId(recipeBookCreateDto.ownerId());
+        recipeBook.setOwnerId(ownerId);
         List<Long> userIds = recipeBookCreateDto.users().stream().map(UserListDto::id).toList();
         List<ApplicationUser> users = userRepository.findAllById(userIds);
         recipeBook.setUsers(users);

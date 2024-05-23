@@ -10,7 +10,6 @@ import java.util.List;
  *
  * @param name the name of the recipe to be created
  * @param description the corresponding description
- * @param ownerId the ID of the recipe's owner
  * @param users users that can interact with the recipe book
  */
 public record RecipeBookCreateDto(
@@ -21,9 +20,6 @@ public record RecipeBookCreateDto(
     @NotNull
     @Size(min = 1, max = 300) // adjust later
     String description,
-
-    @NotNull
-    Long ownerId,
 
     @NotNull
     List<UserListDto> users,

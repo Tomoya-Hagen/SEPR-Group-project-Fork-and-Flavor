@@ -102,6 +102,10 @@ public class RecipeBook {
         this.editors = users;
     }
 
+    public List<ApplicationUser> getUsers() {
+        return editors;
+    }
+
     public void setRecipes(List<Recipe> recipes) {
         this.recipes = recipes;
     }

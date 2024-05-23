@@ -6,5 +6,5 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 
 public interface RecipeBookService {
 
-    RecipeBook createRecipeBook(RecipeBookCreateDto recipeBook);
+    RecipeBook createRecipeBook(RecipeBookCreateDto recipeBook, Long ownerId);
 }

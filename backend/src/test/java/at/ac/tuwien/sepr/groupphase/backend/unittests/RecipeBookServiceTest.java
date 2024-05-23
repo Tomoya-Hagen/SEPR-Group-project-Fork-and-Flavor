@@ -47,23 +47,25 @@ public class RecipeBookServiceTest {
     @Test
     public void createRecipeBookSuccessfully() {
         List<UserListDto> userRecipeBooks = new ArrayList<>();
-        UserListDto userListDto = new UserListDto(1L, "a");
+        UserListDto userListDto = new UserListDto(3L, "a");
         userRecipeBooks.add(userListDto);
         List<Recipe> recipes = recipeRepository.getRecipeByIds(List.of(1L, 2L));
         List<RecipeListDto> r = recipeMapper.recipesToRecipeListDto(recipes);
 
         RecipeBookCreateDto createDto = new RecipeBookCreateDto( "Fast Food", "This recipe contains fast food dishes",
-            1L, userRecipeBooks, r);
+            userRecipeBooks, r);
 
-        RecipeBook recipeBook = recipeBookService.createRecipeBook(createDto);
+        RecipeBook recipeBook = recipeBookService.createRecipeBook(createDto, 1L);
 
         assertAll(
             () -> assertNotNull(recipeBook),
             () -> assertEquals(1L, recipeBook.getRecipes().getFirst().getId()),
+            () -> assertEquals(2L, recipeBook.getRecipes().get(1).getId()),
             () -> assertEquals("Fast Food", recipeBook.getName()),
             () -> assertEquals("This recipe contains fast food dishes", recipeBook.getDescription()),
             () -> assertEquals(1L, recipeBook.getOwnerId()),
-            () -> assertEquals(2, recipeBook.getRecipes().size())
+            () -> assertEquals(2, recipeBook.getRecipes().size()),
+            () -> assertEquals(3L, recipeBook.getUsers().getFirst().getId())
         );
     }
 
@@ -74,10 +76,10 @@ public class RecipeBookServiceTest {
         List<Recipe> recipes = recipeRepository.getRecipeByIds(List.of(2L, 3L));
         users.add(userListDto);
         RecipeBookCreateDto createDto = new RecipeBookCreateDto(null, "This recipe harms your lungs",
-            1L, users, recipeMapper.recipesToRecipeListDto(recipes));
+            users, recipeMapper.recipesToRecipeListDto(recipes));
         ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             validate(createDto);
-            recipeBookService.createRecipeBook(createDto);
+            recipeBookService.createRecipeBook(createDto, 1L);
         });
 
         assertTrue(exception.getMessage().contains("name"));
@@ -93,11 +95,11 @@ public class RecipeBookServiceTest {
 
         String longName = "a".repeat(101);
         RecipeBookCreateDto createDto = new RecipeBookCreateDto(longName, "This recipe will not be created.",
-            2L, users, recipeListDtos);
+            users, recipeListDtos);
 
         ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             validate(createDto);
-            recipeBookService.createRecipeBook(createDto);
+            recipeBookService.createRecipeBook(createDto, 1L);
         });
 
         assertTrue(exception.getMessage().contains("size must be between 1 and 100"));
