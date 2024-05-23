@@ -11,6 +11,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This is the interface for the persistence layer of Recipes.
+ *
+ */
 @DynamicInsert
 @DynamicUpdate
 @Repository

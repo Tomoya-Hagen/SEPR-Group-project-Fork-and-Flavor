@@ -8,6 +8,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * This is the interface for the Nutrition entities and related DTOs.
+ *
+ */
 @Mapper
 public interface NutritionMapper {
     NutritionDetailDto nutritionAndValueToNutritionDetailDto(Nutrition nutrition, BigDecimal value);

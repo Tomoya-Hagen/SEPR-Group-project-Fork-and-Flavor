@@ -8,6 +8,10 @@ import org.mapstruct.Mapping;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is the interface for the User entities and related DTOs.
+ *
+ */
 @Mapper
 public interface UserMapper {
 

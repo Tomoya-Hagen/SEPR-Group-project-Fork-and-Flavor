@@ -12,6 +12,10 @@ import org.mapstruct.Mapping;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is the interface for the RecipeStep entities and related DTOs.
+ *
+ */
 @Mapper
 public interface RecipeStepMapper {
 

@@ -16,6 +16,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This is the interface for the Recipe entities and related DTOs.
+ *
+ */
 @Mapper(uses = {RecipeStepMapper.class, CategoryMapper.class, AllergenMapper.class,
     IngredientMapper.class, NutritionMapper.class})
 public interface RecipeMapper {

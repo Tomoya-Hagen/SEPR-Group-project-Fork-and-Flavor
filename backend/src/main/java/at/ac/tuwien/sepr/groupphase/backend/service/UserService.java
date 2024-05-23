@@ -13,6 +13,10 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.PasswordException;
 
 import java.util.List;
 
+/**
+ * This is the interface for the user service extending UserDetailsService.
+ *
+ */
 public interface UserService extends UserDetailsService {
 
     /**

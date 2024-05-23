@@ -8,6 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * This is the interface for the persistence layer of Categories.
+ *
+ */
 @DynamicInsert
 @DynamicUpdate
 @Repository

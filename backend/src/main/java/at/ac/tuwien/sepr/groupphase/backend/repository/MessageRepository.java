@@ -6,6 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * This is the interface for the persistence layer of Messages.
+ *
+ */
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
