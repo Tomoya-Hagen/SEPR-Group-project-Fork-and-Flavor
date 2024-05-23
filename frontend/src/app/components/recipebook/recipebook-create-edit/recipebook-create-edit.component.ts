@@ -25,13 +25,12 @@ export class RecipebookCreateEditComponent implements OnInit {
   recipeBook: RecipeBookCreateDto = {
     name: '',
     description: '',
-    ownerId: 1,
-    users: [],
-    recipes: []
+    users: null,
+    recipes: null
   };
 
   users: (UserListDto | null)[] = [];
-  recipes: (RecipeListDto | null)[] =[];
+  recipes: (RecipeListDto | null)[] = new Array(1);
   dummyUserSelectionModel: unknown;
   dummyRecipeSelectionModel: unknown;
 
@@ -151,11 +150,24 @@ export class RecipebookCreateEditComponent implements OnInit {
   public addRecipe(recipe: RecipeListDto | null) {
     if (!recipe)
       return;
+    console.log(this.recipes);
+    let counter = 0;
+    for (let j = 0; j < this.recipes.length; j++) {
+      if (this.recipes[j] != null) counter++;
+      else {
+        this.recipes[j] === undefined;
+        this.recipes[j] = recipe;
+        return;
+      }
+    }
+    if (counter == this.recipes.length) {
+      this.recipes.push(null);
+    }
     // This should happen late, when the ngModelChange hook has completed,
-    // so that changing dummyHorseSelectionModel works
+    // so that changing dummyRecipeSelectionModel works
     setTimeout(() => {
       const recipes = this.recipes;
-      for (let i = 0; i < this.recipes.length + 1; i++) {
+      for (let i = 0; i < this.recipes.length; i++) {
         if (recipes[i]?.id === recipe.id) {
           // this.notification.error(`${recipe.name} is already in participant list`, "Duplicate Participant");
           this.dummyRecipeSelectionModel = null;
@@ -163,10 +175,12 @@ export class RecipebookCreateEditComponent implements OnInit {
         }
         if (recipes[i] == null) {
           recipes[i] = recipe;
+          console.log(this.recipes);
           this.dummyRecipeSelectionModel = null;
           return;
         }
       }
+    // console.log(this.recipes);
       // this.notification.error("");
     });
   }
@@ -175,20 +189,18 @@ export class RecipebookCreateEditComponent implements OnInit {
     console.log(user);
     if (!user)
       return;
-    // This should happen late, when the ngModelChange hook has completed,
-    // so that changing dummyHorseSelectionModel works
     setTimeout(() => {
       const users = this.users;
       for (let i = 0; i < this.users.length + 1; i++) {
         if (users[i]?.id === user.id) {
           // this.notification.error(`${recipe.name} is already in participant list`, "Duplicate Participant");
           this.dummyUserSelectionModel = null;
-          return;
+          break;
         }
         if (users[i] == null) {
           users[i] = user;
           this.dummyUserSelectionModel = null;
-          return;
+          break;
         }
       }
       console.log(this.users);

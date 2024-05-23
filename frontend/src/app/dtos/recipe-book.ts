@@ -13,7 +13,6 @@ export interface RecipeBook {
 export interface RecipeBookCreateDto {
     name: string,
     description: string,
-    ownerId: number,
     users: UserListDto[],
     recipes: RecipeListDto[]
 }

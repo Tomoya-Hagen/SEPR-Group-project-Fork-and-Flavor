@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RecipeBook } from '../dtos/recipe-book';
+import { RecipeBook, RecipeBookCreateDto } from '../dtos/recipe-book';
 import { Observable, catchError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -19,7 +19,7 @@ export class RecipeBookService {
         private http: HttpClient,
     ) { }
 
-    createRecipeBook(recipeBook: RecipeBook): Observable<RecipeBook> {
+    createRecipeBook(recipeBook: RecipeBookCreateDto): Observable<RecipeBook> {
         return this.http.post<RecipeBook>(baseUri, recipeBook)
         .pipe(
             catchError((error) => {

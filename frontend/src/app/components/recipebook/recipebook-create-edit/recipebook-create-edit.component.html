@@ -28,17 +28,25 @@
 
   <div class="form-group wrapper">
     <label for="recipes">Select Recipes: </label>
-      <app-autocomplete
-        id="recipes"
-        name="recipes"
-        [(ngModel)]="recipeBook.recipes"
-        textInputClass="form-control"
-        [class]="'autocomplete-spacing'"
-        [formatModel]="formatRecipeName"
-        valueNeedsToMatchSuggestion="true"
-        [suggestions]="recipeSuggestions"
-        (ngModelChange)="addRecipe($event)">
-      </app-autocomplete>
+    <table class="table align-baseline">
+      <tbody>
+      <div class="col-md-12" *ngFor="let recipe of recipes; index as i">
+          <div class="form-group">
+            <app-autocomplete
+              id="recipes"
+              name="recipes"
+              [(ngModel)]="recipeBook.recipes"
+              textInputClass="form-control"
+              [class]="'autocomplete-spacing'"
+              [formatModel]="formatRecipeName"
+              valueNeedsToMatchSuggestion="true"
+              [suggestions]="recipeSuggestions"
+              (ngModelChange)="addRecipe($event)">
+            </app-autocomplete>
+          </div>
+      </div>
+      <tbody>
+    </table>
   </div>
 
   <div class="form-group wrapper">
