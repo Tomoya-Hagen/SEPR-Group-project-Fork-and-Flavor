@@ -2,7 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeBookMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -44,7 +43,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     }
 
     @Override
-    public List<RecipeBookListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber) {
+    public List<RecipeBookListDto> getRecipeBooksFromPageInSteps(int pageNumber, int stepNumber) {
         int from = ((pageNumber - 1) * stepNumber) + 1;
         int to = pageNumber * stepNumber;
         List<RecipeBook> recipes = recipeBookRepository.getAllRecipesWithIdFromTo(from, to);

@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
-import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -11,14 +10,37 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * This is the RecipeBookRepository interface. It is a Spring Data JPA repository for RecipeBook entities.
+ * It extends JpaRepository, which provides methods for CRUD operations.
+ * It also includes custom methods for searching for recipe books by name and getting a range of recipe books by ID.
+ */
 @Repository
 @DynamicInsert
 @DynamicUpdate
 public interface RecipeBookRepository extends JpaRepository<RecipeBook, Long> {
+
+    /**
+     * This method is responsible for searching for recipe books by name.
+     * It uses a custom query to select distinct recipe books where the name matches the provided name.
+     * The name matching is case-insensitive and allows for partial matches.
+     *
+     * @param name The name of the recipe book.
+     * @return A list of RecipeBook entities that match the search criteria.
+     */
     @Query("select distinct RecipeBook from RecipeBook RecipeBook"
         + " where (?1 is null or UPPER(RecipeBook.name) like UPPER('%'||?1||'%'))")
     List<RecipeBook> search(@Param("name") String name);
 
+    /**
+     * This method is responsible for getting a range of recipe books by ID.
+     * It uses a custom query to select recipe books where the ID is between the provided from and to values.
+     * The results are ordered by ID.
+     *
+     * @param from The start of the ID range.
+     * @param to The end of the ID range.
+     * @return A list of RecipeBook entities that are within the specified ID range.
+     */
     @Query("select r from RecipeBook r where r.id between :#{#from} and :#{#to} order by r.id")
     List<RecipeBook> getAllRecipesWithIdFromTo(@Param("from") int from, @Param("to") int to);
 

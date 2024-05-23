@@ -45,7 +45,7 @@ public class LoginEndpointTest implements TestData {
     @Autowired
     private ObjectMapper objectMapper;
 
-    /*@Test
+    @Test
     public void registerValidUser() throws Exception {
         UserRegisterDto validUser = new UserRegisterDto(
             "validuser@email.com",
@@ -129,6 +129,6 @@ public class LoginEndpointTest implements TestData {
                 .content(objectMapper.writeValueAsString(user2)))
             .andDo(print())
             .andExpect(status().isConflict());
-    }*/
+    }
 
 }

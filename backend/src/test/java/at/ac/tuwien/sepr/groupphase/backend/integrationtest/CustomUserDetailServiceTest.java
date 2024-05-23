@@ -34,7 +34,7 @@ class CustomUserDetailServiceTest implements TestData {
     @Autowired
     private UserRepository userRepository;
 
-    /*@Test
+    @Test
     public void registerValidUser() {
         UserRegisterDto validUser = new UserRegisterDto(
             "validuser@email.com",
@@ -83,8 +83,8 @@ class CustomUserDetailServiceTest implements TestData {
             "admin"
         );
 
-        assertThrowsExactly(UsernameException.class, () -> customUserDetailService.register(invalidUser));*/
-    //}
+        assertThrowsExactly(UsernameException.class, () -> customUserDetailService.register(invalidUser));
+    }
 
 
 }

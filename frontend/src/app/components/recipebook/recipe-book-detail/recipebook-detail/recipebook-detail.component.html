@@ -9,7 +9,7 @@
       <tr *ngFor="let recipes of recipeBook.recipes" class="center-td">
         <td>{{recipes.name}}</td>
         <td>{{recipes.description}}</td>
-        <td><button class="btn-info"
+        <td><button class="btn btn-primary btn-sm"
                     [routerLink]="['/recipe/details',recipes.id]">Go to recipe
         </button></td>
       </tr>
