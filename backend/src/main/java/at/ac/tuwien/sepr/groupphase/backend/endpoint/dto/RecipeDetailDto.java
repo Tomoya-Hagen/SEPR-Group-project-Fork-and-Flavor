@@ -4,11 +4,11 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.ArrayList;
 
-import java.util.List;
-import java.util.Set;
 
 /**
  * Record to hold RecipeDetails
@@ -20,10 +20,10 @@ import java.util.Set;
  * @param categories categories the recipe belongs to
  * @param isDraft boolean that indicates whether this recipe is a draft
  * @param ingredients ingredients of the recipe
- * @param forkedFrom indicates which recipe this one was forked from
+ * @param forkedFromId indicates which recipe this one was forked from
  * @param recipeSteps steps that the recipe requires
  */
-public record RecipeDetailDto (
+public record RecipeDetailDto(
 
     @NotNull
     Long id,
@@ -37,21 +37,30 @@ public record RecipeDetailDto (
     String description,
 
     @NotNull
+    @Min(1)
     Short numberOfServings,
 
     @NotNull
-    Set<Category> categories,
+    Long forkedFromId,
 
+    @NotNull
+    Long ownerId,
+
+    @NotNull
+    ArrayList<CategoryDetailDto> categories,
     @NotNull
     Boolean isDraft,
 
     @NotNull
-    List<RecipeIngredient> ingredients,
+    ArrayList<RecipeStepDetailDto> recipeSteps,
 
     @NotNull
-    Recipe forkedFrom,
+    ArrayList<IngredientDetailDto> ingredients,
 
     @NotNull
-    List<RecipeStep> recipeSteps
-)
-{}
+    ArrayList<AllergenDetailDto> allergens,
+
+    @NotNull
+    ArrayList<NutritionDetailDto> nutritions
+) {
+}

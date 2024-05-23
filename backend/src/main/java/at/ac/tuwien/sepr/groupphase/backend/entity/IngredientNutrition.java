@@ -2,31 +2,33 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "ingredient_nutrition", schema = "PUBLIC", catalog = "DB")
 public class IngredientNutrition {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ingredient_id", nullable = false)
     private Ingredient ingredient;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "nutrition_id", nullable = false)
     private Nutrition nutrition;
 
-    @Column(name = "nutrition_value")  // Changed from "value" to "nutrition_value"
-    private BigDecimal nutritionValue;  // Adjusted the field name accordingly
+    @Column(name = "nutrition_value")
+    private BigDecimal nutritionValue;
 
     // Getters and Setters
 
@@ -61,4 +63,47 @@ public class IngredientNutrition {
     public void setValue(BigDecimal nutritionValue) {  // Method name updated
         this.nutritionValue = nutritionValue;
     }
+
+    public static final class IngredientNutritionBuilder {
+        private Long id;
+        private Ingredient ingredient;
+        private Nutrition nutrition;
+        private BigDecimal nutritionValue;
+
+        private IngredientNutritionBuilder() {
+        }
+
+        public static IngredientNutritionBuilder anIngredientNutrition() {
+            return new IngredientNutritionBuilder();
+        }
+
+        public IngredientNutritionBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public IngredientNutritionBuilder withIngredient(Ingredient ingredient) {
+            this.ingredient = ingredient;
+            return this;
+        }
+
+        public IngredientNutritionBuilder withNutrition(Nutrition nutrition) {
+            this.nutrition = nutrition;
+            return this;
+        }
+
+        public IngredientNutritionBuilder withValue(BigDecimal nutritionValue) {  // Method name updated
+            this.nutritionValue = nutritionValue;
+            return this;
+        }
+
+        public IngredientNutrition build() {
+            IngredientNutrition ingredientNutrition = new IngredientNutrition();
+            ingredientNutrition.setId(id);
+            ingredientNutrition.setIngredient(ingredient);
+            ingredientNutrition.setNutrition(nutrition);
+            return ingredientNutrition;
+        }
+    }
+
 }

@@ -1,55 +1,34 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
-
-import jakarta.persistence.Basic;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.ManyToOne;
 
-import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Recipe_Recipe_Step", schema = "PUBLIC", catalog = "DB")
-public class RecipeRecipeStep {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id")
-    private long id;
-    @Basic
-    @Column(name = "recipe_id")
-    private long recipeId;
-    @Basic
-    @Column(name = "name")
-    private String name;
+public class RecipeRecipeStep extends RecipeStep {
 
-    public long getId() {
-        return id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipe_recipe_id")
+    private Recipe recipeRecipe;
+
+
+    public Recipe getRecipeRecipe() {
+        return recipeRecipe;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setRecipeRecipe(Recipe recipe) {
+        this.recipeRecipe = recipe;
     }
 
-    public long getRecipeId() {
-        return recipeId;
+    public RecipeRecipeStep(String name, Recipe recipe, int stepNumber, Recipe recipeRecipe) {
+        super(name, recipe, stepNumber);
+        this.recipeRecipe = recipeRecipe;
     }
 
-    public void setRecipeId(long recipeId) {
-        this.recipeId = recipeId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public RecipeRecipeStep() {
     }
 
     @Override
@@ -61,15 +40,11 @@ public class RecipeRecipeStep {
             return false;
         }
         RecipeRecipeStep that = (RecipeRecipeStep) o;
-        return Objects.equals(id, that.id) && Objects.equals(recipeId, that.recipeId) && Objects.equals(name, that.name);
+        return Objects.equals(getId(), that.getId()) && Objects.equals(recipeRecipe, that.recipeRecipe);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, recipeId, name);
+        return Objects.hash(getId(), recipeRecipe);
     }
-
-    @OneToOne(mappedBy = "recipeRecipeStep")
-    @JoinColumn(referencedColumnName = "id")
-    private RecipeStep recipeRecipeStep;
 }

@@ -3,7 +3,10 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserRegisterDtoMapper;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.exception.EmailException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.UsernameException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
@@ -32,13 +35,16 @@ public class CustomUserDetailService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator userValidator = new UserValidator();
-    private final UserRegisterDtoMapper userRegisterDtoMapper = new UserRegisterDtoMapper();
+    private final UserRegisterDtoMapper userRegisterDtoMapper;
+    private final RoleRepository rolesRepository;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
+        this.userRegisterDtoMapper = userRegisterDtoMapper;
+        this.rolesRepository = rolesRepository;
     }
 
     @Override
@@ -92,21 +98,25 @@ public class CustomUserDetailService implements UserService {
         LOGGER.debug("Register a new user");
         userValidator.validateForCreate(userRegisterDto);
 
-        UserDetails userDetails = loadUserByUsername(userRegisterDto.getUsername());
-        if (userDetails != null) {
+        if (userRepository.existsByUsername(userRegisterDto.username())) {
             throw new UsernameException("Username already exists");
         }
 
-        userDetails = loadUserByUsername(userRegisterDto.getEmail());
-        if (userDetails != null) {
-            throw new UsernameException("Email already exists");
+        if (userRepository.existsByEmail(userRegisterDto.email())) {
+            throw new EmailException("Email already exists");
         }
 
-        ApplicationUser applicationUser = new ApplicationUser();
-        applicationUser.setEmail(userRegisterDto.getEmail());
-        applicationUser.setUsername(userRegisterDto.getUsername());
-        applicationUser.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
+        ApplicationUser applicationUser = new ApplicationUser.ApplicationUserBuilder()
+            .withEmail(userRegisterDto.email())
+            .withUsername(userRegisterDto.username())
+            .withPassword(passwordEncoder.encode(userRegisterDto.password()))
+            .withhasProfilePicture(false)
+            .withRoles(List.of(rolesRepository.findByName("User")))
+            .build();
         userRepository.save(applicationUser);
+
+        // Ensure the user is persisted
+        userRepository.flush();
 
         return login(userRegisterDtoMapper.toUserLoginDto(userRegisterDto));
     }
