@@ -9,6 +9,10 @@ import org.mapstruct.Mapping;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * This is the interface for the Ingredient entities and related DTOs.
+ *
+ */
 @Mapper
 public interface IngredientMapper {
 

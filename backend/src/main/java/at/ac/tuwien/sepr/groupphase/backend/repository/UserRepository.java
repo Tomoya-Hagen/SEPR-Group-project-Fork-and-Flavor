@@ -8,6 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * This is the interface for the persistence layer of Users.
+ *
+ */
 @Repository
 public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
 

@@ -6,6 +6,10 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
+/**
+ * This is the interface for the Allergen entities and related DTOs.
+ *
+ */
 @Mapper
 public interface AllergenMapper {
     AllergenDetailDto allergenToAllergenDetailDto(Allergen allergen);

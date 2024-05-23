@@ -7,6 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+/**
+ * This is the interface for the persistence layer of RecipeIngredient's.
+ *
+ */
 @DynamicInsert
 @DynamicUpdate
 public interface RecipeIngredientRepository extends JpaRepository<RecipeIngredient, Long> {

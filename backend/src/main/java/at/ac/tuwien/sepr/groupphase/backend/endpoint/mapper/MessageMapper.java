@@ -10,6 +10,10 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
+/**
+ * This is the interface for the Message entities and related DTOs.
+ *
+ */
 @Mapper
 public interface MessageMapper {
 

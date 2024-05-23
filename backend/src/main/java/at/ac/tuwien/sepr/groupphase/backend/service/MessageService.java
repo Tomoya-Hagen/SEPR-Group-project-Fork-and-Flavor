@@ -4,6 +4,10 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Message;
 
 import java.util.List;
 
+/**
+ * This is the interface for the service layer of Messages.
+ *
+ */
 public interface MessageService {
 
     /**

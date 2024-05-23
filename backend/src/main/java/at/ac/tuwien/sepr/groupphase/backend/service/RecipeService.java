@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * This is the interface for the service layer of Recipes.
+ *
+ */
 @Service
 public interface RecipeService {
     RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException;
