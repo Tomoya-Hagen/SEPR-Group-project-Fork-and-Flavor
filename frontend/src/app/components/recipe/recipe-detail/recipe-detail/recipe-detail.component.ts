@@ -82,8 +82,6 @@ export class RecipeDetailComponent implements OnInit{
   }
 
   addRecipeStepsfromRecipe(recipeStep:RecipeStepRecipeDetailDto){
-    console.log(this.recipeSteps);
-    
     let recipeSteps = [];
     for (let i = 0; i < this.recipeSteps.length; i++) {
       if (this.recipeSteps[i]===recipeStep) {
@@ -91,11 +89,10 @@ export class RecipeDetailComponent implements OnInit{
           recipeSteps.push(recipeStep.recipe.recipeSteps[j]);
         } 
       } else{
-        recipeSteps.push(this.recipeSteps[i])
+        let newRecipeStep = JSON.parse(JSON.stringify(this.recipeSteps[i]));
+        recipeSteps.push(newRecipeStep)
       }
     }
-    console.log(recipeSteps);
-    console.log(this.recipeSteps);
     this.recipeSteps=recipeSteps;
   }
 }
