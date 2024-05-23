@@ -38,6 +38,7 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
         ApplicationUser user = new ApplicationUser();
         user.setId(1);
         Recipe riceRecipe = new Recipe();
+        riceRecipe.setId(1L);
         riceRecipe.setName("Reis");
         riceRecipe.setDescription("So muss Reis schmecken!");
         riceRecipe.setNumberOfServings((short) 1);
@@ -61,8 +62,12 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
                     + "Nach 10 minütigem Dämpfen ist der Reis locker und lecker und kann serviert werden. ",
                 riceRecipe, 3)
         ));
-        recipeRepository.save(riceRecipe);
+        if (recipeRepository.getRecipeById(1L).isEmpty()) {
+            recipeRepository.save(riceRecipe);
+        }
+
         Recipe eggFriedRiceRecipe = new Recipe();
+        eggFriedRiceRecipe.setId(2L);
         eggFriedRiceRecipe.setOwner(user);
         eggFriedRiceRecipe.setName("Egg Fried Rice");
         eggFriedRiceRecipe.setDescription("Ein schnelles asiatisches Gericht.");
@@ -101,6 +106,8 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
                 eggFriedRiceRecipe, 5)
 
         ));
-        recipeRepository.save(eggFriedRiceRecipe);
+        if (recipeRepository.getRecipeById(2L).isEmpty()) {
+            recipeRepository.save(eggFriedRiceRecipe);
+        }
     }
 }
