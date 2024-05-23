@@ -106,5 +106,11 @@ public class RecipeBook {
         inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<ApplicationUser> editors = new ArrayList<>();
 
+    public List<ApplicationUser> getEditors() {
+        return editors;
+    }
 
+    public void setEditors(List<ApplicationUser> editors) {
+        this.editors = editors;
+    }
 }

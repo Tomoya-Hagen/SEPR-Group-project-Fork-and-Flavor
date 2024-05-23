@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 @Component
-@Order(5)
+@Order(6)
 public class RecipeBookDataGenerator extends DataGenerator implements CommandLineRunner {
 
     private final RecipeBookRepository recipeBookRepository;
@@ -50,7 +50,7 @@ public class RecipeBookDataGenerator extends DataGenerator implements CommandLin
                 recipeBook.setOwnerId(Long.parseLong(record[3]));
 
                 List<Recipe> recipe = new java.util.ArrayList<>(List.of());
-                for (int i = 3; i < record.length; i++) {
+                for (int i = 4; i < record.length; i++) {
                     recipe.add(recipeRepository.findById(Long.parseLong(record[i])).orElseThrow(NotFoundException::new));
                 }
                 recipeBook.setRecipes(recipe);
