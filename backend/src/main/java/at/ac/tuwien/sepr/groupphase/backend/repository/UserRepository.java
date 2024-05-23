@@ -11,7 +11,7 @@ public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
 
 
     /**
-     * Find first User entrie via email.
+     * Find first User entry via email.
      *
      * @return ordered list of al message entries
      */
