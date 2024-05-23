@@ -30,7 +30,7 @@ export class RecipebookCreateEditComponent implements OnInit {
   };
 
   users: (UserListDto | null)[] = [];
-  recipes: (RecipeListDto | null)[] = new Array(1);
+  recipes: (RecipeListDto | null)[] = new Array();
   dummyUserSelectionModel: unknown;
   dummyRecipeSelectionModel: unknown;
 
@@ -207,6 +207,12 @@ export class RecipebookCreateEditComponent implements OnInit {
       // this.notification.error("");
     });
   }
+public removeRecipe(index: number) {
+  this.recipes.splice(index,1);
+}
 
+public removeUser(index: number) {
+  this.recipes.splice(index,1);
+}
 
 }
