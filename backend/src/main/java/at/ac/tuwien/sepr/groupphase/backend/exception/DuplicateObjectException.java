@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.exception;
 
-public class DuplicateObjectException extends RuntimeException{
+public class DuplicateObjectException extends RuntimeException {
     public DuplicateObjectException() {
     }
 
