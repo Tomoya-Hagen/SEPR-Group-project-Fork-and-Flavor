@@ -10,6 +10,12 @@ const baseUri = environment.backendUrl + '/recipebook';
   providedIn: 'root'
 })
 export class RecipeBookService {
+  spoonRecipe(recipeId: number, recipeBookId: number): Observable<RecipeBookDetailDto> {
+    return this.http.patch<RecipeBookDetailDto>(baseUri+"/"+recipeBookId+"/spoon/"+recipeId,null);
+  }
+  getRecipeBooksTheUserHasWriteAccessTo(): Observable<RecipeBookListDto[]> {
+    return this.http.get<RecipeBookListDto[]>(baseUri+"/user");
+  }
 
   constructor(
     private http: HttpClient) {

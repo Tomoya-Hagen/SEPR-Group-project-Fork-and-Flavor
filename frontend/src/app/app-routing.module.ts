@@ -8,7 +8,7 @@ import {RecipebookComponent} from "./components/recipebook/recipebook.component"
 import {WeekplanComponent} from "./components/weekplan/weekplan.component";
 import {RecipeComponent} from "./components/recipe/recipe.component";
 import {RegisterComponent} from "./components/register/register.component";
-import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail/recipe-detail.component';
+import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail.component';
 import {
   RecipebookDetailComponent
 } from "./components/recipebook/recipe-book-detail/recipebook-detail/recipebook-detail.component";
