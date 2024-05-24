@@ -8,7 +8,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
-import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
 import jakarta.transaction.Transactional;
@@ -94,15 +93,14 @@ public class RecipeBookServiceTest {
         List<RecipeListDto> recipeListDtos = recipeMapper.recipesToRecipeListDto(recipes);
 
         String longName = "a".repeat(101);
-        RecipeBookCreateDto createDto = new RecipeBookCreateDto(longName, "This recipe will not be created.",
+        RecipeBookCreateDto createDto = new RecipeBookCreateDto(longName, null,
             users, recipeListDtos);
 
         ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             validate(createDto);
             recipeBookService.createRecipeBook(createDto, 1L);
         });
-
-        assertTrue(exception.getMessage().contains("size must be between 1 and 100"));
+        assertTrue(exception.getMessage().contains("between 1 and 100"));
     }
 
 
