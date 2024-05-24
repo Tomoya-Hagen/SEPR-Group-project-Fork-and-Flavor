@@ -76,14 +76,13 @@ public class RecipeBookServiceTest {
         UserListDto userListDto = new UserListDto(3L, "Admin");
         List<Recipe> recipes = recipeRepository.getRecipeByIds(List.of(2L, 3L));
         users.add(userListDto);
-        RecipeBookCreateDto createDto = new RecipeBookCreateDto(null, "This recipe harms your lungs",
+        RecipeBookCreateDto createDto = new RecipeBookCreateDto(null, null,
             users, recipeMapper.recipesToRecipeListDto(recipes));
         ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             validate(createDto);
             recipeBookService.createRecipeBook(createDto, 1L);
         });
-
-        assertTrue(exception.getMessage().contains("name"));
+        assertTrue(exception.getMessage().contains("Validation failed for name: must not be null"));
     }
 
     @Test
