@@ -22,9 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 /**
- * class in charge of REST requests for Recipes
+ * class in charge of REST requests for Recipes.
  */
 @RestController
 @RequestMapping(value = "/api/v1/recipes")
@@ -51,6 +52,7 @@ public class RecipeEndpoint {
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
     }
+
     /**
      * This function updates the recipe with the values specified by the given parameter.
      *

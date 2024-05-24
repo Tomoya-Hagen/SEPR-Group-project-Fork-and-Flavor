@@ -66,6 +66,7 @@ public class RecipeServiceImpl implements RecipeService {
         }
         return recipeMapper.recipeListAndRatingListToListOfRecipeRatingDto(recipes, ratings);
     }
+
     @Override
     public Recipe updateRecipe(RecipeDetailDto recipeDetailDto) {
         LOGGER.trace("updateRecipe({})", recipeDetailDto);

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Interface representing the recipe service layer
+ * Interface representing the recipe service layer.
  */
 @Service
 public interface RecipeService {

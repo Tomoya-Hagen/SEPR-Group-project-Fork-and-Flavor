@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 
 /**
- * Record to hold RecipeDetails
+ * Record to hold RecipeDetails.
  *
  * @param id ID of the recipe
  * @param name name of the recipe
