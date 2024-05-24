@@ -19,7 +19,5 @@ public class RecipeRepositoryTest {
     @Autowired
     private RecipeRepository recipeRepository;
 
-    public void ReturnRecipe(){
 
-    }
 }

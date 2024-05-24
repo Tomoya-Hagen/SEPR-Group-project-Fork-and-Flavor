@@ -2,6 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import org.slf4j.Logger;
@@ -9,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.stream.Stream;
+import java.util.List;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -25,12 +27,9 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Stream<RecipeListDto> searchRecipes(String name) {
-        LOGGER.debug("Find recipe with name");
-        var recipes = recipeRepository.search(name);
-
-        return recipes.stream()
-            .map(recipeMapper::recipeToRecipeListDto);
+    public List<RecipeListDto> searchRecipe(String name) throws NotFoundException {
+        List<Recipe> searchedRecipe = recipeRepository.search(name);
+        return recipeMapper.recipeListToRecipeListDto(searchedRecipe);
     }
 
 }

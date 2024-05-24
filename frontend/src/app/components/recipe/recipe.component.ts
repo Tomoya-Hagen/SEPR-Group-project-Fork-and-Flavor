@@ -6,10 +6,6 @@ import {debounceTime, Subject} from "rxjs";
 import {RecipeList, RecipeSearch} from "../../dtos/recipe";
 import {RecipeService} from "../../services/recipe.service";
 
-export interface RecipeData{
-  id: string;
-  name: string;
-}
 
 const NAMES: string[] = [
   'Apfelkuchen',
@@ -36,8 +32,8 @@ const NAMES: string[] = [
 
 export class RecipeComponent implements AfterViewInit, OnInit {
   displayedColumns: string[] = ['name'];
-  dataSource: MatTableDataSource<RecipeData>;
-  clickedRows = new Set<RecipeData>();
+  dataSource: MatTableDataSource<RecipeList>;
+  clickedRows = new Set<RecipeList>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -50,8 +46,8 @@ export class RecipeComponent implements AfterViewInit, OnInit {
     private service: RecipeService,
   ) {
     const recipesExample = Array.from({length: 15}, (_, k) => createNewRecipe(k + 1));
-    this.dataSource = new MatTableDataSource(recipesExample);
 
+    this.dataSource = new MatTableDataSource(recipesExample);
   }
 
   ngAfterViewInit() {
@@ -90,15 +86,13 @@ export class RecipeComponent implements AfterViewInit, OnInit {
   }
 }
 
-
-/** Builds and returns a new User. */
-function createNewRecipe(id: number): RecipeData {
+function createNewRecipe(id: number): RecipeList {
   const name =
     NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
-    ' ' ;
+    ' ';
 
   return {
-    id: id.toString(),
+    id: id,
     name: name,
   };
 }

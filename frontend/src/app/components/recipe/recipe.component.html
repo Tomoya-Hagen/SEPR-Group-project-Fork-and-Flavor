@@ -25,6 +25,7 @@
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row
                 (click)="clickedRows.add(row)"
+                  [routerLink]="['/recipe/details', row.id]"
                 [class.demo-row-is-clicked]="clickedRows.has(row)"
                 *matRowDef="let row; columns: displayedColumns;"
               ></tr>

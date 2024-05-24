@@ -18,6 +18,7 @@ import {MatTableModule} from "@angular/material/table";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatSortModule} from "@angular/material/sort";
+import {RecipeDetailComponent} from "./components/recipe/recipe-detail/recipe-detail/recipe-detail.component";
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import {MatSortModule} from "@angular/material/sort";
     HomeComponent,
     LoginComponent,
     MessageComponent,
-    RecipeComponent
+    RecipeComponent,
+    RecipeDetailComponent
   ],
   imports: [
     BrowserModule,

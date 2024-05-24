@@ -30,12 +30,7 @@ public interface TestData {
         }
     };
 
-    List<String> RECIPES = new ArrayList<>() {
-        {
-            add("Spaghetti Bolognese");
-            add("Schnitzel");
-            add("Kaiserschmarrn");
-            add("Eierreis");
-        }
-    };
+
+    String RECIPE_BASE_URI = BASE_URI + "/recipes";
+
 }
