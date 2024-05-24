@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeBookMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
@@ -23,15 +25,20 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     private final RecipeBookRepository recipeRepository;
     private final RecipeMapper recipeMapper;
     private final UserRepository userRepository;
+    private final RecipeBookMapper recipeBookMapper;
 
-    public RecipeBookServiceImpl(RecipeBookRepository recipeRepository, RecipeMapper recipeMapper, UserRepository userRepository) {
+    public RecipeBookServiceImpl(RecipeBookRepository recipeRepository,
+                                 RecipeMapper recipeMapper,
+                                 UserRepository userRepository,
+                                 RecipeBookMapper recipeBookMapper) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
         this.userRepository = userRepository;
+        this.recipeBookMapper = recipeBookMapper;
     }
 
     @Override
-    public RecipeBook createRecipeBook(@Valid RecipeBookCreateDto recipeBookCreateDto, Long ownerId) {
+    public RecipeBookDetailDto createRecipeBook(@Valid RecipeBookCreateDto recipeBookCreateDto, Long ownerId) {
         LOGGER.trace("createRecipeBook({}, {})", recipeBookCreateDto, ownerId);
         RecipeBook recipeBook = new RecipeBook();
         recipeBook.setName(recipeBookCreateDto.name());
@@ -41,7 +48,8 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         List<ApplicationUser> users = userRepository.findAllById(userIds);
         recipeBook.setUsers(users);
         recipeBook.setRecipes(recipeMapper.listOfRecipeListDtoToRecipeList(recipeBookCreateDto.recipes()));
-        return recipeRepository.save(recipeBook);
+        recipeRepository.save(recipeBook);
+        return recipeBookMapper.recipeBookToRecipeBookDetailDto(recipeBook);
     }
 
 }

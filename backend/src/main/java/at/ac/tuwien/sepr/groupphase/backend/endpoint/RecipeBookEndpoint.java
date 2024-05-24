@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
@@ -34,7 +35,7 @@ public class RecipeBookEndpoint {
     }
 
     @PostMapping
-    public ResponseEntity<RecipeBook> createRecipe(@RequestBody RecipeBookCreateDto recipeBook) {
+    public ResponseEntity<RecipeBookDetailDto> createRecipe(@RequestBody RecipeBookCreateDto recipeBook) {
         LOGGER.trace("Creating recipe book: {}", recipeBook);
         LOGGER.debug("Body of request: {}", recipeBook);
 

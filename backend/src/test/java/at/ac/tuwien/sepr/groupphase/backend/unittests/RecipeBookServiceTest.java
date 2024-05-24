@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.unittests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
@@ -55,17 +56,17 @@ public class RecipeBookServiceTest {
         RecipeBookCreateDto createDto = new RecipeBookCreateDto( "Fast Food", "This recipe contains fast food dishes",
             userRecipeBooks, r);
 
-        RecipeBook recipeBook = recipeBookService.createRecipeBook(createDto, 1L);
+        RecipeBookDetailDto recipeBook = recipeBookService.createRecipeBook(createDto, 1L);
 
         assertAll(
             () -> assertNotNull(recipeBook),
-            () -> assertEquals(1L, recipeBook.getRecipes().getFirst().getId()),
-            () -> assertEquals(2L, recipeBook.getRecipes().get(1).getId()),
-            () -> assertEquals("Fast Food", recipeBook.getName()),
-            () -> assertEquals("This recipe contains fast food dishes", recipeBook.getDescription()),
-            () -> assertEquals(1L, recipeBook.getOwnerId()),
-            () -> assertEquals(2, recipeBook.getRecipes().size()),
-            () -> assertEquals(3L, recipeBook.getUsers().getFirst().getId())
+            () -> assertEquals(1L, recipeBook.recipes().getFirst().id()),
+            () -> assertEquals(2L, recipeBook.recipes().get(1).id()),
+            () -> assertEquals("Fast Food", recipeBook.name()),
+            () -> assertEquals("This recipe contains fast food dishes", recipeBook.description()),
+            () -> assertEquals(1L, recipeBook.ownerId()),
+            () -> assertEquals(2, recipeBook.recipes().size()),
+            () -> assertEquals(3L, recipeBook.users().getFirst().id())
         );
     }
 

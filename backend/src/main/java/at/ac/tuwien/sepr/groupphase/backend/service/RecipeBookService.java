@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 
 /**
@@ -16,5 +17,5 @@ public interface RecipeBookService {
      * @param ownerId Owner ID to be passed to the recipe book, this is the ID of the current user.
      * @return The created recipe book.
      */
-    RecipeBook createRecipeBook(RecipeBookCreateDto recipeBook, Long ownerId);
+    RecipeBookDetailDto createRecipeBook(RecipeBookCreateDto recipeBook, Long ownerId);
 }

@@ -113,4 +113,8 @@ public class RecipeBook {
     public List<Recipe> getRecipes() {
         return recipes;
     }
+
+    public long getId() {
+        return id;
+    }
 }
