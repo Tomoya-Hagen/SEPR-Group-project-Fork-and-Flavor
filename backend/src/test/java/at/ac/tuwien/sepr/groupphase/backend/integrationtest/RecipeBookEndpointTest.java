@@ -104,30 +104,8 @@ class RecipeBookEndpointTest implements TestData {
     }
 
     @Test
-    void serviceShouldThrowANotFoundExceptionIfTheGivenUserIdDoesNotExistWhenTryingToRequestTheRecipeBooksThatAUserHasAccessTo() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BOOK_BASE_URI + "/user/-1")
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
-            .andDo(print())
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-    }
-
-    @Test
-    void serviceShouldThrowAForbiddenExceptionIfTheGivenUserIdDoesNotHaveAccessRightsWhenTryingToRequestTheRecipeBooksThatAUserHasAccessTo() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BOOK_BASE_URI + "/user/1")
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("contributor@email.com", ADMIN_ROLES)))
-            .andDo(print())
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
-    }
-
-    @Test
     void serviceShouldReturnAllRecipeBooksThatAnUserHasWriteRightsFor() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BOOK_BASE_URI + "/user/1")
+        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BOOK_BASE_URI + "/user")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();

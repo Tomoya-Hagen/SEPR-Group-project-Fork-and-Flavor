@@ -35,11 +35,9 @@ public interface RecipeBookService {
     /**
      * This method gets all recipe books that a user has write access.
      *
-     * @param userId represents the id of the user.
      * @param email  represents the email address of the currently logged in user.
      * @return all recipes for that a user has write access.
      * @throws NotFoundException  if the recipe or the recipe book does not exist.
-     * @throws ForbiddenException if the user is not allowed to get the recipe books
      */
-    List<RecipeBookListDto> getRecipeBooksThatAnUserHasAccessToByUserId(long userId, String email) throws NotFoundException, ForbiddenException;
+    List<RecipeBookListDto> getRecipeBooksThatAnUserHasAccessToByUserId(String email) throws NotFoundException;
 }

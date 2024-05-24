@@ -82,6 +82,10 @@ public class RecipeBook {
         this.recipes = recipes;
     }
 
+    public long getId() {
+        return id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

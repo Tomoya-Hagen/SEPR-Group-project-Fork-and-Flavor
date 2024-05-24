@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeBookMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
@@ -89,14 +90,13 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     }
 
     @Override
-    public List<RecipeBookListDto> getRecipeBooksThatAnUserHasAccessToByUserId(long userId, String email) throws NotFoundException, ForbiddenException {
-        LOGGER.trace("getRecipeBooksThatAUserHasAccessToByUserId({})", userId);
-        if (!userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException("user with the given id not found"))
-            .getEmail().equals(email)) {
-            throw new ForbiddenException("This user is not allowed to access this method");
+    public List<RecipeBookListDto> getRecipeBooksThatAnUserHasAccessToByUserId(String email) throws NotFoundException {
+        LOGGER.trace("getRecipeBooksThatAUserHasAccessToByUserId()");
+        if (!userRepository.existsByEmail(email)) {
+            throw new NotFoundException("user was not found");
         }
+        ApplicationUser user = userRepository.findFirstUserByEmail(email);
         return recipeBookMapper.recipeBookListToRecipeBookListDto(recipeBookRepository
-            .getRecipeBooksThatAnUserHasWriteAccessToByUserId(userId));
+            .getRecipeBooksThatAnUserHasWriteAccessToByUserId(user.getId()));
     }
 }

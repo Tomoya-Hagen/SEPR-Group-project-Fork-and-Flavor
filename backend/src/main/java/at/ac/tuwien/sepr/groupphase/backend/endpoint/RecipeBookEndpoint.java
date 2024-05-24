@@ -98,12 +98,12 @@ public class RecipeBookEndpoint {
     }
 
     @Secured("ROLE_USER")
-    @GetMapping("user/{userId}")
-    public List<RecipeBookListDto> getRecipeBooksThatAnUserHasWriteAccessTo(@PathVariable(name = "userId") Long userId) {
-        LOGGER.info("GET /api/v1/recipebook/user/{}", userId);
+    @GetMapping("user")
+    public List<RecipeBookListDto> getRecipeBooksThatAnUserHasWriteAccessTo() {
+        LOGGER.info("GET /api/v1/recipebook/user");
         try {
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
-            return recipeBookService.getRecipeBooksThatAnUserHasAccessToByUserId(userId, email);
+            return recipeBookService.getRecipeBooksThatAnUserHasAccessToByUserId(email);
         } catch (ForbiddenException e) {
             HttpStatus status = HttpStatus.FORBIDDEN;
             logClientError(status, "you are not allowed to get the recipe books from this user", e);

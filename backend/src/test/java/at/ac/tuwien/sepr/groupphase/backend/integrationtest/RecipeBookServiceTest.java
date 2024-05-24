@@ -65,23 +65,13 @@ class RecipeBookServiceTest {
     }
 
     @Test
-    void serviceShouldThrowANotFoundExceptionIfTheGivenUserIdDoesNotExistWhenTryingToRequestTheRecipeBooksThatAUserHasAccessTo(){
-        Assertions.assertThrows(NotFoundException.class, () -> recipeBookService.getRecipeBooksThatAnUserHasAccessToByUserId(-1L, "admin@email.com"));
-    }
-
-    @Test
-    void serviceShouldThrowAForbiddenExceptionIfTheGivenUserIdDoesNotHaveAccessRightsWhenTryingToRequestTheRecipeBooksThatAUserHasAccessTo(){
-        Assertions.assertThrows(ForbiddenException.class, () -> recipeBookService.getRecipeBooksThatAnUserHasAccessToByUserId(1L, "test@email.com"));
-    }
-
-    @Test
     void serviceShouldReturnAllRecipeBooksThatAnUserHasWriteRightsFor(){
         RecipeBook recipeBook=recipeBookRepository.findById(15L).get();
         List<ApplicationUser> editors = recipeBook.getEditors();
         editors.add(userRepository.findById(1L).get());
         recipeBook.setEditors(editors);
         recipeBookRepository.save(recipeBook);
-        List<RecipeBookListDto> recipeBookListDtos = recipeBookService.getRecipeBooksThatAnUserHasAccessToByUserId(1L,"admin@email.com");
+        List<RecipeBookListDto> recipeBookListDtos = recipeBookService.getRecipeBooksThatAnUserHasAccessToByUserId("admin@email.com");
         Assertions.assertAll(
             () -> Assertions.assertFalse(recipeBookListDtos.isEmpty()),
             () -> Assertions.assertEquals(7,recipeBookListDtos.size()),
