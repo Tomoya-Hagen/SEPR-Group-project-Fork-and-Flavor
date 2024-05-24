@@ -1,12 +1,17 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 public record RecipeBookDetailDto(
-    long id,
+    @NotNull
+    Long id,
+    @NotNull
     String name,
     String description,
-    long ownerId,
+    @NotNull
+    Long ownerId,
     List<UserListDto> users,
     List<RecipeListDto> recipes) {
 }

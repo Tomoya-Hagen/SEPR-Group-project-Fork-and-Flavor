@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -17,14 +18,11 @@ public record RecipeBookCreateDto(
     @Size(min = 1, max = 100)
     String name,
 
-    @NotNull
-    @Size(min = 1, max = 300) // adjust later
+    @Max(300) // adjust later
     String description,
 
-    @NotNull
     List<UserListDto> users,
 
-    @NotNull
     List<RecipeListDto> recipes
 
 ) {
