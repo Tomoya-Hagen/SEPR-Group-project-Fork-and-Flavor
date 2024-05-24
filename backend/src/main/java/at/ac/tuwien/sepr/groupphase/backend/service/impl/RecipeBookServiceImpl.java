@@ -32,7 +32,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
 
     @Override
     public RecipeBook createRecipeBook(@Valid RecipeBookCreateDto recipeBookCreateDto, Long ownerId) {
-        LOGGER.trace("createRecipeBook({})", recipeBookCreateDto);
+        LOGGER.trace("createRecipeBook({}, {})", recipeBookCreateDto, ownerId);
         RecipeBook recipeBook = new RecipeBook();
         recipeBook.setName(recipeBookCreateDto.name());
         recipeBook.setDescription(recipeBookCreateDto.description());

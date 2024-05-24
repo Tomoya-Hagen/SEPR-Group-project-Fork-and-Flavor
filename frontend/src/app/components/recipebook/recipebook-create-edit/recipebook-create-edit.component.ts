@@ -30,7 +30,7 @@ export class RecipebookCreateEditComponent implements OnInit {
   };
 
   users: (UserListDto | null)[] = [];
-  recipes: (RecipeListDto | null)[] = new Array();
+  recipes: (RecipeListDto | null)[] = [];
   dummyUserSelectionModel: unknown;
   dummyRecipeSelectionModel: unknown;
 
@@ -148,26 +148,12 @@ export class RecipebookCreateEditComponent implements OnInit {
   }
 
   public addRecipe(recipe: RecipeListDto | null) {
-    if (!recipe)
-      return;
-    console.log(this.recipes);
-    let counter = 0;
-    for (let j = 0; j < this.recipes.length; j++) {
-      if (this.recipes[j] != null) counter++;
-      else {
-        this.recipes[j] === undefined;
-        this.recipes[j] = recipe;
-        return;
-      }
-    }
-    if (counter == this.recipes.length) {
-      this.recipes.push(null);
-    }
+    if (!recipe) return;
     // This should happen late, when the ngModelChange hook has completed,
     // so that changing dummyRecipeSelectionModel works
     setTimeout(() => {
       const recipes = this.recipes;
-      for (let i = 0; i < this.recipes.length; i++) {
+      for (let i = 0; i < this.recipes.length + 1; i++) {
         if (recipes[i]?.id === recipe.id) {
           // this.notification.error(`${recipe.name} is already in participant list`, "Duplicate Participant");
           this.dummyRecipeSelectionModel = null;
@@ -175,44 +161,37 @@ export class RecipebookCreateEditComponent implements OnInit {
         }
         if (recipes[i] == null) {
           recipes[i] = recipe;
-          console.log(this.recipes);
           this.dummyRecipeSelectionModel = null;
           return;
         }
       }
-    // console.log(this.recipes);
-      // this.notification.error("");
     });
   }
 
   public addUser(user: UserListDto | null) {
-    console.log(user);
-    if (!user)
-      return;
+    if (!user) return;
     setTimeout(() => {
       const users = this.users;
       for (let i = 0; i < this.users.length + 1; i++) {
         if (users[i]?.id === user.id) {
           // this.notification.error(`${recipe.name} is already in participant list`, "Duplicate Participant");
           this.dummyUserSelectionModel = null;
-          break;
+          return;
         }
         if (users[i] == null) {
           users[i] = user;
           this.dummyUserSelectionModel = null;
-          break;
+          return;
         }
       }
-      console.log(this.users);
-      // this.notification.error("");
     });
   }
 public removeRecipe(index: number) {
-  this.recipes.splice(index,1);
+  this.recipes.splice(index, 1);
 }
 
 public removeUser(index: number) {
-  this.recipes.splice(index,1);
+  this.users.splice(index, 1);
 }
 
 }

@@ -42,10 +42,11 @@ public class RecipeBookEndpoint {
         ApplicationUser user = userService.findApplicationUserByEmail(email);
 
         try {
+            LOGGER.debug("Created recipe book: {}, with the owner id: {}", recipeBook, user.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(recipeBookService.createRecipeBook(recipeBook, user.getId()));
         } catch (Exception e) {
             LOGGER.warn("Error creating recipe book: {}", recipeBook, e);
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
     }
 }

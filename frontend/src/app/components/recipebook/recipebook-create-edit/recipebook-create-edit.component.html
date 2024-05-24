@@ -2,7 +2,7 @@
 
 <form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
   <div class="form-group wrapper">
-    <label for="name">Name: </label>
+    <h2 for="name">Name </h2>
     <input  type="text"
             id="name"
             name="name"
@@ -17,7 +17,7 @@
     </div>
   </div>
   <div class="form-group wrapper">
-    <label for="description">Description: </label>
+    <h2 for="description">Description: </h2>
     <textarea id="description"
               class="form-control"
               placeholder="Enter a description for the recipe book"
@@ -81,12 +81,12 @@
       <div>
         <table class="table align-baseline">
           <tbody>
-          <tr *ngFor="let user of users; index as i">
+          <tr *ngFor="let user of users; index as j">
             <td>{{formatUserName(user)}}</td>
             <td style="text-align: right;" class="min-width">
               <button type="button"
                       class="btn btn-light ms-2"
-                      (click)="removeUser(i)"
+                      (click)="removeUser(j)"
                       [style.visibility]="user ? 'visible' : 'hidden'">
                 <i class="bi-trash"></i>
               </button>
