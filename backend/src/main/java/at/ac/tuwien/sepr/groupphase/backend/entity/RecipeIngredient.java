@@ -46,6 +46,10 @@ public class RecipeIngredient {
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
+    public long getId() {
+        return id;
+    }
+
     public Recipe getRecipe() {
         return recipe;
     }
@@ -106,4 +110,13 @@ public class RecipeIngredient {
     public int hashCode() {
         return Objects.hash(recipe, ingredient, amount, unit);
     }
+
+    public static Unit getUnitFromString(String input) {
+        try {
+            return Unit.valueOf(input);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
 }

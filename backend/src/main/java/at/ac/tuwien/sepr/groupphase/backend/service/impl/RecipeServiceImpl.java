@@ -1,9 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.IngredientNutrition;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Nutrition;
@@ -13,9 +16,11 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeIngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jakarta.transaction.Transactional;
@@ -37,11 +42,15 @@ public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
     private final RecipeMapper recipeMapper;
+    private final CategoryRepository categoryRepository;
+    private final RecipeIngredientRepository recipeIngredientRepository;
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
-                             RecipeMapper recipeMapper) {
+                             RecipeMapper recipeMapper, CategoryRepository categoryRepository, RecipeIngredientRepository recipeIngredientRepository) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
+        this.categoryRepository = categoryRepository;
+        this.recipeIngredientRepository = recipeIngredientRepository;
     }
 
     @Override
@@ -68,10 +77,19 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe updateRecipe(RecipeDetailDto recipeDetailDto) {
-        LOGGER.trace("updateRecipe({})", recipeDetailDto);
-        Recipe recipe = recipeRepository.findById(recipeDetailDto.id()).orElseThrow(EntityNotFoundException::new);
-        return recipeRepository.save(recipe);
+    public DetailedRecipeDto updateRecipe(@Valid RecipeUpdateDto recipeUpdateDto) {
+        LOGGER.trace("updateRecipe({})", recipeUpdateDto);
+        Recipe recipe = recipeMapper.recipeUpdateDtoToRecipe(recipeUpdateDto);
+
+        List<Category> categories = new ArrayList<>();
+        // at this point recipe.getCategories() only holds the IDs
+        for (Category category : recipe.getCategories()) {
+            categories.add(categoryRepository.getById(category.getId()));
+        }
+        recipe.setCategories(categories);
+
+        Recipe updated =  recipeRepository.save(recipe);
+        return recipeMapper.recipeToDetailedRecipeDto(updated);
     }
 
     private long calculateAverageTasteRating(List<Rating> ratings) {

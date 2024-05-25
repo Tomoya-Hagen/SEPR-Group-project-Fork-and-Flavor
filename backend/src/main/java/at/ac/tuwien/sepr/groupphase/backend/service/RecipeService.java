@@ -1,9 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +19,10 @@ public interface RecipeService {
     /**
      * Updates recipe with the given recipeDetailDto.
      *
-     * @param recipeDetailDto contains the values to update recipe with
+     * @param recipeUpdateDto contains the values to update recipe with
      * @return The updated recipe
      */
-    Recipe updateRecipe(RecipeDetailDto recipeDetailDto);
+    DetailedRecipeDto updateRecipe(RecipeUpdateDto recipeUpdateDto);
 
     List<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber);
 }
