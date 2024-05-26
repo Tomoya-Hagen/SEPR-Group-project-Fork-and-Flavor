@@ -7,21 +7,27 @@ import {RecipeList, RecipeSearch} from "../../dtos/recipe";
 import {RecipeService} from "../../services/recipe.service";
 
 
-const NAMES: string[] = [
-  'Apfelkuchen',
-  'Pizzaschnecke',
-  'Kürbisccremesuppe',
-  'Kaiserschmarrn', 'Schnitzel',
-  'Spagthetti Bolognese',
-  'Becherkuchen',
-  'Bratkartoffel',
-  'Eierreis',
-  'Grillgemüse',
-  'Gefüllte Zucchini',
-  'Kartoffelpüree',
-  'Joghurtgugelhupf',
-  'Hühnerbrust gefüllt',
-  'Käsekuchen',
+const NAMES: RecipeList[] = [
+  {id: 1, name: 'Apfelkuchen'},
+  {id: 2, name: 'Becherkuchen'},
+  {id: 3, name: 'Champions-Huhn'},
+  {id: 4, name: 'Cookies'},
+  {id: 5, name: 'Ei Spiegelei'},
+  {id: 6, name: 'Eierlikör-Gugelhupf'},
+  {id: 7, name: 'Gefüllte Zucchini'},
+  {id: 8, name: 'Gemüse mit Huhn'},
+  {id: 9, name: 'Griesbrei'},
+  {id: 10, name: 'Faschiertes mit Gemüse'},
+  {id: 11, name: 'Kürbiscremesuppe'},
+  {id: 12, name: 'Käsekuchen'},
+  {id: 13, name: 'Lachsnudeln'},
+  {id: 14, name: 'Mais-Ripperl'},
+  {id: 15, name: 'Nudeln mit Spinatsauce'},
+  {id: 16, name: 'Pizzaschnecke'},
+  {id: 17, name: 'Rahmkohlrabi'},
+  {id: 18, name: 'Spaghetti Bolognese'},
+  {id: 19, name: 'Steak nach Gordon Ramsay'},
+  {id: 20, name: 'Zitronenkuchen'},
 ];
 
 @Component({
@@ -38,16 +44,17 @@ export class RecipeComponent implements AfterViewInit, OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  searchParams: RecipeSearch = {};
+  searchParams: RecipeSearch = new class implements RecipeSearch {
+    name: string;
+  };
   recipes: RecipeList[] = [];
   searchChangedObservable = new Subject<void>();
 
   constructor(
     private service: RecipeService,
   ) {
-    const recipesExample = Array.from({length: 15}, (_, k) => createNewRecipe(k + 1));
-
-    this.dataSource = new MatTableDataSource(recipesExample);
+   // this.dataSource = new MatTableDataSource<RecipeList>(this.recipes);
+    this.dataSource = new MatTableDataSource<RecipeList>(NAMES);
   }
 
   ngAfterViewInit() {
@@ -58,7 +65,6 @@ export class RecipeComponent implements AfterViewInit, OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -86,13 +92,3 @@ export class RecipeComponent implements AfterViewInit, OnInit {
   }
 }
 
-function createNewRecipe(id: number): RecipeList {
-  const name =
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
-    ' ';
-
-  return {
-    id: id,
-    name: name,
-  };
-}

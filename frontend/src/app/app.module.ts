@@ -12,13 +12,13 @@ import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
+import {RecipeDetailComponent} from './components/recipe/recipe-detail/recipe-detail/recipe-detail.component';
 import {RecipeComponent} from "./components/recipe/recipe.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatTableModule} from "@angular/material/table";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatSortModule} from "@angular/material/sort";
-import {RecipeDetailComponent} from "./components/recipe/recipe-detail/recipe-detail/recipe-detail.component";
 
 @NgModule({
   declarations: [
@@ -29,7 +29,7 @@ import {RecipeDetailComponent} from "./components/recipe/recipe-detail/recipe-de
     LoginComponent,
     MessageComponent,
     RecipeComponent,
-    RecipeDetailComponent
+    RecipeDetailComponent,
   ],
   imports: [
     BrowserModule,

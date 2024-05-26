@@ -9,7 +9,6 @@ export interface RecipeList{
   name: string,
 }
 
-
 export interface RecipeSearch {
   name?: string;
 }

@@ -7,8 +7,13 @@ table {
   width: 60%;
 }
 
-td, th {
-  width: 40%;
+td{
+  width: 60%;
+}
+
+th {
+  width: 60%;
+  font-size: 20px;
 }
 
 .mat-mdc-row .mat-mdc-cell {

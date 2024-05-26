@@ -26,14 +26,14 @@ export class RecipeService {
    * @return an Observable for the recipes where all given parameters match.
    */
   search(searchParams: RecipeSearch): Observable<RecipeList[]> {
-    if (searchParams.name === '') {
+    if (searchParams.name) {
       delete searchParams.name;
     }
     let params = new HttpParams();
     if (searchParams.name) {
       params = params.append('name', searchParams.name);
     }
-    return this.http.get<RecipeList[]>(baseUri, {params});
+    return this.http.get<RecipeList[]>(baseUri+"/search", {params});
   }
 
 }
