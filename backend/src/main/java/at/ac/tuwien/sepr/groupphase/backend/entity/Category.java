@@ -2,16 +2,18 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 public class Category {
@@ -50,17 +52,6 @@ public class Category {
         this.type = type;
     }
 
-    @ManyToMany(mappedBy = "categories")
-    private Set<Recipe> recipes = new HashSet<>();
-
-    public Set<Recipe> getRecipes() {
-        return recipes;
-    }
-
-    public void setRecipes(Set<Recipe> recipes) {
-        this.recipes = recipes;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -73,16 +64,28 @@ public class Category {
         return Objects.equals(id, category.id) && Objects.equals(name, category.name) && Objects.equals(type, category.type);
     }
 
+    public void setRecipes(List<Recipe> recipes) {
+        this.recipes = recipes;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id, name, type);
     }
 
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "recipe_category",
+        joinColumns = @JoinColumn(name = "category_id"),
+        inverseJoinColumns = @JoinColumn(name = "recipe_id")
+    )
+    private List<Recipe> recipes;
+
     public static final class CategoryBuilder {
         private long id;
         private String name;
         private String type;
-        private Set<Recipe> recipes;
+        private List<Recipe> recipes;
 
         private CategoryBuilder() {
         }
@@ -106,7 +109,7 @@ public class Category {
             return this;
         }
 
-        public CategoryBuilder withRecipes(Set<Recipe> recipes) {
+        public CategoryBuilder withRecipes(List<Recipe> recipes) {
             this.recipes = recipes;
             return this;
         }
