@@ -17,6 +17,9 @@ import { ToastrModule } from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import {RegisterComponent} from "./components/register/register.component";
+import { RecipeEditComponent } from './components/recipe/recipe-edit/recipe-edit.component';
+import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import { IngredientComponent } from './components/recipe/recipe-create/ingredient/ingredient.component';
 
 @NgModule({
   declarations: [
@@ -26,8 +29,11 @@ import {RegisterComponent} from "./components/register/register.component";
     HomeComponent,
     LoginComponent,
     MessageComponent,
+    IngredientComponent,
     RecipeDetailComponent,
-    RegisterComponent
+    RecipeEditComponent,
+    RegisterComponent,
+    AutocompleteComponent
   ],
   imports: [
     BrowserModule,
@@ -42,6 +48,9 @@ import {RegisterComponent} from "./components/register/register.component";
     SlickCarouselModule
   ],
   providers: [httpInterceptorProviders],
+  exports: [
+    AutocompleteComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,4 +20,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     @Query("select r from Recipe r where r.id between :#{#from} and :#{#to} order by r.id")
     List<Recipe> getAllRecipesWithIdFromTo(@Param("from") int from, @Param("to") int to);
+
+    @Query("SELECT i FROM Recipe i WHERE i.name LIKE %:name%")
+    List<Recipe> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
+
 }

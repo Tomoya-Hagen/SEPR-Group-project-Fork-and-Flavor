@@ -4,18 +4,20 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.PermitAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,11 +25,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * class in charge of REST requests for Recipes.
@@ -66,9 +70,9 @@ public class RecipeEndpoint {
      * @param recipeUpdatedto DTO holding values to update
      * @return ResponseEntity of Recipe with the HTTP status of "No Content"
      */
-    @PutMapping
-    public ResponseEntity<DetailedRecipeDto> updateRecipe(@RequestBody RecipeUpdateDto recipeUpdatedto) {
-        LOGGER.info("PUT /api/v1/recipe + {}", recipeUpdatedto);
+    @PutMapping("/{id}")
+    public ResponseEntity<DetailedRecipeDto> updateRecipe(@PathVariable("id") Long id, @RequestBody RecipeUpdateDto recipeUpdatedto) {
+        LOGGER.info("PUT /api/v1/recipe/ + {} + {}", id, recipeUpdatedto);
         LOGGER.debug("Body of request: {}", recipeUpdatedto);
         ApplicationUser user = userService.findApplicationUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         RecipeDetailDto recipe = recipeService.getRecipeDetailDtoById(recipeUpdatedto.id());
@@ -80,7 +84,6 @@ public class RecipeEndpoint {
         } catch (Exception e) {
             LOGGER.warn("Error updating recipe book: {}", recipeUpdatedto, e);
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
-
         }
     }
 
@@ -91,6 +94,16 @@ public class RecipeEndpoint {
         LOGGER.info("GET /api/v1/recipe?page={}&step={}", page, step);
         return recipeService.getRecipesFromPageInSteps(page, step);
     }
+
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/simple")
+    @Operation(summary = "Getting simple recipes", security = @SecurityRequirement(name = "apiKey"))
+    public Stream<SimpleRecipeResultDto> get(@RequestParam("name") String name, @RequestParam("limit") int limit) {
+        LOGGER.info("POST /api/v1/recipe params: {} {}", name, limit);
+        return recipeService.byname(name, limit);
+    }
+
 
     private void logClientError(HttpStatus status, String message, Exception e) {
         LOGGER.warn("{} {}: {}: {}", status.value(), message, e.getClass().getSimpleName(), e.getMessage());

@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
@@ -105,5 +106,14 @@ public interface RecipeMapper {
         ret.setCategories(categoryList);
         return ret;
     }
+
+    default SimpleRecipeResultDto recipeToRecipeResultDto(Recipe r) {
+        SimpleRecipeResultDto result = new SimpleRecipeResultDto();
+        result.setRecipeId(r.getId());
+        result.setWhichstep(false);
+        result.setRecipename(r.getName());
+        return result;
+    }
+
 
 }

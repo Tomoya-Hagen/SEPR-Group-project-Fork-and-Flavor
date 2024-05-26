@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import org.mapstruct.Mapper;
@@ -27,5 +28,7 @@ public interface IngredientMapper {
     @Mapping(source = "recipeIngredient.amount", target = "amount")
     IngredientDetailDto ingredientAndRecipeIngredientToIngredientDetailDto(
         Ingredient ingredient, RecipeIngredient recipeIngredient);
+
+    IngredientResultDto ingredientToIngredientResultDto(Ingredient ingredient);
 
 }

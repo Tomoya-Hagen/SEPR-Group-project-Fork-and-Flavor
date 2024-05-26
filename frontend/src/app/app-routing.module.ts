@@ -9,6 +9,7 @@ import {WeekplanComponent} from "./components/weekplan/weekplan.component";
 import {RecipeComponent} from "./components/recipe/recipe.component";
 import {RegisterComponent} from "./components/register/register.component";
 import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail/recipe-detail.component';
+import { RecipeEditComponent } from './components/recipe/recipe-edit/recipe-edit.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -17,7 +18,8 @@ const routes: Routes = [
   {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
   {path: 'recipe', children: [
     {path: '', component: RecipeComponent},
-    {path: 'details/:id', component: RecipeDetailComponent}
+    {path: 'details/:id', component: RecipeDetailComponent},
+    {path: 'edit/:id', component: RecipeEditComponent}
   ]},
   {path: 'recipebook', component: RecipebookComponent},
   {path: 'weekplan', component: WeekplanComponent},

@@ -3,3 +3,8 @@ export interface CategoryDetailDto {
     name: string,
     type:string
 }
+
+export interface Category {
+    id: number,
+    name: string,
+}

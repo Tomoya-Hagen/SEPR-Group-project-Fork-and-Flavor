@@ -4,10 +4,12 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Interface representing the recipe service layer.
@@ -25,4 +27,6 @@ public interface RecipeService {
     DetailedRecipeDto updateRecipe(RecipeUpdateDto recipeUpdateDto);
 
     List<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber);
+
+    Stream<SimpleRecipeResultDto> byname(String name, int limit);
 }

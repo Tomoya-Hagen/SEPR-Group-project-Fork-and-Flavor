@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
@@ -17,13 +18,13 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeIngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -33,6 +34,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @Transactional
 @Service
@@ -43,14 +45,12 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
     private final RecipeMapper recipeMapper;
     private final CategoryRepository categoryRepository;
-    private final RecipeIngredientRepository recipeIngredientRepository;
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
-                             RecipeMapper recipeMapper, CategoryRepository categoryRepository, RecipeIngredientRepository recipeIngredientRepository) {
+                             RecipeMapper recipeMapper, CategoryRepository categoryRepository) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
         this.categoryRepository = categoryRepository;
-        this.recipeIngredientRepository = recipeIngredientRepository;
     }
 
     @Override
@@ -79,18 +79,40 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public DetailedRecipeDto updateRecipe(@Valid RecipeUpdateDto recipeUpdateDto) {
         LOGGER.trace("updateRecipe({})", recipeUpdateDto);
+        Recipe oldRecipe = recipeRepository.findById(recipeUpdateDto.id()).orElseThrow(NotFoundException::new);
         Recipe recipe = recipeMapper.recipeUpdateDtoToRecipe(recipeUpdateDto);
 
-        List<Category> categories = new ArrayList<>();
-        // at this point recipe.getCategories() only holds the IDs
-        for (Category category : recipe.getCategories()) {
-            categories.add(categoryRepository.getById(category.getId()));
+        for (RecipeIngredient recipeIngredient : recipe.getIngredients()) {
+            if (oldRecipe.getIngredients().stream().anyMatch(ri -> ri.getIngredient().getId().equals(recipeIngredient.getIngredient().getId()))) {
+                RecipeIngredient oldRecipeIngredient = oldRecipe.getIngredients().stream().filter(ri -> ri.getIngredient().getId()
+                    .equals(recipeIngredient.getIngredient().getId())).findFirst().get();
+                oldRecipeIngredient.setUnit(recipeIngredient.getUnit());
+                oldRecipeIngredient.setAmount(recipeIngredient.getAmount());
+            } else {
+                List<RecipeIngredient> recipeIngredients = oldRecipe.getIngredients();
+                recipeIngredients.add(recipeIngredient);
+                oldRecipe.setIngredients(recipeIngredients);
+            }
         }
-        recipe.setCategories(categories);
 
-        Recipe updated =  recipeRepository.save(recipe);
-        return recipeMapper.recipeToDetailedRecipeDto(updated);
+        List<Category> categories = categoryRepository.findAllById(recipe.getCategories().stream().map(Category::getId).toList());
+
+        oldRecipe.setCategories(categories);
+        oldRecipe.setName(recipe.getName());
+        oldRecipe.setDescription(recipe.getDescription());
+        oldRecipe.setNumberOfServings(recipe.getNumberOfServings());
+        oldRecipe.setRecipeSteps(recipe.getRecipeSteps());
+
+        recipeRepository.save(oldRecipe);
+
+        return recipeMapper.recipeToDetailedRecipeDto(oldRecipe);
     }
+
+    @Override
+    public Stream<SimpleRecipeResultDto> byname(String name, int limit) {
+        return recipeRepository.findByNameContainingWithLimit(name, PageRequest.of(0, limit)).stream().map(recipeMapper::recipeToRecipeResultDto);
+    }
+
 
     private long calculateAverageTasteRating(List<Rating> ratings) {
         long rating = 0;
