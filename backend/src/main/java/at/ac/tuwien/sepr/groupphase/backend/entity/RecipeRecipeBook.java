@@ -1,31 +1,31 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 
-import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
 
-import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@IdClass(Cookedpk.class)
-public class Cooked {
+@Table(name = "Recipe_Recipe_Book", schema = "PUBLIC", catalog = "DB")
+@IdClass(Reciperecipebookpk.class)
+public class RecipeRecipeBook {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "user_id")
-    private long userId;
+    @Column(name = "recipe_book_id")
+    private long recipeBookId;
 
-    public long getUserId() {
-        return userId;
+    public long getRecipeBookId() {
+        return recipeBookId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setRecipeBookId(long recipeBookId) {
+        this.recipeBookId = recipeBookId;
     }
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,18 +41,6 @@ public class Cooked {
         this.recipeId = recipeId;
     }
 
-    @Basic
-    @Column(name = "date")
-    private Date date;
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -61,12 +49,12 @@ public class Cooked {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Cooked cooked = (Cooked) o;
-        return Objects.equals(userId, cooked.userId) && Objects.equals(recipeId, cooked.recipeId) && Objects.equals(date, cooked.date);
+        RecipeRecipeBook that = (RecipeRecipeBook) o;
+        return Objects.equals(recipeBookId, that.recipeBookId) && Objects.equals(recipeId, that.recipeId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, recipeId, date);
+        return Objects.hash(recipeBookId, recipeId);
     }
 }

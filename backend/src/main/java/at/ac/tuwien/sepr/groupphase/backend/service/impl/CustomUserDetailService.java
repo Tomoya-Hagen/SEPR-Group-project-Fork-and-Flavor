@@ -1,17 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserRegisterDtoMapper;
-import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepr.groupphase.backend.exception.EmailException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.UsernameException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,17 +29,12 @@ public class CustomUserDetailService implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
-    private final UserValidator userValidator = new UserValidator();
-    private final UserRegisterDtoMapper userRegisterDtoMapper;
-    private final RoleRepository rolesRepository;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
-        this.userRegisterDtoMapper = userRegisterDtoMapper;
-        this.rolesRepository = rolesRepository;
     }
 
     @Override
@@ -91,33 +81,5 @@ public class CustomUserDetailService implements UserService {
             return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
         }
         throw new BadCredentialsException("Username or password is incorrect or account is locked");
-    }
-
-    @Override
-    public String register(UserRegisterDto userRegisterDto) {
-        LOGGER.debug("Register a new user");
-        userValidator.validateForCreate(userRegisterDto);
-
-        if (userRepository.existsByUsername(userRegisterDto.username())) {
-            throw new UsernameException("Username already exists");
-        }
-
-        if (userRepository.existsByEmail(userRegisterDto.email())) {
-            throw new EmailException("Email already exists");
-        }
-
-        ApplicationUser applicationUser = new ApplicationUser.ApplicationUserBuilder()
-            .withEmail(userRegisterDto.email())
-            .withUsername(userRegisterDto.username())
-            .withPassword(passwordEncoder.encode(userRegisterDto.password()))
-            .withhasProfilePicture(false)
-            .withRoles(List.of(rolesRepository.findByName("User")))
-            .build();
-        userRepository.save(applicationUser);
-
-        // Ensure the user is persisted
-        userRepository.flush();
-
-        return login(userRegisterDtoMapper.toUserLoginDto(userRegisterDto));
     }
 }

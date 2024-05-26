@@ -4,17 +4,13 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -35,17 +31,9 @@ public class RecipeBook {
     @Column(name = "owner_id")
     private long ownerId;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "recipe_recipe_book",
-        joinColumns = @JoinColumn(name = "recipe_book_id"),
-        inverseJoinColumns = @JoinColumn(name = "recipe_id")
-    )
-    private List<Recipe> recipes = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_book_id", referencedColumnName = "id")
-    private List<WeeklyPlanner> weeklyPlanner;
+    public long getId() {
+        return id;
+    }
 
     public void setId(long id) {
         this.id = id;
@@ -92,9 +80,11 @@ public class RecipeBook {
         return Objects.hash(id, name, description, ownerId);
     }
 
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "user_recipe_book",
-        joinColumns = {@JoinColumn(name = "recipe_book_id")},
-        inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    private List<ApplicationUser> editors = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "recipe_book_id", referencedColumnName = "id")
+    private List<UserRecipeBook> userRecipeBooks;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "recipe_book_id", referencedColumnName = "id")
+    private List<RecipeRecipeBook> recipeRecipeBooks;
 }

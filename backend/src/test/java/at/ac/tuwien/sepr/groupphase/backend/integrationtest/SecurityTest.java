@@ -9,14 +9,9 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Message;
 import at.ac.tuwien.sepr.groupphase.backend.repository.MessageRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.security.DeclareRoles;
-import jakarta.annotation.security.DenyAll;
-import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.aop.support.AopUtils;
@@ -32,21 +27,18 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.DenyAll;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -54,12 +46,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 /**
  * Security is a cross-cutting concern, however for the sake of simplicity it is tested against the message endpoint
  */
-@Disabled
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-class SecurityTest implements TestData {
+public class SecurityTest implements TestData {
 
     private static final List<Class<?>> mappingAnnotations = Lists.list(
         RequestMapping.class,
@@ -124,7 +115,7 @@ class SecurityTest implements TestData {
      * Feel free to remove / disable / adapt if you do not use Method Security (e.g. if you prefer Web Security to define who may perform which actions) or want to use Method Security on the service layer.
      */
     @Test
-    void ensureSecurityAnnotationPresentForEveryEndpoint() {
+    public void ensureSecurityAnnotationPresentForEveryEndpoint() {
         List<ImmutablePair<Class<?>, Method>> notSecured = components.stream()
             .map(AopUtils::getTargetClass) // beans may be proxies, get the target class instead
             .filter(clazz -> clazz.getCanonicalName() != null && clazz.getCanonicalName().startsWith(BackendApplication.class.getPackageName())) // limit to our package
@@ -142,9 +133,9 @@ class SecurityTest implements TestData {
     }
 
     @Test
-    void givenUserLoggedIn_whenFindAll_then200() throws Exception {
+    public void givenUserLoggedIn_whenFindAll_then200() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -156,7 +147,7 @@ class SecurityTest implements TestData {
     }
 
     @Test
-    void givenNoOneLoggedIn_whenFindAll_then401() throws Exception {
+    public void givenNoOneLoggedIn_whenFindAll_then401() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(MESSAGE_BASE_URI))
             .andDo(print())
             .andReturn();
@@ -166,14 +157,14 @@ class SecurityTest implements TestData {
     }
 
     @Test
-    void givenAdminLoggedIn_whenPost_then201() throws Exception {
+    public void givenAdminLoggedIn_whenPost_then201() throws Exception {
         MessageInquiryDto messageInquiryDto = messageMapper.messageToMessageInquiryDto(message);
         String body = objectMapper.writeValueAsString(messageInquiryDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(MESSAGE_BASE_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -182,14 +173,14 @@ class SecurityTest implements TestData {
     }
 
     @Test
-    void givenNoOneLoggedIn_whenPost_then403() throws Exception {
+    public void givenNoOneLoggedIn_whenPost_then403() throws Exception {
         message.setPublishedAt(null);
         MessageInquiryDto messageInquiryDto = messageMapper.messageToMessageInquiryDto(message);
         String body = objectMapper.writeValueAsString(messageInquiryDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(MESSAGE_BASE_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -198,15 +189,15 @@ class SecurityTest implements TestData {
     }
 
     @Test
-    void givenUserLoggedIn_whenPost_then403() throws Exception {
+    public void givenUserLoggedIn_whenPost_then403() throws Exception {
         message.setPublishedAt(null);
         MessageInquiryDto messageInquiryDto = messageMapper.messageToMessageInquiryDto(message);
         String body = objectMapper.writeValueAsString(messageInquiryDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(MESSAGE_BASE_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER, USER_ROLES)))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();

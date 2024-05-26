@@ -1,15 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class Nutrition {
@@ -58,18 +53,6 @@ public class Nutrition {
 
     public void setUnit(String unit) {
         this.unit = unit;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "nutrition_id", referencedColumnName = "id")
-    private List<IngredientNutrition> ingredients = new ArrayList<>();
-
-    public void setIngredients(List<IngredientNutrition> ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    public List<IngredientNutrition> getIngredients() {
-        return ingredients;
     }
 
     public static final class NutritionBuilder {

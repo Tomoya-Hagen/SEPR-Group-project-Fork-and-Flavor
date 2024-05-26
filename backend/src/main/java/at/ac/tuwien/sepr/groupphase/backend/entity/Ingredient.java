@@ -12,8 +12,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Ingredient {
@@ -25,22 +27,16 @@ public class Ingredient {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
         name = "ingredient_allergen",
         joinColumns = @JoinColumn(name = "ingredient_id"),
         inverseJoinColumns = @JoinColumn(name = "allergen_id")
     )
-    private List<Allergen> allergens = new ArrayList<>();
+    private Set<Allergen> allergens = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
-    private List<IngredientNutrition> nutritions = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
-
-    private List<RecipeIngredient> recipesIngredients = new ArrayList<>();
+    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<IngredientNutrition> nutritionData = new HashSet<>();
 
     // Getters and setters
     public Long getId() {
@@ -59,30 +55,27 @@ public class Ingredient {
         this.name = name;
     }
 
-    public List<Allergen> getAllergens() {
+    public Set<Allergen> getAllergens() {
         return allergens;
     }
 
-    public void setAllergens(List<Allergen> allergens) {
+    public void setAllergens(Set<Allergen> allergens) {
         this.allergens = allergens;
     }
 
-    public List<IngredientNutrition> getNutritions() {
-        return nutritions;
-    }
-
-    public void setNutritions(List<IngredientNutrition> nutritions) {
-        this.nutritions = nutritions;
-    }
-
-    public List<RecipeIngredient> getRecipesIngredients() {
-        return recipesIngredients;
+    public void addNutritionData(Nutrition nutrition, BigDecimal value) {
+        IngredientNutrition ingredientNutrition = IngredientNutrition.IngredientNutritionBuilder.anIngredientNutrition()
+            .withIngredient(this)
+            .withNutrition(nutrition)
+            .withValue(value)
+            .build();
+        this.nutritionData.add(ingredientNutrition);
     }
 
     public static final class IngredientBuilder {
         private Long id;
         private String name;
-        private List<Allergen> allergens;
+        private Set<Allergen> allergens;
 
         private IngredientBuilder() {
         }
@@ -101,7 +94,7 @@ public class Ingredient {
             return this;
         }
 
-        public IngredientBuilder withAllergens(List<Allergen> allergens) {
+        public IngredientBuilder withAllergens(Set<Allergen> allergens) {
             this.allergens = allergens;
             return this;
         }

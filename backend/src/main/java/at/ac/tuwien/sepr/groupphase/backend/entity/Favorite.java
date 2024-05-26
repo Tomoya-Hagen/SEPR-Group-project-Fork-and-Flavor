@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 
-import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,12 +8,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 
-import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@IdClass(Cookedpk.class)
-public class Cooked {
+@IdClass(Favoritepk.class)
+public class Favorite {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "user_id")
@@ -41,18 +39,6 @@ public class Cooked {
         this.recipeId = recipeId;
     }
 
-    @Basic
-    @Column(name = "date")
-    private Date date;
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -61,12 +47,12 @@ public class Cooked {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Cooked cooked = (Cooked) o;
-        return Objects.equals(userId, cooked.userId) && Objects.equals(recipeId, cooked.recipeId) && Objects.equals(date, cooked.date);
+        Favorite favorite = (Favorite) o;
+        return Objects.equals(userId, favorite.userId) && Objects.equals(recipeId, favorite.recipeId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, recipeId, date);
+        return Objects.hash(userId, recipeId);
     }
 }

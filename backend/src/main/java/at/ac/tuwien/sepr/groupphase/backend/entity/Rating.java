@@ -4,50 +4,42 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.IdClass;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Objects;
 
 @Entity
-@Table(name = "rating", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"user_id", "recipe_id"})
-})
+@IdClass(Ratingpk.class)
 public class Rating {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
-    private long id;
+    @Column(name = "user_id")
+    private long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private ApplicationUser user;
-
-    public ApplicationUser getUser() {
-        return user;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setUser(ApplicationUser user) {
-        this.user = user;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipe_id", nullable = false)
-    private Recipe recipe;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "recipe_id")
+    private long recipeId;
 
-    public Recipe getRecipe() {
-        return recipe;
+    public long getRecipeId() {
+        return recipeId;
     }
 
-    public void setRecipe(Recipe recipe) {
-        this.recipe = recipe;
+    public void setRecipeId(long recipeId) {
+        this.recipeId = recipeId;
     }
 
     @Basic
@@ -107,8 +99,8 @@ public class Rating {
             return false;
         }
         Rating rating = (Rating) o;
-        return Objects.equals(user, rating.user)
-            && Objects.equals(recipe, rating.recipe)
+        return Objects.equals(userId, rating.userId)
+            && Objects.equals(recipeId, rating.recipeId)
             && Objects.equals(cost, rating.cost)
             && Objects.equals(taste, rating.taste)
             && Objects.equals(easeOfPrep, rating.easeOfPrep)
@@ -117,6 +109,6 @@ public class Rating {
 
     @Override
     public int hashCode() {
-        return Objects.hash(user, recipe, cost, taste, easeOfPrep, review);
+        return Objects.hash(userId, recipeId, cost, taste, easeOfPrep, review);
     }
 }

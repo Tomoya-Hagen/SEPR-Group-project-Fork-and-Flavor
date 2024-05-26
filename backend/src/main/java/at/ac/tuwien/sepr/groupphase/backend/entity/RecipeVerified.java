@@ -2,12 +2,9 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 
 import java.util.Objects;
 
@@ -27,38 +24,40 @@ public class RecipeVerified {
         this.id = id;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipe_id", nullable = false)
-    private Recipe recipe;
+    @Basic
+    @jakarta.persistence.Column(name = "recipe_id")
+    private long recipeId;
 
-    public Recipe getRecipe() {
-        return recipe;
+    public long getRecipeId() {
+        return recipeId;
     }
 
-    public void setRecipe(Recipe recipe) {
-        this.recipe = recipe;
+    public void setRecipeId(long recipeId) {
+        this.recipeId = recipeId;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "verified_id", nullable = false)
-    private Verified verified;
+    @Basic
+    @jakarta.persistence.Column(name = "verified_id")
+    private long verifiedId;
 
-    public Verified getVerified() {
-        return verified;
+    public long getVerifiedId() {
+        return verifiedId;
     }
 
-    public void setVerified(Verified verified) {
-        this.verified = verified;
+    public void setVerifiedId(long verifiedId) {
+        this.verifiedId = verifiedId;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private ApplicationUser user;
+    @Basic
+    @jakarta.persistence.Column(name = "user_id")
+    private long userId;
 
+    public long getUserId() {
+        return userId;
+    }
 
-
-    public void setUser(ApplicationUser user) {
-        this.user = user;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     @Basic
@@ -82,11 +81,11 @@ public class RecipeVerified {
             return false;
         }
         RecipeVerified that = (RecipeVerified) o;
-        return Objects.equals(id, that.id) && Objects.equals(recipe, that.recipe) && Objects.equals(verified, that.verified) && Objects.equals(user, that.user) && Objects.equals(isExternal, that.isExternal);
+        return Objects.equals(id, that.id) && Objects.equals(recipeId, that.recipeId) && Objects.equals(verifiedId, that.verifiedId) && Objects.equals(userId, that.userId) && Objects.equals(isExternal, that.isExternal);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, recipe, verified, user, isExternal);
+        return Objects.hash(id, recipeId, verifiedId, userId, isExternal);
     }
 }
