@@ -19,7 +19,8 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findByNameAndType(String name, String type);
 
-
     @Query("SELECT i FROM Category i WHERE i.name LIKE %:name%")
     List<Category> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
+
+
 }

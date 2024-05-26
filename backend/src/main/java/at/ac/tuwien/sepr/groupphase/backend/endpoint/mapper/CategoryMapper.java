@@ -10,11 +10,10 @@ public interface CategoryMapper {
     CategoryDetailDto categoryToCategoryDetailDto(Category category);
 
 
-
-    default CategoryResultDto categoryToCategoryResultDto(Category category){
-         CategoryResultDto categoryResultDto = new CategoryResultDto();
-         categoryResultDto.setId(category.getId());
-         categoryResultDto.setName(category.getName());
-         return categoryResultDto;
+    default CategoryResultDto categoryToCategoryResultDto(Category category) {
+        CategoryResultDto categoryResultDto = new CategoryResultDto();
+        categoryResultDto.setId(category.getId());
+        categoryResultDto.setName(category.getName());
+        return categoryResultDto;
     }
 }

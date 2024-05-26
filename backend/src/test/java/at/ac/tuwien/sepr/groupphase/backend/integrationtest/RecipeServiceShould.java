@@ -113,9 +113,9 @@ class RecipeServiceShould {
         Assertions.assertTrue(recipes.isEmpty());
     }
     @Test
-    void CreateRecipeShouldCreateRecipePlusDependencies(){
+    void CreateRecipeShouldCreateRecipePlusDependencies() throws Exception{
         List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
-        recipeCategoryDtoList.add(new RecipeCategoryDto(1));
+        recipeCategoryDtoList.add(new RecipeCategoryDto(55));
 
         List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
         recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));

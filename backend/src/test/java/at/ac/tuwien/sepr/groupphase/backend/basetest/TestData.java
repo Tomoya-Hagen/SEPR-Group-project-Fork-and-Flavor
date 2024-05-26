@@ -32,4 +32,6 @@ public interface TestData {
 
     String RECIPE_BASE_URI = BASE_URI + "/recipes";
 
+    String AUTH_BASE_URI = BASE_URI + "/authentication";
+
 }

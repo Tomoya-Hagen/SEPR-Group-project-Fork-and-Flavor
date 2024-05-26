@@ -22,8 +22,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe> getAllRecipesWithIdFromTo(@Param("from") int from, @Param("to") int to);
 
     @Query("SELECT COALESCE(MAX(i.id),0) FROM Recipe i")
-        Long findMaxId();
+    Long findMaxId();
 
-        @Query("SELECT i FROM Recipe i WHERE i.name LIKE %:name%")
-        List<Recipe> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
+    @Query("SELECT i FROM Recipe i WHERE i.name LIKE %:name%")
+    List<Recipe> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
 }

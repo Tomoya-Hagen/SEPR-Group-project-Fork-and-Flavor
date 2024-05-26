@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.exception;
 
-public class RecipeStepSelfReferenceException  extends RuntimeException{
+public class RecipeStepSelfReferenceException extends RuntimeException {
     public RecipeStepSelfReferenceException() {
     }
 

@@ -22,7 +22,7 @@ public class JwtTokenizer {
 
     public String getAuthToken(String user, List<String> roles, int id) {
         byte[] signingKey = securityProperties.getJwtSecret().getBytes();
-        Map<String, Object> claims = Map.of("rol",roles,"id",id);
+        Map<String, Object> claims = Map.of("rol", roles, "id", id);
         String token = Jwts.builder()
             .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
             .setHeaderParam("typ", securityProperties.getJwtType())
@@ -37,7 +37,7 @@ public class JwtTokenizer {
 
     public String getAuthToken(String user, List<String> roles) {
         byte[] signingKey = securityProperties.getJwtSecret().getBytes();
-        Map<String, Object> claims = Map.of("rol",roles,"id",1);
+        Map<String, Object> claims = Map.of("rol", roles, "id", 1);
         String token = Jwts.builder()
             .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
             .setHeaderParam("typ", securityProperties.getJwtType())

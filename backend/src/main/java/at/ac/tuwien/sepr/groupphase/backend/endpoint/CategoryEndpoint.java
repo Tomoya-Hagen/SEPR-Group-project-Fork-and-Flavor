@@ -36,7 +36,7 @@ public class CategoryEndpoint {
     @GetMapping
     @Operation(summary = "Getting categories", security = @SecurityRequirement(name = "apiKey"))
     public Stream<CategoryResultDto> get(@RequestParam("name") String name, @RequestParam("limit") int limit) {
-        LOGGER.info("POST /api/v1/category params: {} {}", name , limit);
-        return categoryService.byname(name,limit);
+        LOGGER.info("POST /api/v1/category params: {} {}", name, limit);
+        return categoryService.byname(name, limit);
     }
 }

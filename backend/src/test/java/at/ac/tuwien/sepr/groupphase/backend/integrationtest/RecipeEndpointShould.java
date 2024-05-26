@@ -3,10 +3,16 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeIngredientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDescriptionDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -35,8 +41,11 @@ import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.g;
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.mg;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
@@ -157,5 +166,191 @@ class RecipeEndpointShould implements TestData {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
         Assertions.assertTrue(recipes.isEmpty());
+    }
+
+    @Test
+    void EndpointCheckCreateRecipeSimpleReturningLightRecipe() throws Exception {
+        String jwttoken = LoginHelper();
+
+        List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
+        recipeCategoryDtoList.add(new RecipeCategoryDto(1));
+
+        List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
+        recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132,new BigDecimal(12.5),"g"));
+
+        List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
+        recipeStepDtoList.add(new RecipeStepDto("Step eins","Beschreibung von Step 1",0,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei","Beschreibung von Step 2",0,true ));
+
+        RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
+        recipeCreateDto.setName("Name");
+        recipeCreateDto.setDescription("Beschreibung");
+        recipeCreateDto.setServings((short)42);
+
+        recipeCreateDto.setIngredients(recipeIngredientDtos);
+        recipeCreateDto.setSteps(recipeStepDtoList);
+        recipeCreateDto.setCategories(recipeCategoryDtoList);
+
+
+        String requestBody = objectMapper.writeValueAsString(recipeCreateDto);
+
+        MvcResult mvcResult = mockMvc.perform(post(RECIPE_BASE_URI)
+                .header(securityProperties.getAuthHeader(), jwttoken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isCreated())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        DetailedRecipeDto lightrecipes = objectMapper.readValue(response.getContentAsString(),
+            DetailedRecipeDto.class);
+
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        Assertions.assertNotNull(lightrecipes);
+        Assertions.assertEquals(lightrecipes.getId(), 3);
+        assertEquals(lightrecipes.getName(), recipeCreateDto.getName());
+        assertEquals(lightrecipes.getDescription(), recipeCreateDto.getDescription());
+    }
+
+
+    @Test
+    void EndpointCheckCreateRecipeSimpleWithoutJWT() throws Exception {
+
+        List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
+        recipeCategoryDtoList.add(new RecipeCategoryDto(1));
+
+        List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
+        recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132,new BigDecimal(12.5),"g"));
+
+        List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
+        recipeStepDtoList.add(new RecipeStepDto("Step eins","Beschreibung von Step 1",0,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei","Beschreibung von Step 2",0,true ));
+
+        RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
+        recipeCreateDto.setName("Name");
+        recipeCreateDto.setDescription("Beschreibung");
+        recipeCreateDto.setServings((short)42);
+
+        recipeCreateDto.setIngredients(recipeIngredientDtos);
+        recipeCreateDto.setSteps(recipeStepDtoList);
+        recipeCreateDto.setCategories(recipeCategoryDtoList);
+
+        String requestBody = objectMapper.writeValueAsString(recipeCreateDto);
+
+        MvcResult mvcResult = mockMvc.perform(post(RECIPE_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isForbidden())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
+    }
+
+    @Test
+    void EndpointCheckCreateRecipeSimpleWithoutavailableCategory() throws Exception {
+        String jwttoken = LoginHelper();
+
+        List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
+        recipeCategoryDtoList.add(new RecipeCategoryDto(1000));
+
+        List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
+        recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132,new BigDecimal(12.5),"g"));
+
+        List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
+        recipeStepDtoList.add(new RecipeStepDto("Step eins","Beschreibung von Step 1",0,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei","Beschreibung von Step 2",0,true ));
+
+        RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
+        recipeCreateDto.setName("Name");
+        recipeCreateDto.setDescription("Beschreibung");
+        recipeCreateDto.setServings((short)42);
+
+        recipeCreateDto.setIngredients(recipeIngredientDtos);
+        recipeCreateDto.setSteps(recipeStepDtoList);
+        recipeCreateDto.setCategories(recipeCategoryDtoList);
+
+
+        String requestBody = objectMapper.writeValueAsString(recipeCreateDto);
+
+        MvcResult mvcResult = mockMvc.perform(post(RECIPE_BASE_URI)
+                .header(securityProperties.getAuthHeader(), jwttoken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isBadRequest())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+    @Test
+    void EndpointCheckCreateRecipeSimpleWithoutAnythingPossibleAvailable() throws Exception {
+        String jwttoken = LoginHelper();
+
+        List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
+        recipeCategoryDtoList.add(new RecipeCategoryDto(1000));
+
+        List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
+        recipeIngredientDtos.add(new RecipeIngredientDto(10000,new BigDecimal(6),"g"));
+
+        List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
+        recipeStepDtoList.add(new RecipeStepDto("Step eins",null,10000,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei",null,10000,false ));
+        recipeStepDtoList.add(new RecipeStepDto("Step drei",null,-1,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step vier",null,-1,false ));
+
+        RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
+        recipeCreateDto.setName("Name");
+        recipeCreateDto.setDescription("Beschreibung");
+        recipeCreateDto.setServings((short)42);
+
+        recipeCreateDto.setIngredients(recipeIngredientDtos);
+        recipeCreateDto.setSteps(recipeStepDtoList);
+        recipeCreateDto.setCategories(recipeCategoryDtoList);
+
+
+        String requestBody = objectMapper.writeValueAsString(recipeCreateDto);
+
+        MvcResult mvcResult = mockMvc.perform(post(RECIPE_BASE_URI)
+                .header(securityProperties.getAuthHeader(), jwttoken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isBadRequest())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+
+        String[] requiredLines = {
+            "Validation of Recipe to create failed.",
+            "Category 1000 not found",
+            "Ingredient 10000 not found",
+            "Step Step eins is not valid",
+            "Step Step zwei not found",
+            "Step Step drei is not valid",
+            "Step Step vier not found"
+        };
+
+        // Check each required line
+
+        for (String requiredLine : requiredLines) {
+            assertTrue(response.getContentAsString().contains(requiredLine));
+        }
+    }
+
+    private String LoginHelper() throws Exception {
+        UserLoginDto userLoginDto = new UserLoginDto();
+        userLoginDto.setEmail("admin@email.com");
+        userLoginDto.setPassword("password");
+
+        String requestBody = objectMapper.writeValueAsString(userLoginDto);
+
+        MvcResult mvcResult = mockMvc.perform(post(AUTH_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isOk())
+            .andReturn();
+        return mvcResult.getResponse().getContentAsString();
     }
 }

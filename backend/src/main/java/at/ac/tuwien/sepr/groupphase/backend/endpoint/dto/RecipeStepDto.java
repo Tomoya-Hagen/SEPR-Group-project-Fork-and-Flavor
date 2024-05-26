@@ -26,8 +26,8 @@ public class RecipeStepDto {
         this.whichstep = whichstep;
     }
 
-    public boolean isCorrect(){
-        if((whichstep && description != null && recipeId == 0) || (!whichstep && description == null && recipeId != 0)){
+    public boolean isCorrect() {
+        if ((whichstep && description != null && recipeId == 0) || (!whichstep && description == null && recipeId != 0)) {
             return true;
         }
         return false;
@@ -74,7 +74,10 @@ public class RecipeStepDto {
             return false;
         }
         RecipeStepDto that = (RecipeStepDto) o;
-        return recipeId == that.recipeId && whichstep == that.whichstep && Objects.equals(name, that.name) && Objects.equals(description, that.description);
+        return recipeId == that.recipeId
+            && whichstep == that.whichstep
+            && Objects.equals(name, that.name)
+            && Objects.equals(description, that.description);
     }
 
     @Override

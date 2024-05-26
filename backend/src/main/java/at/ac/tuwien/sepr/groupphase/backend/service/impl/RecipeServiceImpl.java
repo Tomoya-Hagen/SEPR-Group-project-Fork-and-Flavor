@@ -20,12 +20,14 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeIngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeStepRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
+import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,15 +52,17 @@ public class RecipeServiceImpl implements RecipeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final RecipeValidator recipeValidator;
 
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
                              RecipeMapper recipeMapper, UserRepository userRepository,
-                             CategoryRepository categoryRepository) {
+                             CategoryRepository categoryRepository, RecipeValidator recipeValidator) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
+        this.recipeValidator = recipeValidator;
     }
 
     @Override
@@ -85,13 +89,16 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public DetailedRecipeDto createRecipe(RecipeCreateDto recipeDto, String usermail) throws RecipeStepNotParsableException, RecipeStepSelfReferenceException {
+    public DetailedRecipeDto createRecipe(RecipeCreateDto recipeDto, String usermail) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException {
         LOGGER.debug("Publish new message {}", recipeDto);
+
+        recipeValidator.validateCreate(recipeDto);
+
 
         Recipe recipe = recipeMapper.recipeCreateDtoToRecipe(recipeDto, recipeRepository.findMaxId() + 1);
 
         List<Category> categories = new ArrayList<>();
-        for(Category category : recipe.getCategories()) {
+        for (Category category : recipe.getCategories()) {
             categories.add(categoryRepository.getById(category.getId()));
         }
         recipe.setCategories(categories);
@@ -105,7 +112,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Stream<SimpleRecipeResultDto> byname(String name, int limit) {
-        var x = recipeRepository.findByNameContainingWithLimit(name, PageRequest.of(0,limit)).stream().map(recipeMapper::recipeToRecipeResultDto);
+        var x = recipeRepository.findByNameContainingWithLimit(name, PageRequest.of(0, limit)).stream().map(recipeMapper::recipeToRecipeResultDto);
         return x;
     }
 

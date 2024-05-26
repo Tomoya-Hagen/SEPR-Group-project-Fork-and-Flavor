@@ -23,7 +23,7 @@ public class SimpleIngredientService implements IngredientService {
 
     @Override
     public Stream<IngredientResultDto> byname(String name, int limit) {
-        var x = ingredientRepository.findByNameContainingWithLimit(name, PageRequest.of(0,limit));
+        var x = ingredientRepository.findByNameContainingWithLimit(name, PageRequest.of(0, limit));
         return x.stream().map(ingredientMapper::ingredientToIngredientResultDto);
     }
 }

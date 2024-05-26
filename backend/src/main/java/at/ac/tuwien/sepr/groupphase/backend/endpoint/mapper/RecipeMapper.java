@@ -54,7 +54,6 @@ public interface RecipeMapper {
     RecipeListDto recipeAndAverageRatingToRecipeListDto(Recipe recipe, long rating);
 
 
-
     DetailedRecipeDto recipeToDetailedRecipeDto(Recipe recipe);
 
     default Recipe recipeCreateDtoToRecipe(RecipeCreateDto recipeCreateDto, long id) throws RecipeStepNotParsableException, RecipeStepSelfReferenceException {
@@ -72,7 +71,7 @@ public interface RecipeMapper {
                 throw new RecipeStepNotParsableException("The steps in the Recipe are not formated correct!");
             }
             if (recipeStepDto.isWhichstep()) {
-                recipeStep = new RecipeDescriptionStep(recipeStepDto.getName(),recipeStepDto.getDescription(),current,i);
+                recipeStep = new RecipeDescriptionStep(recipeStepDto.getName(), recipeStepDto.getDescription(), current, i);
 
             } else {
                 if (recipeStepDto.getRecipeId() == id) {
@@ -80,23 +79,23 @@ public interface RecipeMapper {
                 }
                 Recipe reciper = new Recipe();
                 reciper.setId(recipeStepDto.getRecipeId());
-                recipeStep = new RecipeRecipeStep(recipeStepDto.getName(),current,i,reciper);
+                recipeStep = new RecipeRecipeStep(recipeStepDto.getName(), current, i, reciper);
             }
             recipeStepList.add(recipeStep);
             i++;
 
         }
         List<RecipeIngredient> recipeIngredientList = new ArrayList<>();
-        for(RecipeIngredientDto recipeIngredient : recipeCreateDto.getIngredients()) {
+        for (RecipeIngredientDto recipeIngredient : recipeCreateDto.getIngredients()) {
             Ingredient ingredient = new Ingredient();
             ingredient.setId(recipeIngredient.getId());
-            RecipeIngredient.Unit u =  RecipeIngredient.getUnitFromString(recipeIngredient.getUnit());
-            RecipeIngredient recieing = new RecipeIngredient(current,ingredient,recipeIngredient.getAmount(),u);
+            RecipeIngredient.Unit u = RecipeIngredient.getUnitFromString(recipeIngredient.getUnit());
+            RecipeIngredient recieing = new RecipeIngredient(current, ingredient, recipeIngredient.getAmount(), u);
             recipeIngredientList.add(recieing);
         }
 
         List<Category> categoryList = new ArrayList<>();
-        for(RecipeCategoryDto categoryDto: recipeCreateDto.getCategories()){
+        for (RecipeCategoryDto categoryDto : recipeCreateDto.getCategories()) {
             Category category = new Category();
             category.setId(categoryDto.getId());
             categoryList.add(category);
@@ -116,7 +115,6 @@ public interface RecipeMapper {
     }
 
 
-    List<RecipeIngredient> recipeIngredientDtoToRecipeIngredientDto(List<RecipeIngredientDto> recipeIngredientDto);
 
     default SimpleRecipeResultDto recipeToRecipeResultDto(Recipe r) {
         SimpleRecipeResultDto result = new SimpleRecipeResultDto();

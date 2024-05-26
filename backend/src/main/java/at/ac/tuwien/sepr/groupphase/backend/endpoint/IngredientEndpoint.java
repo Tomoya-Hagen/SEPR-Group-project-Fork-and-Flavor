@@ -38,7 +38,7 @@ public class IngredientEndpoint {
     @GetMapping
     @Operation(summary = "Getting ingredients", security = @SecurityRequirement(name = "apiKey"))
     public Stream<IngredientResultDto> get(@RequestParam("name") String name, @RequestParam("limit") int limit) {
-        LOGGER.info("POST /api/v1/ingredients params: {} {}", name , limit);
-        return ingredientService.byname(name,limit);
+        LOGGER.info("POST /api/v1/ingredients params: {} {}", name, limit);
+        return ingredientService.byname(name, limit);
     }
 }

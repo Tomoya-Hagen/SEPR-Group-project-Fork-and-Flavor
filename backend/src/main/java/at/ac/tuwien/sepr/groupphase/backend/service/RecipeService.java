@@ -11,6 +11,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceExc
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Stream;
@@ -23,16 +24,16 @@ public interface RecipeService {
      * Creates a new recipe entry.
      *
      * @param recipe to create
-     *  usermail for owner
+     *               usermail for owner
      * @return created recipe entry
      */
-    DetailedRecipeDto createRecipe(RecipeCreateDto recipe, String usermail);
+    DetailedRecipeDto createRecipe(RecipeCreateDto recipe, String usermail) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException;
 
     /**
      * Find all recipes having a name like name.
      *
      * @param name name of recipes to find
-     *       limit max amount of recipe to return
+     *             limit max amount of recipe to return
      * @return limit amount of recipes found
      */
     Stream<SimpleRecipeResultDto> byname(String name, int limit);

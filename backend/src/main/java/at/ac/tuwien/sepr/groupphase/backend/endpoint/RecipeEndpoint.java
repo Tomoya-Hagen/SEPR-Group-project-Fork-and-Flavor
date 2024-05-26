@@ -68,13 +68,19 @@ public class RecipeEndpoint {
         return recipeService.getRecipesFromPageInSteps(page, step);
     }
 
+    @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Create a new Recipe", security = @SecurityRequirement(name = "apiKey"))
     public DetailedRecipeDto createnew(@Valid @RequestBody RecipeCreateDto recipeDto) {
         LOGGER.info("POST /api/v1/recipe body: {}", recipeDto);
         var auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return recipeService.createRecipe(recipeDto,(String) auth);
+        try {
+            return recipeService.createRecipe(recipeDto, (String) auth);
+        } catch (Exception e) {
+            HttpStatus status = HttpStatus.BAD_REQUEST;
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
     }
 
     @Secured("ROLE_USER")
@@ -82,8 +88,8 @@ public class RecipeEndpoint {
     @GetMapping("/simple")
     @Operation(summary = "Getting simple recipes", security = @SecurityRequirement(name = "apiKey"))
     public Stream<SimpleRecipeResultDto> get(@RequestParam("name") String name, @RequestParam("limit") int limit) {
-        LOGGER.info("POST /api/v1/recipe params: {} {}", name , limit);
-        return recipeService.byname(name,limit);
+        LOGGER.info("POST /api/v1/recipe params: {} {}", name, limit);
+        return recipeService.byname(name, limit);
     }
 
     private void logClientError(HttpStatus status, String message, Exception e) {

@@ -89,7 +89,12 @@ public class RecipeCreateDto {
             return false;
         }
         RecipeCreateDto that = (RecipeCreateDto) o;
-        return ownerId == that.ownerId && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(servings, that.servings) && Objects.equals(steps, that.steps) && Objects.equals(categories, that.categories) && Objects.equals(ingredients, that.ingredients);
+        return ownerId == that.ownerId && Objects.equals(name, that.name)
+            && Objects.equals(description, that.description)
+            && Objects.equals(servings, that.servings)
+            && Objects.equals(steps, that.steps)
+            && Objects.equals(categories, that.categories)
+            && Objects.equals(ingredients, that.ingredients);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.exception;
 
-public class RecipeStepNotParsableException extends RuntimeException{
+public class RecipeStepNotParsableException extends RuntimeException {
     public RecipeStepNotParsableException() {
     }
 
