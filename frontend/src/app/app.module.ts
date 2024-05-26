@@ -9,7 +9,6 @@ import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
 import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
-import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail/recipe-detail.component';
@@ -25,7 +24,6 @@ import {RegisterComponent} from "./components/register/register.component";
     FooterComponent,
     HomeComponent,
     LoginComponent,
-    MessageComponent,
     RecipeDetailComponent,
     RegisterComponent
   ],
