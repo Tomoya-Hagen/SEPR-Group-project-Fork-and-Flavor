@@ -130,8 +130,7 @@ export class RecipeEditComponent implements OnInit {
   public textareachange(index : number) : void{
     if(!this.recipe.recipeSteps[index].description){
       this.recipe.recipeSteps[index].whichstep = null;
-    }
-    else {
+    } else {
       this.recipe.recipeSteps[index].whichstep = true;
     }
     if(this.recipe.recipeSteps.length -1 == index){
@@ -153,8 +152,7 @@ export class RecipeEditComponent implements OnInit {
 
     if(this.recipe.recipeSteps.length > 1 && this.recipe.recipeSteps.slice(0, -1).every(obj => obj != null && obj.whichstep != null)){
       this.stepbool = true;
-    }
-    else {
+    } else {
       this.stepbool = false;
     }
   }
