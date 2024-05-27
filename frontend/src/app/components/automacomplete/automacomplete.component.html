@@ -4,8 +4,8 @@
        [(ngModel)]="inputText"
        (ngModelChange)="inputChange.next($event)"
        [disabled]="disabled"
-       (blur)="resetInputText()"
->
+       (blur)="resetInputText()">
+
 <datalist [id]="dataListId" [ngClass]="datalistClass">
   <option *ngFor="let candidateEntry of valueCandidates | keyvalue" [value]="formatModel(candidateEntry.value)">
 </datalist>

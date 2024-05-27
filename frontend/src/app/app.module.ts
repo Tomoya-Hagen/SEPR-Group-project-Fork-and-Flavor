@@ -34,11 +34,12 @@ import { AutomaticCompleteComponent } from './components/automacomplete/automaco
     RecipeDetailComponent,
     RegisterComponent,
     RecipeComponent,
-    RecipebookComponent,
     RecipebookCreateEditComponent,
+
   ],
   imports: [
     BrowserModule,
+    RecipebookComponent,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
