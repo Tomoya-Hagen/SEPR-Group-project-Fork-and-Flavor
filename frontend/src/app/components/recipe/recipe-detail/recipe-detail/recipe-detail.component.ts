@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { RecipeDetailDto } from 'src/app/dtos/recipe';
-import { RecipeStepDetailDto } from 'src/app/dtos/recipe-step';
+import { RecipeStepDetailDto, RecipeStepRecipeDetailDto } from 'src/app/dtos/recipe-step';
 import { RecipeService } from 'src/app/services/recipe.service';
 
 @Component({
@@ -26,6 +26,7 @@ export class RecipeDetailComponent implements OnInit{
     allergens: [],
     nutritions: []
   };
+  recipeSteps = [];
   returnClass = true;
   bannerError: string | null = null;
   slideConfig = {
@@ -50,6 +51,7 @@ export class RecipeDetailComponent implements OnInit{
       observable.subscribe({
         next: data => {
           this.recipe = data;
+          this.recipeSteps=this.recipe.recipeSteps;
         },
         error: error => {
           console.error('Error fetching Recipe', error);
@@ -77,5 +79,20 @@ export class RecipeDetailComponent implements OnInit{
   }
   isAllergensNotEmpty(): boolean{
     return this.recipe.allergens.length != 0;
+  }
+
+  addRecipeStepsfromRecipe(recipeStep:RecipeStepRecipeDetailDto){
+    let recipeSteps = [];
+    for (let i = 0; i < this.recipeSteps.length; i++) {
+      if (this.recipeSteps[i]===recipeStep) {
+        for (let j = 0; j < recipeStep.recipe.recipeSteps.length; j++) {
+          recipeSteps.push(recipeStep.recipe.recipeSteps[j]);
+        } 
+      } else{
+        let newRecipeStep = JSON.parse(JSON.stringify(this.recipeSteps[i]));
+        recipeSteps.push(newRecipeStep)
+      }
+    }
+    this.recipeSteps=recipeSteps;
   }
 }

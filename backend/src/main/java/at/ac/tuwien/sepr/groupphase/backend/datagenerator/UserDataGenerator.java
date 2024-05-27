@@ -4,6 +4,8 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Role;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Order(1)
 public class UserDataGenerator {
 
     // Autowired dependencies

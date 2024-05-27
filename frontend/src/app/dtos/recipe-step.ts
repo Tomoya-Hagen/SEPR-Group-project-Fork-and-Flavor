@@ -1,3 +1,5 @@
+import { RecipeDetailDto } from "./recipe"
+
 export interface RecipeStepDetailDto {
     id: number,
     name: string,
@@ -5,7 +7,7 @@ export interface RecipeStepDetailDto {
 }
 
 export interface RecipeStepRecipeDetailDto extends RecipeStepDetailDto {
-    recipe: RecipeStepDetailDto
+    recipe: RecipeDetailDto
 }
 
 export interface RecipeStepDescriptionDetailDto extends RecipeStepDetailDto{
