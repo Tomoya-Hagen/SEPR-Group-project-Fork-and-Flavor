@@ -14,7 +14,6 @@ import java.util.List;
  * Interface for repository of recipe books.
  */
 @Repository
-@Repository
 @DynamicInsert
 @DynamicUpdate
 public interface RecipeBookRepository extends JpaRepository<RecipeBook, Long> {

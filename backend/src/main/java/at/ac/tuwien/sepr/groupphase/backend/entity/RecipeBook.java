@@ -51,6 +51,10 @@ public class RecipeBook {
         this.id = id;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -81,10 +85,6 @@ public class RecipeBook {
 
     public void setRecipes(List<Recipe> recipes) {
         this.recipes = recipes;
-    }
-
-    public long getId() {
-        return id;
     }
 
     @Override
@@ -118,11 +118,4 @@ public class RecipeBook {
         this.editors = editors;
     }
 
-    public void setRecipes(List<Recipe> recipes) {
-        this.recipes = recipes;
-    }
-
-    public List<Recipe> getRecipes() {
-        return recipes;
-    }
 }

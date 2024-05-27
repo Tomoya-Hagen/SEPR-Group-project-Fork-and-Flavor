@@ -124,6 +124,7 @@ public class RecipeBookEndpoint {
         }
     }
 
+    @PermitAll
     @PostMapping
     public ResponseEntity<RecipeBookDetailDto> createRecipe(@RequestBody RecipeBookCreateDto recipeBook) {
         LOGGER.trace("Creating recipe book: {}", recipeBook);

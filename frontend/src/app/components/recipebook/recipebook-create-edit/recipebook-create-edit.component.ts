@@ -6,9 +6,8 @@ import {RecipeBook, RecipeBookCreateDto} from '../../../dtos/recipe-book';
 import { RecipeBookService } from '../../../services/recipe-book.service';
 import { RecipeService } from 'src/app/services/recipe.service';
 import { UserService } from 'src/app/services/user.service';
-import {ToastrService} from 'ngx-toastr';
 import { RecipeListDto } from 'src/app/dtos/recipe';
-import { UserListDto } from 'src/app/dtos/user';
+import {userListDto} from "../../../dtos/user";
 
 export enum RecipeBookCreateEditMode {
   create,
@@ -29,7 +28,7 @@ export class RecipebookCreateEditComponent implements OnInit {
     recipes: null
   };
 
-  users: (UserListDto | null)[] = [];
+  users: (userListDto | null)[] = [];
   recipes: (RecipeListDto | null)[] = [];
   dummyUserSelectionModel: unknown;
   dummyRecipeSelectionModel: unknown;
@@ -136,7 +135,7 @@ export class RecipebookCreateEditComponent implements OnInit {
     return recipe?.name ?? '';
   }
 
-  public formatUserName(user: UserListDto | null): string {
+  public formatUserName(user: userListDto | null): string {
     return user?.name ?? '';
   }
 
@@ -168,7 +167,7 @@ export class RecipebookCreateEditComponent implements OnInit {
     });
   }
 
-  public addUser(user: UserListDto | null) {
+  public addUser(user: userListDto | null) {
     if (!user) return;
     setTimeout(() => {
       const users = this.users;

@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, catchError } from "rxjs";
 import { environment } from "src/environments/environment";
-import { UserListDto } from "../dtos/user";
+import { userListDto } from "../dtos/user";
 
 const baseUri = environment.backendUrl + '/users';
 
@@ -19,11 +19,11 @@ export class UserService {
         private http: HttpClient,
     ) { }
 
-    usersByName(name: string, limit: number): Observable<UserListDto[]> {
+    usersByName(name: string, limit: number): Observable<userListDto[]> {
         let params = new HttpParams();
         params = params.append('name', name);
         params = params.append('limit', limit.toString());
-        return this.http.get<UserListDto[]>(baseUri, { params })
+        return this.http.get<userListDto[]>(baseUri, { params })
         .pipe(
             catchError((error) => {
                 console.error(error);

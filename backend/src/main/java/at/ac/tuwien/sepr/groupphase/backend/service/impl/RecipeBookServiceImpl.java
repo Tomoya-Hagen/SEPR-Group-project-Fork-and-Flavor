@@ -36,14 +36,14 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public RecipeBookServiceImpl(RecipeBookRepository recipeBookRepository,
-                                 RecipeMapper recipeBookRecipeMapper,
-                                 RecipeBookMapper recipeMapper,
+                                 RecipeMapper recipeMapper,
+                                 RecipeBookMapper recipeBookMapper,
                                  RecipeRepository recipeRepository,
                                  UserRepository userRepository) {
         this.recipeBookRepository = recipeBookRepository;
-        this.recipeBookMapper = recipeMapper;
+        this.recipeBookMapper = recipeBookMapper;
         this.recipeRepository = recipeRepository;
-        this.recipeBookRecipeMapper = recipeBookRecipeMapper;
+        this.recipeBookRecipeMapper = recipeMapper;
         this.userRepository = userRepository;
     }
 
@@ -116,7 +116,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         recipeBook.setOwnerId(ownerId);
         List<Long> userIds = recipeBookCreateDto.users().stream().map(UserListDto::id).toList();
         List<ApplicationUser> users = userRepository.findAllById(userIds);
-        recipeBook.setUsers(users);
+        recipeBook.setEditors(users);
         recipeBook.setRecipes(recipeBookRecipeMapper.listOfRecipeListDtoToRecipeList(recipeBookCreateDto.recipes()));
         recipeBookRepository.save(recipeBook);
         return recipeBookMapper.recipeBookToRecipeBookDetailDto(recipeBook);

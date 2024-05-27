@@ -42,5 +42,6 @@ public interface RecipeBookMapper {
      * @param recipeBook A RecipeBook object that needs to be mapped to a RecipeBookDetailDto object.
      * @return A RecipeBookDetailDto object that has been mapped from the provided RecipeBook object.
      */
+    @Mapping(source = "editors", target = "users")
     RecipeBookDetailDto recipeBookToRecipeBookDetailDto(RecipeBook recipeBook);
 }
