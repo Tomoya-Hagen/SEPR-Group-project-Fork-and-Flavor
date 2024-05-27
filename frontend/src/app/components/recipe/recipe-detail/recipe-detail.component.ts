@@ -78,8 +78,8 @@ export class RecipeDetailComponent implements OnInit{
     });
   }
 
-  isRecipeDescriptionStep(recipeStep: RecipeStepDetailDto) :boolean{
-    return recipeStep.hasOwnProperty('description');
+  isRecipeDescriptionStep(recipeStep: any): boolean {
+    return recipeStep.hasOwnProperty('description') && !('recipe' in recipeStep);
   }
 
   isCategoriesNotEmpty(): boolean{
@@ -156,13 +156,12 @@ export class RecipeDetailComponent implements OnInit{
 
   toggleNutritionVisibility() {
     this.showNutrition = !this.showNutrition;
-}
-
-  expandedIndex: number | null = null;
-
-  toggleRecipeStep(index: number) {
-    this.expandedIndex = this.expandedIndex === index ? null : index;
   }
 
+  toggleStep(step: any): void {
+    if (step.recipe) {
+      step.expanded = !step.expanded;
+    }
+  }
 
 }
