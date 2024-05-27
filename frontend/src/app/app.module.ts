@@ -15,7 +15,7 @@ import {httpInterceptorProviders} from './interceptors';
 import { RecipebookComponent } from './components/recipebook/recipebook.component';
 import { RecipebookCreateEditComponent } from './components/recipebook/recipebook-create-edit/recipebook-create-edit.component';
 import { RecipeComponent } from './components/recipe/recipe.component';
-import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import { AutomaticCompleteComponent } from './components/autocomplete/automacomplete.component';
 import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail/recipe-detail.component';
 import { ToastrModule } from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -25,7 +25,7 @@ import {RegisterComponent} from "./components/register/register.component";
 @NgModule({
   declarations: [
     AppComponent,
-    AutocompleteComponent,
+    AutomaticCompleteComponent,
     HeaderComponent,
     FooterComponent,
     HomeComponent,

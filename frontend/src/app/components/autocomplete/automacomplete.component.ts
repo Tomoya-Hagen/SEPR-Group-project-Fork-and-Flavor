@@ -11,18 +11,18 @@ import {debounceTime, of, Subject, switchMap, tap} from 'rxjs';
  * @param T the model type. In practice only used as a placeholder and helper for typesafety inside this class.
  */
 @Component({
-  selector: 'app-autocomplete',
-  templateUrl: './autocomplete.component.html',
-  styleUrls: ['./autocomplete.component.scss'],
+  selector: 'app-automatic-complete',
+  templateUrl: './automacomplete.component.html',
+  styleUrls: ['./automacomplete.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
-      useExisting: AutocompleteComponent,
+      useExisting: AutomaticCompleteComponent,
     },
   ]
 })
-export class AutocompleteComponent<T> implements OnInit, ControlValueAccessor {
+export class AutomaticCompleteComponent<T> implements OnInit, ControlValueAccessor {
   static counter = 0;
 
   // See documentation of NgClass for comparison
@@ -42,7 +42,7 @@ export class AutocompleteComponent<T> implements OnInit, ControlValueAccessor {
   inputChange = new Subject<string>();
 
   constructor() {
-    const autocompleteId = AutocompleteComponent.counter++;
+    const autocompleteId = AutomaticCompleteComponent.counter++;
     this.dataListId = `app-autocomplete-candidates-${autocompleteId}`;
   }
 
