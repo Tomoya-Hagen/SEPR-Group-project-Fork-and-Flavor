@@ -45,6 +45,7 @@ export class RecipeDetailComponent implements OnInit{
     "arrows" : true,
     "infinite" : false
   }
+  showNutrition: boolean = false;
 
   constructor(
     private service: RecipeService,
@@ -152,4 +153,16 @@ export class RecipeDetailComponent implements OnInit{
     }
     this.recipeSteps=recipeSteps;
   }
+
+  toggleNutritionVisibility() {
+    this.showNutrition = !this.showNutrition;
+}
+
+  expandedIndex: number | null = null;
+
+  toggleRecipeStep(index: number) {
+    this.expandedIndex = this.expandedIndex === index ? null : index;
+  }
+
+
 }

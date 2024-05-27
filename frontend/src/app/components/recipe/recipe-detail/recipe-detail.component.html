@@ -37,50 +37,70 @@
       <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
     </div>
   </ng-template>
-  <div style="width: 50%; float:left">
-    <div style="margin-bottom: 2%;">
-      <h4>Rating: </h4>
+  <br>
+  <div class="RecipeInfos" style="display: flex; justify-content: space-between; width: 100%;">
+    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-right: 1%; background-color: var(--box-2);">
+      <h4>Rating:</h4>
       {{recipe.rating}}/5 <!--Entwurf-->
     </div>
-    <div style="margin-bottom: 2%;">
-      <h4>Number of servings: </h4>
+    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-right: 1%; background-color: var(--box-3);">
+      <h4>Servings:</h4>
       {{recipe.numberOfServings}}
     </div>
-    <div style="margin-bottom: 5%;" *ngIf="isCategoriesNotEmpty()">
+    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-right: 1%; background-color: var(--box-4);" *ngIf="isCategoriesNotEmpty()">
       <h4>Categories:</h4>
       <div *ngFor="let category of recipe.categories">
         {{category.name}}
       </div>
     </div>
-    <div style="margin-bottom: 5%;" *ngIf="isAllergensNotEmpty()">
-      <h4>Allergens:</h4>
-      <div *ngFor="let allergen of recipe.allergens">
-        {{allergen.name}}
+    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--box-5);">
+      <h4>Allergene: </h4>
+      <div>
+        <span *ngFor="let allergen of recipe.allergens; let isLast=last">
+           {{allergen.name}}{{isLast ? '' : ', '}}
+        </span>
+      </div>
+      <div *ngIf="recipe.allergens.length === 0">
+        none
       </div>
     </div>
-  <h4>Description:</h4>
-  <p>{{recipe.description}}</p>
-</div>
-  <div class="mt-3" style="width: 50%; margin-bottom: 5%; margin-left: auto;margin-right: 0;">
-    <img src="https://api.campbellsmeat.com/wp-content/uploads/2020/10/1602145295bolog-1.png" class="card-img-top" alt="Hollywood Sign on The Hill"/>
-      <table class="table" style="margin-top: 5%;">
-          <tbody>
-            <h4>Ingredients:</h4>
-              <tr *ngFor="let ingredient of recipe.ingredients" class="center-td">
-                  <td>{{ingredient.name}}</td>
-                  <td>{{ingredient.amount}} {{ingredient.unit}}</td>
-              </tr>
-          </tbody>
-      </table>
-      <table class="table" style="margin-top: 5%;">
-        <h4>Nutritions:</h4>
+    <div class="info-box clickable" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--acent-color);" (click)="toggleNutritionVisibility()">
+      <h4>Nutrition:</h4>
+      Click to Show
+    </div>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 5%;">
+    <!-- Ingredients and Description Section -->
+    <div style="width: 49%; padding: 10px;">
+      <h4>Ingredients:</h4>
+      <table class="table">
         <tbody>
-            <tr *ngFor="let nutrition of recipe.nutritions" class="center-td">
-                <td>{{nutrition.name}}</td>
-                <td>{{nutrition.value}} {{nutrition.unit}}</td>
-            </tr>
+        <tr *ngFor="let ingredient of recipe.ingredients">
+          <td>{{ingredient.name}}</td>
+          <td>{{ingredient.amount}} {{ingredient.unit}}</td>
+        </tr>
         </tbody>
-    </table>
+      </table>
+      <h4>Description:</h4>
+      <p>{{recipe.description}}</p>
+    </div>
+
+
+    <!-- Nutrition Section -->
+    <div style="width: 49%; padding: 10px;" [class.collapse]="!showNutrition">
+      <h4 style="cursor: pointer;">Nutritions:</h4>
+      <div>
+        <table class="table">
+          <tbody>
+          <tr *ngFor="let nutrition of recipe.nutritions">
+            <td>{{nutrition.name}}</td>
+            <td>{{nutrition.value}} {{nutrition.unit}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <ngx-slick-carousel class="carousel"
