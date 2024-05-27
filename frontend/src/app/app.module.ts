@@ -24,7 +24,6 @@ import { AutomaticCompleteComponent } from './components/automacomplete/automaco
 
 @NgModule({
   declarations: [
-    AutocompleteComponent,
     AppComponent,
     AutocompleteComponent,
     AutomaticCompleteComponent,
@@ -35,6 +34,7 @@ import { AutomaticCompleteComponent } from './components/automacomplete/automaco
     RecipeDetailComponent,
     RegisterComponent,
     RecipeComponent,
+    RecipebookComponent,
     RecipebookCreateEditComponent,
   ],
   imports: [
@@ -48,7 +48,6 @@ import { AutomaticCompleteComponent } from './components/automacomplete/automaco
     // Needed for Toastr
     BrowserAnimationsModule,
     SlickCarouselModule,
-    RecipebookComponent
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
