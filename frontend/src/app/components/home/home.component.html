@@ -2,7 +2,7 @@
   <h1 class="display-4" style="text-align:center">Welcome to Fork & Flavour!</h1>
   <hr class="my-4">
   <div class="row">
-    <div class="col-xl-5 col-xl-3 col-lg-4 p-2" *ngFor="let recipe of recipes">
+    <div class="col-lg-4 p-2" *ngFor="let recipe of recipes">
       <div class="card RecipeCard" [routerLink]="['/recipe/details',recipe.id]">
         <div class="card-body">
           <h5 class="card-title">{{recipe.name}}</h5>
