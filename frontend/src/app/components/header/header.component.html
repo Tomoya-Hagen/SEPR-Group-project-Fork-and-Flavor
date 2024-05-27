@@ -23,17 +23,35 @@
                 Rezepte
               </button>
               <div ngbDropdownMenu >
-                <a ngbDropdownItem class="nav-link" routerLink="/recipe" >Alle Rezepte</a>
-                <a ngbDropdownItem class="nav-link" routerLink="/recipecreate" >Rezept erstellen</a>
+                <a ngbDropdownItem class="nav-link" routerLink="/recipe" >Alle Rezepte anzeigen</a>
+                <a ngbDropdownItem class="nav-link" routerLink="/recipecreate" >Neue Rezepte erstellen</a>
               </div>
             </div>
           </div>
-        <li class="nav-item d-flex align-items-center">
-          <a class="nav-link active" routerLink="/recipebook" >Rezeptbuch</a>
-        </li>
-        <li class="nav-item d-flex align-items-center">
-          <a class="nav-link active"routerLink="/weekplan"  >Wochenplan</a>
-        </li>
+        <li class="nav-item">
+          <div class="col nav-link ">
+            <div ngbDropdown class="d-inline-block">
+              <button type="button" class="btn" id="dropdownBasic2" ngbDropdownToggle>
+                Rezeptbuch
+              </button>
+              <div ngbDropdownMenu >
+                <a ngbDropdownItem class="nav-link" routerLink="/recipebook" >Alle Rezeptebücher anzeigen</a>
+                <a ngbDropdownItem class="nav-link" routerLink="/recipecreate" >Neues Rezeptbuch erstellen</a>
+              </div>
+            </div>
+          </div>
+        <li class="nav-item">
+          <div class="col nav-link ">
+            <div ngbDropdown class="d-inline-block">
+              <button type="button" class="btn" id="dropdownBasic3" ngbDropdownToggle>
+                Wochenplan
+              </button>
+              <div ngbDropdownMenu >
+                <a ngbDropdownItem class="nav-link" routerLink="/weekplan" >Wochenplan anzeigen</a>
+                <a ngbDropdownItem class="nav-link" routerLink="/weekplancreate" >Wochenplan erstellen</a>
+              </div>
+            </div>
+          </div>
       </ul>
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item">

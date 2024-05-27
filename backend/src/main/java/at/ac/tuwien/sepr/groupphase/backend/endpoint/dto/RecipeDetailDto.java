@@ -12,6 +12,7 @@ public record RecipeDetailDto(
     long ownerId,
     ArrayList<CategoryDetailDto> categories,
     boolean isDraft,
+    ArrayList<RecipeStepDetailDto> recipeSteps,
     ArrayList<IngredientDetailDto> ingredients,
     ArrayList<AllergenDetailDto> allergens,
     ArrayList<NutritionDetailDto> nutritions

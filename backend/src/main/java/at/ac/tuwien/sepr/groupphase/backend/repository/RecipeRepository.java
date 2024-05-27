@@ -9,11 +9,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @DynamicInsert
 @DynamicUpdate
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
+    Optional<Recipe> getRecipeById(@Param("id") long id);
+
+    @Query("select r from Recipe r where r.id between :#{#from} and :#{#to} order by r.id")
+    List<Recipe> getAllRecipesWithIdFromTo(@Param("from") int from, @Param("to") int to);
 
     /**
      * Search for recipes in the persistent data store matching  provided field.
@@ -22,8 +27,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      * @param name the recipe name to use in filtering.
      * @return the recipes where the given fields match.
      */
-    @Query("select distinct Recipe from Recipe Recipe"
-        + " where (?1 is null or UPPER(Recipe.name) like UPPER('%'||?1||'%'))")
+    @Query("select Recipe from Recipe Recipe where (?1 is null or UPPER(Recipe.name) like UPPER('%'||?1||'%'))")
     List<Recipe> search(@Param("name") String name);
 
 }
