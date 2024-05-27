@@ -5,7 +5,6 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs/internal/Observable';
 import { RecipeDetailDto } from 'src/app/dtos/recipe';
 import { RecipeBookListDto } from 'src/app/dtos/recipe-book';
-import { RecipeStepDetailDto } from 'src/app/dtos/recipe-step';
 import { RecipeStepDetailDto, RecipeStepRecipeDetailDto } from 'src/app/dtos/recipe-step';
 import { RecipeService } from 'src/app/services/recipe.service';
 import { RecipeBookService } from 'src/app/services/recipebook.service';
@@ -79,11 +78,7 @@ export class RecipeDetailComponent implements OnInit{
   }
 
   isRecipeDescriptionStep(recipeStep: RecipeStepDetailDto) :boolean{
-    if(recipeStep.hasOwnProperty('description')) {
-        return true;
-    } else {
-        return false;
-    }
+    return recipeStep.hasOwnProperty('description');
   }
 
   isCategoriesNotEmpty(): boolean{
@@ -98,7 +93,7 @@ export class RecipeDetailComponent implements OnInit{
     this.modalService.open(spoonModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
-  spoon(form) {
+  spoon() {
     this.submitted = true;
 
 
@@ -130,7 +125,7 @@ export class RecipeDetailComponent implements OnInit{
       }
     }
 
-  recipeBookSuggestions = (input: string): Observable<RecipeBookListDto[]> =>
+  recipeBookSuggestions = (): Observable<RecipeBookListDto[]> =>
     this.recipeBookService.getRecipeBooksTheUserHasWriteAccessTo()
 
     public formatRecipeBook(recipeBook: RecipeBookListDto | null): string {
