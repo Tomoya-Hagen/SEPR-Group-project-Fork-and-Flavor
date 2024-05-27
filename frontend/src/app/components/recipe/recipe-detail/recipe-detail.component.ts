@@ -1,9 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs/internal/Observable';
 import { RecipeDetailDto } from 'src/app/dtos/recipe';
+import { RecipeBookListDto } from 'src/app/dtos/recipe-book';
+import { RecipeStepDetailDto } from 'src/app/dtos/recipe-step';
 import { RecipeStepDetailDto, RecipeStepRecipeDetailDto } from 'src/app/dtos/recipe-step';
 import { RecipeService } from 'src/app/services/recipe.service';
+import { RecipeBookService } from 'src/app/services/recipebook.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -26,9 +31,14 @@ export class RecipeDetailComponent implements OnInit{
     allergens: [],
     nutritions: []
   };
+  dummyRecipeBookSelectionModel: unknown;
   recipeSteps = [];
   returnClass = true;
+  error = false;
+  errorMessage = '';
+  submitted = false;
   bannerError: string | null = null;
+  currentRecipeBook: RecipeBookListDto;
   slideConfig = {
     "slidesToShow": 1,
     "slidesToScroll": 1,
@@ -42,6 +52,8 @@ export class RecipeDetailComponent implements OnInit{
     private router: Router,
     private route: ActivatedRoute,
     private notification: ToastrService,
+    private modalService: NgbModal,
+    private recipeBookService: RecipeBookService,
   ) { }
 
   ngOnInit(): void {
@@ -81,13 +93,63 @@ export class RecipeDetailComponent implements OnInit{
     return this.recipe.allergens.length != 0;
   }
 
+  openSpoonModal(spoonModal: TemplateRef<any>) {
+    this.currentRecipeBook = null;
+    this.modalService.open(spoonModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  spoon(form) {
+    this.submitted = true;
+
+
+    this.spoonRecipe(this.recipe.id,this.currentRecipeBook.id);
+  }
+
+  private spoonRecipe(recipeId:number, recipeBookId:number) {
+    this.recipeBookService.spoonRecipe(recipeId,recipeBookId).subscribe({
+          next: () => {
+            this.notification.success(`Recipe added successfully.`);
+            this.modalService.dismissAll();
+            this.currentRecipeBook=null;
+          },
+          error: error => {
+            this.notification.error(error);
+            this.defaultServiceErrorHandling(error);
+          }
+        }
+      );
+    }
+
+    private defaultServiceErrorHandling(error: any) {
+      console.log(error);
+      this.error = true;
+      if (typeof error.error === 'object') {
+        this.errorMessage = error.error.error;
+      } else {
+        this.errorMessage = error.error;
+      }
+    }
+
+  recipeBookSuggestions = (input: string): Observable<RecipeBookListDto[]> =>
+    this.recipeBookService.getRecipeBooksTheUserHasWriteAccessTo()
+
+    public formatRecipeBook(recipeBook: RecipeBookListDto | null): string {
+      return !recipeBook
+        ? ""
+        : `${recipeBook.name}`
+    }
+
+    public selectRecipeBook(recipeBook: RecipeBookListDto | null) {
+      this.currentRecipeBook = recipeBook;
+    }
+
   addRecipeStepsfromRecipe(recipeStep:RecipeStepRecipeDetailDto){
     let recipeSteps = [];
     for (let i = 0; i < this.recipeSteps.length; i++) {
       if (this.recipeSteps[i]===recipeStep) {
         for (let j = 0; j < recipeStep.recipe.recipeSteps.length; j++) {
           recipeSteps.push(recipeStep.recipe.recipeSteps[j]);
-        } 
+        }
       } else{
         let newRecipeStep = JSON.parse(JSON.stringify(this.recipeSteps[i]));
         recipeSteps.push(newRecipeStep)

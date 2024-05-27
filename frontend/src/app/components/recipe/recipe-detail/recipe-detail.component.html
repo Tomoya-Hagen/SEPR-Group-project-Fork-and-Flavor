@@ -1,6 +1,42 @@
 <div class="jumbotron mt-5">
-  <h1 class="display-4" *ngIf="!recipe.isDraft" style="text-align:center;margin-bottom: 5%;">{{recipe.name}}</h1>
-  <h1 class="display-4" *ngIf="recipe.isDraft" style="text-align:center;margin-bottom: 5%;">{{recipe.name}} (Template)</h1>
+  <div>
+    <div style="position: relative;">
+      <h1 class="display-4" *ngIf="!recipe.isDraft" style="text-align:center;margin-bottom: 5%;">{{recipe.name}}</h1>
+      <h1 class="display-4" *ngIf="recipe.isDraft" style="text-align:center;margin-bottom: 5%;">{{recipe.name}} (Template)</h1>
+    </div>
+    <div style="text-align: right;position: relative;">
+      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openSpoonModal(spoonRecipeModal)">Spoon Recipe</button>
+    </div>
+  </div>
+  <ng-template #spoonRecipeModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Spoon</h5>
+      <button type="button" class="close" (click)="modal.dismiss('X')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>Add {{recipe.name}} to:</p>
+      <div class="col-lg-6 mb-2">
+        <app-autocomplete
+          name="recipeBookSelection"
+          textInputClass="form-control"
+          [suggestions]="recipeBookSuggestions"
+          [formatModel]="formatRecipeBook"
+          valueNeedsToMatchSuggestion="true"
+          [(ngModel)]="dummyRecipeBookSelectionModel"
+          (ngModelChange)="selectRecipeBook($event)"
+        >
+        </app-autocomplete>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <form (ngSubmit)="spoon(spoonForm)" #spoonForm="ngForm">
+        <button type="button" (click)="spoon(spoonForm)" id="spn-rcp" class="btn btn-success float-right" *ngIf="currentRecipeBook">Spoon Recipe</button>
+      </form>
+      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
+    </div>
+  </ng-template>
   <div style="width: 50%; float:left">
     <div style="margin-bottom: 2%;">
       <h4>Rating: </h4>
