@@ -93,7 +93,7 @@ export class RecipeDetailComponent implements OnInit{
     this.modalService.open(spoonModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
-  spoon() {
+  spoon(form) {
     this.submitted = true;
 
 
@@ -125,7 +125,7 @@ export class RecipeDetailComponent implements OnInit{
       }
     }
 
-  recipeBookSuggestions = (): Observable<RecipeBookListDto[]> =>
+  recipeBookSuggestions = (input: string): Observable<RecipeBookListDto[]> =>
     this.recipeBookService.getRecipeBooksTheUserHasWriteAccessTo()
 
     public formatRecipeBook(recipeBook: RecipeBookListDto | null): string {
