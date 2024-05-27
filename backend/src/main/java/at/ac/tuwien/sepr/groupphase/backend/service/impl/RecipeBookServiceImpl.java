@@ -1,8 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeBookMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
@@ -14,6 +17,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,18 +29,21 @@ import java.util.List;
 @Service
 public class RecipeBookServiceImpl implements RecipeBookService {
     private final RecipeBookRepository recipeBookRepository;
+    private final RecipeMapper recipeBookRecipeMapper;
     private final RecipeBookMapper recipeBookMapper;
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public RecipeBookServiceImpl(RecipeBookRepository recipeBookRepository,
+                                 RecipeMapper recipeBookRecipeMapper,
                                  RecipeBookMapper recipeMapper,
                                  RecipeRepository recipeRepository,
                                  UserRepository userRepository) {
         this.recipeBookRepository = recipeBookRepository;
         this.recipeBookMapper = recipeMapper;
         this.recipeRepository = recipeRepository;
+        this.recipeBookRecipeMapper = recipeBookRecipeMapper;
         this.userRepository = userRepository;
     }
 
@@ -98,5 +105,20 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         ApplicationUser user = userRepository.findFirstUserByEmail(email);
         return recipeBookMapper.recipeBookListToRecipeBookListDto(recipeBookRepository
             .getRecipeBooksThatAnUserHasWriteAccessToByUserId(user.getId()));
+    }
+
+    @Override
+    public RecipeBookDetailDto createRecipeBook(@Valid RecipeBookCreateDto recipeBookCreateDto, Long ownerId) {
+        LOGGER.trace("createRecipeBook({}, {})", recipeBookCreateDto, ownerId);
+        RecipeBook recipeBook = new RecipeBook();
+        recipeBook.setName(recipeBookCreateDto.name());
+        recipeBook.setDescription(recipeBookCreateDto.description());
+        recipeBook.setOwnerId(ownerId);
+        List<Long> userIds = recipeBookCreateDto.users().stream().map(UserListDto::id).toList();
+        List<ApplicationUser> users = userRepository.findAllById(userIds);
+        recipeBook.setUsers(users);
+        recipeBook.setRecipes(recipeBookRecipeMapper.listOfRecipeListDtoToRecipeList(recipeBookCreateDto.recipes()));
+        recipeBookRepository.save(recipeBook);
+        return recipeBookMapper.recipeBookToRecipeBookDetailDto(recipeBook);
     }
 }

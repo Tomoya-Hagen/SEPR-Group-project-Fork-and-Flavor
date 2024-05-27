@@ -12,6 +12,11 @@ import {LoginComponent} from './components/login/login.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail.component';
+import { RecipebookComponent } from './components/recipebook/recipebook.component';
+import { RecipebookCreateEditComponent } from './components/recipebook/recipebook-create-edit/recipebook-create-edit.component';
+import { RecipeComponent } from './components/recipe/recipe.component';
+import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail/recipe-detail.component';
 import { ToastrModule } from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
@@ -22,12 +27,16 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
   declarations: [
     AutocompleteComponent,
     AppComponent,
+    AutocompleteComponent,
     HeaderComponent,
     FooterComponent,
     HomeComponent,
     LoginComponent,
     RecipeDetailComponent,
-    RegisterComponent
+    RegisterComponent,
+    RecipeComponent,
+    RecipebookComponent,
+    RecipebookCreateEditComponent,
   ],
   imports: [
     BrowserModule,

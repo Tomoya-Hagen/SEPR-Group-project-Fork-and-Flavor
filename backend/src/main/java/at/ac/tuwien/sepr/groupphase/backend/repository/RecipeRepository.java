@@ -11,6 +11,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This is the interface for the persistence layer of Recipes.
+ *
+ */
 @DynamicInsert
 @DynamicUpdate
 @Repository
@@ -24,6 +28,9 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      */
     Optional<Recipe> getRecipeById(@Param("id") long id);
 
+    @Query("select r from Recipe r where r.id in :ids")
+    List<Recipe> getRecipeByIds(@Param("ids") List<Long> ids);
+
     /**
      * gets a list recipe entities by the given range from to.
      *
@@ -33,4 +40,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      */
     @Query("select r from Recipe r where r.id between :#{#from} and :#{#to} order by r.id")
     List<Recipe> getAllRecipesWithIdFromTo(@Param("from") int from, @Param("to") int to);
+
+    @Query("SELECT r FROM Recipe r WHERE LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%')) ORDER BY r.id LIMIT :limit")
+    List<Recipe> findByNamesContainingIgnoreCase(@Param("name") String name, @Param("limit") int limit);
 }

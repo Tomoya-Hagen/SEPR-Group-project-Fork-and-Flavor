@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -115,5 +116,13 @@ public class RecipeBook {
 
     public void setEditors(List<ApplicationUser> editors) {
         this.editors = editors;
+    }
+
+    public void setRecipes(List<Recipe> recipes) {
+        this.recipes = recipes;
+    }
+
+    public List<Recipe> getRecipes() {
+        return recipes;
     }
 }

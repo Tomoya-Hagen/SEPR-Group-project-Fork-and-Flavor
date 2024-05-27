@@ -1,22 +1,29 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.security.PermitAll;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,10 +37,12 @@ import java.util.List;
 public class RecipeBookEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final RecipeBookService recipeBookService;
+    private final UserService userService;
 
     @Autowired
-    public RecipeBookEndpoint(RecipeBookService recipeBookService) {
+    public RecipeBookEndpoint(RecipeBookService recipeBookService, UserService userService) {
         this.recipeBookService = recipeBookService;
+        this.userService = userService;
     }
 
     @PermitAll
@@ -112,6 +121,23 @@ public class RecipeBookEndpoint {
             HttpStatus status = HttpStatus.NOT_FOUND;
             logClientError(status, "no user found", e);
             throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<RecipeBookDetailDto> createRecipe(@RequestBody RecipeBookCreateDto recipeBook) {
+        LOGGER.trace("Creating recipe book: {}", recipeBook);
+        LOGGER.debug("Body of request: {}", recipeBook);
+
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        ApplicationUser user = userService.findApplicationUserByEmail(email);
+
+        try {
+            LOGGER.debug("Created recipe book: {}, with the owner id: {}", recipeBook, user.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(recipeBookService.createRecipeBook(recipeBook, user.getId()));
+        } catch (Exception e) {
+            LOGGER.warn("Error creating recipe book: {}", recipeBook, e);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
         }
     }
 

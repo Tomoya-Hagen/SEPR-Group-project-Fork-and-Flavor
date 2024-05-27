@@ -10,7 +10,7 @@
     "mocha-junit-reporter": "2.2.1"
   },
   "devDependencies": {
-    "cypress": "^13.9.0"
+    "cypress": "^13.10.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

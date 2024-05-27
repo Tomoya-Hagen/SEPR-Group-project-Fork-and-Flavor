@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserRegisterDtoMapper;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
@@ -37,14 +39,17 @@ public class CustomUserDetailService implements UserService {
     private final UserValidator userValidator = new UserValidator();
     private final UserRegisterDtoMapper userRegisterDtoMapper;
     private final RoleRepository rolesRepository;
+    private final UserMapper userMapper;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserMapper userMapper,
+        UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
         this.userRegisterDtoMapper = userRegisterDtoMapper;
         this.rolesRepository = rolesRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -91,6 +96,12 @@ public class CustomUserDetailService implements UserService {
             return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
         }
         throw new BadCredentialsException("Username or password is incorrect or account is locked");
+    }
+
+    @Override
+    public List<UserListDto> findUsersByName(String name, int limit) {
+        List<ApplicationUser> users = userRepository.findByNamesContainingIgnoreCase(name, limit);
+        return userMapper.userListToUserListDtoList(users);
     }
 
     @Override

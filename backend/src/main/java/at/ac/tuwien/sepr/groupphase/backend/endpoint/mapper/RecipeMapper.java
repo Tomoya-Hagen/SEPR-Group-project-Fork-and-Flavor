@@ -14,6 +14,7 @@ import org.mapstruct.Mapping;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * This mapper is used to map recipes zu all kinds of different dto types.
@@ -51,6 +52,15 @@ public interface RecipeMapper {
         return recipeListDtos;
     }
 
+    @Mapping(source = "recipeListDto.id", target = "id")
+    default List<Recipe> listOfRecipeListDtoToRecipeList(List<RecipeListDto> recipeListDto) {
+        List<Recipe> recipeList = new ArrayList<>();
+        for (RecipeListDto recipeListDto1 : recipeListDto) {
+            recipeList.add(recipeListDtoToRecipe(recipeListDto1));
+        }
+        return recipeList;
+    }
+
     /**
      * This method creates a RecipeListDto out of a recipe entity and the average rating based on the taste.
      *
@@ -61,4 +71,15 @@ public interface RecipeMapper {
     @Mapping(source = "recipe.name", target = "name")
     @Mapping(source = "recipe.description", target = "description")
     RecipeListDto recipeAndAverageRatingToRecipeListDto(Recipe recipe, long rating);
+
+    Recipe recipeListDtoToRecipe(RecipeListDto recipeListDto);
+
+    default List<RecipeListDto> recipesToRecipeListDto(List<Recipe> recipes) {
+        List<RecipeListDto> recipeList = new ArrayList<>();
+        for (Recipe recipe : recipes) {
+            recipeList.add(recipeAndAverageRatingToRecipeListDto(recipe, 0));
+        }
+        return recipeList;
+    }
+
 }

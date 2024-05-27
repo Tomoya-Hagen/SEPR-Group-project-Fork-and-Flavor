@@ -17,4 +17,6 @@ public interface AllergenMapper {
      * @return an AllergenDetailDto which contains all important fields of an allergen entity.
      */
     AllergenDetailDto allergenToAllergenDetailDto(Allergen allergen);
+
+    List<AllergenDetailDto> allergenListToAllergenDetailDtoList(List<Allergen> allergens);
 }

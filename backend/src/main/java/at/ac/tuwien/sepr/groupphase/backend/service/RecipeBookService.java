@@ -1,11 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import org.springframework.stereotype.Service;
+import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 
 import java.util.List;
 
@@ -40,4 +42,13 @@ public interface RecipeBookService {
      * @throws NotFoundException  if the recipe or the recipe book does not exist.
      */
     List<RecipeBookListDto> getRecipeBooksThatAnUserHasAccessToByUserId(String email) throws NotFoundException;
+
+    /**
+     * This method creates a new recipe book.
+     *
+     * @param recipeBook the recipe book to create.
+     * @param ownerId Owner ID to be passed to the recipe book, this is the ID of the current user.
+     * @return The created recipe book.
+     */
+    RecipeBookDetailDto createRecipeBook(RecipeBookCreateDto recipeBook, Long ownerId);
 }

@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * This is the interface for the service layer of Recipes.
+ *
+ */
 @Service
 public interface RecipeService {
     /**
@@ -27,4 +31,13 @@ public interface RecipeService {
      * @return the recipes of the given page.
      */
     List<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber);
+
+    /**
+     * This method finds a limited number of recipes with the name, or letters typed in by the user.
+     *
+     * @param name the name or parts of it of the recipe to look for.
+     * @param limit limit to specify the number of recipes to be found.
+     * @return A list of RecipeListDto.
+     */
+    List<RecipeListDto> getRecipesByNames(String name, int limit);
 }

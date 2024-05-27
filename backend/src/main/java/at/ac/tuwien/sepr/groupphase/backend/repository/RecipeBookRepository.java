@@ -10,6 +10,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Interface for repository of recipe books.
+ */
+@Repository
 @Repository
 @DynamicInsert
 @DynamicUpdate

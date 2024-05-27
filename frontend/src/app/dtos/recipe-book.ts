@@ -1,8 +1,10 @@
 import {userListDto} from "./user";
 import {RecipeListDto} from "./recipe"
+import {UserListDto} from "../dtos/user";
+import {RecipeListDto} from "../dtos/recipe"
 
 export interface RecipeBookDetailDto {
-  id: number,
+  id?: number,
   name: string,
   description: string,
   ownerId: number,
@@ -14,7 +16,9 @@ export interface RecipeBookListDto {
   id: number,
   name: string,
   ownerId: number,
-  description: string
+  description: string,
+  users: UserListDto[],
+  recipes: RecipeListDto[]
 }
 
 export interface RecipeBookSearch {

@@ -33,12 +33,14 @@ export class AutocompleteComponent<T> implements OnInit, ControlValueAccessor {
   datalistClass: string | string[] | Set<string> | { [klass: string]: any } = [];
   @Input()
   disabled: boolean = false;
+
   dataListId: string;
   inputText = '';
   checkValueNeedsToMatchSuggestion = true;
   value: T | null = null;
   valueCandidates = new Map<string, T>();
   touched = false;
+  disabled = false;
   inputChange = new Subject<string>();
 
   constructor() {
@@ -90,6 +92,9 @@ export class AutocompleteComponent<T> implements OnInit, ControlValueAccessor {
   }
 
 
+  /**
+   * Resets the text input if `checkValueNeedsToMatchSuggestion` is `true`.
+   */
   public resetInputText(): void {
     if (this.checkValueNeedsToMatchSuggestion) {
       this.inputText = this.formatModel(this.value);
