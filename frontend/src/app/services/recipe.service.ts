@@ -32,6 +32,14 @@ export class RecipeService {
     );
   }
 
+  public getRecipeNameBy(recipeId: number): Observable<string> {
+    return this.http.get<RecipeDetailDto>(
+      baseUri+"/details/"+recipeId
+    ).pipe(
+      rxjsMap(recipe => recipe.name)
+    );
+  }
+
   public recipeByName(name: string, limit: number | undefined): Observable<SimpleRecipe[]> {
     let params = new HttpParams();
     params = params.append("name", name);
@@ -75,7 +83,7 @@ export class RecipeService {
       if (step.hasOwnProperty('recipe')) {
         return {
           id: step.id,
-          name: step.name,
+          name: (step as RecipeStepRecipeDetailDto).recipe.name,
           recipeId: (step as RecipeStepRecipeDetailDto).recipe.id,
           whichstep: false
         };

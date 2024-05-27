@@ -7,7 +7,7 @@ import { DetailedRecipeDto } from 'src/app/dtos/DetailedRecipeDto';
 import { SimpleCategory } from 'src/app/dtos/SimpleCategory';
 import { SimpleRecipe } from 'src/app/dtos/SimpleRecipe';
 import { IngredientDetailDto } from 'src/app/dtos/ingredient';
-import { RecipeUpdateDto } from 'src/app/dtos/recipe';
+import { RecipeDetailDto, RecipeUpdateDto } from 'src/app/dtos/recipe';
 
 import { RecipeService } from 'src/app/services/recipe.service';
 import { Step } from "../../../dtos/Step";
@@ -23,6 +23,7 @@ export class RecipeEditComponent implements OnInit {
 
   error = false;
   errorMessage = '';
+  recipeStepRecipeName = '';
   recipe: RecipeUpdateDto = {
     id: 0,
     name: '',
@@ -46,14 +47,20 @@ export class RecipeEditComponent implements OnInit {
     console.log(this.recipe.ingredients)
     this.recipe.ingredients[index] = updatedIngredient;
     if(this.recipe.ingredients[this.recipe.ingredients.length-1].id != -1){
-      this.recipe.ingredients.push({name: "", id: -1,amount: null, unit:null});
+      this.recipe.ingredients.push({name: "", id: -1, amount: null, unit: null});
     }
     if(this.recipe.ingredients.length > 1 && this.recipe.ingredients.slice(0, -1).every(obj => obj != null && obj.id !== -1 && obj.id !== 0)){
       this.ingbool = true;
-    }
-    else {
+    } else {
       this.ingbool = false;
     }
+    for (let i = 0; i < this.recipe.ingredients.length; i++) {
+      if(this.recipe.ingredients[i].amount == null || this.recipe.ingredients[i].unit == null){
+        this.ingbool = false;
+        break;
+      }
+    }
+    console.log(this.ingbool);
   }
 
 
@@ -61,28 +68,30 @@ export class RecipeEditComponent implements OnInit {
     const id = this.route.snapshot.params['id'];
     this.recipeService.getRecipeUpdateDtoById(id).subscribe(recipe => {
       this.recipe = recipe;
+      console.log(this.recipe);
     });
-    for (let i = 0; i < this.recipe.ingredients.length; i++) {
-      this.recipe.ingredients.push({name: this.recipe.ingredients[i].name, id: this.recipe.ingredients[i].id ,amount: this.recipe.ingredients[i].amount, unit: this.recipe.ingredients[i].unit});
-    }
-    for (let i = 0; i < this.recipe.recipeSteps.length; i++) {
-      this.recipe.recipeSteps.push({name: this.recipe.recipeSteps[i].name, description: this.recipe.recipeSteps[i].description, recipeId: this.recipe.recipeSteps[i].recipeId, whichstep: this.recipe.recipeSteps[i].whichstep});
-    }
-    for (let i = 0; i < this.recipe.categories.length; i++) {
-      this.recipe.categories.push({id: this.recipe.categories[i].id, name: this.recipe.categories[i].name});
-    }
   }
-
   public onSubmit(form: NgForm): void {
     console.log(this.recipe);
-    if(!this.recipe.recipeSteps[this.recipe.ingredients.length-1].name){
-      this.recipe.categories.pop();
+    for (let i = 0; i < this.recipe.recipeSteps.length; i++) {
+      if(this.recipe.recipeSteps[i].name === ""){
+        this.recipe.recipeSteps.splice(i, 1);
+        i--;
+      }
     }
-    if(this.recipe.categories[this.recipe.ingredients.length-1].name === ""){
-      this.recipe.categories.pop();
+    console.log(this.recipe.ingredients.length);
+    for (let i = 0; i < this.recipe.ingredients.length; i++) {
+      if(this.recipe.ingredients[i].id <= 0){
+        this.recipe.ingredients.splice(i, 1);
+        i--;
+      }
     }
-    if(this.recipe.ingredients[this.recipe.ingredients.length-1].name === ""){
-      this.recipe.ingredients.pop();
+    console.log(this.recipe.ingredients.length);
+    for (let i = 0; i < this.recipe.categories.length; i++) {
+      if(this.recipe.categories[i].id <= 0){
+        this.recipe.categories.splice(i, 1);
+        i--;
+      }
     }
     this.recipe.recipeSteps.forEach(step => {
       if(step.description){

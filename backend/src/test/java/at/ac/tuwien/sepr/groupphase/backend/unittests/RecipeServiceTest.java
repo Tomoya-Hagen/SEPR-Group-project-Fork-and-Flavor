@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeIngredientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
@@ -102,7 +103,8 @@ class RecipeServiceTest {
             categorieDtos, recipeSteps, newDtoList
             );
 
-        Recipe updatedRecipe = recipeRepository.getById(recipeService.updateRecipe(updateDto).getId());
+        DetailedRecipeDto d = recipeService.updateRecipe(updateDto);
+        Recipe updatedRecipe = recipeRepository.getById(d.getId());
 
         assertEquals(updatedRecipe.getId(), recipe.getId());
         assertEquals(3, (int) updatedRecipe.getNumberOfServings());

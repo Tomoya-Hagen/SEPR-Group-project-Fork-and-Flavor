@@ -82,22 +82,28 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe oldRecipe = recipeRepository.findById(recipeUpdateDto.id()).orElseThrow(NotFoundException::new);
         Recipe recipe = recipeMapper.recipeUpdateDtoToRecipe(recipeUpdateDto);
 
+        List<RecipeIngredient> updatedIngredients = new ArrayList<>();
+
         for (RecipeIngredient recipeIngredient : recipe.getIngredients()) {
-            if (oldRecipe.getIngredients().stream().anyMatch(ri -> ri.getIngredient().getId().equals(recipeIngredient.getIngredient().getId()))) {
-                RecipeIngredient oldRecipeIngredient = oldRecipe.getIngredients().stream().filter(ri -> ri.getIngredient().getId()
-                    .equals(recipeIngredient.getIngredient().getId())).findFirst().get();
-                oldRecipeIngredient.setUnit(recipeIngredient.getUnit());
-                oldRecipeIngredient.setAmount(recipeIngredient.getAmount());
-            } else {
-                List<RecipeIngredient> recipeIngredients = oldRecipe.getIngredients();
-                recipeIngredients.add(recipeIngredient);
-                oldRecipe.setIngredients(recipeIngredients);
+            boolean found = false;
+            for (RecipeIngredient oldRecipeIngredient : oldRecipe.getIngredients()) {
+                if (oldRecipeIngredient.getIngredient().getId().equals(recipeIngredient.getIngredient().getId())) {
+                    oldRecipeIngredient.setUnit(recipeIngredient.getUnit());
+                    oldRecipeIngredient.setAmount(recipeIngredient.getAmount());
+                    updatedIngredients.add(oldRecipeIngredient);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                updatedIngredients.add(recipeIngredient);
             }
         }
 
         List<Category> categories = categoryRepository.findAllById(recipe.getCategories().stream().map(Category::getId).toList());
 
         oldRecipe.setCategories(categories);
+        oldRecipe.setIngredients(updatedIngredients);
         oldRecipe.setName(recipe.getName());
         oldRecipe.setDescription(recipe.getDescription());
         oldRecipe.setNumberOfServings(recipe.getNumberOfServings());
