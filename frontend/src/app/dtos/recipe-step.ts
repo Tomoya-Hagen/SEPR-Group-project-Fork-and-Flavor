@@ -3,7 +3,8 @@ import { RecipeDetailDto } from "./recipe"
 export interface RecipeStepDetailDto {
     id: number,
     name: string,
-    stepNumber: number
+    stepNumber: number,
+    expanded: boolean | false
 }
 
 export interface RecipeStepRecipeDetailDto extends RecipeStepDetailDto {

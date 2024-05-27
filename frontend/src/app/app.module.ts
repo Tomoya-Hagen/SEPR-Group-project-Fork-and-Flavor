@@ -21,6 +21,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import {RegisterComponent} from "./components/register/register.component";
 import { AutomaticCompleteComponent } from './components/automacomplete/automacomplete.component'
+import {CardComponent} from "./components/card/card.component";
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { AutomaticCompleteComponent } from './components/automacomplete/automaco
     // Needed for Toastr
     BrowserAnimationsModule,
     SlickCarouselModule,
+    CardComponent,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

@@ -45,6 +45,7 @@ export class RecipeDetailComponent implements OnInit{
     "arrows" : true,
     "infinite" : false
   }
+  showNutrition: boolean = false;
 
   constructor(
     private service: RecipeService,
@@ -77,8 +78,8 @@ export class RecipeDetailComponent implements OnInit{
     });
   }
 
-  isRecipeDescriptionStep(recipeStep: RecipeStepDetailDto) :boolean{
-    return recipeStep.hasOwnProperty('description');
+  isRecipeDescriptionStep(recipeStep: any): boolean {
+    return recipeStep.hasOwnProperty('description') && !('recipe' in recipeStep);
   }
 
   isCategoriesNotEmpty(): boolean{
@@ -152,4 +153,15 @@ export class RecipeDetailComponent implements OnInit{
     }
     this.recipeSteps=recipeSteps;
   }
+
+  toggleNutritionVisibility() {
+    this.showNutrition = !this.showNutrition;
+  }
+
+  toggleStep(step: any): void {
+    if (step.recipe) {
+      step.expanded = !step.expanded;
+    }
+  }
+
 }
