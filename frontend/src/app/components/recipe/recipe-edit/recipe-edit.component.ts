@@ -13,6 +13,7 @@ import { RecipeService } from 'src/app/services/recipe.service';
 import { Step } from "../../../dtos/Step";
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryService } from 'src/app/services/CategoryService';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -35,32 +36,23 @@ export class RecipeEditComponent implements OnInit {
   }
   ingbool = false;
   stepbool = false;
+  isSubmitDisabled = true;
 
   constructor(
     private recipeService: RecipeService,
     private categoryService: CategoryService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private notification: ToastrService
   ){}
 
   ingredientChangeHandler(updatedIngredient: IngredientDetailDto, index: number) {
     console.log(this.recipe.ingredients)
     this.recipe.ingredients[index] = updatedIngredient;
-    if(this.recipe.ingredients[this.recipe.ingredients.length-1].id != -1){
+    if(this.recipe.ingredients[this.recipe.ingredients.length - 1].id != -1){
       this.recipe.ingredients.push({name: "", id: -1, amount: null, unit: null});
     }
-    if(this.recipe.ingredients.length > 1 && this.recipe.ingredients.slice(0, -1).every(obj => obj != null && obj.id !== -1 && obj.id !== 0)){
-      this.ingbool = true;
-    } else {
-      this.ingbool = false;
-    }
-    for (let i = 0; i < this.recipe.ingredients.length; i++) {
-      if(this.recipe.ingredients[i].amount == null || this.recipe.ingredients[i].unit == null){
-        this.ingbool = false;
-        break;
-      }
-    }
-    console.log(this.ingbool);
+    this.validateForm();
   }
 
 
@@ -100,15 +92,15 @@ export class RecipeEditComponent implements OnInit {
     })
 
     this.recipeService.updateRecipe(this.recipe).subscribe({
-        next: (detrecipe: DetailedRecipeDto) => {
-        },
-        error: error => {
-          this.defaultServiceErrorHandling(error);
-        }
+      next: (detrecipe: DetailedRecipeDto) => {
+        this.notification.info('Update successful!');
+        this.router.navigate(['/recipe']);
+      },
+      error: error => {
+        this.defaultServiceErrorHandling(error);
       }
-    );
-
-    this.router.navigate(['/recipe']);
+    }
+  );
   }
 
 
@@ -136,6 +128,7 @@ export class RecipeEditComponent implements OnInit {
     if(this.recipe.recipeSteps.length -1 == index){
       this.recipe.recipeSteps.push(new Step());
     }
+    this.validateForm();
   }
 
   public formatRecipeStep(simpleRecipe: SimpleRecipe | null): string {
@@ -150,11 +143,15 @@ export class RecipeEditComponent implements OnInit {
       this.recipe.recipeSteps.push(new Step());
     }
 
-    if(this.recipe.recipeSteps.length > 1 && this.recipe.recipeSteps.slice(0, -1).every(obj => obj != null && obj.whichstep != null)){
-      this.stepbool = true;
-    } else {
-      this.stepbool = false;
+    if (this.recipe.recipeSteps[index].recipeId === this.recipe.id) {
+      this.error = true;
+      this.errorMessage = 'A recipe cannot reference itself as a step.';
+      this.recipe.recipeSteps[index] = new Step();
+      this.notification.error(this.errorMessage);
+      return;
     }
+
+    this.validateForm();
   }
 
   recipeStepSuggestions = (input: string) => (input === '')
@@ -178,6 +175,19 @@ export class RecipeEditComponent implements OnInit {
     if(this.recipe.categories[index].id != 0 && this.recipe.categories.length -1 == index){
       this.recipe.categories.push({id: 0, name: ""});
     }
+    this.validateForm();
+  }
+
+  public validateForm(): void {
+    this.ingbool = this.recipe.ingredients.length > 1 && this.recipe.ingredients.slice(0, -1).every(ingredient =>
+      ingredient != null && ingredient.id > 0 && ingredient.amount != null && ingredient.unit != null
+    );
+
+    this.stepbool = this.recipe.recipeSteps.slice(0, -1).every(step =>
+      step != null && step.whichstep != null && (step.whichstep === true || step.whichstep === false)
+    );
+
+    this.isSubmitDisabled = !(this.recipe.name && this.recipe.description && this.recipe.numberOfServings > 0);
   }
 
 
