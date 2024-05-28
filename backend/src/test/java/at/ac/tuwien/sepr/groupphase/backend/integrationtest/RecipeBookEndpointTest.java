@@ -18,15 +18,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-public class RecipeBookEndpointTest {
+class RecipeBookEndpointTest implements TestData {
 
     @Autowired
     private MockMvc mockMvc;
@@ -56,7 +65,7 @@ public class RecipeBookEndpointTest {
     private RecipeBookMapper recipeBookMapper;
 
     @Test
-    public void searchRecipeBooksReturnsRecipeBook() throws Exception {
+    void searchRecipeBooksReturnsRecipeBook() throws Exception {
         mockMvc.perform(get("/api/v1/recipebook/search")
                 .param("name", "Familienrezepte")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -66,7 +75,7 @@ public class RecipeBookEndpointTest {
     }
 
     @Test
-    public void searchRecipeBooksReturnsEmptyListWhenNoMatch() throws Exception {
+    void searchRecipeBooksReturnsEmptyListWhenNoMatch() throws Exception {
         mockMvc.perform(get("/api/v1/recipebook/search")
                 .param("name", "Nonexistent")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -75,13 +84,13 @@ public class RecipeBookEndpointTest {
     }
 
     @Test
-    public void getNonExistingIdReturnsNotFound() throws Exception {
+    void getNonExistingIdReturnsNotFound() throws Exception {
         mockMvc.perform(get("/api/v1/recipebook/999/details"))
             .andExpect(status().isNotFound());
     }
 
     @Test
-    public void getListByPageAndStepReturnsRecipeBooks() throws Exception {
+    void getListByPageAndStepReturnsRecipeBooks() throws Exception {
         mockMvc.perform(get("/api/v1/recipebook/")
                 .param("page", "1")
                 .param("step", "1")
@@ -92,7 +101,7 @@ public class RecipeBookEndpointTest {
     }
 
     @Test
-    public void getListByPageAndStepReturnsEmptyListWhenNoMatch() throws Exception {
+    void getListByPageAndStepReturnsEmptyListWhenNoMatch() throws Exception {
         mockMvc.perform(get("/api/v1/recipebook/")
                 .param("page", "-1")
                 .param("step", "1")
@@ -102,7 +111,7 @@ public class RecipeBookEndpointTest {
     }
 
     @Test
-    public void getListByPageAndStepReturnsBadRequestWhenPageIsNotNumber() throws Exception {
+    void getListByPageAndStepReturnsBadRequestWhenPageIsNotNumber() throws Exception {
         mockMvc.perform(get("/api/v1/recipebook/")
                 .param("page", "notANumber")
                 .param("step", "1")
@@ -111,7 +120,7 @@ public class RecipeBookEndpointTest {
     }
 
     @Test
-    public void getListByPageAndStepReturnsBadRequestWhenStepIsNotNumber() throws Exception {
+    void getListByPageAndStepReturnsBadRequestWhenStepIsNotNumber() throws Exception {
         mockMvc.perform(get("/api/v1/recipebook/")
                 .param("page", "1")
                 .param("step", "notANumber")
@@ -120,12 +129,13 @@ public class RecipeBookEndpointTest {
     }
 
     @Test
-    public void getRecipeBookListReturnsRecipeBooks() throws Exception {
+    void getRecipeBookListReturnsRecipeBooks() throws Exception {
         mockMvc.perform(get("/api/v1/recipebook")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(15)));
+            .andExpect(jsonPath("$", hasSize(16)));
     }
+
     @Test
     void serviceShouldThrowANotFoundExceptionIfARecipeIsAddedToARecipeBookThatDoesNotExist() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(patch(RECIPE_BOOK_BASE_URI + "/16/spoon/3")
@@ -161,7 +171,7 @@ public class RecipeBookEndpointTest {
 
         RecipeBookDetailDto recipeBookDetailDto = objectMapper.readValue(response.getContentAsString(),
             RecipeBookDetailDto.class);
-        Assertions.assertEquals(1, recipeBookDetailDto.recipes().stream().filter(r -> r.id() == 2L).count());
+        assertEquals(1, recipeBookDetailDto.recipes().stream().filter(r -> r.id() == 2L).count());
     }
 
     @Test
@@ -190,7 +200,7 @@ public class RecipeBookEndpointTest {
             RecipeBookListDto[].class));
         Assertions.assertAll(
             () -> Assertions.assertFalse(recipeBookListDtos.isEmpty()),
-            () -> Assertions.assertEquals(6, recipeBookListDtos.size())
+            () -> assertEquals(6, recipeBookListDtos.size())
         );
     }
 }

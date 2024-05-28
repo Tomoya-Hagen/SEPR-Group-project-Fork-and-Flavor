@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Transactional
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-public class RecipeBookServiceTest {
+class RecipeBookServiceTest {
 
     @Autowired
     private RecipeBookService recipeBookService;
@@ -46,41 +46,41 @@ public class RecipeBookServiceTest {
     RecipeBookMapper recipeBookMapper;
 
     @Test
-    public void searchRecipeBooksReturnsRecipeBooks() {
+    void searchRecipeBooksReturnsRecipeBooks() {
         RecipeBookListDto recipeBookListDto = new RecipeBookListDto(15, "Familienrezepte", "Klassische und beliebte Rezepte für die ganze Familie.", 3);
         List<RecipeBookListDto> recipeBookListDtoList = new java.util.ArrayList<>(List.of());
         recipeBookListDtoList.add(recipeBookListDto);
 
         assertEquals(recipeBookService.searchRecipeBooks("Familienrezepte"), recipeBookListDtoList);
-        assertEquals(recipeBookService.searchRecipeBooks("Familienrezepte").size(), 1);
+        assertEquals(1, recipeBookService.searchRecipeBooks("Familienrezepte").size());
 
     }
 
     @Test
-    public void searchRecipeBooksReturnsEmptyListWhenNoMatch() {
-        assertEquals(recipeBookService.searchRecipeBooks("Nonexistent"), new java.util.ArrayList<>(List.of()));
-        assertEquals(recipeBookService.searchRecipeBooks("Nonexistent").size(), 0);
+    void searchRecipeBooksReturnsEmptyListWhenNoMatch() {
+        assertEquals(new java.util.ArrayList<>(List.of()), recipeBookService.searchRecipeBooks("Nonexistent"));
+        assertEquals(0, recipeBookService.searchRecipeBooks("Nonexistent").size());
     }
 
     @Test
-    public void getNonExistingIdReturnsNotFound() {
+    void getNonExistingIdReturnsNotFound() {
         assertThrows(NotFoundException.class, () -> recipeBookService.getRecipeBookDetailDtoById(999L));
     }
 
     @Test
-    public void getListByPageAndStepReturnsRecipeBooks() {
+    void getListByPageAndStepReturnsRecipeBooks() {
         RecipeBookListDto recipeBookListDto = new RecipeBookListDto(1L, "Italienische Küche", "Eine Sammlung klassischer italienischer Rezepte von Pasta bis Pizza.", 1L);
-        assertEquals(recipeBookService.getRecipeBooksFromPageInSteps(1, 1), Collections.singletonList(recipeBookListDto));
+        assertEquals(Collections.singletonList(recipeBookListDto), recipeBookService.getRecipeBooksFromPageInSteps(1, 1));
     }
 
     @Test
-    public void getListByPageAndStepReturnsEmptyListWhenNoMatch() {
-        assertEquals(recipeBookService.getRecipeBooksFromPageInSteps(-1, 1), Collections.emptyList());
+    void getListByPageAndStepReturnsEmptyListWhenNoMatch() {
+        assertEquals(Collections.emptyList(), recipeBookService.getRecipeBooksFromPageInSteps(-1, 1));
     }
 
     @Test
-    public void getRecipeBookReturnAllRecipeBooks() {
-        assertEquals(recipeBookService.getRecipeBooks().size(), 15);
+    void getRecipeBookReturnAllRecipeBooks() {
+        assertEquals(16, recipeBookService.getRecipeBooks().size());
     }
 
     @Test

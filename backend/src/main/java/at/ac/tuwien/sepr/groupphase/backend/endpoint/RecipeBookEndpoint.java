@@ -115,13 +115,6 @@ public class RecipeBookEndpoint {
         return recipeBookService.searchRecipeBooks(name);
     }
 
-    /**
-     * This method logs client errors.
-     *
-     * @param status The HTTP status of the error.
-     * @param message The error message.
-     * @param e The exception that caused the error.
-     */
     @Secured("ROLE_USER")
     @PatchMapping("{recipeBookId}/spoon/{recipeId}")
     public RecipeBookDetailDto spoon(@PathVariable(name = "recipeBookId") Long recipeBookId,
@@ -181,6 +174,13 @@ public class RecipeBookEndpoint {
         }
     }
 
+    /**
+     * This method logs client errors.
+     *
+     * @param status The HTTP status of the error.
+     * @param message The error message.
+     * @param e The exception that caused the error.
+     */
     private void logClientError(HttpStatus status, String message, Exception e) {
         LOGGER.warn("{} {}: {}: {}", status.value(), message, e.getClass().getSimpleName(), e.getMessage());
     }

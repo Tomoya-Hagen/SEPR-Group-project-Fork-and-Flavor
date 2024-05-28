@@ -7,7 +7,6 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import org.springframework.stereotype.Service;
-import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 
 import java.util.List;
 

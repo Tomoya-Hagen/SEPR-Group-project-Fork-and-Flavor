@@ -21,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-public class RecipeBookServiceTest {
+class RecipeBookServiceTest {
     @Autowired
     private RecipeBookService recipeBookService;
 
@@ -46,28 +47,30 @@ public class RecipeBookServiceTest {
 
     @Autowired
     private Validator validator;
+    @Autowired
+    private RecipeBookRepository recipeBookRepository;
     @Test
-    public void searchReturnsRecipeBooksWhenNameMatches() {
-        assertEquals(recipeBookRepository.search("Familienrezepte").getFirst().getName(), "Familienrezepte");
+    void searchReturnsRecipeBooksWhenNameMatches() {
+        assertEquals("Familienrezepte", recipeBookRepository.search("Familienrezepte").getFirst().getName());
     }
 
     @Test
-    public void searchReturnsEmptyListWhenNoNameMatches() {
-        assertEquals(recipeBookRepository.search("Nonexistent"), Collections.emptyList());
+    void searchReturnsEmptyListWhenNoNameMatches() {
+        assertEquals(Collections.emptyList(), recipeBookRepository.search("Nonexistent"));
     }
 
     @Test
-    public void searchReturnsRecipeBooksRegardlessOfCase() {
-        assertEquals(recipeBookRepository.search("Familien").getFirst().getName(), "Familienrezepte");
+    void searchReturnsRecipeBooksRegardlessOfCase() {
+        assertEquals("Familienrezepte", recipeBookRepository.search("Familien").getFirst().getName());
     }
 
     @Test
-    public void searchReturnsEmptyListWhenNameIsNull() {
-        assertEquals(recipeBookRepository.search(null).size(), 15);
+    void searchReturnsEmptyListWhenNameIsNull() {
+        assertEquals(16, recipeBookRepository.search(null).size());
     }
 
     @Test
-    public void getAllRecipesWithIdFromToReturnsRecipesInIdRange() {
+    void getAllRecipesWithIdFromToReturnsRecipesInIdRange() {
         List<RecipeBook> result = recipeBookRepository.getAllRecipesWithIdFromTo(1, 2);
         assertEquals(2, result.size());
         assertEquals(1L, result.get(0).getId());
@@ -75,13 +78,13 @@ public class RecipeBookServiceTest {
     }
 
     @Test
-    public void getAllRecipesWithIdFromToReturnsEmptyListWhenNoRecipesInIdRange() {
+    void getAllRecipesWithIdFromToReturnsEmptyListWhenNoRecipesInIdRange() {
         List<RecipeBook> result = recipeBookRepository.getAllRecipesWithIdFromTo(100, 200);
         assertTrue(result.isEmpty());
     }
 
     @Test
-    public void getAllRecipesWithIdFromToReturnsRecipesInIdRangeWhenRangeIsSingleId() {
+    void getAllRecipesWithIdFromToReturnsRecipesInIdRangeWhenRangeIsSingleId() {
 
         List<RecipeBook> result = recipeBookRepository.getAllRecipesWithIdFromTo(1, 1);
         assertEquals(1, result.size());
@@ -89,7 +92,7 @@ public class RecipeBookServiceTest {
     }
 
     @Test
-    public void createRecipeBookSuccessfully() {
+    void createRecipeBookSuccessfully() {
         List<UserListDto> userRecipeBooks = new ArrayList<>();
         UserListDto userListDto = new UserListDto(3L, "a");
         userRecipeBooks.add(userListDto);
@@ -114,7 +117,7 @@ public class RecipeBookServiceTest {
     }
 
     @Test
-    public void recipeCreationFailsIfNameIsNull() {
+    void recipeCreationFailsIfNameIsNull() {
         List<UserListDto> users = new ArrayList<>();
         UserListDto userListDto = new UserListDto(3L, "Admin");
         List<Recipe> recipes = recipeRepository.getRecipeByIds(List.of(2L, 3L));
@@ -129,7 +132,7 @@ public class RecipeBookServiceTest {
     }
 
     @Test
-    public void recipeCreationFailsIfNameTooLong() {
+    void recipeCreationFailsIfNameTooLong() {
         List<UserListDto> users = new ArrayList<>();
         UserListDto userListDto = new UserListDto(4L, "User");
         users.add(userListDto);
