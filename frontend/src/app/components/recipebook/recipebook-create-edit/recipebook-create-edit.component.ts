@@ -67,7 +67,7 @@ export class RecipebookCreateEditComponent implements OnInit {
 
   public onSubmit(form: NgForm): void {
     console.log('is form valid?', form.valid, this.recipeBook);
-    if (form.valid) {
+    if (form.valid && this.isFormValid()) {
       let observable: Observable<RecipeBook>;
       switch (this.mode) {
         case RecipeBookCreateEditMode.create:
@@ -144,6 +144,10 @@ export class RecipebookCreateEditComponent implements OnInit {
     return {
       'is-invalid': !input.valid && !input.pristine,
     };
+  }
+
+  public isFormValid(): boolean {
+    return this.recipes.length > 0 && this.recipeBook.description !== '' && this.recipeBook.name !== '';
   }
 
   public addRecipe(recipe: RecipeListDto | null) {
