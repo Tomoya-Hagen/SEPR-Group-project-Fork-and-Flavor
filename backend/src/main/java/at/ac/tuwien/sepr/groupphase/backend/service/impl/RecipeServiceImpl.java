@@ -52,7 +52,6 @@ public class RecipeServiceImpl implements RecipeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final RecipeRepository recipeRepository;
     private final RecipeMapper recipeMapper;
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final RecipeValidator recipeValidator;

@@ -155,8 +155,6 @@ public interface RecipeMapper {
         return result;
     }
 
-}
-
     Recipe recipeListDtoToRecipe(RecipeListDto recipeListDto);
 
     default List<RecipeListDto> recipesToRecipeListDto(List<Recipe> recipes) {
