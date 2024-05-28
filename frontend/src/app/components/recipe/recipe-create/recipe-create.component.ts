@@ -47,8 +47,7 @@ export class RecipeCreateComponent implements OnInit{
     }
     if(this.recipe.ingredients.length > 1 && this.recipe.ingredients.slice(0, -1).every(obj => obj != null && obj.id !== -1 && obj.id !== 0)){
       this.ingbool = true;
-    }
-    else {
+    } else {
       this.ingbool = false;
     }
   }
@@ -101,8 +100,7 @@ export class RecipeCreateComponent implements OnInit{
   public textareachange(index : number) : void{
     if(!this.recipe.steps[index].description){
       this.recipe.steps[index].whichstep = null;
-    }
-    else {
+    } else {
       this.recipe.steps[index].whichstep = true;
     }
     if(this.recipe.steps.length -1 == index){
@@ -124,8 +122,7 @@ export class RecipeCreateComponent implements OnInit{
 
     if(this.recipe.steps.length > 1 && this.recipe.steps.slice(0, -1).every(obj => obj != null && obj.whichstep != null)){
       this.stepbool = true;
-    }
-    else {
+    } else {
       this.stepbool = false;
     }
   }
