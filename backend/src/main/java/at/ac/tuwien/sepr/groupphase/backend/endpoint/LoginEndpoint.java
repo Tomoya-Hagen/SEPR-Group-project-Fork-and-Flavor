@@ -44,10 +44,9 @@ public class LoginEndpoint {
         return ResponseEntity.created(URI.create("")).body(jwt);
     }
 
-//    @Secured("ROLE_USER")
-//    @ResponseStatus(HttpStatus.OK)
-//    @Operation(summary = "Check if a User is logged in", security = @SecurityRequirement(name = "apiKey"))
-    @PermitAll
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Check if a User is logged in", security = @SecurityRequirement(name = "apiKey"))
     @GetMapping("/islogged")
     public boolean isLoggedIn() {
         return true;
