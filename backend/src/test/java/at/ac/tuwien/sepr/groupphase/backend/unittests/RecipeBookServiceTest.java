@@ -1,13 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
 import jakarta.transaction.Transactional;
@@ -18,20 +18,24 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@ActiveProfiles({"test"})
+@ActiveProfiles("test")
 @Transactional
-public class RecipeBookServiceTest {
-
+class RecipeBookServiceTest {
     @Autowired
     private RecipeBookService recipeBookService;
 
@@ -43,16 +47,59 @@ public class RecipeBookServiceTest {
 
     @Autowired
     private Validator validator;
+    @Autowired
+    private RecipeBookRepository recipeBookRepository;
+    @Test
+    void searchReturnsRecipeBooksWhenNameMatches() {
+        assertEquals("Familienrezepte", recipeBookRepository.search("Familienrezepte").getFirst().getName());
+    }
 
     @Test
-    public void createRecipeBookSuccessfully() {
+    void searchReturnsEmptyListWhenNoNameMatches() {
+        assertEquals(Collections.emptyList(), recipeBookRepository.search("Nonexistent"));
+    }
+
+    @Test
+    void searchReturnsRecipeBooksRegardlessOfCase() {
+        assertEquals("Familienrezepte", recipeBookRepository.search("Familien").getFirst().getName());
+    }
+
+    @Test
+    void searchReturnsEmptyListWhenNameIsNull() {
+        assertEquals(16, recipeBookRepository.search(null).size());
+    }
+
+    @Test
+    void getAllRecipesWithIdFromToReturnsRecipesInIdRange() {
+        List<RecipeBook> result = recipeBookRepository.getAllRecipesWithIdFromTo(1, 2);
+        assertEquals(2, result.size());
+        assertEquals(1L, result.get(0).getId());
+        assertEquals(2L, result.get(1).getId());
+    }
+
+    @Test
+    void getAllRecipesWithIdFromToReturnsEmptyListWhenNoRecipesInIdRange() {
+        List<RecipeBook> result = recipeBookRepository.getAllRecipesWithIdFromTo(100, 200);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void getAllRecipesWithIdFromToReturnsRecipesInIdRangeWhenRangeIsSingleId() {
+
+        List<RecipeBook> result = recipeBookRepository.getAllRecipesWithIdFromTo(1, 1);
+        assertEquals(1, result.size());
+        assertEquals(1L, result.getFirst().getId());
+    }
+
+    @Test
+    void createRecipeBookSuccessfully() {
         List<UserListDto> userRecipeBooks = new ArrayList<>();
         UserListDto userListDto = new UserListDto(3L, "a");
         userRecipeBooks.add(userListDto);
         List<Recipe> recipes = recipeRepository.getRecipeByIds(List.of(1L, 2L));
         List<RecipeListDto> r = recipeMapper.recipesToRecipeListDto(recipes);
 
-        RecipeBookCreateDto createDto = new RecipeBookCreateDto( "Fast Food", "This recipe contains fast food dishes",
+        RecipeBookCreateDto createDto = new RecipeBookCreateDto("Fast Food", "This recipe contains fast food dishes",
             userRecipeBooks, r);
 
         RecipeBookDetailDto recipeBook = recipeBookService.createRecipeBook(createDto, 1L);
@@ -70,7 +117,7 @@ public class RecipeBookServiceTest {
     }
 
     @Test
-    public void recipeCreationFailsIfNameIsNull() {
+    void recipeCreationFailsIfNameIsNull() {
         List<UserListDto> users = new ArrayList<>();
         UserListDto userListDto = new UserListDto(3L, "Admin");
         List<Recipe> recipes = recipeRepository.getRecipeByIds(List.of(2L, 3L));
@@ -85,7 +132,7 @@ public class RecipeBookServiceTest {
     }
 
     @Test
-    public void recipeCreationFailsIfNameTooLong() {
+    void recipeCreationFailsIfNameTooLong() {
         List<UserListDto> users = new ArrayList<>();
         UserListDto userListDto = new UserListDto(4L, "User");
         users.add(userListDto);

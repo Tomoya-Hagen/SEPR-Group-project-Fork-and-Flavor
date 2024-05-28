@@ -66,7 +66,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     }
 
     @Override
-    public List<RecipeBookListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber) {
+    public List<RecipeBookListDto> getRecipeBooksFromPageInSteps(int pageNumber, int stepNumber) {
         int from = ((pageNumber - 1) * stepNumber) + 1;
         int to = pageNumber * stepNumber;
         List<RecipeBook> recipes = recipeBookRepository.getAllRecipesWithIdFromTo(from, to);

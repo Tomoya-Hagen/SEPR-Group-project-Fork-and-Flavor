@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class LoginEndpointTest implements TestData {
+class LoginEndpointTest implements TestData {
 
     private final static String ENDPOINT = "/api/v1/authentication";
 
@@ -45,8 +45,8 @@ public class LoginEndpointTest implements TestData {
     @Autowired
     private ObjectMapper objectMapper;
 
-    /*@Test
-    public void registerValidUser() throws Exception {
+    @Test
+    void registerValidUser() throws Exception {
         UserRegisterDto validUser = new UserRegisterDto(
             "validuser@email.com",
             "password",
@@ -71,7 +71,7 @@ public class LoginEndpointTest implements TestData {
     }
 
     @Test
-    public void registerInvalidUserEmail() throws Exception {
+    void registerInvalidUserEmail() throws Exception {
         UserRegisterDto invalidUser = new UserRegisterDto(
             "invalidEmail",
             "password",
@@ -86,7 +86,7 @@ public class LoginEndpointTest implements TestData {
     }
 
     @Test
-    public void registerUserWithDuplicateEmail() throws Exception {
+    void registerUserWithDuplicateEmail() throws Exception {
         ApplicationUser user1 = ApplicationUser.ApplicationUserBuilder.anApplicationUser()
             .withEmail("duplicate@email.com")
             .withPassword("password")
@@ -109,7 +109,7 @@ public class LoginEndpointTest implements TestData {
     }
 
     @Test
-    public void registerUserWithDuplicateUsername() throws Exception {
+    void registerUserWithDuplicateUsername() throws Exception {
         ApplicationUser user1 = ApplicationUser.ApplicationUserBuilder.anApplicationUser()
             .withEmail("adsfaew@email.com")
             .withPassword("password")
@@ -129,6 +129,6 @@ public class LoginEndpointTest implements TestData {
                 .content(objectMapper.writeValueAsString(user2)))
             .andDo(print())
             .andExpect(status().isConflict());
-    }*/
+    }
 
 }
