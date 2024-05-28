@@ -44,6 +44,12 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public List<RecipeListDto> getRecipe() {
+        List<Recipe> allRecipeBooks = recipeRepository.findAll();
+        return recipeMapper.recipeListToRecipeListDto(allRecipeBooks);
+    }
+
+    @Override
     public RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException {
         Recipe recipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
         HashMap<Ingredient, RecipeIngredient> ingredients = new HashMap<>();

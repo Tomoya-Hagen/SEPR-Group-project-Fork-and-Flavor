@@ -1,21 +1,51 @@
-id;name
-1;Apfelkuchen
-2;Becherkuchen
-3;Champions-Huhn
-4;Cookies
-5;Ei Spiegelei
-6;Eierlikör-Gugelhupf
-7;Gefüllte Zucchini
-8;Gemüse mit Huhn
-9;Griesbrei
-10;Faschiertes mit Gemüse
-11;Kürbiscremesuppe
-12;Käsekuchen
-13;Lachsnudeln
-14;Mais-Ripperl
-15;Nudeln mit Spinatsauce
-16;Pizzaschnecke
-17;Rahmkohlrabi
-18;Spaghetti Bolognese
-19;Steak nach Gordon Ramsay
-20;Zitronenkuchen
+id;name;description;numberofServings;forkedFrom
+1;Apfelkuchen;;;
+2;Bananenkuchen;;;
+3;Becherkuchen;;;
+4;Beef und Brokkoli Soja;;;
+5;Bratkartoffel;;;
+6;Braunhirse Erdmandel Schnitten;;;
+7;Brokkoli Strude;;;
+8;Brokkoli-Lauch-Nudeln;;;
+9;Brokkoli-Nudeln;;;
+10;Cake Pops;;;
+11;Champion Spaghetti;;;
+12;Champions-Huhn;;;
+13;Cookies;;;
+14;Ei knusprig mit Olivenöl;;;
+15;Ei scrambled;;;
+16;Ei Spiegelei;;;
+17;Eieraufstrich;;;
+18;Eierlikör-Gugelhupf;;;
+19;ErbsenChampingnon Risotto;;;
+20;Erdnuss Chili Nudeln;;;
+21;Erdäpfel asiatisch;;;
+22;Erdäpfel griechisch;;;
+23;Erdäpfel Lauch Suppe;;;
+24;Faschiertes mit Gemüse;;;
+25;Feta Nudeln;;;
+26;Gebrannte Mandeln;;;
+27;Gefüllte Zucchini;;;
+28;Gemüse mit Huhn;;;
+29;Gratin;;;
+30;Griechische Erbsen nach HE;;;
+31;Griesbrei;;;
+32;Grillgemüse;;;
+33;Grillhuhn;;;
+34;Guacamole;;;
+35;Hirse mit Tomaten und Speck;;;
+36;Hirseauflauf mit Gemüse;;;
+37;Hühnerbrust gefüllt;;;
+38;Hähnchenbruststreifen im Kräutermantel;;;
+39;Joghurtgugelhupf;;;
+40;Kaiserschmarren;;;
+41;Kürbiscremesuppe;;;
+42;Käsekuchen;;;
+43;Lachsnudeln;;;
+44;Mais-Ripperl;;;
+45;Nudeln mit Spinatsauce;;;
+46;Pizzaschnecke;;;
+47;Rahmkohlrabi;;;
+48;Spaghetti Bolognese;;;
+49;Steak nach Gordon Ramsay;;;
+50;Zitronenkuchen;;;

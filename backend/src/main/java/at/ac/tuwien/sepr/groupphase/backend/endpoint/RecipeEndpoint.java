@@ -46,6 +46,13 @@ public class RecipeEndpoint {
         return recipeService.searchRecipe(name);
     }
 
+    @PermitAll
+    @GetMapping("")
+    @Operation(summary = "Get a list of all recipes")
+    public List<RecipeListDto> getRecipeList() {
+        LOGGER.info("GET /api/v1/recipe");
+        return recipeService.getRecipe();
+    }
 
     @PermitAll
     @GetMapping(value = "/details/{id}")

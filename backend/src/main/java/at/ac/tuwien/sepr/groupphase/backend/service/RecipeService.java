@@ -23,5 +23,6 @@ public interface RecipeService {
      */
     List<RecipeListDto> searchRecipe(String name) throws NotFoundException;
 
+    List<RecipeListDto> getRecipe();
 
 }
