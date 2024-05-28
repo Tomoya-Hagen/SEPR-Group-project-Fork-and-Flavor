@@ -31,6 +31,8 @@ import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,7 @@ import java.util.stream.Stream;
 @Transactional
 @Service
 public class RecipeServiceImpl implements RecipeService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final RecipeRepository recipeRepository;
     private final RecipeMapper recipeMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -67,6 +70,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException {
+        LOGGER.trace("getRecipeDetailDtoById({})", id);
         Recipe recipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
         HashMap<Ingredient, RecipeIngredient> ingredients = new HashMap<>();
         HashMap<Nutrition, BigDecimal> nutritions = new HashMap<>();
@@ -78,6 +82,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public ArrayList<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber) {
+        LOGGER.trace("getRecipesFromPageInSteps({},{})", pageNumber, stepNumber);
         int from = ((pageNumber - 1) * stepNumber) + 1;
         int to = pageNumber * stepNumber;
         ArrayList<Recipe> recipes = (ArrayList<Recipe>) recipeRepository.getAllRecipesWithIdFromTo(from, to);
@@ -116,7 +121,14 @@ public class RecipeServiceImpl implements RecipeService {
         return x;
     }
 
+    @Override
+    public List<RecipeListDto> getRecipesByNames(String name, int limit) {
+        List<Recipe> recipes = recipeRepository.findByNamesContainingIgnoreCase(name, limit);
+        return recipeMapper.recipesToRecipeListDto(recipes);
+    }
+
     private long calculateAverageTasteRating(List<Rating> ratings) {
+        LOGGER.trace("calculateAverageTasteRating({})", ratings);
         long rating = 0;
         if (!ratings.isEmpty()) {
             for (Rating value : ratings) {
@@ -132,6 +144,8 @@ public class RecipeServiceImpl implements RecipeService {
         Map<Ingredient, RecipeIngredient> ingredients,
         Map<Nutrition, BigDecimal> nutritions,
         List<Allergen> allergens) {
+        LOGGER.trace("getRecipeDetails({}, {}, {}, {})",
+            recipe, ingredients, nutritions, allergens);
         for (RecipeIngredient recipeIngredient : recipe.getIngredients()) {
             Ingredient ingredient = recipeIngredient.getIngredient();
             updateMapOfIngredients(recipeIngredient, ingredient, ingredients);
@@ -149,6 +163,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void updateMapOfIngredients(RecipeIngredient recipeIngredient, Ingredient ingredient, Map<Ingredient, RecipeIngredient> ingredients) {
+        LOGGER.trace("updateMapOfIngredients({}, {}, {})",
+            recipeIngredient, ingredients, ingredients);
         if (ingredients.containsKey(ingredient)) {
             RecipeIngredient temp = ingredients.get(ingredient);
             temp.setAmount(temp.getAmount().add(recipeIngredient.getAmount()));
@@ -161,6 +177,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void updateMapOfNutritions(Ingredient ingredient, Map<Nutrition, BigDecimal> nutritions) {
+        LOGGER.trace("updateMapOfNutritions({}, {})",
+            ingredient, nutritions);
         for (IngredientNutrition ingredientNutrition : ingredient.getNutritions()) {
             if (nutritions.containsKey(ingredientNutrition.getNutrition())) {
                 nutritions.put(ingredientNutrition.getNutrition(),
@@ -173,6 +191,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void updateListOfAllergens(Ingredient ingredient, List<Allergen> allergens) {
+        LOGGER.trace("getRecipeDetails({}, {})",
+            ingredient, allergens);
         for (Allergen allergen : ingredient.getAllergens()) {
             if (!allergens.contains(allergen)) {
                 allergens.add(allergen);

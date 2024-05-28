@@ -12,15 +12,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "Recipe_Book", schema = "PUBLIC", catalog = "DB")
 public class RecipeBook {
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
@@ -51,6 +52,10 @@ public class RecipeBook {
         this.id = id;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -75,6 +80,14 @@ public class RecipeBook {
         this.ownerId = ownerId;
     }
 
+    public List<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(List<Recipe> recipes) {
+        this.recipes = recipes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -97,4 +110,13 @@ public class RecipeBook {
         joinColumns = {@JoinColumn(name = "recipe_book_id")},
         inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<ApplicationUser> editors = new ArrayList<>();
+
+    public List<ApplicationUser> getEditors() {
+        return editors;
+    }
+
+    public void setEditors(List<ApplicationUser> editors) {
+        this.editors = editors;
+    }
+
 }

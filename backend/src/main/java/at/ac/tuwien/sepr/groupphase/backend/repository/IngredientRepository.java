@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * This is the interface for the persistence layer of Ingredients.
+ *
+ */
 @DynamicInsert
 @DynamicUpdate
 @Repository

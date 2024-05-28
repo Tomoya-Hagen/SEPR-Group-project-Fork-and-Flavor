@@ -2,14 +2,13 @@ package at.ac.tuwien.sepr.groupphase.backend.repository;
 
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigInteger;
-import java.util.List;
+/**
+ * This is the interface for the persistence layer of RecipesStep's.
+ *
+ */
 
 @Repository
 public interface RecipeStepRepository extends JpaRepository<RecipeStep, Long> {

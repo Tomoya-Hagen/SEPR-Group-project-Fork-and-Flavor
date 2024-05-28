@@ -13,7 +13,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import org.springframework.web.jsf.el.WebApplicationContextFacesELResolver;
 
 import java.util.ArrayList;
 import java.util.List;

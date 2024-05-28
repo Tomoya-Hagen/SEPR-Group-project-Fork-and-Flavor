@@ -31,6 +31,8 @@ export class AutocompleteComponent<T> implements OnInit, ControlValueAccessor {
   textInputClass: string | string[] | Set<string> | { [klass: string]: any } = [];
   @Input()
   datalistClass: string | string[] | Set<string> | { [klass: string]: any } = [];
+  @Input()
+  disabled: boolean = false;
 
   dataListId: string;
   inputText = '';
@@ -92,6 +94,9 @@ export class AutocompleteComponent<T> implements OnInit, ControlValueAccessor {
   }
 
 
+  /**
+   * Resets the text input if `checkValueNeedsToMatchSuggestion` is `true`.
+   */
   public resetInputText(): void {
     if (this.checkValueNeedsToMatchSuggestion) {
       this.inputText = this.formatModel(this.value);
@@ -135,9 +140,11 @@ export class AutocompleteComponent<T> implements OnInit, ControlValueAccessor {
   }
 
   private setValue(newValue: T | null) {
-    this.value = newValue;
-    this.inputText = this.formatModel(this.value);
-    this.onChange(this.value);
+    if (this.value != newValue) {
+      this.value = newValue;
+      this.inputText = this.formatModel(this.value);
+      this.onChange(this.value);
+    }
   }
 
   private onRecieveNewCandidates(result: T[]) {
