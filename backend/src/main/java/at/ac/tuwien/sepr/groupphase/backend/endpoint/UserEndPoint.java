@@ -31,4 +31,6 @@ public class UserEndPoint {
         LOGGER.debug("Retrieving {} users using {}", limit, name);
         return ResponseEntity.ok(userService.findUsersByName(name, limit));
     }
+
+
 }
