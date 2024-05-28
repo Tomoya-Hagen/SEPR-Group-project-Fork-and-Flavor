@@ -102,6 +102,28 @@ public class RecipeCreateDto {
         return Objects.hash(name, description, servings, ownerId, steps, categories, ingredients);
     }
 
+    public RecipeCreateDto(String name, String description, Short servings, int ownerId, List<RecipeStepDto> steps, List<RecipeCategoryDto> categories, List<RecipeIngredientDto> ingredients) {
+        this.name = name;
+        this.description = description;
+        this.servings = servings;
+        this.ownerId = ownerId;
+        this.steps = steps;
+        this.categories = categories;
+        this.ingredients = ingredients;
+    }
+
+    public RecipeCreateDto(RecipeCreateDto dto) {
+        this.name = dto.name;
+        this.description = dto.description;
+        this.servings = dto.servings;
+        this.ownerId = dto.ownerId;
+
+        this.steps = dto.steps;
+        this.categories = dto.categories;
+        this.ingredients = dto.ingredients;
+    }
+
+    public RecipeCreateDto() {}
 
     public static final class RecipeCreateDtoBuilder {
         private String name;

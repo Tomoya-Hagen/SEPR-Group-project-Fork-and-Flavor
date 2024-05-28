@@ -29,6 +29,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -337,6 +338,74 @@ class RecipeEndpointShould implements TestData {
         for (String requiredLine : requiredLines) {
             assertTrue(response.getContentAsString().contains(requiredLine));
         }
+    }
+
+    @Test
+    void EndpointCheckCreateRecipeSimpleWithoutEachNeededInput() throws Exception {
+        String jwttoken = LoginHelper();
+
+        List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
+        recipeCategoryDtoList.add(new RecipeCategoryDto(1));
+
+        List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
+        recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132,new BigDecimal(12.5),"g"));
+
+        List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
+        recipeStepDtoList.add(new RecipeStepDto("Step eins","Beschreibung von Step 1",0,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei","Beschreibung von Step 2",0,true ));
+
+        RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
+        recipeCreateDto.setName("Name");
+        recipeCreateDto.setDescription("Beschreibung");
+        recipeCreateDto.setServings((short)42);
+
+        recipeCreateDto.setIngredients(recipeIngredientDtos);
+        recipeCreateDto.setSteps(recipeStepDtoList);
+        recipeCreateDto.setCategories(recipeCategoryDtoList);
+
+        RecipeCreateDto noname = new RecipeCreateDto(recipeCreateDto);
+        noname.setName(null);
+        RecipeCreateDto nodesc = new RecipeCreateDto(recipeCreateDto);
+        nodesc.setDescription(null);
+        RecipeCreateDto noservings = new RecipeCreateDto(recipeCreateDto);
+        noservings.setServings(null);
+        RecipeCreateDto noingredient = new RecipeCreateDto(recipeCreateDto);
+        noingredient.setIngredients(null);
+        RecipeCreateDto nocategory = new RecipeCreateDto(recipeCreateDto);
+        nocategory.setCategories(null);
+        RecipeCreateDto nosteps = new RecipeCreateDto(recipeCreateDto);
+        nosteps.setSteps(null);
+
+        MockHttpServletResponse nonameresponse = SimpleSend(jwttoken,noname,status().isBadRequest());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), nonameresponse.getStatus());
+
+        MockHttpServletResponse nodescresponse = SimpleSend(jwttoken,nodesc,status().isBadRequest());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), nodescresponse.getStatus());
+
+        MockHttpServletResponse noservingsresponse = SimpleSend(jwttoken,noservings,status().isBadRequest());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), noservingsresponse.getStatus());
+
+        MockHttpServletResponse noingredientresponse = SimpleSend(jwttoken,noingredient,status().isBadRequest());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), noingredientresponse.getStatus());
+
+        MockHttpServletResponse nocategoryresponse = SimpleSend(jwttoken,nocategory,status().isBadRequest());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), nocategoryresponse.getStatus());
+
+        MockHttpServletResponse nostepsresponse = SimpleSend(jwttoken,nosteps,status().isBadRequest());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), nostepsresponse.getStatus());
+    }
+
+    private MockHttpServletResponse SimpleSend(String jwttoken, Object obj, ResultMatcher matcher) throws Exception {
+        String requestBody = objectMapper.writeValueAsString(obj);
+
+        MvcResult mvcResult = mockMvc.perform(post(RECIPE_BASE_URI)
+                .header(securityProperties.getAuthHeader(), jwttoken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(matcher)
+            .andReturn();
+        return mvcResult.getResponse();
     }
 
     private String LoginHelper() throws Exception {
