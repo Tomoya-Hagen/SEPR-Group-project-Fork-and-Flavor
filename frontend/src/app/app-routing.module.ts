@@ -17,7 +17,6 @@ const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
   {path: 'recipe', component: RecipeComponent},
   {path: 'recipecreate', component: RecipeCreateComponent},
   {path: 'recipe', children: [

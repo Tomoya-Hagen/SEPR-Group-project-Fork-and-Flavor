@@ -42,7 +42,6 @@ export class AutocompleteComponent<T> implements OnInit, ControlValueAccessor {
   valueCandidates = new Map<string, T>();
   touched = false;
   @Input()
-  disabled = false;
   inputChange = new Subject<string>();
 
   constructor() {

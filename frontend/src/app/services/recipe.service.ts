@@ -1,14 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {environment} from '../../environments/environment';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
 import {Recipe, RecipeDetailDto, RecipeListDto} from '../dtos/recipe';
 import {SimpleRecipe} from "../dtos/SimpleRecipe";
 import {DetailedRecipeDto} from "../dtos/DetailedRecipeDto";
 import { Observable, catchError } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { RecipeDetailDto, RecipeListDto } from '../dtos/recipe';
 
 const baseUri = environment.backendUrl + '/recipes';
 
@@ -25,9 +21,6 @@ export class RecipeService {
     private http: HttpClient) {
   }
 
-    constructor(
-        private http: HttpClient,
-    ) { }
 
 
     recipesByName(name: string, limit: number): Observable<RecipeListDto[]> {
