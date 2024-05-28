@@ -9,12 +9,16 @@
           <hr class="my-4">
 
           <mat-form-field>
-            <input style="text-align:center" matInput (keyup)="applyFilter($event)" placeholder="Suche nach Rezepte" #input
+            <input style="text-align:center" matInput
+                   (keyup)="applyFilter($event)" placeholder="Suche nach Rezepte" #input
                  >
           </mat-form-field>
 
           <div class="mat-elevation-z8">
-            <table mat-table [dataSource]="dataSource" matSort >
+            <table mat-table
+                   [(ngModel)]="searchParams.name"
+                   (ngModelChange)="searchChanged()"
+                   [dataSource]="dataSource" matSort >
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Name</th>
                 <td mat-cell *matCellDef="let row"> {{ row.name }}</td>

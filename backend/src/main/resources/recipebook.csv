@@ -1,0 +1,17 @@
+id;titel;beschreibung;ownerId;recipeId1;recipeId2;recipeId3;recipeId4
+1;Italienische Küche;Eine Sammlung klassischer italienischer Rezepte von Pasta bis Pizza.;1;1;2;1;2
+2;Indische Spezialitäten;Ein Kochbuch mit authentischen indischen Rezepten und Gewürzen.;2;2;1;2;1
+3;Russische Delikatessen;Traditionelle russische Rezepte von Borschtsch bis Bliny.;3;1;1;2;2
+4;Vegetarische Gerichte;Gesunde und leckere vegetarische Rezepte für jeden Tag.;1;2;2;1;1
+5;Dessertträume;Süße Köstlichkeiten und Desserts für besondere Anlässe.;2;1;2;1;2
+6;Salate der Welt;Eine Vielfalt an frischen und gesunden Salatrezepten aus aller Welt.;3;2;1;2;1
+7;Japanische Küche;Ein Kochbuch mit klassischen und modernen japanischen Rezepten.;1;1;2;1;2
+8;Mexikanische Fiesta;Würzige und bunte Rezepte für eine mexikanische Fiesta.;2;2;1;2;1
+9;Backen mit Liebe;Leckere Kuchen, Torten und Gebäck für jede Gelegenheit.;3;1;1;2;2
+10;Suppenküche;Herzhafte und wärmende Suppenrezepte für kalte Tage.;1;2;2;1;1
+11;Asiatische Köstlichkeiten;Eine Sammlung köstlicher asiatischer Rezepte von Thai bis Chinesisch.;2;1;2;1;2
+12;Mediterrane Leckerbissen;Gesunde und schmackhafte Rezepte aus dem Mittelmeerraum.;3;2;1;2;1
+13;Orientalische Genüsse;Exotische und aromatische Rezepte aus dem Orient.;1;1;1;2;2
+14;Grillspaß;Die besten Grillrezepte für Fleisch, Fisch und Gemüse.;2;2;2;1;1
+15;Familienrezepte;Klassische und beliebte Rezepte für die ganze Familie.;3;1;2;1;2
+16;Familienrezepte 2;Mehr klassische und mehr beliebte Rezepte für die ganze Familie.;1;1;1;1;1

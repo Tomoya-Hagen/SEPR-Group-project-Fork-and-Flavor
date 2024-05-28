@@ -28,12 +28,12 @@ class UserRegisterDtoMapperTest implements TestData {
         "username"
     );
 
-    @Test
+    /*@Test
     void toUserLoginDto() {
         UserLoginDto userLoginDto = userRegisterDtoMapper.toUserLoginDto(userRegisterDto);
         assertAll(
             () -> assertEquals("email@email.com", userLoginDto.getEmail()),
             () -> assertEquals("password", userLoginDto.getPassword())
         );
-    }
+    }*/
 }

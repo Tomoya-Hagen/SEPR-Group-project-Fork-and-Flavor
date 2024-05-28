@@ -10,7 +10,6 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.IngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -30,9 +29,8 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
     //  private final CategoryRepository categoryRepository;
     private final ResourceLoader resourceLoader;
 
-
     /**
-     * The constructor for the RecipeBookDataGenerator class.
+     * The constructor for the RecipeDataGenerator class.
      *
      * @param resourceLoader The resource loader for loading resources.
      * @param recipeRepository The repository for Recipe objects.
@@ -43,10 +41,10 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
     }
 
     /**
-     * This method is run at application startup. It reads data from a CSV file and uses it to create and save RecipeBook objects.
+     * This method is run at application startup. It reads data from a CSV file and uses it to create and save Recipe objects.
      *
      * @param args The command line arguments.
-     * @throws Exception If an error occurs while reading the file or saving the RecipeBook objects.
+     * @throws Exception If an error occurs while reading the file or saving the Recipe objects.
      */
     @Transactional
     @Override
@@ -79,21 +77,14 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
 
     /*
 
-       public RecipeDataGenerator(RecipeRepository recipeRepository,
-                               CategoryRepository categoryRepository,
-                               IngredientRepository ingredientRepository) {
-        this.categoryRepository = categoryRepository;
-        this.recipeRepository = recipeRepository;
-        this.ingredientRepository = ingredientRepository;
-    }
 
-
-   @Transactional
+    @Transactional
     @Override
     public void run(String... args) throws Exception {
         ApplicationUser user = new ApplicationUser();
         user.setId(1);
         Recipe riceRecipe = new Recipe();
+        riceRecipe.setId(1L);
         riceRecipe.setName("Reis");
         riceRecipe.setDescription("So muss Reis schmecken!");
         riceRecipe.setNumberOfServings((short) 1);
@@ -117,8 +108,12 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
                     + "Nach 10 minütigem Dämpfen ist der Reis locker und lecker und kann serviert werden. ",
                 riceRecipe, 3)
         ));
-        recipeRepository.save(riceRecipe);
+        if (recipeRepository.getRecipeById(1L).isEmpty()) {
+            recipeRepository.save(riceRecipe);
+        }
+
         Recipe eggFriedRiceRecipe = new Recipe();
+        eggFriedRiceRecipe.setId(2L);
         eggFriedRiceRecipe.setOwner(user);
         eggFriedRiceRecipe.setName("Egg Fried Rice");
         eggFriedRiceRecipe.setDescription("Ein schnelles asiatisches Gericht.");
@@ -157,6 +152,10 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
                 eggFriedRiceRecipe, 5)
 
         ));
-        recipeRepository.save(eggFriedRiceRecipe);
-    }*/
+        if (recipeRepository.getRecipeById(2L).isEmpty()) {
+            recipeRepository.save(eggFriedRiceRecipe);
+        }
+    }
+
+     */
 }

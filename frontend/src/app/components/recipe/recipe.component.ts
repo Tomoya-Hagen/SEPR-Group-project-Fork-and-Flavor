@@ -5,6 +5,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import {debounceTime, Subject} from "rxjs";
 import {RecipeList, RecipeSearch} from "../../dtos/recipe";
 import {RecipeService} from "../../services/recipe.service";
+import {RecipeBookSearch} from "../../dtos/recipe-book";
 
 
 @Component({
