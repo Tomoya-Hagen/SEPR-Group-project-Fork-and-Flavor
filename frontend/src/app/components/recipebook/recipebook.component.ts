@@ -73,6 +73,7 @@ export class RecipebookComponent implements OnInit{
       next: items => {
         console.log("Successfully received all recipe books");
         this.data = items;
+
       },
       error: error => {
         console.error('Error fetching recipes', error);

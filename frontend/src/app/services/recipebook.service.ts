@@ -35,6 +35,7 @@ export class RecipeBookService {
 
   public search(searchParams: RecipeBookSearch): Observable<RecipeBookListDto[]> {
         return this.http.get<RecipeBookListDto[]>(baseUri+"/search?name="+searchParams.name);
+
   }
 
 }
