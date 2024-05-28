@@ -55,6 +55,10 @@ export class RecipeEditComponent implements OnInit {
     this.validateForm();
   }
 
+  public returnIsSubmitDisabled(): boolean {
+    return this.isSubmitDisabled;
+  }
+
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];
@@ -93,7 +97,7 @@ export class RecipeEditComponent implements OnInit {
 
     this.recipeService.updateRecipe(this.recipe).subscribe({
       next: (detrecipe: DetailedRecipeDto) => {
-        this.notification.info('Update successful!');
+        // this.notification.info('Update successful!');
         this.router.navigate(['/recipe']);
       },
       error: error => {
@@ -147,7 +151,7 @@ export class RecipeEditComponent implements OnInit {
       this.error = true;
       this.errorMessage = 'A recipe cannot reference itself as a step.';
       this.recipe.recipeSteps[index] = new Step();
-      this.notification.error(this.errorMessage);
+      // this.notification.error(this.errorMessage);
       return;
     }
 
@@ -187,7 +191,12 @@ export class RecipeEditComponent implements OnInit {
       step != null && step.whichstep != null && (step.whichstep === true || step.whichstep === false)
     );
 
-    this.isSubmitDisabled = !(this.recipe.name && this.recipe.description && this.recipe.numberOfServings > 0);
+    this.isSubmitDisabled = !(this.recipe.name && this.recipe.description && this.ingbool && this.stepbool);
+  }
+
+  public removeStep(index: number) {
+    this.recipe.recipeSteps.splice(index, 1);
+    this.recipe.recipeSteps.push(null);
   }
 
 
