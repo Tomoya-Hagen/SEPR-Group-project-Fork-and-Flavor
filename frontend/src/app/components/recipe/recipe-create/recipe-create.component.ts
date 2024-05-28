@@ -2,7 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import {Recipe} from "../../../dtos/recipe";
 import {AbstractControl, NgForm, ValidationErrors, ValidatorFn} from "@angular/forms";
 import {IngredientComponent} from "./ingredient/ingredient.component";
-import {of} from "rxjs";
+import {catchError, of} from "rxjs";
 import {IngredientService} from "../../../services/ingredient.service";
 import {RecipeService} from "../../../services/recipe.service";
 import {Step} from "../../../dtos/Step";
@@ -11,6 +11,10 @@ import {SimpleCategory} from "../../../dtos/SimpleCategory";
 import {CategoryService} from "../../../services/CategoryService";
 import {DetailedRecipeDto} from "../../../dtos/DetailedRecipeDto";
 import {IngredientDetailDto} from "../../../dtos/ingredient";
+import {AuthService} from '../../../services/auth.service';
+import {tap} from "rxjs/operators";
+import {Router} from '@angular/router';
+
 
 @Component({
   selector: 'app-recipe-create',
@@ -36,7 +40,8 @@ export class RecipeCreateComponent implements OnInit{
   constructor(
     private recipeService: RecipeService,
     private categoryService: CategoryService,
-
+    private authService: AuthService,
+    private router: Router
   ){}
 
   ingredientChangeHandler(updatedIngredient: IngredientDetailDto, index: number) {
@@ -54,6 +59,20 @@ export class RecipeCreateComponent implements OnInit{
 
 
   ngOnInit(): void {
+    this.authService.isLogged()
+      .pipe(
+        tap((isLoggedIn: boolean) => {
+          console.log('Is logged in:', isLoggedIn);
+
+        }),
+        catchError((error) => {
+          console.error('Error:', error);
+          this.router.navigate(['/login']);
+          return of(false); // Handle the error and return a fallback value
+        })
+      )
+      .subscribe();
+
     this.recipe.ingredients.push({name: "", id: -1,amount: 0, unit:"g"});
     this.recipe.steps.push(new Step());
     this.recipe.categories.push({id: 0});
@@ -73,6 +92,7 @@ export class RecipeCreateComponent implements OnInit{
 
     this.recipeService.createRecipe(this.recipe).subscribe({
         next: (detrecipe: DetailedRecipeDto) => {
+          this.router.navigate(['/recipe/details/' + detrecipe.id]);
         },
         error: error => {
           this.defaultServiceErrorHandling(error);
