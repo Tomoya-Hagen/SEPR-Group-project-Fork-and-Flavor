@@ -5,6 +5,7 @@ import {RecipeBookListDto, RecipeBookSearch} from "../../dtos/recipe-book";
 import {NgForOf} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {FormsModule} from "@angular/forms";
+import {CardComponent} from "../card/card.component";
 
 @Component({
   selector: 'app-recipebook',
@@ -12,7 +13,8 @@ import {FormsModule} from "@angular/forms";
   imports: [
     NgForOf,
     RouterLink,
-    FormsModule
+    FormsModule,
+    CardComponent
   ],
   templateUrl: './recipebook.component.html',
   styleUrl: './recipebook.component.scss'

@@ -6,14 +6,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
+/**
+ * This is the interface for the persistence layer of Users.
+ *
+ */
 @Repository
 public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
 
 
     /**
-     * Find first User entrie via email.
+     * Find first User entry via email.
      *
      * @return ordered list of al message entries
      */
@@ -42,5 +46,8 @@ public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
      * @return ordered list of al message entries
      */
     Long findFirstByEmail(String email);
+
+    @Query("SELECT u FROM ApplicationUser u WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :username, '%')) ORDER BY u.id LIMIT :limit")
+    List<ApplicationUser> findByNamesContainingIgnoreCase(@Param("username") String name, @Param("limit") int limit);
 
 }

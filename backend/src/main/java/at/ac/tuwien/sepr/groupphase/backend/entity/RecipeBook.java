@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -110,5 +111,12 @@ public class RecipeBook {
         inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<ApplicationUser> editors = new ArrayList<>();
 
+    public List<ApplicationUser> getEditors() {
+        return editors;
+    }
+
+    public void setEditors(List<ApplicationUser> editors) {
+        this.editors = editors;
+    }
 
 }

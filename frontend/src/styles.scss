@@ -1,7 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  --primary-color: #2C73D2;
+  --secondary-color: #0089BA;
+  --tertiary-color: #008F7A;
+  --quaternary-color: #FFC75F;
+  --quinary-color: #FF9671;
+  --acent-color: #845EC2;
+  --bcent-color: #D65DB1;
+  --box-1: #2C73D2;
+  --box-2: #0081CF;
+  --box-3: #0089BA;
+  --box-4: #008E9B;
+  --box-5: #008F7A;
+}
+
 body {
   background-color: whitesmoke;
 }
+
 .slick-prev,
 .slick-next {
   background: black !important;
@@ -9,3 +26,58 @@ body {
   padding: 0.1rem 0rem 0rem 0rem !important;
 }
 
+.RecipeInfos .info-box {
+  text-align: center;
+  padding: 20px 10px;
+  width: 18%;
+  color: white;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .RecipeInfos {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .RecipeInfos .info-box {
+    flex: 1 0 18%;
+    margin-right: 1%;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 767px) {
+  .RecipeInfos {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .RecipeInfos .info-box {
+    width: 100%;
+    margin-bottom: 1%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 35px;
+    padding-right: 40px;
+  }
+
+  .RecipeInfos .info-box h4 {
+    margin-right: 1em;
+  }
+}
+
+.recipe-step {
+  margin-bottom: 10px;
+  margin-top: 10px;
+  padding: 10px 10px 0px 10px;
+  border: 2px solid var(--tertiary-color);
+}
+
+.sub-recipe {
+  border: 3px solid var(--acent-color);
+  cursor: pointer;
+  padding: 20px 20px;
+}

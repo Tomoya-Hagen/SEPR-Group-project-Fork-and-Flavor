@@ -1,4 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -12,9 +13,12 @@ import java.util.List;
  * @param recipes A list of RecipeDetailDto objects representing the recipes contained in the RecipeBook.
  */
 public record RecipeBookDetailDto(
+    @NotNull
     long id,
+    @NotNull
     String name,
     String description,
     long ownerId,
-    List<RecipeDetailDto> recipes) {
+    List<UserListDto> users,
+    List<RecipeListDto> recipes) {
 }
