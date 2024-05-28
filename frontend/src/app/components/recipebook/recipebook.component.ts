@@ -76,11 +76,11 @@ export class RecipebookComponent implements OnInit{
       },
       error: error => {
         console.error('Error fetching recipes', error);
-        this.bannerError = 'Could not fetch recipes: ' + error.message;
+        this.bannerError = 'Could not fetch recipe books: ' + error.message;
         const errorMessage = error.status === 0
           ? 'Is the backend up?'
           : error.message.message;
-        this.notification.error(errorMessage, 'Could Not Fetch Recipes');
+        this.notification.error(errorMessage, 'Could Not Fetch Recipe books');
       }})
   }
 
