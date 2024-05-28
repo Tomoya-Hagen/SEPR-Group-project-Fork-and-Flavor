@@ -27,27 +27,37 @@
             <div class="row">
               <div class="col-md-8 overflow-auto" style="height: 30vh">
                 <div class="col-md-12" *ngFor="let inneringredient of recipe.ingredients; let i = index">
-                  <app-ingredient
-                    (ingredientChange)="ingredientChangeHandler($event, i)"
-                    [(ingredient)]="recipe.ingredients[i]">
-                  </app-ingredient>
+                  <div class="d-flex align-items-center">
+                    <app-ingredient
+                      (ingredientChange)="ingredientChangeHandler($event, i)"
+                      [(ingredient)]="recipe.ingredients[i]">
+                    </app-ingredient>
+                    <button type="button" class="btn btn-light ms-2" (click)="removeIngredient(i)">
+                      <i class="bi-trash"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
               <div class="col-md-4 overflow-auto" style="height: 30vh">
                 <div class="col-md-12" *ngFor="let incategory of recipe.categories; let i = index">
                   <div class="form-group">
                     <label for="incategory{{i}}">Category</label>
-                    <app-autocomplete
-                      id="incategory{{i}}"
-                      name="incategory{{i}}"
-                      class="col-md-10 col-lg-8"
-                      textInputClass="form-control"
-                      valueNeedsToMatchSuggestion="true"
-                      [(ngModel)]="recipe.categories[i]"
-                      [formatModel]="formatCategory"
-                      [suggestions]="categorySuggestions"
-                      (ngModelChange)="categorychanged(i)"
-                    ></app-autocomplete>
+                    <div class="d-flex align-items-center">
+                      <app-autocomplete
+                        id="incategory{{i}}"
+                        name="incategory{{i}}"
+                        class="col-md-10 col-lg-8"
+                        textInputClass="form-control"
+                        valueNeedsToMatchSuggestion="true"
+                        [(ngModel)]="recipe.categories[i]"
+                        [formatModel]="formatCategory"
+                        [suggestions]="categorySuggestions"
+                        (ngModelChange)="categorychanged(i)">
+                      </app-autocomplete>
+                      <button type="button" class="btn btn-light ms-2" (click)="removeCategory(i)">
+                        <i class="bi-trash"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

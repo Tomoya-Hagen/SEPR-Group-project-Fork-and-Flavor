@@ -7,7 +7,7 @@ import { DetailedRecipeDto } from 'src/app/dtos/DetailedRecipeDto';
 import { SimpleCategory } from 'src/app/dtos/SimpleCategory';
 import { SimpleRecipe } from 'src/app/dtos/SimpleRecipe';
 import { IngredientDetailDto } from 'src/app/dtos/ingredient';
-import { RecipeDetailDto, RecipeUpdateDto } from 'src/app/dtos/recipe';
+import { RecipeUpdateDto } from 'src/app/dtos/recipe';
 
 import { RecipeService } from 'src/app/services/recipe.service';
 import { Step } from "../../../dtos/Step";
@@ -48,6 +48,17 @@ export class RecipeEditComponent implements OnInit {
 
   ingredientChangeHandler(updatedIngredient: IngredientDetailDto, index: number) {
     console.log(this.recipe.ingredients)
+    for (let i = 0; i < this.recipe.ingredients.length; i++) {
+      if(i !== index && this.recipe.ingredients[i].id === updatedIngredient.id) {
+        this.error = true;
+        this.errorMessage = 'You cannot choose the same category twice!';
+        // this.recipe.ingredients.splice(index, 1, { name: "", id: -1, amount: null, unit: null });
+        this.validateForm()
+        console.log('Duplicate found:', updatedIngredient);
+        this.recipe.ingredients[index] = {name: "", id: -1, amount: null, unit: null};
+        return;
+      }
+    }
     this.recipe.ingredients[index] = updatedIngredient;
     if(this.recipe.ingredients[this.recipe.ingredients.length - 1].id != -1){
       this.recipe.ingredients.push({name: "", id: -1, amount: null, unit: null});
@@ -172,11 +183,11 @@ export class RecipeEditComponent implements OnInit {
     ? of([])
     :  this.categoryService.categoryByName(input, 5);
 
-  public categorychanged(index: number):void{
+  public categorychanged(index: number): void {
     if(this.recipe.categories[index] == null){
       this.recipe.categories[index] = {id: 0, name: ""};
     }
-    if(this.recipe.categories[index].id != 0 && this.recipe.categories.length -1 == index){
+    if(this.recipe.categories[index].id != 0 && this.recipe.categories.length - 1 == index){
       this.recipe.categories.push({id: 0, name: ""});
     }
     this.validateForm();
@@ -186,17 +197,48 @@ export class RecipeEditComponent implements OnInit {
     this.ingbool = this.recipe.ingredients.length > 1 && this.recipe.ingredients.slice(0, -1).every(ingredient =>
       ingredient != null && ingredient.id > 0 && ingredient.amount != null && ingredient.unit != null
     );
+    for (let i = 0; i < this.recipe.ingredients.length; i++) {
+      if(this.recipe.ingredients[i] && this.recipe.ingredients[i].name && this.recipe.ingredients[i].name != "") {
+        this.ingbool = true;
+      }
+    }
 
     this.stepbool = this.recipe.recipeSteps.slice(0, -1).every(step =>
       step != null && step.whichstep != null && (step.whichstep === true || step.whichstep === false)
     );
+
+    for (let i = 0; i < this.recipe.recipeSteps.length; i++) {
+      if(this.recipe.recipeSteps[i] && this.recipe.recipeSteps[i].whichstep && (this.recipe.recipeSteps[i].whichstep === true || (this.recipe.recipeSteps[i].whichstep === null && this.recipe.recipeSteps[i].name))) {
+        console.log("step not null");
+        this.stepbool = true;
+        break;
+      } else {
+        console.log("step null");
+        this.stepbool = false;
+      }
+    }
 
     this.isSubmitDisabled = !(this.recipe.name && this.recipe.description && this.ingbool && this.stepbool);
   }
 
   public removeStep(index: number) {
     this.recipe.recipeSteps.splice(index, 1);
-    this.recipe.recipeSteps.push(null);
+    if (this.recipe.recipeSteps.length === 0) {
+      this.recipe.recipeSteps.push(new Step());
+    }
+  }
+
+  public removeIngredient(index: number) {
+    this.recipe.ingredients.splice(index, 1);
+    if (this.recipe.ingredients.length === 0) {
+      this.recipe.ingredients.push({ name: "", id: -1, amount: null, unit: null });
+    }
+  }
+  public removeCategory(index: number) {
+    this.recipe.categories.splice(index, 1);
+    if (this.recipe.categories.length === 0) {
+      this.recipe.categories.push({ id: 0, name: "" });
+    }
   }
 
 
