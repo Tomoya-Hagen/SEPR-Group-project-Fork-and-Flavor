@@ -207,16 +207,9 @@ export class RecipeEditComponent implements OnInit {
       step != null && step.whichstep != null && (step.whichstep === true || step.whichstep === false)
     );
 
-    for (let i = 0; i < this.recipe.recipeSteps.length; i++) {
-      if (this.recipe.recipeSteps[i] && this.recipe.recipeSteps[i].whichstep && (this.recipe.recipeSteps[i].whichstep === true || (this.recipe.recipeSteps[i].whichstep === null && this.recipe.recipeSteps[i].name))) {
-        console.log("step not null");
-        this.stepbool = true;
-        break;
-      } else {
-        console.log("step null");
-        this.stepbool = false;
-      }
-    }
+    this.stepbool = this.recipe.recipeSteps.some(step =>
+      (step.description && step.name && step.name.trim() !== '' && step.description.trim() !== '') || (step.recipeId && step.recipeId > 0)
+    );
 
     this.isSubmitDisabled = !(this.recipe.name && this.recipe.description && this.ingbool && this.stepbool);
   }
