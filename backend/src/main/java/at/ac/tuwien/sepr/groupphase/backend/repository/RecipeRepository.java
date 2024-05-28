@@ -45,8 +45,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query("SELECT COALESCE(MAX(i.id),0) FROM Recipe i")
     Long findMaxId();
 
-    @Query("SELECT i FROM Recipe i WHERE i.name LIKE %:name%")
-    List<Recipe> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
+    List<Recipe> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
     @Query("SELECT r FROM Recipe r WHERE LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%')) ORDER BY r.id LIMIT :limit")
     List<Recipe> findByNamesContainingIgnoreCase(@Param("name") String name, @Param("limit") int limit);

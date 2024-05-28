@@ -2,7 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.IngredientMapper;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
 import at.ac.tuwien.sepr.groupphase.backend.repository.IngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.IngredientService;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +22,7 @@ public class SimpleIngredientService implements IngredientService {
 
     @Override
     public Stream<IngredientResultDto> byname(String name, int limit) {
-        var x = ingredientRepository.findByNameContainingWithLimit(name, PageRequest.of(0, limit));
+        var x = ingredientRepository.findByNameContainingIgnoreCase(name, PageRequest.of(0, limit));
         return x.stream().map(ingredientMapper::ingredientToIngredientResultDto);
     }
 }
