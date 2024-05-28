@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
 public class RecipeBookServiceTest {
+
     @Autowired
     private RecipeBookService recipeBookService;
 
@@ -48,5 +50,21 @@ public class RecipeBookServiceTest {
     @Test
     public void getNonExistingIdReturnsNotFound() {
         assertThrows(NotFoundException.class, () -> recipeBookService.getRecipeBookDetailDtoById(999L));
+    }
+
+    @Test
+    public void getListByPageAndStepReturnsRecipeBooks() {
+        RecipeBookListDto recipeBookListDto = new RecipeBookListDto(1L, "Italienische Küche", "Eine Sammlung klassischer italienischer Rezepte von Pasta bis Pizza.", 1L);
+        assertEquals(recipeBookService.getRecipeBooksFromPageInSteps(1, 1),Collections.singletonList(recipeBookListDto));
+    }
+
+    @Test
+    public void getListByPageAndStepReturnsEmptyListWhenNoMatch() {
+        assertEquals(recipeBookService.getRecipeBooksFromPageInSteps(-1, 1),Collections.emptyList());
+    }
+
+    @Test
+    public void getRecipeBookReturnAllRecipeBooks() {
+        assertEquals(recipeBookService.getRecipeBooks().size(),15);
     }
 }
