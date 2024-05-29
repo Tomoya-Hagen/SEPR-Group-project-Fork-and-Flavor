@@ -39,3 +39,13 @@ export interface RecipeDetailDto {
     allergens: AllergenDetailDto[],
     nutritions: NutritionDetailDto[]
 }
+
+export interface RecipeList{
+  id: number,
+  name: string,
+}
+
+export interface RecipeSearch {
+  name?: string;
+}
+

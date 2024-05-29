@@ -47,6 +47,16 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     List<Recipe> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
+    /**
+     * Search for recipes in the persistent data store matching  provided field.
+     * The name is considered a match, if the search string is a substring of the field in recipes.
+     *
+     * @param name the recipe name to use in filtering.
+     * @return the recipes where the given fields match.
+     */
+    @Query("select Recipe from Recipe Recipe where (?1 is null or UPPER(Recipe.name) like UPPER('%'||?1||'%'))")
+    List<Recipe> search(@Param("name") String name);
+
     @Query("SELECT r FROM Recipe r WHERE LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%')) ORDER BY r.id LIMIT :limit")
     List<Recipe> findByNamesContainingIgnoreCase(@Param("name") String name, @Param("limit") int limit);
 }

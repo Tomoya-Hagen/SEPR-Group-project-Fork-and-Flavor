@@ -20,8 +20,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
@@ -151,4 +154,24 @@ class RecipeRepositoryShould {
         List<Recipe> recipes = recipeRepository.getAllRecipesWithIdFromTo(3, 4);
         Assertions.assertTrue(recipes.isEmpty());
     }
+
+    @Test
+    void searchReturnsEmptyListWhenNoNameMatches() {
+        assertEquals(Collections.emptyList(), recipeRepository.search("Kaschew"));
+    }
+
+    @Test
+    void searchReturnsRecipeRegardlessOfCase() {
+        assertEquals("Zitronenkuchen", recipeRepository.search("Zitronen").getFirst().getName());
+    }
+
+    @Test
+    void searchReturnsEmptyListWhenNameIsNull() {
+        assertEquals(50, recipeRepository.search(null).size());
+    }
+    @Test
+    void searchReturnsRecipeWhenNameMatches() {
+        assertEquals("Gratin", recipeRepository.search("Gratin").getFirst().getName());
+    }
+
 }

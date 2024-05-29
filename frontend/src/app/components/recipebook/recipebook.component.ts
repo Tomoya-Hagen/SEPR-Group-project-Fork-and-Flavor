@@ -19,7 +19,8 @@ import {CardComponent} from "../card/card.component";
   templateUrl: './recipebook.component.html',
   styleUrl: './recipebook.component.scss'
 })
-export class RecipebookComponent implements OnInit{
+
+export class RecipebookComponent implements OnInit {
 
   steps = [1, 10, 25, 50, 100];
   bannerError: string | null = null;
@@ -81,7 +82,7 @@ export class RecipebookComponent implements OnInit{
         const errorMessage = error.status === 0
           ? 'Is the backend up?'
           : error.message.message;
-        this.notification.error(errorMessage, 'Could Not Fetch Recipe books');
+        this.notification.error(errorMessage, 'Could Not Fetch Recipes');
       }})
   }
 

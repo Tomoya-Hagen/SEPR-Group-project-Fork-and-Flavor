@@ -60,6 +60,16 @@ public interface RecipeService {
     List<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber);
 
     /**
+     * Search for recipes in the persistent data store matching provided field.
+     * The name is considered a match, if the search string is a substring of the field in recipes.
+     *
+     * @param name The name of the recipe.
+     * @return A list of RecipeListDto objects that represent the recipe that match the search criteria.
+     * @throws NotFoundException If no recipe are found with the provided name.
+     */
+    List<RecipeListDto> searchRecipe(String name) throws NotFoundException;
+
+    /**
      * This method finds a limited number of recipes with the name, or letters typed in by the user.
      *
      * @param name the name or parts of it of the recipe to look for.

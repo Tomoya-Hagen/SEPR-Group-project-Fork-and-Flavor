@@ -10,6 +10,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeIngredientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
@@ -34,6 +35,9 @@ import java.util.stream.LongStream;
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.L;
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.g;
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.mg;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest
@@ -155,6 +159,34 @@ class RecipeServiceShould {
         Assertions.assertTrue(
             IntStream.range(0, recipeCategoryDtoList.size())
                 .allMatch(i -> recipefDB.getCategories().get(i).getId() == recipeCategoryDtoList.get(i).getId()));
+
+    }
+
+    @Test
+    public void searchByNameShouldFound() {
+
+        var recipe = recipeService.searchRecipe("Apfelkuchen");
+        assertNotNull(recipe);
+        assertThat(recipe)
+            .hasSize(1);
+
+        RecipeListDto recipeListDto = new RecipeListDto(13, "Cookies", "", 0);
+        List<RecipeListDto> recipeListDtoList = new java.util.ArrayList<>(List.of());
+        recipeListDtoList.add(recipeListDto);
+
+        assertEquals(recipeService.searchRecipe("Cookies"), recipeListDtoList);
+        assertEquals(1, recipeService.searchRecipe("Cookies").size());
+
+    }
+
+    @Test
+    public void searchByNameShouldNoTFound() {
+
+        var recipe = recipeService.searchRecipe("Gurke");
+        assertEquals("[]",recipe.toString());
+
+        assertEquals(new java.util.ArrayList<>(List.of()), recipeService.searchRecipe("Kaschew"));
+        assertEquals(0, recipeService.searchRecipe("Kaschew").size());
 
     }
 }

@@ -2,21 +2,22 @@
   <h1 class="display-4" style="text-align:center">Welcome to Fork & Flavour!</h1>
   <hr class="my-4">
   <div class="row">
-    <div class="col-lg-4 p-2" *ngFor="let item of recipes">
-      <app-card [item]="item" [detailUrlPrefix]="'/recipe/details'"></app-card>
-    </div>
-  </div>
-    <div class="d-flex flex-row w-auto">
-      <button class="btn btn-primary mr-1" (click)="loadPreviousPage()" [disabled] = "previousButtonDisabled" aria-label="zurück">
+    <div class="col-md-6 offset-md-8">
+      <button type="button" class="btn btn-link" (click)="loadPreviousPage()" [disabled] = "previousButtonDisabled" aria-label="zurück">
         <i class="bi bi-arrow-clockwise"></i>
-        zurück
-      </button>
-      <button class="btn btn-primary mr-1" (click)="loadNextPage()" [disabled]="nextButtonDisabled" aria-label="weiter">
-        <i class="bi bi-arrow-clockwise"></i>
-        weiter
+        < Zurück
       </button>
       <select [(ngModel)]="step" (change)="selectedStepChanged()">
         <option *ngFor="let step of steps" value="{{step}}">Show {{step}} items</option>
       </select>
+      <button  class="btn btn-link" (click)="loadNextPage()" [disabled]="nextButtonDisabled" aria-label="weiter">
+        <i class="bi bi-arrow-clockwise"></i>
+         Weiter >
+      </button>
+    </div>
+    <div class="col-lg-4 p-2" *ngFor="let item of recipes">
+      <app-card [item]="item" [detailUrlPrefix]="'/recipe/details'"></app-card>
     </div>
   </div>
+
+</div>
