@@ -22,7 +22,8 @@ const routes: Routes = [
   {path: 'recipecreate', component: RecipeCreateComponent},
   {path: 'recipe', children: [
       {path: '', component: RecipeComponent},
-      {path: 'details/:id', component: RecipeDetailComponent}
+      {path: 'details/:id', component: RecipeDetailComponent},
+      {path: 'edit/:id', component: RecipeEditComponent}
     ]},
   {path: 'recipebook', children: [
     {path: '', component: RecipebookComponent},
