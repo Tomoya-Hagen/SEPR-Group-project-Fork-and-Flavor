@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,5 +24,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
-
+    @Query("SELECT i FROM Category i WHERE i.name LIKE %:name%")
+    List<Category> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
 }

@@ -13,12 +13,14 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@DynamicUpdate
 public class Recipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

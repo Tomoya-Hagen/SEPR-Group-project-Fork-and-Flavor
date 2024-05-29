@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IngredientComponent } from './ingredient.component';
+import { RecipeEditComponent } from './recipe-edit.component';
 
-describe('IngredientComponent', () => {
-  let component: IngredientComponent;
-  let fixture: ComponentFixture<IngredientComponent>;
+describe('RecipeEditComponent', () => {
+  let component: RecipeEditComponent;
+  let fixture: ComponentFixture<RecipeEditComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IngredientComponent]
+      imports: [RecipeEditComponent]
     })
     .compileComponents();
-
-    fixture = TestBed.createComponent(IngredientComponent);
+    
+    fixture = TestBed.createComponent(RecipeEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -12,6 +12,7 @@ import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-
 import {
   RecipebookDetailComponent
 } from "./components/recipebook/recipe-book-detail/recipebook-detail/recipebook-detail.component";
+import { RecipeEditComponent } from './components/recipe/recipe-edit/recipe-edit.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -27,6 +28,9 @@ const routes: Routes = [
     {path: '', component: RecipebookComponent},
     {path: 'create', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.create}},
     {path: 'edit/:id', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.edit}},
+    {path: '', component: RecipeComponent},
+    {path: 'details/:id', component: RecipeDetailComponent},
+    {path: 'edit/:id', component: RecipeEditComponent}
   ]},
   {path: 'recipebook', children:[
       {path: '', component: RecipebookComponent},

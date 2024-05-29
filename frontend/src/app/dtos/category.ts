@@ -5,5 +5,6 @@ export interface CategoryDetailDto {
 }
 
 export interface Category {
-  id: number;
+    id: number,
+    name: string
 }

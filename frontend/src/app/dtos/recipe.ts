@@ -15,13 +15,13 @@ export interface RecipeListDto {
 }
 
 export interface Recipe {
-  name: string;
-  description: string;
-  servings: number;
-  ownerId: number;
-  ingredients: IngredientDetailDto[];
-  steps: Step[]
-  categories: Category[]
+    name: string;
+    description: string;
+    servings: number;
+    ownerId: number;
+    ingredients: IngredientDetailDto[];
+    steps: Step[]
+    categories: Category[]
 }
 
 export interface RecipeDetailDto {
@@ -38,6 +38,16 @@ export interface RecipeDetailDto {
     ingredients: IngredientDetailDto[],
     allergens: AllergenDetailDto[],
     nutritions: NutritionDetailDto[]
+}
+
+export interface RecipeUpdateDto {
+    id: number;
+    name: string;
+    description: string;
+    numberOfServings: number;
+    categories: Category[];
+    recipeSteps: Step[];
+    ingredients: IngredientDetailDto[];
 }
 
 export interface RecipeList{

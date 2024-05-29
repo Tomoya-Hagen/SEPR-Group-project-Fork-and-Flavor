@@ -12,8 +12,8 @@ import java.util.stream.Stream;
 @Service
 public class SimpleCategoryService implements CategoryService {
 
-    private CategoryRepository categoryRepository;
-    private CategoryMapper categoryMapper;
+    private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     public SimpleCategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;

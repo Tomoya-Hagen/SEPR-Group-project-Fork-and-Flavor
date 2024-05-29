@@ -96,6 +96,7 @@ export class AutocompleteComponent<T> implements OnInit, ControlValueAccessor {
   /**
    * Resets the text input if `checkValueNeedsToMatchSuggestion` is `true`.
    */
+
   public resetInputText(): void {
     if (this.checkValueNeedsToMatchSuggestion) {
       this.inputText = this.formatModel(this.value);

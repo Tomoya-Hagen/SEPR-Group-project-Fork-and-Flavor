@@ -7,20 +7,21 @@ import java.util.Objects;
 public class RecipeCategoryDto {
 
     @NotNull(message = "categoryId must not be null")
-    int id;
+    long id;
 
     public RecipeCategoryDto() {
     }
 
-    public RecipeCategoryDto(int id) {
+
+    public RecipeCategoryDto(long id) {
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -42,7 +43,7 @@ public class RecipeCategoryDto {
     }
 
     public static final class RecipeCategoryDtoBuilder {
-        private int id;
+        private long id;
 
         private RecipeCategoryDtoBuilder() {
         }
@@ -51,7 +52,8 @@ public class RecipeCategoryDto {
             return new RecipeCategoryDtoBuilder();
         }
 
-        public RecipeCategoryDtoBuilder withId(int id) {
+
+        public RecipeCategoryDtoBuilder withId(long id) {
             this.id = id;
             return this;
         }
@@ -63,5 +65,3 @@ public class RecipeCategoryDto {
         }
     }
 }
-
-
