@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { RecipeBook, RecipeBookCreateDto } from '../dtos/recipe-book';
 import { Observable, catchError } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import {Globals} from '../global/globals';
 
-const baseUri = environment.backendUrl + '/recipebook';
 
 /**
  * Service for handling recipe books.
@@ -14,13 +14,13 @@ const baseUri = environment.backendUrl + '/recipebook';
     providedIn: 'root'
   })
 export class RecipeBookService {
-
+    private baseUri = this.globals.backendUri + '/recipebook';
     constructor(
-        private http: HttpClient,
+        private http: HttpClient, private globals: Globals
     ) { }
 
     createRecipeBook(recipeBook: RecipeBookCreateDto): Observable<RecipeBook> {
-        return this.http.post<RecipeBook>(baseUri, recipeBook)
+        return this.http.post<RecipeBook>(this.baseUri, recipeBook)
         .pipe(
             catchError((error) => {
                 console.error(error);
@@ -30,7 +30,7 @@ export class RecipeBookService {
     }
 
     getById(id: number): Observable<RecipeBook> {
-        return this.http.get<RecipeBook>(baseUri + '/' + id)
+        return this.http.get<RecipeBook>(this.baseUri + '/' + id)
         .pipe(
             catchError((error) => {
                 console.error(error.error);
