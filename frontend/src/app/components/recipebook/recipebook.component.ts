@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {RecipeBookService} from "../../services/recipebook.service";
-import {ToastrService} from "ngx-toastr";
-import {RecipeBookListDto, RecipeBookSearch} from "../../dtos/recipe-book";
-import {NgForOf} from "@angular/common";
-import {RouterLink} from "@angular/router";
-import {FormsModule} from "@angular/forms";
-import {CardComponent} from "../card/card.component";
+import { Component, OnInit } from '@angular/core';
+import { RecipeBookService } from "../../services/recipebook.service";
+import { ToastrService } from "ngx-toastr";
+import { NgForOf } from "@angular/common";
+import { RouterLink } from "@angular/router";
+import { FormsModule } from "@angular/forms";
+import { CardComponent } from "../card/card.component";
+import { RecipeBookListDto, RecipeBookSearch } from "../../dtos/recipe-book";
 
 @Component({
   selector: 'app-recipebook',
@@ -17,94 +17,77 @@ import {CardComponent} from "../card/card.component";
     CardComponent
   ],
   templateUrl: './recipebook.component.html',
-  styleUrl: './recipebook.component.scss'
+  styleUrls: ['./recipebook.component.scss']
 })
-
 export class RecipebookComponent implements OnInit {
-
-  steps = [1, 10, 25, 50, 100];
-  bannerError: string | null = null;
-  page = 0;
-  step = 10;
-  oldStep = 10;
-  previousButtonDisabled = false;
+  steps = [3, 9, 30, 90, 300];
+  page = 1;
+  step = 300;
+  oldStep = 300;
+  previousButtonDisabled = true;
   nextButtonDisabled = false;
+  bannerError: string | null = null;
   data: RecipeBookListDto[] = [];
-  bookSearch: RecipeBookSearch = new class implements RecipeBookSearch {
-    name: string;
-  };
+  bookSearch: RecipeBookSearch = { name: '' };
+
   constructor(
     private service: RecipeBookService,
     private notification: ToastrService,
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.loadNextPage()
+    this.loadRecipes();
   }
 
-  loadPage(isNext: boolean) {
-    console.log("Trying to get all recipe books.");
+  loadRecipes(isNext: boolean = true) {
+    this.updateButtonState();
     this.service.getAllRecipeBooksBySteps(this.page, this.step).subscribe({
       next: items => {
-        console.log("Successfully received all recipe books");
-        if (items.length == 0) {
-          if (isNext) {
-            this.nextButtonDisabled = true;
-          } else {
-            this.previousButtonDisabled = true;
-          }
-          return;
-        }
         this.data = items;
-        },
-      error: error => {
-        console.error('Error fetching recipes', error);
-        this.bannerError = 'Could not fetch recipes: ' + error.message;
-        const errorMessage = error.status === 0
-          ? 'Is the backend up?'
-          : error.message.message;
-        this.notification.error(errorMessage, 'Could Not Fetch Recipes');
-      }})
+        this.updateButtonState(items.length > 0, isNext);
+      },
+      error: error => this.handleLoadError(error)
+    });
   }
 
   searchChanged(): void {
-    console.log("Trying to get the searched recipe books.");
     this.service.search(this.bookSearch).subscribe({
-      next: items => {
-        console.log("Successfully received all recipe books");
-        this.data = items;
-
-      },
-      error: error => {
-        console.error('Error fetching recipes', error);
-        this.bannerError = 'Could not fetch recipe books: ' + error.message;
-        const errorMessage = error.status === 0
-          ? 'Is the backend up?'
-          : error.message.message;
-        this.notification.error(errorMessage, 'Could Not Fetch Recipes');
-      }})
+      next: items => this.data = items,
+      error: error => this.handleLoadError(error)
+    });
   }
 
   loadNextPage() {
-    this.nextButtonDisabled = false;
-    this.previousButtonDisabled = false;
-    this.page += 1;
-    this.loadPage(true);
+    this.page++;
+    this.loadRecipes(true);
   }
 
   loadPreviousPage() {
-    this.nextButtonDisabled = false;
-    this.previousButtonDisabled = false;
-    this.page -= 1;
-    this.loadPage(false)
+    if (this.page > 1) {
+      this.page--;
+      this.loadRecipes(false);
+    }
   }
 
   selectedStepChanged() {
-    let recipeNumber = this.step * this.page;
-    this.page = Math.floor(recipeNumber / this.step);
+    const recipeNumber = this.oldStep * (this.page - 1) + this.step;
+    this.page = Math.floor(recipeNumber / this.step) + 1;
     this.oldStep = this.step;
-    this.loadPage(true);
+    this.loadRecipes();
   }
 
+  private updateButtonState(hasData: boolean = true, isNext: boolean = true) {
+    if (isNext) {
+      this.nextButtonDisabled = !hasData;
+    } else {
+      this.previousButtonDisabled = this.page <= 1;
+    }
+  }
+
+  private handleLoadError(error: any) {
+    console.error('Error fetching recipes', error);
+    const errorMessage = error.status === 0 ? 'Is the backend up?' : error.message.message;
+    this.notification.error(errorMessage, 'Could Not Fetch Recipes');
+    this.bannerError = 'Could not fetch recipes: ' + error.message;
+  }
 }

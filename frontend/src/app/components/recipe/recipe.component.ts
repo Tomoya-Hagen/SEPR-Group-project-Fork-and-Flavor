@@ -1,8 +1,9 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {RecipeListDto, RecipeSearch} from "../../dtos/recipe";
 import {RecipeService} from "../../services/recipe.service";
+import { Title } from '@angular/platform-browser';
 
 import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
@@ -13,7 +14,7 @@ import {Router} from "@angular/router";
   styleUrl: './recipe.component.scss'
 })
 
-export class RecipeComponent implements OnInit {
+export class RecipeComponent implements OnInit, OnDestroy {
   bannerError: string | null = null;
   data: RecipeListDto[] = [];
   recipeSearch: RecipeSearch = new class implements RecipeSearch {
@@ -29,12 +30,19 @@ export class RecipeComponent implements OnInit {
     private service: RecipeService,
     private notification: ToastrService,
     private router: Router,
+    private titleService: Title,
   ) {
   }
 
   ngOnInit(): void {
     this.loadPage()
+    this.titleService.setTitle("Fork & Flavour | Alle Rezepte");
   }
+
+  ngOnDestroy() {
+    this.titleService.setTitle("Fork & Flavour");
+  }
+
   loadPage() {
     console.log("Trying to get all recipe books.");
     this.service.getListByPageAndStep(this.page, this.step).subscribe({
