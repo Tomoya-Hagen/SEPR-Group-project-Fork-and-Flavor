@@ -8,6 +8,8 @@ import {DetailedRecipeDto} from "../dtos/DetailedRecipeDto";
 import { RecipeStepDescriptionDetailDto, RecipeStepDetailDto, RecipeStepRecipeDetailDto } from '../dtos/recipe-step';
 import { Step } from '../dtos/Step';
 import { map as rxjsMap, catchError } from 'rxjs/operators'
+import { Observable, catchError } from 'rxjs';
+import {RecipeSearch} from "../dtos/recipe";
 
 const baseUri = environment.backendUrl + '/recipes';
 
@@ -18,36 +20,50 @@ const baseUri = environment.backendUrl + '/recipes';
 @Injectable({
   providedIn: 'root'
 })
+
 export class RecipeService {
 
   constructor(
     private http: HttpClient) {
   }
 
+  /**
+   * Get the recipes that match the given search parameter.
+   * Parameters that are {@code null} are ignored.
+   * The name is considered a match, if the given parameter is a substring of the field in recipe.
+   *
+   * @param searchParams the parameters to use in searching.
+   * @return an Observable for the recipes where all given parameters match.
+   */
+  public search(searchParams: RecipeSearch): Observable<RecipeListDto[]> {
+    return this.http.get<RecipeListDto[]>(baseUri+"/search?name="+searchParams.name);
+
+  }
 
 
-    recipesByName(name: string, limit: number): Observable<RecipeListDto[]> {
-        let params = new HttpParams();
-        params = params.append('name', name);
-        params = params.append('limit', limit.toString());
-        return this.http.get<RecipeListDto[]>(baseUri, { params })
-        .pipe(
-            catchError((error) => {
-                console.error(error);
-                throw error;
-            })
-        );
-    }
-  public getListByPageAndStep(page:number, step: number): Observable<RecipeListDto[]> {
+  recipesByName(name: string, limit: number): Observable<RecipeListDto[]> {
+    let params = new HttpParams();
+    params = params.append('name', name);
+    params = params.append('limit', limit.toString());
+    return this.http.get<RecipeListDto[]>(baseUri, {params})
+      .pipe(
+        catchError((error) => {
+          console.error(error);
+          throw error;
+        })
+      );
+  }
+
+  public getListByPageAndStep(page: number, step: number): Observable<RecipeListDto[]> {
     return this.http.get<RecipeListDto[]>(
-      baseUri+"/?page="+page+"&step="+step
+      baseUri + "/?page=" + page + "&step=" + step
     );
   }
 
 
   public getRecipeDetailsBy(recipeId: number): Observable<RecipeDetailDto> {
     return this.http.get<RecipeDetailDto>(
-      baseUri+"/details/"+recipeId
+      baseUri + "/details/" + recipeId
     );
   }
 

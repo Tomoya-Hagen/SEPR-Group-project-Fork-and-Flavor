@@ -67,6 +67,12 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public List<RecipeListDto> searchRecipe(String name) throws NotFoundException {
+        List<Recipe> searchedRecipe = recipeRepository.search(name);
+        return recipeMapper.recipeListToRecipeListDto(searchedRecipe);
+    }
+
+    @Override
     public RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException {
         LOGGER.trace("getRecipeDetailDtoById({})", id);
         Recipe recipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);

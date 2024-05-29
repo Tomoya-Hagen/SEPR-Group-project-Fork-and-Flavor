@@ -4,12 +4,10 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.UsernameException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.EmailException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.PasswordException;
 
 import java.util.List;
 
@@ -64,11 +62,9 @@ public interface UserService extends UserDetailsService {
      * @param userRegisterDto login credentials
      * @return the JWT, if successful
      * @throws org.springframework.security.authentication.BadCredentialsException if credentials are bad
-     * @throws UsernameException if the username already exist
-     * @throws EmailException if the email already exist
-     * @throws PasswordException if the password is weak
+     * @throws ValidationException if the input is invalid
      */
-    String register(UserRegisterDto userRegisterDto);
+    String register(UserRegisterDto userRegisterDto) throws ValidationException;
 
 
 }

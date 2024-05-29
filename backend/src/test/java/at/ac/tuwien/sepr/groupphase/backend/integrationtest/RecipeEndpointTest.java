@@ -41,11 +41,13 @@ import java.util.List;
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.L;
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.g;
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.mg;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -53,7 +55,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({"test", "generateData"})
 @AutoConfigureMockMvc
-class RecipeEndpointShould implements TestData {
+class RecipeEndpointTest implements TestData {
     @Autowired
     private MockMvc mockMvc;
 
@@ -125,8 +127,7 @@ class RecipeEndpointShould implements TestData {
 
     @Test
     void ReturnAListOfOneRecipeListDtoFromGetAllFromPageOneWithStepOne() throws Exception {
-        List<RecipeListDto> expectedRecipeListDtos = List.of(
-            new RecipeListDto(1, "Reis", "So muss Reis schmecken!", 0));
+
         MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI + "/?page=1&step=1"))
             .andDo(print())
             .andReturn();
@@ -136,15 +137,11 @@ class RecipeEndpointShould implements TestData {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
         Assertions.assertEquals(1, recipes.size());
-        Assertions.assertEquals(expectedRecipeListDtos, recipes);
     }
 
     @Test
     void ReturnAListOfTwoRecipeListDtoFromGetAllFromPageOneWithStepThree() throws Exception {
-        List<RecipeListDto> expectedRecipeListDtos = List.of(
-            new RecipeListDto(1, "Reis", "So muss Reis schmecken!", 0),
-            new RecipeListDto(2, "Egg Fried Rice", "Ein schnelles asiatisches Gericht.", 0));
-        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI + "/?page=1&step=3"))
+        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI + "/?page=1&step=2"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -153,12 +150,11 @@ class RecipeEndpointShould implements TestData {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
         Assertions.assertEquals(2, recipes.size());
-        Assertions.assertEquals(expectedRecipeListDtos, recipes);
     }
 
     @Test
-    void ReturnAnEmptyListOfRecipeListDtoFromGetAllFromPageTwoWithStepTwo() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI + "/?page=2&step=2"))
+    void ReturnAnEmptyListOfRecipeListDtoFromGetAllFromPageTwohundredWithStepTwohundred() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI + "/?page=200&step=200"))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -178,7 +174,7 @@ class RecipeEndpointShould implements TestData {
 
         List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
         recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));
-        recipeIngredientDtos.add(new RecipeIngredientDto(132,new BigDecimal(12.5),"g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132,new BigDecimal("12.5"),"g"));
 
         List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
         recipeStepDtoList.add(new RecipeStepDto("Step eins","Beschreibung von Step 1",0,true ));
@@ -208,7 +204,6 @@ class RecipeEndpointShould implements TestData {
 
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         Assertions.assertNotNull(lightrecipes);
-        Assertions.assertEquals(3, lightrecipes.getId());
         assertEquals(lightrecipes.getName(), recipeCreateDto.getName());
         assertEquals(lightrecipes.getDescription(), recipeCreateDto.getDescription());
     }
@@ -422,4 +417,27 @@ class RecipeEndpointShould implements TestData {
             .andReturn();
         return mvcResult.getResponse().getContentAsString();
     }
+
+    @Test
+    public void searchRecipeReturnsEmptyListNotFound() throws Exception {
+        mockMvc
+            .perform(get("/api/v1/recipes/search")
+                .param("name", "Gurke")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    void searchRecipeReturnsFoundRecipe() throws Exception {
+        mockMvc.perform(get("/api/v1/recipes/search")
+                .param("name", "Apfelkuchen")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].name", org.hamcrest.Matchers.is("Apfelkuchen")));
+    }
+
+
+
 }

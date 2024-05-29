@@ -49,3 +49,13 @@ export interface RecipeUpdateDto {
     recipeSteps: Step[];
     ingredients: IngredientDetailDto[];
 }
+
+export interface RecipeList{
+  id: number,
+  name: string,
+}
+
+export interface RecipeSearch {
+  name?: string;
+}
+

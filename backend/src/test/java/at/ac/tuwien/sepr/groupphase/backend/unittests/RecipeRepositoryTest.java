@@ -20,15 +20,18 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles({"test", "generateData"})
 @Transactional
-class RecipeRepositoryShould {
+class RecipeRepositoryTest {
     @Autowired
     private RecipeRepository recipeRepository;
     @Autowired
@@ -137,18 +140,38 @@ class RecipeRepositoryShould {
     }
 
     @Test
-    void ReturnTwoRecipesFromGetAllFromIdOneToThree() {
+    void ReturnTwoRecipesFromGetAllFromIdOneToTwo() {
         List<Recipe> expectedRecipes = List.of(
             recipeRepository.getRecipeById(1).orElseThrow(),
             recipeRepository.getRecipeById(2).orElseThrow());
-        List<Recipe> recipes = recipeRepository.getAllRecipesWithIdFromTo(1, 3);
+        List<Recipe> recipes = recipeRepository.getAllRecipesWithIdFromTo(1, 2);
         Assertions.assertEquals(2, recipes.size());
         Assertions.assertEquals(expectedRecipes, recipes);
     }
 
     @Test
     void ReturnNoRecipesFromGetAllFromIdThreeToFour() {
-        List<Recipe> recipes = recipeRepository.getAllRecipesWithIdFromTo(3, 4);
+        List<Recipe> recipes = recipeRepository.getAllRecipesWithIdFromTo(3000, 3001);
         Assertions.assertTrue(recipes.isEmpty());
     }
+
+    @Test
+    void searchReturnsEmptyListWhenNoNameMatches() {
+        assertEquals(Collections.emptyList(), recipeRepository.search("Kaschew"));
+    }
+
+    @Test
+    void searchReturnsRecipeRegardlessOfCase() {
+        assertEquals("Zitronenkuchen", recipeRepository.search("Zitronen").getFirst().getName());
+    }
+
+    @Test
+    void searchReturnsEmptyListWhenNameIsNull() {
+        assertEquals(52, recipeRepository.search(null).size());
+    }
+    @Test
+    void searchReturnsRecipeWhenNameMatches() {
+        assertEquals("Gratin", recipeRepository.search("Gratin").getFirst().getName());
+    }
+
 }

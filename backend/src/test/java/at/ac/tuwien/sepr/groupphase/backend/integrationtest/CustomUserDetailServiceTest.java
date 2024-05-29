@@ -2,8 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
-import at.ac.tuwien.sepr.groupphase.backend.exception.EmailException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.UsernameException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.impl.CustomUserDetailService;
 import jakarta.transaction.Transactional;
@@ -35,7 +34,7 @@ class CustomUserDetailServiceTest implements TestData {
     private UserRepository userRepository;
 
     @Test
-    void registerValidUser() {
+    void registerValidUser() throws ValidationException {
         UserRegisterDto validUser = new UserRegisterDto(
             "validuser@email.com",
             "password",
@@ -60,7 +59,12 @@ class CustomUserDetailServiceTest implements TestData {
             "invaliduser"
         );
 
-        assertThrowsExactly(EmailException.class, () -> customUserDetailService.register(invalidUser));
+        Exception exception = assertThrowsExactly(ValidationException.class, () -> customUserDetailService.register(invalidUser));
+        String expectedMessage = "Email must be a valid email address";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+
     }
 
 
@@ -72,7 +76,12 @@ class CustomUserDetailServiceTest implements TestData {
             "invaliduser"
         );
 
-        assertThrowsExactly(EmailException.class, () -> customUserDetailService.register(invalidUser));
+        Exception exception = assertThrowsExactly(ValidationException.class, () -> customUserDetailService.register(invalidUser));
+        String expectedMessage = "Email already exists";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+
     }
 
     @Test
@@ -83,7 +92,12 @@ class CustomUserDetailServiceTest implements TestData {
             "admin"
         );
 
-        assertThrowsExactly(UsernameException.class, () -> customUserDetailService.register(invalidUser));
+        Exception exception = assertThrowsExactly(ValidationException.class, () -> customUserDetailService.register(invalidUser));
+        String expectedMessage = "Username already exists";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+
     }
 
 
