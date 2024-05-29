@@ -5,10 +5,7 @@ import {Recipe, RecipeDetailDto, RecipeListDto} from '../dtos/recipe';
 import {SimpleRecipe} from "../dtos/SimpleRecipe";
 import {DetailedRecipeDto} from "../dtos/DetailedRecipeDto";
 import { Observable, catchError } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { RecipeDetailDto, RecipeListDto } from '../dtos/recipe';
-import {RecipeList, RecipeSearch} from "../dtos/recipe";
-import {RecipeBookListDto, RecipeBookSearch} from "../dtos/recipe-book";
+import {RecipeSearch} from "../dtos/recipe";
 
 const baseUri = environment.backendUrl + '/recipes';
 
@@ -24,11 +21,6 @@ export class RecipeService {
 
   constructor(
     private http: HttpClient) {
-  }
-
-  constructor(
-    private http: HttpClient,
-  ) {
   }
 
   /**
