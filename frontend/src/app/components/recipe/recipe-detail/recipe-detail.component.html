@@ -29,7 +29,7 @@
     </div>
     <div class="modal-footer">
       <form (ngSubmit)="spoon(spoonForm)" #spoonForm="ngForm">
-        <button type="button" (click)="spoon(spoonForm)" id="spn-rcp" class="btn btn-success float-right" *ngIf="currentRecipeBook">Spoon Recipe</button>
+        <button type="button" (click)="spoon(spoonForm)" id="spn-rcp" class="btn btn-success float-right" *ngIf="currentRecipeBook">Rezept Spoonen</button>
       </form>
       <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
     </div>
@@ -37,15 +37,15 @@
   <br>
   <div class="RecipeInfos" style="display: flex; justify-content: space-between; width: 100%;">
     <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-right: 1%; background-color: var(--box-2);">
-      <h4>Rating:</h4>
+      <h4>Bewertung:</h4>
       {{recipe.rating}}/5 <!--Entwurf-->
     </div>
     <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-right: 1%; background-color: var(--box-3);">
-      <h4>Servings:</h4>
+      <h4>Portionen:</h4>
       {{recipe.numberOfServings}}
     </div>
     <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-right: 1%; background-color: var(--box-4);" *ngIf="isCategoriesNotEmpty()">
-      <h4>Categories:</h4>
+      <h4>Kategorien:</h4>
       <div *ngFor="let category of recipe.categories">
         {{category.name}}
       </div>
@@ -62,7 +62,7 @@
       </div>
     </div>
     <div class="info-box clickable" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--acent-color);" (click)="toggleNutritionVisibility()">
-      <h4>Nutrition:</h4>
+      <h4>Nährwerte:</h4>
       Click to Show
     </div>
   </div>
@@ -70,7 +70,7 @@
   <div style="display: flex; justify-content: space-between; width: 100%;">
     <!-- Ingredients and Description Section -->
     <div style="width: 49%; padding: 10px;">
-      <h4>Ingredients:</h4>
+      <h4>Zutaten:</h4>
       <table class="table">
         <tbody>
         <tr *ngFor="let ingredient of recipe.ingredients">
@@ -79,16 +79,16 @@
         </tr>
         </tbody>
       </table>
-      <h4>Description:</h4>
+      <h4>Beschreibung:</h4>
       <p>{{recipe.description}}</p>
     </div>
     <div style="text-align: right;position: relative; margin: 30px">
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openSpoonModal(spoonRecipeModal)">Spoon Recipe</button>
+      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openSpoonModal(spoonRecipeModal)">Rezept Spoonen</button>
     </div>
 
     <!-- Nutrition Section -->
     <div style="width: 49%; padding: 10px;" [class.collapse]="!showNutrition">
-      <h4 style="cursor: pointer;">Nutritions:</h4>
+      <h4 style="cursor: pointer;">Nährwerte:</h4>
       <div>
         <table class="table">
           <tbody>
@@ -102,7 +102,7 @@
     </div>
   </div>
 
-  <h2>Steps:</h2>
+  <h2>Schritte:</h2>
 
   <div class="recipe-steps">
     <ng-container *ngFor="let step of recipeSteps">

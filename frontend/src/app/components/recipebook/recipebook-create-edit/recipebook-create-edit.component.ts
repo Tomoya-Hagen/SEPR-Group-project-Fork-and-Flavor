@@ -57,9 +57,9 @@ export class RecipebookCreateEditComponent implements OnInit {
   public get heading(): string {
     switch (this.mode) {
       case RecipeBookCreateEditMode.create:
-        return 'Create Here A New Recipe Book';
+        return 'Neues Rezeptbuch erstellen';
       case RecipeBookCreateEditMode.edit:
-        return 'Edit Recipe Book';
+        return 'Rezeptbuch bearbeiten';
       default:
         return '?';
     }

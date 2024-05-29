@@ -12,7 +12,7 @@
                   <input class="form-control" type="text" name="search" autocomplete="off"
                          [(ngModel)]="recipeSearch.name"
                          (ngModelChange)="searchChanged()"
-                         placeholder="Start searching for recipe">
+                         placeholder="Suche">
                 </div>
               </div>
                 <div class="col-lg-4 p-2" *ngFor="let item of data" (click)="detail(item.id)">
