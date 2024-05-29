@@ -1,14 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {environment} from '../../environments/environment';
-import {Observable, mergeMap, throwError} from 'rxjs';
 import {Recipe, RecipeDetailDto, RecipeListDto, RecipeUpdateDto} from '../dtos/recipe';
 import {SimpleRecipe} from "../dtos/SimpleRecipe";
 import {DetailedRecipeDto} from "../dtos/DetailedRecipeDto";
 import { RecipeStepDescriptionDetailDto, RecipeStepDetailDto, RecipeStepRecipeDetailDto } from '../dtos/recipe-step';
 import { Step } from '../dtos/Step';
-import { map as rxjsMap, catchError } from 'rxjs/operators'
-import { Observable, catchError } from 'rxjs';
+import { map as rxjsMap} from 'rxjs/operators'
+import { Observable, catchError, throwError } from 'rxjs';
 import {RecipeSearch} from "../dtos/recipe";
 
 const baseUri = environment.backendUrl + '/recipes';

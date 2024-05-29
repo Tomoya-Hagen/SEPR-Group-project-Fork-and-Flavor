@@ -15,8 +15,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeIngredientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeDescriptionStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
@@ -149,8 +147,6 @@ public interface RecipeMapper {
         return result;
     }
 
-    Recipe recipeListDtoToRecipe(RecipeListDto recipeListDto);
-
     default List<RecipeListDto> recipesToRecipeListDto(List<Recipe> recipes) {
         List<RecipeListDto> recipeList = new ArrayList<>();
         for (Recipe recipe : recipes) {
@@ -217,26 +213,8 @@ public interface RecipeMapper {
         return ret;
     }
 
-
-
-    default SimpleRecipeResultDto recipeToRecipeResultDto(Recipe r) {
-        SimpleRecipeResultDto result = new SimpleRecipeResultDto();
-        result.setRecipeId(r.getId());
-        result.setWhichstep(false);
-        result.setRecipename(r.getName());
-        return result;
-    }
-
     List<RecipeListDto> recipeListToRecipeListDto(List<Recipe> recipe);
 
     Recipe recipeListDtoToRecipe(RecipeListDto recipeListDto);
-
-    default List<RecipeListDto> recipesToRecipeListDto(List<Recipe> recipes) {
-        List<RecipeListDto> recipeList = new ArrayList<>();
-        for (Recipe recipe : recipes) {
-            recipeList.add(recipeAndAverageRatingToRecipeListDto(recipe, 0));
-        }
-        return recipeList;
-    }
 
 }
