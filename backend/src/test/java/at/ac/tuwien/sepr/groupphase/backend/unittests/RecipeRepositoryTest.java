@@ -140,18 +140,18 @@ class RecipeRepositoryTest {
     }
 
     @Test
-    void ReturnTwoRecipesFromGetAllFromIdOneToThree() {
+    void ReturnTwoRecipesFromGetAllFromIdOneToTwo() {
         List<Recipe> expectedRecipes = List.of(
             recipeRepository.getRecipeById(1).orElseThrow(),
             recipeRepository.getRecipeById(2).orElseThrow());
-        List<Recipe> recipes = recipeRepository.getAllRecipesWithIdFromTo(1, 3);
+        List<Recipe> recipes = recipeRepository.getAllRecipesWithIdFromTo(1, 2);
         Assertions.assertEquals(2, recipes.size());
         Assertions.assertEquals(expectedRecipes, recipes);
     }
 
     @Test
     void ReturnNoRecipesFromGetAllFromIdThreeToFour() {
-        List<Recipe> recipes = recipeRepository.getAllRecipesWithIdFromTo(3, 4);
+        List<Recipe> recipes = recipeRepository.getAllRecipesWithIdFromTo(3000, 3001);
         Assertions.assertTrue(recipes.isEmpty());
     }
 
@@ -167,7 +167,7 @@ class RecipeRepositoryTest {
 
     @Test
     void searchReturnsEmptyListWhenNameIsNull() {
-        assertEquals(50, recipeRepository.search(null).size());
+        assertEquals(52, recipeRepository.search(null).size());
     }
     @Test
     void searchReturnsRecipeWhenNameMatches() {

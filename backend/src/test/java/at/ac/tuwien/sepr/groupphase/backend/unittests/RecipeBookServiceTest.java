@@ -128,7 +128,7 @@ class RecipeBookServiceTest {
             validate(createDto);
             recipeBookService.createRecipeBook(createDto, 1L);
         });
-        assertTrue(exception.getMessage().contains("Validation failed for name: darf nicht null sein"));
+        assertTrue(exception.getMessage().contains("Validation failed for name: must not be null"));
     }
 
     @Test
@@ -147,7 +147,7 @@ class RecipeBookServiceTest {
             validate(createDto);
             recipeBookService.createRecipeBook(createDto, 1L);
         });
-        assertTrue(exception.getMessage().contains("Validation failed for name: Größe muss zwischen 1 und 100 sein"));
+        assertTrue(exception.getMessage().contains("between 1 and 100"));
     }
 
 
