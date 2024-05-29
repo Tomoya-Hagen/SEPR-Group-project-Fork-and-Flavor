@@ -25,7 +25,7 @@ import java.util.List;
 @SpringBootTest
 @ActiveProfiles({"test"})
 @Transactional
-public class UserServiceTest {
+class UserServiceTest {
 
     @Autowired
     private UserService userService;
@@ -37,7 +37,7 @@ public class UserServiceTest {
     private RoleRepository roleRepository;
 
     @Test
-    public void findUsersByNameFindsTwoUsersWithTheLetterU() {
+    void findUsersByNameFindsTwoUsersWithTheLetterU() {
         String[] roles = {"Admin", "User", "Contributor", "Cook", "StarCook"};
         List<Role> rolesList = new ArrayList<>();
         for (String s : roles) {

@@ -1,10 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {environment} from '../../environments/environment';
-import {Recipe, RecipeDetailDto, RecipeListDto} from '../dtos/recipe';
+import {Recipe, RecipeDetailDto, RecipeListDto, RecipeUpdateDto} from '../dtos/recipe';
 import {SimpleRecipe} from "../dtos/SimpleRecipe";
 import {DetailedRecipeDto} from "../dtos/DetailedRecipeDto";
-import { Observable, catchError } from 'rxjs';
+import { RecipeStepDescriptionDetailDto, RecipeStepDetailDto, RecipeStepRecipeDetailDto } from '../dtos/recipe-step';
+import { Step } from '../dtos/Step';
+import { map as rxjsMap} from 'rxjs/operators'
+import { Observable, catchError, throwError } from 'rxjs';
 import {RecipeSearch} from "../dtos/recipe";
 
 const baseUri = environment.backendUrl + '/recipes';
@@ -63,6 +66,14 @@ export class RecipeService {
     );
   }
 
+  public getRecipeNameBy(recipeId: number): Observable<string> {
+    return this.http.get<RecipeDetailDto>(
+      baseUri+"/details/"+recipeId
+    ).pipe(
+      rxjsMap(recipe => recipe.name)
+    );
+  }
+
   public recipeByName(name: string, limit: number | undefined): Observable<SimpleRecipe[]> {
     let params = new HttpParams();
     params = params.append("name", name);
@@ -74,5 +85,50 @@ export class RecipeService {
 
   public createRecipe(recipe: Recipe): Observable<DetailedRecipeDto> {
     return this.http.post<DetailedRecipeDto>(baseUri, recipe);
+  }
+
+  public updateRecipe(recipe: RecipeUpdateDto): Observable<DetailedRecipeDto> {
+      return this.http.put<DetailedRecipeDto>(baseUri + '/' + recipe.id, recipe);
+  }
+
+  public getRecipeUpdateDtoById(recipeId: number): Observable<RecipeUpdateDto> {
+    return this.getRecipeDetailsBy(recipeId).pipe(
+      rxjsMap(existingRecipe => this.mapToUpdateDto(existingRecipe)),
+      catchError(error => {
+        console.error('Error fetching recipe details:', error);
+        return throwError(() => new Error('Failed to fetch recipe details: ' + error.message));
+      })
+    );
+  }
+
+  private mapToUpdateDto(existingRecipe: RecipeDetailDto): RecipeUpdateDto {
+    return {
+      id: existingRecipe.id,
+      name: existingRecipe.name,
+      description: existingRecipe.description,
+      numberOfServings: existingRecipe.numberOfServings,
+      categories: existingRecipe.categories.map(c => ({ id: c.id, name: c.name })),
+      recipeSteps: this.mapSteps(existingRecipe.recipeSteps),
+      ingredients: existingRecipe.ingredients
+    };
+  }
+  private mapSteps(recipeSteps: RecipeStepDetailDto[]): Step[] {
+    return recipeSteps.map(step => {
+      if (step.hasOwnProperty('recipe')) {
+        return {
+          id: step.id,
+          name: (step as RecipeStepRecipeDetailDto).recipe.name,
+          recipeId: (step as RecipeStepRecipeDetailDto).recipe.id,
+          whichstep: false
+        };
+      } else {
+        return {
+          id: step.id,
+          name: step.name,
+          description: (step as RecipeStepDescriptionDetailDto).description,
+          whichstep: true
+        };
+      }
+    });
   }
 }

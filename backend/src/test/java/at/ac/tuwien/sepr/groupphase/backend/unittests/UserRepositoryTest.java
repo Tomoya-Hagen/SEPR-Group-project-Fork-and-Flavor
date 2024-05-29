@@ -17,13 +17,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @ActiveProfiles("test")
-public class UserRepositoryTest implements TestData {
+class UserRepositoryTest implements TestData {
 
     @Autowired
     private UserRepository userRepository;
 
     @Test
-    public void givenNothing_whenSaveUser_thenFindListWithOneElementAndFindUserById() {
+    void givenNothing_whenSaveUser_thenFindListWithOneElementAndFindUserById() {
         ApplicationUser user = ApplicationUser.ApplicationUserBuilder.anApplicationUser()
             .withEmail("email@email.com")
             .withPassword("password")

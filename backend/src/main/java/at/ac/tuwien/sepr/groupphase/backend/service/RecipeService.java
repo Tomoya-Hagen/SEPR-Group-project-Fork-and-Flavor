@@ -7,12 +7,13 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableExcep
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.springframework.stereotype.Service;
 
-import java.util.stream.Stream;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * This is the interface for the service layer of Recipes.
@@ -49,6 +50,13 @@ public interface RecipeService {
      */
     RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException;
 
+    /**
+     * Updates recipe with the given recipeDetailDto.
+     *
+     * @param recipeUpdateDto contains the values to update recipe with
+     * @return The updated recipe
+     */
+    DetailedRecipeDto updateRecipe(RecipeUpdateDto recipeUpdateDto);
 
     /**
      * finds a list of RecipeListDto based on the given parameters.
@@ -57,6 +65,7 @@ public interface RecipeService {
      * @param stepNumber represents the number of how many recipes are shown per page.
      * @return the recipes of the given page.
      */
+
     List<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber);
 
     /**

@@ -5,16 +5,20 @@ import jakarta.validation.constraints.Size;
 
 public class DetailedRecipeDto {
 
+    @NotNull
+    @Size(min = 1, max = 100)
     private String name;
 
     private String description;
-    private int id;
 
-    public int getId() {
+    @NotNull
+    private long id;
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

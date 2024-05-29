@@ -19,13 +19,14 @@ import { RecipebookComponent } from './components/recipebook/recipebook.componen
 import { RecipebookCreateEditComponent } from './components/recipebook/recipebook-create-edit/recipebook-create-edit.component';
 import { RecipeComponent } from './components/recipe/recipe.component';
 import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail.component';
-import {AutocompleteComponent} from "./components/autocomplete/autocomplete.component";
 import {RecipeCreateComponent} from "./components/recipe/recipe-create/recipe-create.component";
-import {IngredientComponent} from "./components/recipe/recipe-create/ingredient/ingredient.component";
 import { ToastrModule } from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import {RegisterComponent} from "./components/register/register.component";
+import { RecipeEditComponent } from './components/recipe/recipe-edit/recipe-edit.component';
+import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import { IngredientComponent } from './components/recipe/recipe-create/ingredient/ingredient.component';
 import { AutomaticCompleteComponent } from './components/automacomplete/automacomplete.component'
 import {CardComponent} from "./components/card/card.component";
 import {MatIconButton} from "@angular/material/button";
@@ -41,11 +42,15 @@ import {MatIcon} from "@angular/material/icon";
     FooterComponent,
     HomeComponent,
     LoginComponent,
+    IngredientComponent,
     AutocompleteComponent,
     RecipeCreateComponent,
     IngredientComponent,
     RecipeComponent,
     RecipeDetailComponent,
+    RecipeEditComponent,
+    RegisterComponent,
+    AutocompleteComponent,
     RegisterComponent,
     RecipebookCreateEditComponent,
   ],

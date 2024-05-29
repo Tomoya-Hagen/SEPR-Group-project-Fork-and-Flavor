@@ -3,7 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -14,12 +14,10 @@ import java.util.ArrayList;
  * @param description description of the recipe
  * @param numberOfServings number of servings of the recipe
  * @param categories categories the recipe belongs to
- * @param isDraft boolean that indicates whether this recipe is a draft
  * @param ingredients ingredients of the recipe
- * @param forkedFromId indicates which recipe this one was forked from
  * @param recipeSteps steps that the recipe requires
  */
-public record RecipeDetailDto(
+public record RecipeUpdateDto(
 
     @NotNull
     Long id,
@@ -37,26 +35,12 @@ public record RecipeDetailDto(
     Short numberOfServings,
 
     @NotNull
-    Long forkedFromId,
+    List<RecipeCategoryDto> categories,
 
     @NotNull
-    Long ownerId,
+    List<RecipeStepDto> recipeSteps,
 
     @NotNull
-    ArrayList<CategoryDetailDto> categories,
-    @NotNull
-    Boolean isDraft,
-
-    @NotNull
-    ArrayList<RecipeStepDetailDto> recipeSteps,
-
-    @NotNull
-    ArrayList<IngredientDetailDto> ingredients,
-
-    @NotNull
-    ArrayList<AllergenDetailDto> allergens,
-
-    @NotNull
-    ArrayList<NutritionDetailDto> nutritions
+    List<RecipeIngredientDto> ingredients
 ) {
 }

@@ -12,8 +12,8 @@ import java.util.stream.Stream;
 @Service
 public class SimpleIngredientService implements IngredientService {
 
-    private IngredientRepository ingredientRepository;
-    private IngredientMapper ingredientMapper;
+    private final IngredientRepository ingredientRepository;
+    private final IngredientMapper ingredientMapper;
 
     public SimpleIngredientService(IngredientRepository ingredientRepository, IngredientMapper ingredientMapper) {
         this.ingredientRepository = ingredientRepository;
@@ -22,7 +22,7 @@ public class SimpleIngredientService implements IngredientService {
 
     @Override
     public Stream<IngredientResultDto> byname(String name, int limit) {
-        var x = ingredientRepository.findByNameContainingIgnoreCase(name, PageRequest.of(0, limit));
+        var x = ingredientRepository.findByNameContainingWithLimit(name, PageRequest.of(0, limit));
         return x.stream().map(ingredientMapper::ingredientToIngredientResultDto);
     }
 }

@@ -171,4 +171,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     }
   }
 
+  editRecipe() {
+    this.router.navigate(['recipe', 'edit', this.recipe.id]);
+  }
+
 }

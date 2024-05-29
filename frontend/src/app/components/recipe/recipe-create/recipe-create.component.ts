@@ -75,7 +75,7 @@ export class RecipeCreateComponent implements OnInit{
 
     this.recipe.ingredients.push({name: "", id: -1,amount: 0, unit:"g"});
     this.recipe.steps.push(new Step());
-    this.recipe.categories.push({id: 0});
+    this.recipe.categories.push({id: 0,name: ""});
   }
 
   public onSubmit(form: NgForm): void {
@@ -163,10 +163,10 @@ export class RecipeCreateComponent implements OnInit{
 
   public categorychanged(index: number):void{
     if(this.recipe.categories[index] == null){
-      this.recipe.categories[index] = {id: 0}
+      this.recipe.categories[index] = {id: 0, name: ""}
     }
     if(this.recipe.categories[index].id != 0 && this.recipe.categories.length -1 == index){
-      this.recipe.categories.push({id: 0});
+      this.recipe.categories.push({id: 0, name: ""});
     }
   }
 
@@ -204,10 +204,12 @@ export class RecipeCreateComponent implements OnInit{
       ],
       categories: [
         {
-          id: 2
+          id: 2,
+          name: ""
         },
         {
-          id: 6
+          id: 6,
+          name: ""
         }
       ]
     }

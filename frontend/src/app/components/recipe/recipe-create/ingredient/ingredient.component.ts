@@ -45,4 +45,5 @@ export class IngredientComponent {
       this.Ingredient = {id: 0, unit: "", name: "", amount: null};
     }
   }
+
 }

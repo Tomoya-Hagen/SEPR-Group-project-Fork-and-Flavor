@@ -1,0 +1,15 @@
+.cbutton{
+    position: absolute;
+    top: 20vh
+  }
+
+@media only screen and (max-width : 768px) {
+.cbutton {
+    position: static;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+}
+
+}
