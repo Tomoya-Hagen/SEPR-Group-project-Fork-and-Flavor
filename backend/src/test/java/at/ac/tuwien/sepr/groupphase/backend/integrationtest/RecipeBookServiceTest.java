@@ -85,7 +85,7 @@ class RecipeBookServiceTest {
 
     @Test
     void serviceShouldThrowANotFoundExceptionIfARecipeIsAddedToARecipeBookThatDoesNotExist() {
-        Assertions.assertThrows(NotFoundException.class, () -> recipeBookService.addRecipeToRecipeBook(16L, 3L, "admin@email.com"));
+        Assertions.assertThrows(NotFoundException.class, () -> recipeBookService.addRecipeToRecipeBook(1600L, 3L, "admin@email.com"));
     }
 
     @Test

@@ -1,9 +1,15 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.IngredientNutrition;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Nutrition;
@@ -13,11 +19,19 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
-import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
+import jakarta.transaction.Transactional;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -27,18 +41,35 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @Transactional
 @Service
 public class RecipeServiceImpl implements RecipeService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private final RecipeRepository recipeRepository;
     private final RecipeMapper recipeMapper;
+    private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
+    private final RecipeValidator recipeValidator;
+
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
-                             RecipeMapper recipeMapper) {
+                             RecipeMapper recipeMapper, UserRepository userRepository,
+                             CategoryRepository categoryRepository, RecipeValidator recipeValidator) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
+        this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
+        this.recipeValidator = recipeValidator;
+    }
+
+    @Override
+    public List<RecipeListDto> searchRecipe(String name) throws NotFoundException {
+        List<Recipe> searchedRecipe = recipeRepository.search(name);
+        return recipeMapper.recipeListToRecipeListDto(searchedRecipe);
     }
 
     @Override
@@ -67,6 +98,33 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public DetailedRecipeDto createRecipe(RecipeCreateDto recipeDto, String usermail) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException {
+        LOGGER.debug("Publish new message {}", recipeDto);
+
+        recipeValidator.validateCreate(recipeDto);
+
+
+        Recipe recipe = recipeMapper.recipeCreateDtoToRecipe(recipeDto, recipeRepository.findMaxId() + 1);
+
+        List<Category> categories = new ArrayList<>();
+        for (Category category : recipe.getCategories()) {
+            categories.add(categoryRepository.getById(category.getId()));
+        }
+        recipe.setCategories(categories);
+
+        ApplicationUser owner = userRepository.findFirstUserByEmail(usermail);
+        recipe.setOwner(owner);
+        recipeRepository.save(recipe);
+
+        return recipeMapper.recipeToDetailedRecipeDto(recipe);
+    }
+
+    @Override
+    public Stream<SimpleRecipeResultDto> byname(String name, int limit) {
+        return recipeRepository.findByNameContainingWithLimit(name, PageRequest.of(0, limit)).stream().map(recipeMapper::recipeToRecipeResultDto);
+    }
+
+    @Override
     public List<RecipeListDto> getRecipesByNames(String name, int limit) {
         List<Recipe> recipes = recipeRepository.findByNamesContainingIgnoreCase(name, limit);
         return recipeMapper.recipesToRecipeListDto(recipes);
@@ -83,6 +141,45 @@ public class RecipeServiceImpl implements RecipeService {
         }
         return rating;
     }
+
+    @Override
+    public DetailedRecipeDto updateRecipe(@Valid RecipeUpdateDto recipeUpdateDto) {
+        LOGGER.trace("updateRecipe({})", recipeUpdateDto);
+        Recipe oldRecipe = recipeRepository.findById(recipeUpdateDto.id()).orElseThrow(NotFoundException::new);
+        Recipe recipe = recipeMapper.recipeUpdateDtoToRecipe(recipeUpdateDto);
+
+        List<RecipeIngredient> updatedIngredients = new ArrayList<>();
+
+        for (RecipeIngredient recipeIngredient : recipe.getIngredients()) {
+            boolean found = false;
+            for (RecipeIngredient oldRecipeIngredient : oldRecipe.getIngredients()) {
+                if (oldRecipeIngredient.getIngredient().getId().equals(recipeIngredient.getIngredient().getId())) {
+                    oldRecipeIngredient.setUnit(recipeIngredient.getUnit());
+                    oldRecipeIngredient.setAmount(recipeIngredient.getAmount());
+                    updatedIngredients.add(oldRecipeIngredient);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                updatedIngredients.add(recipeIngredient);
+            }
+        }
+
+        List<Category> categories = categoryRepository.findAllById(recipe.getCategories().stream().map(Category::getId).toList());
+
+        oldRecipe.setCategories(categories);
+        oldRecipe.setIngredients(updatedIngredients);
+        oldRecipe.setName(recipe.getName());
+        oldRecipe.setDescription(recipe.getDescription());
+        oldRecipe.setNumberOfServings(recipe.getNumberOfServings());
+        oldRecipe.setRecipeSteps(recipe.getRecipeSteps());
+
+        recipeRepository.save(oldRecipe);
+
+        return recipeMapper.recipeToDetailedRecipeDto(oldRecipe);
+    }
+
 
     private void getRecipeDetails(
         Recipe recipe,

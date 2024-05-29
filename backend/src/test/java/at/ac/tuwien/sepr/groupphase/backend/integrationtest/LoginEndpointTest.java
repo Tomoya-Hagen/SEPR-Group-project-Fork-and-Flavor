@@ -105,7 +105,7 @@ class LoginEndpointTest implements TestData {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(user2)))
             .andDo(print())
-            .andExpect(status().isConflict());
+            .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -128,7 +128,7 @@ class LoginEndpointTest implements TestData {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(user2)))
             .andDo(print())
-            .andExpect(status().isConflict());
+            .andExpect(status().isBadRequest());
     }
 
 }

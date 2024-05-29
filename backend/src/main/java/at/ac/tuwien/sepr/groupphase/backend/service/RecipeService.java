@@ -1,11 +1,19 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * This is the interface for the service layer of Recipes.
@@ -13,6 +21,26 @@ import java.util.List;
  */
 @Service
 public interface RecipeService {
+
+
+    /**
+     * Creates a new recipe entry.
+     *
+     * @param recipe to create
+     *               usermail for owner
+     * @return created recipe entry
+     */
+    DetailedRecipeDto createRecipe(RecipeCreateDto recipe, String usermail) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException;
+
+    /**
+     * Find all recipes having a name like name.
+     *
+     * @param name name of recipes to find
+     *             limit max amount of recipe to return
+     * @return limit amount of recipes found
+     */
+    Stream<SimpleRecipeResultDto> byname(String name, int limit);
+
     /**
      * finds a recipeDetailDto based on the given recipe id.
      *
@@ -22,6 +50,13 @@ public interface RecipeService {
      */
     RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException;
 
+    /**
+     * Updates recipe with the given recipeDetailDto.
+     *
+     * @param recipeUpdateDto contains the values to update recipe with
+     * @return The updated recipe
+     */
+    DetailedRecipeDto updateRecipe(RecipeUpdateDto recipeUpdateDto);
 
     /**
      * finds a list of RecipeListDto based on the given parameters.
@@ -30,7 +65,18 @@ public interface RecipeService {
      * @param stepNumber represents the number of how many recipes are shown per page.
      * @return the recipes of the given page.
      */
+
     List<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber);
+
+    /**
+     * Search for recipes in the persistent data store matching provided field.
+     * The name is considered a match, if the search string is a substring of the field in recipes.
+     *
+     * @param name The name of the recipe.
+     * @return A list of RecipeListDto objects that represent the recipe that match the search criteria.
+     * @throws NotFoundException If no recipe are found with the provided name.
+     */
+    List<RecipeListDto> searchRecipe(String name) throws NotFoundException;
 
     /**
      * This method finds a limited number of recipes with the name, or letters typed in by the user.
@@ -40,4 +86,5 @@ public interface RecipeService {
      * @return A list of RecipeListDto.
      */
     List<RecipeListDto> getRecipesByNames(String name, int limit);
+
 }

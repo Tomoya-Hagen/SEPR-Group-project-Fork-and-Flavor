@@ -23,7 +23,6 @@ public class RecipeIngredient {
         mg,
         g,
         L,
-
     }
 
     public RecipeIngredient(Recipe recipe, Ingredient ingredient, BigDecimal amount, Unit unit) {
@@ -45,6 +44,10 @@ public class RecipeIngredient {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
+
+    public long getId() {
+        return id;
+    }
 
     public Recipe getRecipe() {
         return recipe;
@@ -105,5 +108,13 @@ public class RecipeIngredient {
     @Override
     public int hashCode() {
         return Objects.hash(recipe, ingredient, amount, unit);
+    }
+
+    public static Unit getUnitFromString(String input) {
+        try {
+            return Unit.valueOf(input);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }

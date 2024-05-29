@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.repository;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -41,6 +42,25 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query("select r from Recipe r where r.id between :#{#from} and :#{#to} order by r.id")
     List<Recipe> getAllRecipesWithIdFromTo(@Param("from") int from, @Param("to") int to);
 
+    @Query("SELECT COALESCE(MAX(i.id),0) FROM Recipe i")
+    Long findMaxId();
+
+    List<Recipe> findByNameContainingIgnoreCase(String name, Pageable pageable);
+
+    /**
+     * Search for recipes in the persistent data store matching  provided field.
+     * The name is considered a match, if the search string is a substring of the field in recipes.
+     *
+     * @param name the recipe name to use in filtering.
+     * @return the recipes where the given fields match.
+     */
+    @Query("select Recipe from Recipe Recipe where (?1 is null or UPPER(Recipe.name) like UPPER('%'||?1||'%'))")
+    List<Recipe> search(@Param("name") String name);
+
     @Query("SELECT r FROM Recipe r WHERE LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%')) ORDER BY r.id LIMIT :limit")
     List<Recipe> findByNamesContainingIgnoreCase(@Param("name") String name, @Param("limit") int limit);
+
+    @Query("SELECT i FROM Recipe i WHERE i.name LIKE %:name%")
+    List<Recipe> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
+
 }

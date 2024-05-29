@@ -7,7 +7,9 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class JwtTokenizer {
@@ -18,8 +20,9 @@ public class JwtTokenizer {
         this.securityProperties = securityProperties;
     }
 
-    public String getAuthToken(String user, List<String> roles) {
+    public String getAuthToken(String user, List<String> roles, int id) {
         byte[] signingKey = securityProperties.getJwtSecret().getBytes();
+        Map<String, Object> claims = Map.of("rol", roles, "id", id);
         String token = Jwts.builder()
             .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
             .setHeaderParam("typ", securityProperties.getJwtType())
@@ -27,7 +30,22 @@ public class JwtTokenizer {
             .setAudience(securityProperties.getJwtAudience())
             .setSubject(user)
             .setExpiration(new Date(System.currentTimeMillis() + securityProperties.getJwtExpirationTime()))
-            .claim("rol", roles)
+            .addClaims(claims)
+            .compact();
+        return securityProperties.getAuthTokenPrefix() + token;
+    }
+
+    public String getAuthToken(String user, List<String> roles) {
+        byte[] signingKey = securityProperties.getJwtSecret().getBytes();
+        Map<String, Object> claims = Map.of("rol", roles, "id", 1);
+        String token = Jwts.builder()
+            .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
+            .setHeaderParam("typ", securityProperties.getJwtType())
+            .setIssuer(securityProperties.getJwtIssuer())
+            .setAudience(securityProperties.getJwtAudience())
+            .setSubject(user)
+            .setExpiration(new Date(System.currentTimeMillis() + securityProperties.getJwtExpirationTime()))
+            .addClaims(claims)
             .compact();
         return securityProperties.getAuthTokenPrefix() + token;
     }
