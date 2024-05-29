@@ -37,9 +37,11 @@ export class AutocompleteComponent<T> implements OnInit, ControlValueAccessor {
   dataListId: string;
   inputText = '';
   checkValueNeedsToMatchSuggestion = true;
+
   value: T | null = null;
   valueCandidates = new Map<string, T>();
   touched = false;
+  @Input()
   inputChange = new Subject<string>();
 
   constructor() {

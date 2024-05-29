@@ -1,8 +1,10 @@
 import { AllergenDetailDto } from "./allergen"
 import { CategoryDetailDto } from "./category"
+import { Category } from "./category"
 import { IngredientDetailDto } from "./ingredient"
 import { RecipeStepDetailDto } from "./recipe-step"
 import { NutritionDetailDto } from "./nutrition"
+import {Step} from "./Step";
 
 export interface RecipeListDto {
     id: number,
@@ -10,6 +12,16 @@ export interface RecipeListDto {
     rating: number,
     description: string
     image: string
+}
+
+export interface Recipe {
+  name: string;
+  description: string;
+  servings: number;
+  ownerId: number;
+  ingredients: IngredientDetailDto[];
+  steps: Step[]
+  categories: Category[]
 }
 
 export interface RecipeDetailDto {

@@ -5,6 +5,7 @@ import {LoginComponent} from './components/login/login.component';
 import {RecipebookComponent} from "./components/recipebook/recipebook.component";
 import {WeekplanComponent} from "./components/weekplan/weekplan.component";
 import {RecipeComponent} from "./components/recipe/recipe.component";
+import {RecipeCreateComponent} from "./components/recipe/recipe-create/recipe-create.component";
 import { RecipebookCreateEditComponent, RecipeBookCreateEditMode } from './components/recipebook/recipebook-create-edit/recipebook-create-edit.component';
 import {RegisterComponent} from "./components/register/register.component";
 import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail.component';
@@ -16,6 +17,8 @@ const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'recipe', component: RecipeComponent},
+  {path: 'recipecreate', component: RecipeCreateComponent},
   {path: 'recipe', children: [
       {path: '', component: RecipeComponent},
       {path: 'details/:id', component: RecipeDetailComponent}

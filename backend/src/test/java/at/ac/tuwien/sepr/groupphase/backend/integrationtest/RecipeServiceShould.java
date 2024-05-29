@@ -1,10 +1,17 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeIngredientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
@@ -21,6 +28,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.L;
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.g;
@@ -35,6 +44,11 @@ import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.
 class RecipeServiceShould {
     @Autowired
     private RecipeService recipeService;
+
+
+    @Autowired
+    private RecipeRepository recipeRepository;
+
 
     @Test
     void ReturnARecipeDetailDtoIfARecipeWithTheGivenRecipeIdExists() {
@@ -97,5 +111,50 @@ class RecipeServiceShould {
     void ReturnAnEmptyListOfRecipeListDtoFromGetAllFromPageTwoWithStepTwo() {
         List<RecipeListDto> recipes = recipeService.getRecipesFromPageInSteps(2, 2);
         Assertions.assertTrue(recipes.isEmpty());
+    }
+    @Test
+    void CreateRecipeShouldCreateRecipePlusDependencies() throws Exception{
+        List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
+        recipeCategoryDtoList.add(new RecipeCategoryDto(55));
+
+        List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
+        recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132,new BigDecimal(12.5),"g"));
+
+        List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
+        recipeStepDtoList.add(new RecipeStepDto("Step eins","Beschreibung von Step 1",0,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei","Beschreibung von Step 2",0,true ));
+
+        RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
+        recipeCreateDto.setName("Name");
+        recipeCreateDto.setDescription("Beschreibung");
+        recipeCreateDto.setServings((short)42);
+
+        recipeCreateDto.setIngredients(recipeIngredientDtos);
+        recipeCreateDto.setSteps(recipeStepDtoList);
+        recipeCreateDto.setCategories(recipeCategoryDtoList);
+
+        DetailedRecipeDto ret = recipeService.createRecipe(recipeCreateDto,"admin@email.com");
+        Assertions.assertNotNull(ret);
+        Assertions.assertEquals(ret.getDescription(), "Beschreibung");
+        Assertions.assertEquals(ret.getName(), "Name");
+
+        Recipe recipefDB = recipeRepository.getRecipeById(3).get();
+        Assertions.assertNotNull(recipefDB);
+
+        Assertions.assertEquals(recipefDB.getName(),recipeCreateDto.getName());
+        Assertions.assertEquals(recipefDB.getDescription(),recipeCreateDto.getDescription());
+        Assertions.assertEquals(recipefDB.getNumberOfServings(), recipeCreateDto.getServings());
+
+        Assertions.assertTrue(
+            IntStream.range(0, recipeIngredientDtos.size())
+                .allMatch(i -> recipefDB.getIngredients().get(i).getIngredient().getId() == recipeIngredientDtos.get(i).getId()));
+        Assertions.assertTrue(
+            IntStream.range(0, recipeStepDtoList.size())
+                .allMatch(i -> recipefDB.getRecipeSteps().get(i).getName() == recipeStepDtoList.get(i).getName()));
+        Assertions.assertTrue(
+            IntStream.range(0, recipeCategoryDtoList.size())
+                .allMatch(i -> recipefDB.getCategories().get(i).getId() == recipeCategoryDtoList.get(i).getId()));
+
     }
 }

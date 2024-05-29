@@ -14,8 +14,10 @@ import {httpInterceptorProviders} from './interceptors';
 import { RecipebookComponent } from './components/recipebook/recipebook.component';
 import { RecipebookCreateEditComponent } from './components/recipebook/recipebook-create-edit/recipebook-create-edit.component';
 import { RecipeComponent } from './components/recipe/recipe.component';
-import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail.component';
+import {AutocompleteComponent} from "./components/autocomplete/autocomplete.component";
+import {RecipeCreateComponent} from "./components/recipe/recipe-create/recipe-create.component";
+import {IngredientComponent} from "./components/recipe/recipe-create/ingredient/ingredient.component";
 import { ToastrModule } from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
@@ -32,6 +34,9 @@ import {CardComponent} from "./components/card/card.component";
     FooterComponent,
     HomeComponent,
     LoginComponent,
+    AutocompleteComponent,
+    RecipeCreateComponent,
+    IngredientComponent,
     RecipeDetailComponent,
     RegisterComponent,
     RecipeComponent,
@@ -53,6 +58,9 @@ import {CardComponent} from "./components/card/card.component";
     CardComponent,
   ],
   providers: [httpInterceptorProviders],
+  exports: [
+    AutocompleteComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

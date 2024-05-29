@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AuthRequest} from '../dtos/auth-request';
-import {Observable} from 'rxjs';
+import {catchError, Observable, of} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
 import {jwtDecode} from 'jwt-decode';
@@ -28,6 +28,17 @@ export class AuthService {
         tap((authResponse: string) => this.setToken(authResponse))
       );
   }
+
+
+  /**
+   * Is the user logged in
+
+   *
+   */
+  isLogged(): Observable<boolean> {
+    return this.httpClient.get<boolean>(this.authBaseUri + "/islogged");
+  }
+
 
   /**
    * Register a new user. If it was successful, a valid JWT token will be stored

@@ -1,8 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import {environment} from '../../environments/environment';
+import {Recipe, RecipeDetailDto, RecipeListDto} from '../dtos/recipe';
+import {SimpleRecipe} from "../dtos/SimpleRecipe";
+import {DetailedRecipeDto} from "../dtos/DetailedRecipeDto";
 import { Observable, catchError } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { RecipeDetailDto, RecipeListDto } from '../dtos/recipe';
 
 const baseUri = environment.backendUrl + '/recipes';
 
@@ -15,9 +17,10 @@ const baseUri = environment.backendUrl + '/recipes';
 })
 export class RecipeService {
 
-    constructor(
-        private http: HttpClient,
-    ) { }
+  constructor(
+    private http: HttpClient) {
+  }
+
 
 
     recipesByName(name: string, limit: number): Observable<RecipeListDto[]> {
@@ -43,5 +46,18 @@ export class RecipeService {
     return this.http.get<RecipeDetailDto>(
       baseUri+"/details/"+recipeId
     );
+  }
+
+  public recipeByName(name: string, limit: number | undefined): Observable<SimpleRecipe[]> {
+    let params = new HttpParams();
+    params = params.append("name", name);
+    if (limit != null) {
+      params = params.append("limit", limit);
+    }
+    return this.http.get<SimpleRecipe[]>(baseUri + "/simple", { params });
+  }
+
+  public createRecipe(recipe: Recipe): Observable<DetailedRecipeDto> {
+    return this.http.post<DetailedRecipeDto>(baseUri, recipe);
   }
 }
