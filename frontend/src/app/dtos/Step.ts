@@ -1,14 +1,14 @@
 export class Step {
-    name: string;
-    description?: string;
-    recipeId?: number;
-    whichstep: boolean;
+  name: string;
+  description?: string;
+  recipeId?: number;
+  whichstep: boolean;
 
-    constructor() {
-      this.name = "";
-      this.description = "";
-      this.recipeId = 0;
-      this.whichstep = null;
-    }
+  constructor() {
+    this.name = "";
+    this.description = "";
+    this.recipeId = 0;
+    this.whichstep = null;
+  }
 
 }

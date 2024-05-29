@@ -13,9 +13,17 @@ import org.mapstruct.Mapping;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This mapper creates all types of RecipeStepDto out of a recipeStep entity.
+ */
 @Mapper
 public interface RecipeStepMapper {
-
+    /**
+     * This method creates a list of RecipeStepDto out of a list of RecipeStep.
+     *
+     * @param recipeSteps represents the recipeSteps that should be converted to a list of recipeStepDto.
+     * @return the list of recipeStepDto
+     */
     default ArrayList<RecipeStepDetailDto> recipeStepListToRecipeStepDetailDtoList(
         List<RecipeStep> recipeSteps) {
         ArrayList<RecipeStepDetailDto> result = new ArrayList<>();
@@ -29,8 +37,20 @@ public interface RecipeStepMapper {
         return result;
     }
 
+    /**
+     * This method converts a recipeDescriptionStep to a RecipeStepDescriptionDetailDto.
+     *
+     * @param recipeDescriptionStep that should be converted to a dto
+     * @return the converted dto based on the given entity
+     */
     RecipeStepDescriptionDetailDto recipeStepToRecipeStepDetailDto(RecipeDescriptionStep recipeDescriptionStep);
 
+    /**
+     * This method converts a recipeRecipeStep to a RecipeStepRecipeDetailDto.
+     *
+     * @param recipeRecipeStep that should be converted to a dto
+     * @return the converted dto based on the given entity
+     */
     @Mapping(source = "recipeRecipe", target = "recipe")
     RecipeStepRecipeDetailDto recipeStepToRecipeStepDetailDto(RecipeRecipeStep recipeRecipeStep);
 

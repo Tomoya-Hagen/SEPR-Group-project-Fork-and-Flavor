@@ -12,6 +12,7 @@ public class RecipeCategoryDto {
     public RecipeCategoryDto() {
     }
 
+
     public RecipeCategoryDto(long id) {
         this.id = id;
     }
@@ -50,6 +51,7 @@ public class RecipeCategoryDto {
         public static RecipeCategoryDtoBuilder aRecipeCategoryDto() {
             return new RecipeCategoryDtoBuilder();
         }
+
 
         public RecipeCategoryDtoBuilder withId(long id) {
             this.id = id;

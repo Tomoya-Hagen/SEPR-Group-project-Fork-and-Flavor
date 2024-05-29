@@ -48,4 +48,3 @@ public class CategoryResultDto {
         return Objects.hash(id, name);
     }
 }
-

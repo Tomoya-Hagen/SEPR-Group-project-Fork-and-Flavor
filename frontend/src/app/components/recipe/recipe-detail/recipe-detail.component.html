@@ -1,0 +1,129 @@
+<div class="jumbotron mt-5">
+  <div>
+    <div style="position: relative;">
+      <h1 class="display-4" *ngIf="!recipe.isDraft" style="text-align:center;">{{recipe.name}}</h1>
+      <h1 class="display-4" *ngIf="recipe.isDraft" style="text-align:center;">{{recipe.name}} (Template)</h1>
+    </div>
+  </div>
+  <ng-template #spoonRecipeModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Spoon</h5>
+      <button type="button" class="btn close-button" (click)="modal.dismiss('X')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>Add {{recipe.name}} to:</p>
+      <div class="col-lg-6 mb-2">
+        <app-autocomplete
+          name="recipeBookSelection"
+          textInputClass="form-control"
+          [suggestions]="recipeBookSuggestions"
+          [formatModel]="formatRecipeBook"
+          valueNeedsToMatchSuggestion="true"
+          [(ngModel)]="dummyRecipeBookSelectionModel"
+          (ngModelChange)="selectRecipeBook($event)"
+        >
+        </app-autocomplete>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <form (ngSubmit)="spoon(spoonForm)" #spoonForm="ngForm">
+        <button type="button" (click)="spoon(spoonForm)" id="spn-rcp" class="btn btn-success float-right" *ngIf="currentRecipeBook">Spoon Recipe</button>
+      </form>
+      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
+    </div>
+  </ng-template>
+  <br>
+  <div class="RecipeInfos" style="display: flex; justify-content: space-between; width: 100%;">
+    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-right: 1%; background-color: var(--box-2);">
+      <h4>Rating:</h4>
+      {{recipe.rating}}/5 <!--Entwurf-->
+    </div>
+    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-right: 1%; background-color: var(--box-3);">
+      <h4>Servings:</h4>
+      {{recipe.numberOfServings}}
+    </div>
+    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-right: 1%; background-color: var(--box-4);" *ngIf="isCategoriesNotEmpty()">
+      <h4>Categories:</h4>
+      <div *ngFor="let category of recipe.categories">
+        {{category.name}}
+      </div>
+    </div>
+    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--box-5);">
+      <h4>Allergene: </h4>
+      <div>
+        <span *ngFor="let allergen of recipe.allergens; let isLast=last">
+           {{allergen.name}}{{isLast ? '' : ', '}}
+        </span>
+      </div>
+      <div *ngIf="recipe.allergens.length === 0">
+        none
+      </div>
+    </div>
+    <div class="info-box clickable" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--acent-color);" (click)="toggleNutritionVisibility()">
+      <h4>Nutrition:</h4>
+      Click to Show
+    </div>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; width: 100%;">
+    <!-- Ingredients and Description Section -->
+    <div style="width: 49%; padding: 10px;">
+      <h4>Ingredients:</h4>
+      <table class="table">
+        <tbody>
+        <tr *ngFor="let ingredient of recipe.ingredients">
+          <td>{{ingredient.name}}</td>
+          <td>{{ingredient.amount}} {{ingredient.unit}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <h4>Description:</h4>
+      <p>{{recipe.description}}</p>
+    </div>
+    <div style="text-align: right;position: relative; margin: 30px">
+      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openSpoonModal(spoonRecipeModal)">Spoon Recipe</button>
+    </div>
+
+    <!-- Nutrition Section -->
+    <div style="width: 49%; padding: 10px;" [class.collapse]="!showNutrition">
+      <h4 style="cursor: pointer;">Nutritions:</h4>
+      <div>
+        <table class="table">
+          <tbody>
+          <tr *ngFor="let nutrition of recipe.nutritions">
+            <td>{{nutrition.name}}</td>
+            <td>{{nutrition.value}} {{nutrition.unit}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <h2>Steps:</h2>
+
+  <div class="recipe-steps">
+    <ng-container *ngFor="let step of recipeSteps">
+      <div [ngClass]="{'recipe-step': true, 'sub-recipe': step.recipe}">
+        <h4 (click)="step.recipe && toggleStep(step)" style="display: flex; align-items: center;">
+          <span *ngIf="step.recipe" style="margin-right: 10px; display: flex; align-items: center;">
+            <img src="assets/images/icon_black.png" height="25px" alt="subrecepy" class="subrecepy-icon">
+          </span>
+          {{ step.name }}
+        </h4>
+        <p *ngIf="!step.recipe">{{ step.description }}</p>
+        <div *ngIf="step.recipe && step.expanded">
+          <ng-container *ngFor="let subStep of step.recipe.recipeSteps">
+            <div class="recipe-step">
+              <h5>{{ subStep.name }}</h5>
+              <p>{{ subStep.description }}</p>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+</div>

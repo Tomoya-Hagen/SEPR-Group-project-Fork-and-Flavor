@@ -23,7 +23,6 @@ public class RecipeIngredient {
         mg,
         g,
         L,
-
     }
 
     public RecipeIngredient(Recipe recipe, Ingredient ingredient, BigDecimal amount, Unit unit) {
@@ -118,5 +117,4 @@ public class RecipeIngredient {
             return null;
         }
     }
-
 }

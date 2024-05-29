@@ -6,11 +6,11 @@ import {AuthService} from '../../services/auth.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
+
 export class HeaderComponent implements OnInit {
 
   constructor(public authService: AuthService) { }
 
   ngOnInit() {
   }
-
 }

@@ -11,7 +11,7 @@ describe('AutocompleteComponent', () => {
       imports: [AutocompleteComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(AutocompleteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

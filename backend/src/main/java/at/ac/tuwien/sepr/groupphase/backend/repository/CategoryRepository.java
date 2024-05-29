@@ -12,12 +12,17 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This is the interface for the persistence layer of Categories.
+ *
+ */
 @DynamicInsert
 @DynamicUpdate
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findByNameAndType(String name, String type);
 
+    List<Category> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
     @Query("SELECT i FROM Category i WHERE i.name LIKE %:name%")
     List<Category> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);

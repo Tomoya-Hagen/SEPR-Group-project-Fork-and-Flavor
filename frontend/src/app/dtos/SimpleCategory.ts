@@ -1,5 +1,5 @@
 
 export interface SimpleCategory {
-    name: string;
-    id: number;
+  name: string;
+  id: number;
 }

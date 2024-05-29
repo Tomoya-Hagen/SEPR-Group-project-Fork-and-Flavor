@@ -26,4 +26,3 @@ public class SimpleIngredientService implements IngredientService {
         return x.stream().map(ingredientMapper::ingredientToIngredientResultDto);
     }
 }
-

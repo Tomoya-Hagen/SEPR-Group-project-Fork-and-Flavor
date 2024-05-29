@@ -74,7 +74,10 @@ public class RecipeStepDto {
             return false;
         }
         RecipeStepDto that = (RecipeStepDto) o;
-        return recipeId == that.recipeId && whichstep == that.whichstep && Objects.equals(name, that.name) && Objects.equals(description, that.description);
+        return recipeId == that.recipeId
+            && whichstep == that.whichstep
+            && Objects.equals(name, that.name)
+            && Objects.equals(description, that.description);
     }
 
     @Override

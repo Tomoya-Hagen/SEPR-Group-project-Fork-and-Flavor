@@ -22,8 +22,7 @@ public class SimpleCategoryService implements CategoryService {
 
     @Override
     public Stream<CategoryResultDto> byname(String name, int limit) {
-        var x = categoryRepository.findByNameContainingWithLimit(name, PageRequest.of(0, limit));
+        var x = categoryRepository.findByNameContainingIgnoreCase(name, PageRequest.of(0, limit));
         return x.stream().map(categoryMapper::categoryToCategoryResultDto);
     }
 }
-

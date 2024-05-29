@@ -4,6 +4,8 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.EmailException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.PasswordException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.UsernameException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -47,8 +49,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-        HttpHeaders headers,
-        HttpStatusCode status, WebRequest request) {
+                                                                  HttpHeaders headers,
+                                                                  HttpStatusCode status, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
         //Get all errors
         List<String> errors = ex.getBindingResult()
@@ -59,7 +61,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         body.put("Validation errors", errors);
 
         return new ResponseEntity<>(body.toString(), headers, status);
+    }
 
+
+    @ExceptionHandler(value = {RecipeStepNotParsableException.class})
+    public ResponseEntity<Object> handleRecipeStepNotParsableException(RecipeStepNotParsableException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return new ResponseEntity<Object>(ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {RecipeStepSelfReferenceException.class})
+    public ResponseEntity<Object> handleRecipeStepSelfReferenceException(RecipeStepSelfReferenceException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return new ResponseEntity<Object>(ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {EmailException.class})
@@ -85,5 +99,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         LOGGER.warn(ex.getMessage());
         return new ResponseEntity<Object>(ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
+
 
 }

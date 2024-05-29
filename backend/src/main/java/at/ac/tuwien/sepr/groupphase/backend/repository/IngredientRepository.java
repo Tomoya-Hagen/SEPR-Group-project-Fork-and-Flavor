@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * This is the interface for the persistence layer of Ingredients.
+ *
+ */
 @DynamicInsert
 @DynamicUpdate
 @Repository
@@ -21,5 +25,8 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
 
     @Query("SELECT i FROM Ingredient i WHERE i.name LIKE %:name%")
     List<Ingredient> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
+
+
+    List<Ingredient> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
 }

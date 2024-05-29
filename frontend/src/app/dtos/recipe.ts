@@ -6,8 +6,6 @@ import { RecipeStepDetailDto } from "./recipe-step"
 import { NutritionDetailDto } from "./nutrition"
 import {Step} from "./Step";
 
-
-
 export interface RecipeListDto {
     id: number,
     name: string,

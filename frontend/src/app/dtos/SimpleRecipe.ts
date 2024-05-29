@@ -1,6 +1,6 @@
 
 export interface SimpleRecipe {
-    recipename: string;
-    recipeId: number;
-    whichstep: boolean;
-  }
+  recipename: string;
+  recipeId: number;
+  whichstep: boolean;
+}
