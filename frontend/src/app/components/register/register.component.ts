@@ -45,11 +45,29 @@ export class RegisterComponent implements OnInit {
           console.log(`Successfully registered user: ${newUserRequest.email}`);
           this.router.navigate(['/']);  // Redirect after successful registration
         },
-        error: (error) => {
-          console.error('Registration error:', error);
+        error: (errorResponse) => {
+          console.error('Registration error:', errorResponse);
           this.error = true;
-          // Adjust below line based on your actual error response format
-          this.errorMessage = error.error ? error.error : 'Unknown error occurred. Please try again.';
+
+          try {
+            // Manually parsing the error response
+            const errorData = JSON.parse(errorResponse.error);
+
+            if (errorData && errorData.detail) {
+              const detailMessage = errorData.detail;
+              const startIndex = detailMessage.indexOf('Failed validations:');
+              if (startIndex !== -1) {
+                this.errorMessage = detailMessage.substring(startIndex);
+              } else {
+                this.errorMessage = detailMessage;
+              }
+            } else {
+              this.errorMessage = 'Unknown error occurred. Please try again.';
+            }
+          } catch (e) {
+            console.error('Error parsing error response:', e);
+            this.errorMessage = 'Error in processing error response. Please contact support.';
+          }
         }
       });
     } else {
