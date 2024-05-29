@@ -115,7 +115,7 @@ class RecipeServiceShould {
     @Test
     void CreateRecipeShouldCreateRecipePlusDependencies() throws Exception{
         List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
-        recipeCategoryDtoList.add(new RecipeCategoryDto(55));
+        recipeCategoryDtoList.add(new RecipeCategoryDto(10));
 
         List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
         recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));

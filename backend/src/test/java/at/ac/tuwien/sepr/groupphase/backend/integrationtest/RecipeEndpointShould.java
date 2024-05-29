@@ -208,7 +208,7 @@ class RecipeEndpointShould implements TestData {
 
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         Assertions.assertNotNull(lightrecipes);
-        Assertions.assertEquals(lightrecipes.getId(), 3);
+        Assertions.assertEquals(3, lightrecipes.getId());
         assertEquals(lightrecipes.getName(), recipeCreateDto.getName());
         assertEquals(lightrecipes.getDescription(), recipeCreateDto.getDescription());
     }

@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
@@ -9,7 +8,6 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceExc
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.springframework.stereotype.Service;
@@ -52,6 +50,13 @@ public interface RecipeService {
      */
     RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException;
 
+    /**
+     * Updates recipe with the given recipeDetailDto.
+     *
+     * @param recipeUpdateDto contains the values to update recipe with
+     * @return The updated recipe
+     */
+    DetailedRecipeDto updateRecipe(RecipeUpdateDto recipeUpdateDto);
 
     /**
      * finds a list of RecipeListDto based on the given parameters.
@@ -60,13 +65,6 @@ public interface RecipeService {
      * @param stepNumber represents the number of how many recipes are shown per page.
      * @return the recipes of the given page.
      */
-    /**
-     * Updates recipe with the given recipeDetailDto.
-     *
-     * @param recipeUpdateDto contains the values to update recipe with
-     * @return The updated recipe
-     */
-    DetailedRecipeDto updateRecipe(RecipeUpdateDto recipeUpdateDto);
 
     List<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber);
 
@@ -79,6 +77,4 @@ public interface RecipeService {
      */
     List<RecipeListDto> getRecipesByNames(String name, int limit);
 
-
-    Stream<SimpleRecipeResultDto> byname(String name, int limit);
 }

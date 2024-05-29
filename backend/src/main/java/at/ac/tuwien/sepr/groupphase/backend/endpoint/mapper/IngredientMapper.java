@@ -9,7 +9,6 @@ import org.mapstruct.Mapping;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * This mapper is used to map an ingredient entity to a dto and reverse.

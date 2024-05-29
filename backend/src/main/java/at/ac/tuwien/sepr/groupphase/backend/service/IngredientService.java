@@ -2,7 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientResultDto;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 public interface IngredientService {
