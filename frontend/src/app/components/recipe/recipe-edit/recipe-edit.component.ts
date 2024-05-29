@@ -238,5 +238,10 @@ export class RecipeEditComponent implements OnInit {
     this.router.navigate(['recipe', 'details', this.recipe.id]);
   }
 
+  public clickSubmit(): void {
+    this.onSubmit({} as NgForm);
+    this.navToDetails();
+  }
+
 
 }
