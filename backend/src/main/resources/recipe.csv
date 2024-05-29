@@ -1,6 +1,4 @@
 id;name;description;numberofServings;forkedFrom
-1;Apfelkuchen;;;
-2;Bananenkuchen;;;
 3;Becherkuchen;;;
 4;Beef und Brokkoli Soja;;;
 5;Bratkartoffel;;;
@@ -49,3 +47,5 @@ id;name;description;numberofServings;forkedFrom
 48;Spaghetti Bolognese;;;
 49;Steak nach Gordon Ramsay;;;
 50;Zitronenkuchen;;;
+51;Apfelkuchen;;;
+52;Banenenkuchen;;;

@@ -25,8 +25,8 @@ import java.util.List;
 public class RecipeDataGenerator extends DataGenerator implements CommandLineRunner {
 
     private final RecipeRepository recipeRepository;
-    //  private final IngredientRepository ingredientRepository;
-    //  private final CategoryRepository categoryRepository;
+    private final IngredientRepository ingredientRepository;
+    private final CategoryRepository categoryRepository;
     private final ResourceLoader resourceLoader;
 
     /**
@@ -34,10 +34,14 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
      *
      * @param resourceLoader The resource loader for loading resources.
      * @param recipeRepository The repository for Recipe objects.
+     * @param ingredientRepository The repository for Ingredient objects.
+     * @param categoryRepository The repository for Category objects.
      */
-    public RecipeDataGenerator(RecipeRepository recipeRepository, ResourceLoader resourceLoader) {
+    public RecipeDataGenerator(RecipeRepository recipeRepository, ResourceLoader resourceLoader, IngredientRepository ingredientRepository, CategoryRepository categoryRepository) {
         this.recipeRepository = recipeRepository;
         this.resourceLoader = resourceLoader;
+        this.ingredientRepository = ingredientRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     /**
@@ -49,38 +53,8 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
     @Transactional
     @Override
     public void run(String... args) throws Exception {
-        String line;
-        ApplicationUser user = new ApplicationUser();
-        user.setId(1);
-        Resource resource = resourceLoader.getResource("classpath:recipe.csv");
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
-            boolean firstLine = true;
-            while ((line = br.readLine()) != null) {
-                if (firstLine) {
-                    firstLine = false;
-                    continue;
-                }
-                String[] record = line.split(";");
-                Recipe recipe = new Recipe();
-                recipe.setId(Long.parseLong(record[0]));
-                recipe.setName(record[1]);
-                recipe.setDescription("");
-                recipe.setCategories(null);
 
-                recipe.setOwner(user);
-
-                recipeRepository.save(recipe);
-            }
-        }
-    }
-
-
-    /*
-
-
-    @Transactional
-    @Override
-    public void run(String... args) throws Exception {
+        // old generator
         ApplicationUser user = new ApplicationUser();
         user.setId(1);
         Recipe riceRecipe = new Recipe();
@@ -155,7 +129,31 @@ public class RecipeDataGenerator extends DataGenerator implements CommandLineRun
         if (recipeRepository.getRecipeById(2L).isEmpty()) {
             recipeRepository.save(eggFriedRiceRecipe);
         }
-    }
 
-     */
+        // new generator
+
+
+
+        String line;
+        Resource resource = resourceLoader.getResource("classpath:recipe.csv");
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+            boolean firstLine = true;
+            while ((line = br.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;
+                    continue;
+                }
+                String[] record = line.split(";");
+                Recipe recipe = new Recipe();
+                recipe.setId(Long.parseLong(record[0]));
+                recipe.setName(record[1]);
+                recipe.setDescription("");
+                recipe.setCategories(null);
+
+                recipe.setOwner(user);
+
+                recipeRepository.save(recipe);
+            }
+        }
+    }
 }

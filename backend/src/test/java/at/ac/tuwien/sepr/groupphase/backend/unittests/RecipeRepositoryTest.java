@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @ActiveProfiles({"test", "generateData"})
 @Transactional
-class RecipeRepositoryShould {
+class RecipeRepositoryTest {
     @Autowired
     private RecipeRepository recipeRepository;
     @Autowired
