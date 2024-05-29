@@ -33,7 +33,6 @@ export class RecipebookComponent implements OnInit {
   bookSearch: RecipeBookSearch = new class implements RecipeBookSearch {
     name: string;
   };
-
   constructor(
     private service: RecipeBookService,
     private notification: ToastrService,
@@ -58,7 +57,7 @@ export class RecipebookComponent implements OnInit {
           return;
         }
         this.data = items;
-      },
+        },
       error: error => {
         console.error('Error fetching recipes', error);
         this.bannerError = 'Could not fetch recipes: ' + error.message;
@@ -66,8 +65,7 @@ export class RecipebookComponent implements OnInit {
           ? 'Is the backend up?'
           : error.message.message;
         this.notification.error(errorMessage, 'Could Not Fetch Recipes');
-      }
-    })
+      }})
   }
 
   searchChanged(): void {
@@ -76,16 +74,16 @@ export class RecipebookComponent implements OnInit {
       next: items => {
         console.log("Successfully received all recipe books");
         this.data = items;
+
       },
       error: error => {
         console.error('Error fetching recipes', error);
-        this.bannerError = 'Could not fetch recipes: ' + error.message;
+        this.bannerError = 'Could not fetch recipe books: ' + error.message;
         const errorMessage = error.status === 0
           ? 'Is the backend up?'
           : error.message.message;
         this.notification.error(errorMessage, 'Could Not Fetch Recipes');
-      }
-    })
+      }})
   }
 
   loadNextPage() {

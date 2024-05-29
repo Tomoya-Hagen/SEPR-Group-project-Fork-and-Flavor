@@ -4,6 +4,7 @@ import { Observable, catchError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { RecipeDetailDto, RecipeListDto } from '../dtos/recipe';
 import {RecipeList, RecipeSearch} from "../dtos/recipe";
+import {RecipeBookListDto, RecipeBookSearch} from "../dtos/recipe-book";
 
 const baseUri = environment.backendUrl + '/recipes';
 
@@ -27,18 +28,12 @@ export class RecipeService {
    * Parameters that are {@code null} are ignored.
    * The name is considered a match, if the given parameter is a substring of the field in recipe.
    *
-   * @param searchParameters the parameters to use in searching.
+   * @param searchParams the parameters to use in searching.
    * @return an Observable for the recipes where all given parameters match.
    */
-  search(searchParams: RecipeSearch): Observable<RecipeList[]> {
-    if (searchParams.name) {
-      delete searchParams.name;
-    }
-    let params = new HttpParams();
-    if (searchParams.name) {
-      params = params.append('name', searchParams.name);
-    }
-    return this.http.get<RecipeList[]>(baseUri + "/search", {params});
+  public search(searchParams: RecipeSearch): Observable<RecipeListDto[]> {
+    return this.http.get<RecipeListDto[]>(baseUri+"/search?name="+searchParams.name);
+
   }
 
 

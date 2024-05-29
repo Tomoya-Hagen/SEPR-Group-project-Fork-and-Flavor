@@ -34,8 +34,8 @@ class CustomUserDetailServiceTest implements TestData {
     @Autowired
     private UserRepository userRepository;
 
-    /*@Test
-    public void registerValidUser() {
+    @Test
+    void registerValidUser() {
         UserRegisterDto validUser = new UserRegisterDto(
             "validuser@email.com",
             "password",
@@ -53,7 +53,7 @@ class CustomUserDetailServiceTest implements TestData {
     }
 
     @Test
-    public void registerInvalidUserEmail() {
+    void registerInvalidUserEmail() {
         UserRegisterDto invalidUser = new UserRegisterDto(
             "invalidEmail",
             "password",
@@ -65,7 +65,7 @@ class CustomUserDetailServiceTest implements TestData {
 
 
     @Test
-    public void registerUserWithDuplicateEmail() {
+    void registerUserWithDuplicateEmail() {
         UserRegisterDto invalidUser = new UserRegisterDto(
             "admin@email.com",
             "password",
@@ -76,15 +76,15 @@ class CustomUserDetailServiceTest implements TestData {
     }
 
     @Test
-    public void registerUserWithDuplicateUsername() {
+    void registerUserWithDuplicateUsername() {
         UserRegisterDto invalidUser = new UserRegisterDto(
             "administrator@email.com",
             "password",
             "admin"
         );
 
-        assertThrowsExactly(UsernameException.class, () -> customUserDetailService.register(invalidUser));*/
-    //}
+        assertThrowsExactly(UsernameException.class, () -> customUserDetailService.register(invalidUser));
+    }
 
 
 }

@@ -26,6 +26,9 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
 import {RegisterComponent} from "./components/register/register.component";
 import { AutomaticCompleteComponent } from './components/automacomplete/automacomplete.component'
 import {CardComponent} from "./components/card/card.component";
+import {MatIconButton} from "@angular/material/button";
+import {MatTooltip} from "@angular/material/tooltip";
+import {MatIcon} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -59,6 +62,9 @@ import {CardComponent} from "./components/card/card.component";
     BrowserAnimationsModule,
     SlickCarouselModule,
     CardComponent,
+    MatIconButton,
+    MatTooltip,
+    MatIcon,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

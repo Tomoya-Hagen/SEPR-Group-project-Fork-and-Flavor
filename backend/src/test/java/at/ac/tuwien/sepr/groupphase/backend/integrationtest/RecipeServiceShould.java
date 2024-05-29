@@ -1,9 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import jakarta.transaction.Transactional;
@@ -109,6 +106,14 @@ class RecipeServiceShould {
         assertNotNull(recipe);
         assertThat(recipe)
             .hasSize(1);
+
+        RecipeListDto recipeListDto = new RecipeListDto(13, "Cookies", "", 0);
+        List<RecipeListDto> recipeListDtoList = new java.util.ArrayList<>(List.of());
+        recipeListDtoList.add(recipeListDto);
+
+        assertEquals(recipeService.searchRecipe("Cookies"), recipeListDtoList);
+        assertEquals(1, recipeService.searchRecipe("Cookies").size());
+
     }
 
     @Test
@@ -116,5 +121,9 @@ class RecipeServiceShould {
 
         var recipe = recipeService.searchRecipe("Gurke");
         assertEquals("[]",recipe.toString());
+
+        assertEquals(new java.util.ArrayList<>(List.of()), recipeService.searchRecipe("Kaschew"));
+        assertEquals(0, recipeService.searchRecipe("Kaschew").size());
+
     }
 }

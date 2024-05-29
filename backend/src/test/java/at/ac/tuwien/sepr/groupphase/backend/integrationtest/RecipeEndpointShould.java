@@ -35,9 +35,11 @@ import java.util.List;
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.L;
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.g;
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.mg;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -162,14 +164,23 @@ class RecipeEndpointShould implements TestData {
     }
 
     @Test
-    public void searchTournamentReturns404() throws Exception {
+    public void searchRecipeReturnsEmptyListNotFound() throws Exception {
         mockMvc
-            .perform(MockMvcRequestBuilders
-                .get("/api/v1/recipes/")
-                .queryParam("name", "Gurke")
-                .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNotFound())
-            .andReturn().getResponse().getContentAsByteArray();
+            .perform(get("/api/v1/recipe/search")
+                .param("name", "Gurke")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    void searchRecipeReturnsFoundRecipe() throws Exception {
+        mockMvc.perform(get("/api/v1/recipe/search")
+                .param("name", "Apfelkuchen")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].name", org.hamcrest.Matchers.is("Apfelkuchen")));
     }
 
 

@@ -21,6 +21,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "Recipe_Book", schema = "PUBLIC", catalog = "DB")
 public class RecipeBook {
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
