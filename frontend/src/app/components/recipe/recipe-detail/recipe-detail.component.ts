@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef} from '@angular/core';
+import {Component, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -8,13 +8,14 @@ import { RecipeBookListDto } from 'src/app/dtos/recipe-book';
 import { RecipeStepDetailDto, RecipeStepRecipeDetailDto } from 'src/app/dtos/recipe-step';
 import { RecipeService } from 'src/app/services/recipe.service';
 import { RecipeBookService } from 'src/app/services/recipebook.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-recipe-detail',
   templateUrl: './recipe-detail.component.html',
   styleUrl: './recipe-detail.component.scss',
 })
-export class RecipeDetailComponent implements OnInit{
+export class RecipeDetailComponent implements OnInit, OnDestroy{
   recipe: RecipeDetailDto = {
     id: 0,
     rating: 0,
@@ -54,6 +55,7 @@ export class RecipeDetailComponent implements OnInit{
     private notification: ToastrService,
     private modalService: NgbModal,
     private recipeBookService: RecipeBookService,
+    private titleService: Title,
   ) { }
 
   ngOnInit(): void {
@@ -64,6 +66,7 @@ export class RecipeDetailComponent implements OnInit{
         next: data => {
           this.recipe = data;
           this.recipeSteps=this.recipe.recipeSteps;
+          this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
         },
         error: error => {
           console.error('Error fetching Recipe', error);
@@ -78,7 +81,11 @@ export class RecipeDetailComponent implements OnInit{
     });
   }
 
-  isRecipeDescriptionStep(recipeStep: any): boolean {
+  ngOnDestroy(): void {
+    this.titleService.setTitle("Fork & Flavour");
+  }
+
+    isRecipeDescriptionStep(recipeStep: any): boolean {
     return recipeStep.hasOwnProperty('description') && !('recipe' in recipeStep);
   }
 

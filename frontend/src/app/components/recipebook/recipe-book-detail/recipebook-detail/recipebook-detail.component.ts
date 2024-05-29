@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from "@angular/common";
 import {SlickCarouselModule} from "ngx-slick-carousel";
 import {RecipeService} from "../../../../services/recipe.service";
@@ -6,6 +6,7 @@ import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 import {RecipeBookService} from "../../../../services/recipebook.service";
 import {RecipeBookDetailDto} from "../../../../dtos/recipe-book";
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-recipebook-detail',
@@ -19,7 +20,7 @@ import {RecipeBookDetailDto} from "../../../../dtos/recipe-book";
   templateUrl: './recipebook-detail.component.html',
   styleUrl: './recipebook-detail.component.scss'
 })
-export class RecipebookDetailComponent implements OnInit{
+export class RecipebookDetailComponent implements OnInit, OnDestroy{
   bannerError: string | null = null;
   recipeBook: RecipeBookDetailDto = {
     name: "",
@@ -33,7 +34,8 @@ export class RecipebookDetailComponent implements OnInit{
     private service: RecipeBookService,
     private router: Router,
     private route: ActivatedRoute,
-    private notification: ToastrService
+    private notification: ToastrService,
+    private titleService: Title,
   ) {
 
   }
@@ -44,6 +46,7 @@ export class RecipebookDetailComponent implements OnInit{
       observable.subscribe({
         next: data => {
           this.recipeBook = data;
+          this.titleService.setTitle("Fork & Flavour | " + this.recipeBook.name);
         },
         error: error => {
           console.error('Error fetching recipe books', error);
@@ -55,6 +58,10 @@ export class RecipebookDetailComponent implements OnInit{
         }
       });
     });
+  }
+
+  ngOnDestroy() {
+    this.titleService.setTitle("Fork & Flavour");
   }
 
 }
