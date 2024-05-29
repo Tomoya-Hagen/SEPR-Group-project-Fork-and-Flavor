@@ -18,24 +18,17 @@ const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'recipe', component: RecipeComponent},
   {path: 'recipecreate', component: RecipeCreateComponent},
   {path: 'recipe', children: [
       {path: '', component: RecipeComponent},
       {path: 'details/:id', component: RecipeDetailComponent},
       {path: 'edit/:id', component: RecipeEditComponent}
-    ]},
-  {path: 'recipebook', children: [
-    {path: '', component: RecipebookComponent},
-    {path: 'create', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.create}},
-    {path: 'edit/:id', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.edit}},
-    {path: '', component: RecipeComponent},
-    {path: 'details/:id', component: RecipeDetailComponent},
-    {path: 'edit/:id', component: RecipeEditComponent}
   ]},
   {path: 'recipebook', children:[
       {path: '', component: RecipebookComponent},
-      {path: 'details/:id', component: RecipebookDetailComponent}
+      {path: 'details/:id', component: RecipebookDetailComponent},
+      {path: 'create', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.create}},
+      {path: 'edit/:id', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.edit}}
   ]},
   {path: 'weekplan', component: WeekplanComponent},
 ];
