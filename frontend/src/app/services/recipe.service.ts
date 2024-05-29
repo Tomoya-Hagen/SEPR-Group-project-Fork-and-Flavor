@@ -8,9 +8,8 @@ import { RecipeStepDescriptionDetailDto, RecipeStepDetailDto, RecipeStepRecipeDe
 import { Step } from '../dtos/Step';
 import { map as rxjsMap} from 'rxjs/operators'
 import { Observable, catchError, throwError } from 'rxjs';
+import {Globals} from '../global/globals';
 import {RecipeSearch} from "../dtos/recipe";
-
-const baseUri = environment.backendUrl + '/recipes';
 
 /**
  * Service for handling recipe books.
@@ -21,9 +20,9 @@ const baseUri = environment.backendUrl + '/recipes';
 })
 
 export class RecipeService {
-
+  private baseUri = this.globals.backendUri + '/recipes';
   constructor(
-    private http: HttpClient) {
+    private http: HttpClient, private globals: Globals) {
   }
 
   /**
@@ -35,7 +34,7 @@ export class RecipeService {
    * @return an Observable for the recipes where all given parameters match.
    */
   public search(searchParams: RecipeSearch): Observable<RecipeListDto[]> {
-    return this.http.get<RecipeListDto[]>(baseUri+"/search?name="+searchParams.name);
+    return this.http.get<RecipeListDto[]>(this.baseUri+"/search?name="+searchParams.name);
 
   }
 
@@ -44,7 +43,7 @@ export class RecipeService {
     let params = new HttpParams();
     params = params.append('name', name);
     params = params.append('limit', limit.toString());
-    return this.http.get<RecipeListDto[]>(baseUri, {params})
+    return this.http.get<RecipeListDto[]>(this.baseUri, {params})
       .pipe(
         catchError((error) => {
           console.error(error);
@@ -55,20 +54,20 @@ export class RecipeService {
 
   public getListByPageAndStep(page: number, step: number): Observable<RecipeListDto[]> {
     return this.http.get<RecipeListDto[]>(
-      baseUri + "/?page=" + page + "&step=" + step
+      this.baseUri + "/?page=" + page + "&step=" + step
     );
   }
 
 
   public getRecipeDetailsBy(recipeId: number): Observable<RecipeDetailDto> {
     return this.http.get<RecipeDetailDto>(
-      baseUri + "/details/" + recipeId
+      this.baseUri + "/details/" + recipeId
     );
   }
 
   public getRecipeNameBy(recipeId: number): Observable<string> {
     return this.http.get<RecipeDetailDto>(
-      baseUri+"/details/"+recipeId
+      this.baseUri+"/details/"+recipeId
     ).pipe(
       rxjsMap(recipe => recipe.name)
     );
@@ -80,15 +79,15 @@ export class RecipeService {
     if (limit != null) {
       params = params.append("limit", limit);
     }
-    return this.http.get<SimpleRecipe[]>(baseUri + "/simple", { params });
+    return this.http.get<SimpleRecipe[]>(this.baseUri + "/simple", { params });
   }
 
   public createRecipe(recipe: Recipe): Observable<DetailedRecipeDto> {
-    return this.http.post<DetailedRecipeDto>(baseUri, recipe);
+    return this.http.post<DetailedRecipeDto>(this.baseUri, recipe);
   }
 
   public updateRecipe(recipe: RecipeUpdateDto): Observable<DetailedRecipeDto> {
-      return this.http.put<DetailedRecipeDto>(baseUri + '/' + recipe.id, recipe);
+      return this.http.put<DetailedRecipeDto>(this.baseUri + '/' + recipe.id, recipe);
   }
 
   public getRecipeUpdateDtoById(recipeId: number): Observable<RecipeUpdateDto> {
