@@ -234,5 +234,9 @@ export class RecipeEditComponent implements OnInit {
     }
   }
 
+  public navToDetails() {
+    this.router.navigate(['recipe', 'details', this.recipe.id]);
+  }
+
 
 }
