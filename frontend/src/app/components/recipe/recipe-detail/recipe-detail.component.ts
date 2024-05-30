@@ -9,6 +9,7 @@ import { RecipeStepDetailDto, RecipeStepRecipeDetailDto } from 'src/app/dtos/rec
 import { RecipeService } from 'src/app/services/recipe.service';
 import { RecipeBookService } from 'src/app/services/recipebook.service';
 import { Title } from '@angular/platform-browser';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -47,6 +48,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     "infinite" : false
   }
   showNutrition: boolean = false;
+  currentUserId: number;
 
   constructor(
     private service: RecipeService,
@@ -56,10 +58,13 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     private modalService: NgbModal,
     private recipeBookService: RecipeBookService,
     private titleService: Title,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
-
+    this.currentUserId = this.authService.getCurrentUserId();
+    console.log("currentUserId: "+this.currentUserId);
+    console.log("owner: "+this.recipe.ownerId);
     this.route.params.subscribe(params => {
       let observable = this.service.getRecipeDetailsBy(params['id']);
       observable.subscribe({
@@ -79,6 +84,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         }
       });
     });
+  }
+
+  public isOwner(): boolean {
+    return this.currentUserId === this.recipe.ownerId;
   }
 
   ngOnDestroy(): void {

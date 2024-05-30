@@ -31,7 +31,7 @@
       <form (ngSubmit)="spoon(spoonForm)" #spoonForm="ngForm">
         <button type="button" (click)="spoon(spoonForm)" id="spn-rcp" class="btn btn-success float-right" *ngIf="currentRecipeBook">Rezept Spoonen</button>
       </form>
-      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Close</button>
+      <button type="button" class="btn btn-secondary" id="close-modal-btn" (click)="modal.dismiss('close')">Schließen</button>
     </div>
   </ng-template>
   <br>
@@ -58,12 +58,12 @@
         </span>
       </div>
       <div *ngIf="recipe.allergens.length === 0">
-        none
+        Keine
       </div>
     </div>
     <div class="info-box clickable" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--acent-color);" (click)="toggleNutritionVisibility()">
       <h4>Nährwerte:</h4>
-      Click to Show
+      Clicke um zu zeigen
     </div>
   </div>
 
@@ -83,7 +83,7 @@
       <p>{{recipe.description}}</p>
     </div>
     <div style="text-align: right;position: relative; margin: 30px">
-      <button type="button" class="btn btn-primary btn-sm" (click)="editRecipe()" style="margin-right: 10px;">Rezept bearbeiten</button>
+      <button *ngIf="isOwner()" type="button" class="btn btn-primary btn-sm" (click)="editRecipe()" style="margin-right: 10px;">Rezept bearbeiten</button>
       <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openSpoonModal(spoonRecipeModal)">Recipe spoonen</button>
     </div>
 
