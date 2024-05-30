@@ -50,4 +50,5 @@ public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
     @Query("SELECT u FROM ApplicationUser u WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :username, '%')) ORDER BY u.id LIMIT :limit")
     List<ApplicationUser> findByNamesContainingIgnoreCase(@Param("username") String name, @Param("limit") int limit);
 
+    ApplicationUser findFirstById(long id);
 }

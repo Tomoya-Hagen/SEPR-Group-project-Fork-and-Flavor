@@ -63,4 +63,14 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query("SELECT i FROM Recipe i WHERE i.name LIKE %:name%")
     List<Recipe> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
 
+    Recipe findById(long id);
+
+    Boolean existsByName(String name);
+
+    Recipe findByName(String name);
+
+    Boolean existsById(long id);
+
+    @Query("SELECT r.name FROM Recipe r")
+    List<String> getAllNames();
 }

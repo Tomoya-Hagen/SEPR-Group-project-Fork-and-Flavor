@@ -6,6 +6,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * This is the interface for the persistence layer of Nutrition's.
  *
@@ -14,6 +16,6 @@ import org.springframework.stereotype.Repository;
 @DynamicUpdate
 @Repository
 public interface NutritionRepository extends JpaRepository<Nutrition, Long> {
-    Nutrition findByName(String name);
+    Optional<Nutrition> findByName(String name);
 
 }

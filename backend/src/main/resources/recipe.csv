@@ -1,51 +1,117 @@
-id;name;description;numberofServings;forkedFrom
-3;Becherkuchen;;;
-4;Beef und Brokkoli Soja;;;
-5;Bratkartoffel;;;
-6;Braunhirse Erdmandel Schnitten;;;
-7;Brokkoli Strude;;;
-8;Brokkoli-Lauch-Nudeln;;;
-9;Brokkoli-Nudeln;;;
-10;Cake Pops;;;
-11;Champion Spaghetti;;;
-12;Champions-Huhn;;;
-13;Cookies;;;
-14;Ei knusprig mit Olivenöl;;;
-15;Ei scrambled;;;
-16;Ei Spiegelei;;;
-17;Eieraufstrich;;;
-18;Eierlikör-Gugelhupf;;;
-19;ErbsenChampingnon Risotto;;;
-20;Erdnuss Chili Nudeln;;;
-21;Erdäpfel asiatisch;;;
-22;Erdäpfel griechisch;;;
-23;Erdäpfel Lauch Suppe;;;
-24;Faschiertes mit Gemüse;;;
-25;Feta Nudeln;;;
-26;Gebrannte Mandeln;;;
-27;Gefüllte Zucchini;;;
-28;Gemüse mit Huhn;;;
-29;Gratin;;;
-30;Griechische Erbsen nach HE;;;
-31;Griesbrei;;;
-32;Grillgemüse;;;
-33;Grillhuhn;;;
-34;Guacamole;;;
-35;Hirse mit Tomaten und Speck;;;
-36;Hirseauflauf mit Gemüse;;;
-37;Hühnerbrust gefüllt;;;
-38;Hähnchenbruststreifen im Kräutermantel;;;
-39;Joghurtgugelhupf;;;
-40;Kaiserschmarren;;;
-41;Kürbiscremesuppe;;;
-42;Käsekuchen;;;
-43;Lachsnudeln;;;
-44;Mais-Ripperl;;;
-45;Nudeln mit Spinatsauce;;;
-46;Pizzaschnecke;;;
-47;Rahmkohlrabi;;;
-48;Spaghetti Bolognese;;;
-49;Steak nach Gordon Ramsay;;;
-50;Zitronenkuchen;;;
-51;Apfelkuchen;;;
-52;Banenenkuchen;;;
+id;name;description;numberofServings;forkedFrom;ownerid
+18;Griesbrei;imported from bignom;2;;1
+20;Cookies;imported from bignom;2;;1
+21;Risotto (Zuchini);imported from bignom;2;;1
+22;Potato-Wedges;imported from bignom;2;;1
+23;Popcorn;imported from bignom;2;;1
+24;Zucchini-Nudeln;imported from bignom;2;;1
+25;Ei knusprig mit Olivenöl;imported from bignom;2;;1
+26;Ei scrambled;imported from bignom;2;;1
+27;Ei Spiegelei;imported from bignom;2;;1
+28;Ei auf Martin Art;imported from bignom;2;;1
+29;Brokkoli-Nudeln;imported from bignom;2;;1
+31;Putengeschnetzeltes mit Gemüse;imported from bignom;2;;1
+32;Milchreis;imported from bignom;2;;1
+34;Alles Speise;imported from bignom;2;;1
+35;Kartoffelpüree;imported from bignom;2;;1
+36;pikante Schupfnudeln;imported from bignom;2;;1
+37;Kürbis-Nudeln;imported from bignom;2;;1
+38;Kürbis-Risotto;imported from bignom;2;;1
+39;Becherkuchen;imported from bignom;2;;1
+40;Erbsen (griechisch);imported from bignom;2;;1
+41;Mais-Ripperl;imported from bignom;2;;1
+43;Ei UFO;imported from bignom;2;;1
+44;Grillgemüse (fertig) nach Martin;imported from bignom;2;;1
+45;Nudeln mit Huhn-Spinat Soße;imported from bignom;2;;1
+46;Faschiertes mit Gemüse;imported from bignom;2;;1
+47;Reis;imported from bignom;2;;1
+48;Reis Vollkorn;imported from bignom;2;;1
+49;Quinoa;imported from bignom;2;;1
+50;Feta Nudeln;imported from bignom;2;;1
+51;Nudeln mit Zitronensauce;imported from bignom;2;;1
+52;Nudeln mit Parmesansauce;imported from bignom;2;;1
+53;Eieraufstrich;imported from bignom;2;;1
+54;Kartoffelgröschti;imported from bignom;2;;1
+55;Gemüse mit Huhn;imported from bignom;2;;1
+56;Bratkartoffel;imported from bignom;2;;1
+57;Spaghetti Bolognese;imported from bignom;2;;1
+58;Spinat Creme;imported from bignom;2;;1
+63;Pizzaschnecken;imported from bignom;2;;1
+67;Braunhirse Erdmandel Schnitten;imported from bignom;2;;1
+68;Regenbogen-Torte;imported from bignom;2;;1
+69;Regenbogen-Torte-Creme;imported from bignom;2;;1
+70;Cake Pops;imported from bignom;2;;1
+71;Hirse mit Tomaten und Speck;imported from bignom;2;;1
+72;Kohlrabi Rahm;imported from bignom;2;;1
+73;Zartweizen;imported from bignom;2;;1
+74;Hirseauflauf mit Gemüse;imported from bignom;2;;1
+75;Eierlikör-Gugelhupf;imported from bignom;2;;1
+76;Marmorgugelhupf;imported from bignom;2;;1
+77;Apfelkuchen nach Ing;imported from bignom;2;;1
+79;Kaiserschmarren;imported from bignom;2;;1
+80;Joghurtgugelhupf;imported from bignom;2;;1
+81;Malakoff-Torte;imported from bignom;2;;1
+82;Streusselkuchen;imported from bignom;2;;1
+83;Thunfisch-Nudeln;imported from bignom;2;;1
+84;Knusprige Kartoffel Asiatisch;imported from bignom;2;;1
+85;Zucchini-Kartoffel;imported from bignom;2;;1
+86;Steak nach Gordon Ramsay;imported from bignom;2;;1
+89;Hühnerbrust gefüllt;imported from bignom;2;;1
+90;Guacamole;imported from bignom;2;;1
+91;Nudeln mit Champignons;imported from bignom;2;;1
+92;Apfelkuchen;imported from bignom;2;;1
+93;Erdäpfel asiatisch;imported from bignom;2;;1
+94;Spinatwraps;imported from bignom;2;;1
+95;Gefüllte Zucchini;imported from bignom;2;;1
+96;Erdnuss Chili Nudeln;imported from bignom;2;;1
+97;Zitronenkuchen;imported from bignom;2;;1
+98;Reis Soja Gemüse;imported from bignom;2;;1
+99;Nudeln mit Spinatsauce;imported from bignom;2;;1
+100;Beef und Brokkoli Soja;imported from bignom;2;;1
+101;Lachs-Risotto;imported from bignom;2;;1
+102;Suppe nach Oma Kutler;imported from bignom;2;;1
+103;Eierreis;imported from bignom;2;;1
+104;Rahmkohlrabi;imported from bignom;2;;1
+105;ErbsenChampingnon Risotto;imported from bignom;2;;1
+106;Hähnchenbruststreifen im Kräutermantel;imported from bignom;2;;1
+107;ZucchiniGemüse;imported from bignom;2;;1
+108;SüßkartoffelGemüse;imported from bignom;2;;1
+110;Gratin;imported from bignom;2;;1
+111;Brokkoli Strudel;imported from bignom;2;;1
+112;Knoblauchsauce;imported from bignom;2;;1
+113;Reispfanne mit Cashewkernen;imported from bignom;2;;1
+114;Petersilkartoffeln;imported from bignom;2;;1
+115;Lachs gebraten;imported from bignom;2;;1
+116;Spinat-Risotto;imported from bignom;2;;1
+117;Kräuterbutter;imported from bignom;2;;1
+118;Nicht-gefüllte Paprika;imported from bignom;2;;1
+119;Paprika-Cashew-Tofu;imported from bignom;2;;1
+120;Reistopf mit Mais;imported from bignom;2;;1
+121;Kürbiscremesuppe;imported from bignom;2;;1
+122;Topfenknödel Proteinreich;imported from bignom;2;;1
+123;Schoko-Zimt Crinkle Cookies;imported from bignom;2;;1
+124;Mürbteig;imported from bignom;2;;1
+126;Lebkuchen;imported from bignom;2;;1
+127;Vanillekipferl;imported from bignom;2;;1
+128;Spinatspätzle;imported from bignom;2;;1
+129;Lachsnudeln;imported from bignom;2;;1
+130;Erdäpfel Griechisch;imported from bignom;2;;1
+131;Gebrannte Mandeln;imported from bignom;2;;1
+132;Griechische Erbsen nach He;imported from bignom;2;;1
+133;Kartoffelspeise;imported from bignom;2;;1
+134;Tomatensuppe Ofen;imported from bignom;2;;1
+136;Champignon Spaghetti;imported from bignom;2;;1
+137;Grillgemüse;imported from bignom;2;;1
+138;Tinto de verano;imported from bignom;2;;1
+139;Tunfisch Sticks;imported from bignom;2;;1
+140;Sriracha Brownies;imported from bignom;2;;1
+141;Champignon-Huhn;imported from bignom;2;;1
+142;Risibisi;imported from bignom;2;;1
+143;Erdäpfel Lauch Suppe;imported from bignom;2;;1
+144;Bananenkuchen - Proteinreich;imported from bignom;2;;1
+145;Brokkoli-Lauch-Nudeln;imported from bignom;2;;1
+146;Grillhuhn;imported from bignom;2;;1
+148;Kartoffelscheiben;imported from bignom;2;;1
+149;Madras Curry;imported from bignom;2;;1
+150;Karotten Nuggets;imported from bignom;2;;1
+151;Käsekuchen;imported from bignom;2;;1

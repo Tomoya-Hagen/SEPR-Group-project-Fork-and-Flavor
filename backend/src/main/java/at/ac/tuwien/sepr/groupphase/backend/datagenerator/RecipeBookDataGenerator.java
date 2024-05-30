@@ -1,20 +1,12 @@
+/*
 package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
-import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
-import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
-import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.List;
 
 @Component
 @Order(6)
@@ -25,6 +17,7 @@ public class RecipeBookDataGenerator extends DataGenerator implements CommandLin
     private final RecipeRepository recipeRepository;
 
     public RecipeBookDataGenerator(RecipeBookRepository recipeBookRepository, ResourceLoader resourceLoader, RecipeRepository recipeRepository) {
+        super(, , , , , , , , , );
         this.recipeBookRepository = recipeBookRepository;
         this.resourceLoader = resourceLoader;
         this.recipeRepository = recipeRepository;
@@ -33,7 +26,8 @@ public class RecipeBookDataGenerator extends DataGenerator implements CommandLin
     @Transactional
     @Override
     public void run(String... args) throws Exception {
-        String line;
+*/
+/*        String line;
         Resource resource = resourceLoader.getResource("classpath:recipebook.csv");
         try (BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
             boolean firstLine = true;
@@ -57,6 +51,8 @@ public class RecipeBookDataGenerator extends DataGenerator implements CommandLin
 
                 recipeBookRepository.save(recipeBook);
             }
-        }
+        }*//*
+
     }
 }
+*/

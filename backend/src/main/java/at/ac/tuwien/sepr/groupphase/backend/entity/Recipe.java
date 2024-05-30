@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,6 @@ import java.util.Objects;
 @Entity
 @DynamicUpdate
 public class Recipe {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
     private long id;
@@ -213,5 +213,150 @@ public class Recipe {
 
     public List<Rating> getRatings() {
         return ratings;
+    }
+
+    public long getOwnerId() {
+        return owner.getId();
+    }
+
+    public static final class RecipeBuilder {
+        private long id;
+        private String name;
+        private String description;
+        private Short numberOfServings;
+        private Recipe forkedFrom;
+        private ApplicationUser owner;
+        private List<Category> categories;
+        private Boolean isDraft;
+        private List<ApplicationUser> favorites;
+        private List<RecipeBook> recipeBooks;
+        private List<Cooked> cooked;
+        private List<Rating> ratings;
+        private List<RecipeStep> recipeSteps;
+        private List<RecipeStep> recipeRecipeSteps;
+        private List<RecipeVerified> recipesVerified;
+        private List<WeeklyPlanner> weeklyPlanner;
+        private List<RecipeIngredient> ingredients;
+        private List<Recipe> recipesForkedFromThis;
+
+        private RecipeBuilder() {
+        }
+
+        public static RecipeBuilder aRecipe() {
+            return new RecipeBuilder();
+        }
+
+        public RecipeBuilder withId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public RecipeBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public RecipeBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public RecipeBuilder withNumberOfServings(Short numberOfServings) {
+            this.numberOfServings = numberOfServings;
+            return this;
+        }
+
+        public RecipeBuilder withForkedFrom(Recipe forkedFrom) {
+            this.forkedFrom = forkedFrom;
+            return this;
+        }
+
+        public RecipeBuilder withOwner(ApplicationUser owner) {
+            this.owner = owner;
+            return this;
+        }
+
+        public RecipeBuilder withCategories(List<Category> categories) {
+            this.categories = categories;
+            return this;
+        }
+
+        public RecipeBuilder withIsDraft(Boolean isDraft) {
+            this.isDraft = isDraft;
+            return this;
+        }
+
+        public RecipeBuilder withFavorites(List<ApplicationUser> favorites) {
+            this.favorites = favorites;
+            return this;
+        }
+
+        public RecipeBuilder withRecipeBooks(List<RecipeBook> recipeBooks) {
+            this.recipeBooks = recipeBooks;
+            return this;
+        }
+
+        public RecipeBuilder withCooked(List<Cooked> cooked) {
+            this.cooked = cooked;
+            return this;
+        }
+
+        public RecipeBuilder withRatings(List<Rating> ratings) {
+            this.ratings = ratings;
+            return this;
+        }
+
+        public RecipeBuilder withRecipeSteps(List<RecipeStep> recipeSteps) {
+            this.recipeSteps = recipeSteps;
+            return this;
+        }
+
+        public RecipeBuilder withRecipeRecipeSteps(List<RecipeStep> recipeRecipeSteps) {
+            this.recipeRecipeSteps = recipeRecipeSteps;
+            return this;
+        }
+
+        public RecipeBuilder withRecipesVerified(List<RecipeVerified> recipesVerified) {
+            this.recipesVerified = recipesVerified;
+            return this;
+        }
+
+        public RecipeBuilder withWeeklyPlanner(List<WeeklyPlanner> weeklyPlanner) {
+            this.weeklyPlanner = weeklyPlanner;
+            return this;
+        }
+
+        public RecipeBuilder withIngredients(List<RecipeIngredient> ingredients) {
+            this.ingredients = ingredients;
+            return this;
+        }
+
+        public RecipeBuilder withRecipesForkedFromThis(List<Recipe> recipesForkedFromThis) {
+            this.recipesForkedFromThis = recipesForkedFromThis;
+            return this;
+        }
+
+        public Recipe build() {
+            Recipe recipe = new Recipe();
+            recipe.setId(id);
+            recipe.setName(name);
+            recipe.setDescription(description);
+            recipe.setNumberOfServings(numberOfServings);
+            recipe.setForkedFrom(forkedFrom);
+            recipe.setOwner(owner);
+            recipe.setCategories(categories);
+            recipe.setIsDraft(isDraft);
+            recipe.setRecipeSteps(recipeSteps);
+            recipe.setIngredients(ingredients);
+            recipe.recipesForkedFromThis = this.recipesForkedFromThis;
+            recipe.recipeRecipeSteps = this.recipeRecipeSteps;
+            recipe.cooked = this.cooked;
+            recipe.ratings = this.ratings;
+            recipe.recipeBooks = this.recipeBooks;
+            recipe.favorites = this.favorites;
+            recipe.weeklyPlanner = this.weeklyPlanner;
+            recipe.recipesVerified = this.recipesVerified;
+            return recipe;
+        }
     }
 }
