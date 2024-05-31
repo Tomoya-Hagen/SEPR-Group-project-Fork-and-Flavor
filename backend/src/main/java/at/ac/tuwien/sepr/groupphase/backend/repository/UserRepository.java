@@ -51,4 +51,8 @@ public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
     List<ApplicationUser> findByNamesContainingIgnoreCase(@Param("username") String name, @Param("limit") int limit);
 
     ApplicationUser findFirstById(long id);
+
+    @Query("SELECT u FROM ApplicationUser u WHERE u.id = :id")
+    ApplicationUser findFirstByIdWithEagerLoading(@Param("id") Long id);
+
 }

@@ -11,9 +11,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +25,6 @@ import java.util.Objects;
 @Table(name = "Recipe_Book", schema = "PUBLIC", catalog = "DB")
 public class RecipeBook {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
     private long id;
@@ -32,17 +34,26 @@ public class RecipeBook {
     @Basic
     @Column(name = "description")
     private String description;
-    @Basic
-    @Column(name = "owner_id")
-    private long ownerId;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private ApplicationUser owner;
+
+    @ManyToMany
+    @JoinTable(
+        name = "Shared_RecipeBooks",
+        joinColumns = @JoinColumn(name = "recipe_book_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
+    )
+    private Set<ApplicationUser> sharedUsers = new HashSet<>();
+
+    @ManyToMany
     @JoinTable(
         name = "recipe_recipe_book",
-        joinColumns = @JoinColumn(name = "recipe_book_id"),
-        inverseJoinColumns = @JoinColumn(name = "recipe_id")
+        joinColumns = @JoinColumn(name = "recipe_book_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     )
-    private List<Recipe> recipes = new ArrayList<>();
+    private List<Recipe> recipes;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_book_id", referencedColumnName = "id")
@@ -72,20 +83,20 @@ public class RecipeBook {
         this.description = description;
     }
 
-    public long getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(long ownerId) {
-        this.ownerId = ownerId;
-    }
-
     public List<Recipe> getRecipes() {
         return recipes;
     }
 
     public void setRecipes(List<Recipe> recipes) {
         this.recipes = recipes;
+    }
+
+    public Long getOwnerId() {
+        return owner.getId();
+    }
+
+    public void setOwner(ApplicationUser owner) {
+        this.owner = owner;
     }
 
     @Override
@@ -97,12 +108,12 @@ public class RecipeBook {
             return false;
         }
         RecipeBook that = (RecipeBook) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(ownerId, that.ownerId);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(owner.getId(), that.owner.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, ownerId);
+        return Objects.hash(id, name, description, owner.getId());
     }
 
     @ManyToMany(cascade = CascadeType.MERGE)
@@ -119,4 +130,96 @@ public class RecipeBook {
         this.editors = editors;
     }
 
+    @Override
+    public String toString() {
+        return "RecipeBook{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", owner=" + owner.toString()+
+            ", recipes=" + recipes +
+            ", weeklyPlanner=" + weeklyPlanner +
+            ", editors=" + editors +
+            '}';
+    }
+
+    public String toStringSmall() {
+        return "RecipeBook{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", description='" + description + '\'' +
+            ", ownerId=" + owner.getId() +
+            '}';
+    }
+
+    public static final class RecipeBookBuilder {
+        private long id;
+        private String name;
+        private String description;
+        private ApplicationUser owner;
+        private Set<ApplicationUser> sharedUsers;
+        private List<Recipe> recipes;
+        private List<WeeklyPlanner> weeklyPlanner;
+        private List<ApplicationUser> editors;
+
+        private RecipeBookBuilder() {
+        }
+
+        public static RecipeBookBuilder aRecipeBook() {
+            return new RecipeBookBuilder();
+        }
+
+        public RecipeBookBuilder withId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public RecipeBookBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public RecipeBookBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public RecipeBookBuilder withOwner(ApplicationUser owner) {
+            this.owner = owner;
+            return this;
+        }
+
+        public RecipeBookBuilder withSharedUsers(Set<ApplicationUser> sharedUsers) {
+            this.sharedUsers = sharedUsers;
+            return this;
+        }
+
+        public RecipeBookBuilder withRecipes(List<Recipe> recipes) {
+            this.recipes = recipes;
+            return this;
+        }
+
+        public RecipeBookBuilder withWeeklyPlanner(List<WeeklyPlanner> weeklyPlanner) {
+            this.weeklyPlanner = weeklyPlanner;
+            return this;
+        }
+
+        public RecipeBookBuilder withEditors(List<ApplicationUser> editors) {
+            this.editors = editors;
+            return this;
+        }
+
+        public RecipeBook build() {
+            RecipeBook recipeBook = new RecipeBook();
+            recipeBook.setId(id);
+            recipeBook.setName(name);
+            recipeBook.setDescription(description);
+            recipeBook.setRecipes(recipes);
+            recipeBook.setEditors(editors);
+            recipeBook.weeklyPlanner = this.weeklyPlanner;
+            recipeBook.sharedUsers = this.sharedUsers;
+            recipeBook.owner = this.owner;
+            return recipeBook;
+        }
+    }
 }

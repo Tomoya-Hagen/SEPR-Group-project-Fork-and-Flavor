@@ -50,6 +50,9 @@ public interface RecipeBookRepository extends JpaRepository<RecipeBook, Long> {
      * @param userId represents the user id of the user.
      * @return all recipe books the user has write access to.
      */
-    @Query("select distinct rb from RecipeBook rb left join rb.editors rbe where rb.ownerId=:userId or rbe.id=:userId")
-    List<RecipeBook> getRecipeBooksThatAnUserHasWriteAccessToByUserId(@Param("userId") long userId);
+    @Query("SELECT rb FROM RecipeBook rb WHERE rb.owner.id = :userId OR :user MEMBER OF rb.sharedUsers")
+    List<RecipeBook> findRecipeBooksByOwnerOrSharedUser(@Param("userId") long userId);
+
+    Boolean existsByName(String name);
+
 }

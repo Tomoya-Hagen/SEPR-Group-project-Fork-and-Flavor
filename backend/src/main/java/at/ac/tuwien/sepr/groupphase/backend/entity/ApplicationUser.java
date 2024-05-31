@@ -14,8 +14,10 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "ApplicationUser")
@@ -36,6 +38,13 @@ public class ApplicationUser {
     @Basic
     @Column(name = "has_profile_picture")
     private Boolean hasProfilePicture;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    private List<RecipeBook> ownedRecipeBooks;
+
+/*    @ManyToMany(mappedBy = "sharedUsers")
+    private List<RecipeBook> sharedRecipeBooks;*/
 
     public long getId() {
         return id;
@@ -101,10 +110,6 @@ public class ApplicationUser {
     private List<Role> roles = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner_id", referencedColumnName = "id")
-    private List<RecipeBook> recipeBooks;
-
-    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<RecipeVerified> recipesVerified;
 
@@ -127,12 +132,6 @@ public class ApplicationUser {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<Rating> ratings;
-
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "user_recipe_book",
-        joinColumns = {@JoinColumn(name = "user_id")},
-        inverseJoinColumns = {@JoinColumn(name = "recipe_book_id")})
-    private List<RecipeBook> editableRecipeBooks = new ArrayList<>();
 
     public boolean getAdmin() {
         if (roles != null && !roles.isEmpty()) {

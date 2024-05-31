@@ -7,7 +7,10 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.IngredientNutrition;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Nutrition;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
+import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeDescriptionStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
+import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Role;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergenRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
@@ -16,10 +19,12 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.NutritionRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeIngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeStepRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -51,12 +56,13 @@ public class DataGenerator implements CommandLineRunner {
     private final RecipeBookRepository recipeBookRepository;
     private final RecipeRepository recipeRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
+    private final RecipeStepRepository recipeStepRepository;
 
     private final ResourceLoader resourceLoader;
 
     private List<Long> skippedRecipes = new ArrayList<>();
 
-    public DataGenerator(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, CategoryRepository categoryRepository, IngredientRepository ingredientRepository, AllergenRepository allergenRepository, NutritionRepository nutritionRepository, RecipeBookRepository recipeBookRepository, RecipeRepository recipeRepository, RecipeIngredientRepository recipeIngredientRepository, ResourceLoader resourceLoader) {
+    public DataGenerator(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, CategoryRepository categoryRepository, IngredientRepository ingredientRepository, AllergenRepository allergenRepository, NutritionRepository nutritionRepository, RecipeBookRepository recipeBookRepository, RecipeRepository recipeRepository, RecipeIngredientRepository recipeIngredientRepository, RecipeStepRepository recipeStepRepository, ResourceLoader resourceLoader) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -67,6 +73,7 @@ public class DataGenerator implements CommandLineRunner {
         this.recipeBookRepository = recipeBookRepository;
         this.recipeRepository = recipeRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
+        this.recipeStepRepository = recipeStepRepository;
         this.resourceLoader = resourceLoader;
     }
 
@@ -80,6 +87,8 @@ public class DataGenerator implements CommandLineRunner {
         generateRecipeData();
         generateRecipeIngredients();
         generateRecipeCategories();
+        generateRecipeSteps();
+        generateRecipeBooks();
     }
 
     private void generateUserData() {
@@ -354,6 +363,85 @@ public class DataGenerator implements CommandLineRunner {
         }
     }
 
+    protected void generateRecipeSteps() {
+        Resource resource = resourceLoader.getResource("classpath:recipeSteps.csv");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+            String line;
+            boolean first = true;
+            while ((line = reader.readLine()) != null) {
+                List<String> fields = parseCsvLine(line, ';');
+                if (first) {
+                    first = false;
+                    continue;
+                }
+                if (skippedRecipes.contains(Long.parseLong(fields.get(0)))) {
+                    continue;
+                }
+                Recipe recipe = recipeRepository.findById(Long.parseLong(fields.get(0)));
+                RecipeDescriptionStep recipeStep = RecipeDescriptionStep.RecipeDescriptionStepBuilder.aRecipeDescriptionStep()
+                    .withRecipe(recipe)
+                    .withStepNumber(Integer.parseInt(fields.get(1)))
+                    .withName(fields.get(2))
+                    .withDescription(fields.get(3))
+                    .build();
+                recipeStepRepository.save(recipeStep);
+            }
+            recipeStepRepository.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void generateRecipeBooks() {
+        Resource resource = resourceLoader.getResource("classpath:recipebook.csv");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+            String line;
+            Boolean first = true;
+            while ((line = reader.readLine()) != null) {
+                List<String> fields = parseCsvLine(line, ';');
+                if (first) {
+                    first = false;
+                    continue;
+                }
+                if (fields.size() == 5) {
+                    String name = fields.get(1).trim();
+                    if (recipeBookRepository.existsByName(name)) {
+                        continue;
+                    }
+                    String description = fields.get(2).trim();
+                    Long id = Long.parseLong(fields.get(0));
+                    Long userid = Long.parseLong(fields.get(3));
+                    List<String> recipeIds;
+                    recipeIds = parseCsvLine(fields.get(4), ',');
+                    List<Recipe> recipes = new java.util.ArrayList<>(List.of());
+                    if (!recipeIds.isEmpty()){
+                        for (String recipeId : recipeIds) {
+                            if (recipeId.isEmpty()){
+                                continue;
+                            }
+                            Recipe recipe = recipeRepository.findById(Long.parseLong(recipeId));
+                            if (recipe != null) {
+                                recipes.add(recipe);
+                            }
+                        }
+                    }
+                    ApplicationUser user = userRepository.findFirstById(userid);
+                    RecipeBook recipeBook = RecipeBook.RecipeBookBuilder.aRecipeBook()
+                        .withId(id)
+                        .withName(name)
+                        .withDescription(description)
+                        .withOwner(user)
+                        .withRecipes(recipes)
+                        .build();
+                    recipeBookRepository.save(recipeBook);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        recipeBookRepository.flush();
+    }
+
     private List<String> parseCsvLine(String line, char separator) {
         List<String> fields = new ArrayList<>();
         StringBuilder field = new StringBuilder();
@@ -393,18 +481,6 @@ public class DataGenerator implements CommandLineRunner {
         List<IngredientNutrition> nutritions = ingredient.getNutritions();
         nutritions.add(newNutrition);
         ingredient.setNutritions(nutritions);
-    }
-
-    private void flushAll() {
-        roleRepository.flush();
-        userRepository.flush();
-        categoryRepository.flush();
-        ingredientRepository.flush();
-        allergenRepository.flush();
-        nutritionRepository.flush();
-        recipeBookRepository.flush();
-        recipeRepository.flush();
-        recipeIngredientRepository.flush();
     }
 
 }

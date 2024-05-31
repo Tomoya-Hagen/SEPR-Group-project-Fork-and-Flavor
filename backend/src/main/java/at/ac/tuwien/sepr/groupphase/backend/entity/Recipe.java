@@ -219,6 +219,10 @@ public class Recipe {
         return owner.getId();
     }
 
+    public String toStringSmall() {
+        return "Recipe(id=" + this.getId() + ", name=" + this.getName() + ", description=" + this.getDescription() + ", numberOfServings=" + this.getNumberOfServings() + ", owner=" + this.getOwner().getUsername() + ")";
+    }
+
     public static final class RecipeBuilder {
         private long id;
         private String name;
