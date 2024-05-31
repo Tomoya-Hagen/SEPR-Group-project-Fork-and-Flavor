@@ -79,6 +79,7 @@ public class DataGenerator implements CommandLineRunner {
         generateIngredientData();
         generateRecipeData();
         generateRecipeIngredients();
+        generateRecipeCategories();
     }
 
     private void generateUserData() {
@@ -323,6 +324,31 @@ public class DataGenerator implements CommandLineRunner {
                 recipeIngredientRepository.save(recipeIngredient);
             }
             recipeIngredientRepository.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void generateRecipeCategories() {
+        Resource resource = resourceLoader.getResource("classpath:recipeCategories.csv");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+            String line;
+            boolean first = true;
+            while ((line = reader.readLine()) != null) {
+                List<String> fields = parseCsvLine(line, ';');
+                if (first) {
+                    first = false;
+                    continue;
+                }
+                if (skippedRecipes.contains(Long.parseLong(fields.get(0)))) {
+                    continue;
+                }
+                Recipe recipe = recipeRepository.findById(Long.parseLong(fields.get(0)));
+                List<Category> category = categoryRepository.findByName(fields.get(1));
+                recipe.setCategories(category);
+                recipeRepository.save(recipe);
+            }
+            recipeRepository.flush();
         } catch (Exception e) {
             e.printStackTrace();
         }
