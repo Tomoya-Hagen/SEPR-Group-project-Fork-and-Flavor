@@ -1,4 +1,11 @@
 recipeid;ingredientName;amount;unit
+17;Risottoreis;1;Tasse
+17;Weißwein;0.5;Tasse
+17;Wasser;2;Tasse
+17;Zwiebel;1;
+17;Salz;;
+17;Suppengewürz;;
+17;schwarzer Pfeffer;;
 18;Gries;50;g
 18;Mehl;25;g
 20;Butter;115;g
@@ -12,16 +19,11 @@ recipeid;ingredientName;amount;unit
 20;weiße Schokolade;225;g
 20;Milch;30;ml
 20;Mehl Glutenfrei;125;g
-21;Risottoreis;1;Tasse
 21;Bratschinken;;
 21;Knoblauch;1;
 21;Bratöl;;
 21;Parmesan;;
-21;Weißwein;1;
-21;Wasser;1;
-21;Zwiebel;1;
-21;Salz;;
-21;Suppengewürz;;
+21;Wasser;;
 22;Erdäpfel;6;
 22;Parmesan;;
 22;Oregano;;

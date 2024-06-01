@@ -10,6 +10,8 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeDescriptionStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
+import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
+import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Role;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergenRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
@@ -374,12 +376,26 @@ public class DataGenerator implements CommandLineRunner {
                     continue;
                 }
                 Recipe recipe = recipeRepository.findById(Long.parseLong(fields.get(0)));
-                RecipeDescriptionStep recipeStep = RecipeDescriptionStep.RecipeDescriptionStepBuilder.aRecipeDescriptionStep()
-                    .withRecipe(recipe)
-                    .withStepNumber(Integer.parseInt(fields.get(1)))
-                    .withName(fields.get(2))
-                    .withDescription(fields.get(3))
-                    .build();
+                RecipeStep recipeStep;
+                if(fields.size() == 4) {
+                    // Beschreibungsschritt
+                     recipeStep = RecipeDescriptionStep.RecipeDescriptionStepBuilder.aRecipeDescriptionStep()
+                        .withRecipe(recipe)
+                        .withStepNumber(Integer.parseInt(fields.get(1)))
+                        .withName(fields.get(2))
+                        .withDescription(fields.get(3))
+                        .build();
+                } else {
+                    // Unterrezept
+                    Long unterrezeptId = Long.parseLong(fields.get(4));
+                    Recipe unterrezept = recipeRepository.findFirstById(unterrezeptId);
+                    recipeStep = RecipeRecipeStep.RecipeRecipeStepBuilder.aRecipeRecipeStep()
+                        .withRecipe(recipe)
+                        .withStepNumber(Integer.parseInt(fields.get(1)))
+                        .withName(fields.get(2))
+                        .withRecipeRecipe(unterrezept)
+                        .build();
+                }
                 recipeStepRepository.save(recipeStep);
             }
             recipeStepRepository.flush();

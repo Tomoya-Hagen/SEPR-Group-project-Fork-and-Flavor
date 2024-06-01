@@ -73,4 +73,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     @Query("SELECT r.name FROM Recipe r")
     List<String> getAllNames();
+
+    Recipe findFirstById(long id);
 }

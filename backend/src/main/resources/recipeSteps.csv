@@ -1,117 +1,481 @@
-recipeId;stepNumber;name;description
-18;1;Step1;<ol><li>Die ganze Milch in einen Topf geben und erhitzen.</li><li>Dann den Griesbrei dazugeben.</li><li>rühren</li><li>nochmal aufkochen lassen</li><li>10 min stehen lassen</li><li>Serivertipp: mit Zimmt gesprenkelt</li></ol>
-20;1;Step1;"<ul><li>Butter cremig schlagen, Zucker, Ei und Vanille dazu.</li><li>Die trockenen Zutaten in einer separaten Schüssel vermischen und zur Butter dazu mixen.</li><li>&nbsp;</li><li>Dann die Milch und die Schokostückchen zur Butter untermischen und den Teig lange im Kühlschrank ruhen lassen.</li></ul><p>Cookies formen und bei 175°C 10 min backen.</p><p>5 Minuten abkühlen lassen</p>"
-21;1;Step1;<p>Zwiebel im Topf anschwitzen und Reis dazugeben. Diesen leichte anbraten und Wein dazugeben. Kochen bis der Wein weg ist und dann Wasser hinzufügen und kochen bis der Reis durch ist. Mit Salz, Pfeffer und Suppengewürz würzen.</p><p>Währenddessen Knoblauch mit Wurst in einer Pfanne anbraten und Zucchini hinzufügen. Mit ein wenig Wasser schmoren lassen bis Zucchini weich ist.</p><p>Den gekochten Reis in die Pfanne geben und mit geriebenem Parmesan vermischen.</p><p>Genießen</p>
-22;1;Step1;<p>Erdäpfel in Wedgesform bringen. ev. davor schälen.</p><p>In eine Schüssel geben und nach eigenem Ermessen die Gewürze, das Öl und den Parmesan dazu geben und gut durchmischen</p><p>Alles auf einem Backblech + Papier austeilen und bei 200°C, 40-50 Minuten lang backen. :)</p>
-23;1;Step1;<p>In einen Topf das Öl geben und den Boden mit Poppcornmais bedecken. Einen Deckel draufgeben und alle paar Sekunden den Topf schütteln. Nachdem die meisten Popcorn gepoppt sind und die Pops länger 3 Sekunden auseinander liegen sind die Popcorn fertig. Danach würzen (Salz, Kräuter-Salu Mischungen, alles Mögliche, ...)</p>
-24;1;Step1;<ol><li>Nudelnwasser hinstellen und salzen, wenns kocht Nudeln zugeben und Timer stellen.</li><li>Würfelig geschnittenen Speck und den klein geschnitten Knoblauch mit Bratöl in einer Pfanne anbraten.</li><li>Anschließend gewürfelten Zucchini zugeben und weiter anbraten.</li><li>Schlagobers zugeben und mit Salz, Pfeffer und Oregano (oder anderem Grünzeug) würzen. Einmal aufkochen lassen.</li><li>Geriebener Parmesan zugeben und köcheln lassen, bis die Nudeln fertig sind.</li><li>Servieren.</li></ol>
-25;1;Step1;<p>Olivenöl in Pfanne heiß machen und Ei hineingehen. (Dotter nicht zerstören)</p><p>Heiß brutzeln und schwenken, damit sich das Ei zusammenzieht. Heißes Öl über Ei gießen.</p><p>Eventuell Pfanne zudecken.</p><p>Wenn es knusprig genug ist, mit Salz und Pfeffer würzen und servieren.</p>
-26;1;Step1;<p>In Pfanne Butter schmelzen.</p><p>Ei in Glas mixen, bis es gut vermengt und durchgängig Gelb ist. Salzen</p><p>In Pfanne gießen und viel verrühren bis es fertig ist. Zum Schluss pfeffern.</p>
-27;1;Step1;"<p>Fett in Pfanne erwärmen und Ei dazugeben.&nbsp;</p><p>Kochen solange man es mag.</p><p>Wenn man den Dotter durch haben möchte kann man die Pfanne zudecken.</p>"
-28;1;Step1;<p>Wurst, Zwiebeln und Champions schneiden.</p><p>Zwiebeln, Wurst und Champignons in Pfanne anbraten.</p><p>Ei dazugeben, warten bis es teilweise hart geworden ist, zerstören und Dotter kaputt machen.</p><p>Salzen und Pfeffern.</p><p>Eckerlkäse als Ganzes oder als Hälfte dazugeben und kurz in der Pfanne lassen.</p><p>Servieren</p>
-29;1;Step1;"<ol><li>Nudelwasser hinstellen und salzen. Wenns kocht Nudel hinein und Timer stellen.</li><li>&nbsp;Lauch/Jungzwiebel anrösten in einer Pfanne kurz anrösten.</li><li>&nbsp;Schinken dazu und Brokkoli dazu. 5 Minuten Deckel drauf und kochen lassen.</li><li>Anschließend Tunke dazu (Creme fraiche oder Schlagobers) und mit &nbsp;Salz, Pfeffer, Muskat und etwas Suppenwürze würzen.</li><li>Servieren :)</li></ol>"
-31;1;Step1;<ol><li>ev. Karotten in Wasser geben und kochen lassen. Erbsen nach Abseihen dazu geben. Sonst nur Erbsen mit wenig Wasser kochen lassen.</li><li>Bratöl in dem Topf und geschnittenes Fleisch mit Pfeffer und Paprikapulver kurz anrösten</li><li>Mit Wasser ablöschen - so viel wie man Saft haben will (Fleisch bedeckt). Salzen, Tomatenmark dazu geben und 25 Minuten kochen lassen.</li><li>Dann Creme Fraiche/Schalgobers mit Maizena verrühren, in den Topf geben und aufkochen lassen.</li><li>Fleisch mit Saft, Gemüse und Reis servieren.</li></ol>
-32;1;Step1;<p>Milchreis/Risotto Reis und Milch im Verhältnis 1:4 vorbereiten.</p><p>In einen Topf geben und warten bis es aufkocht. Regelmässig rühren. Wenn es aufkocht zurück drehen und Ahornsirup hineinmischen. Regelmässig rühren damit es nicht anbrennt. Fertig ist es, wenn man mit einem Löffel den Reis am Boden entlangziehen kann und den Boden kurz sieht. (Bis die Milch wieder kommt)</p>
-34;1;Step1;<p>Zwiebel, Champignons und Wurst schneiden und in einer große Pfanne anbraten. Zuccini gewürfelt hinzufügen und kochen.</p><p>Währenddessen Kartoffel kochen und in Scheiben schneiden. Alles in der Pfanne vermengen.</p><p>Nach Geschmack abbraten, salzen und pfeffern.</p><p>Eier hinzufügen, kurz warten und dann verrühren.</p><p>Schlussendlich Eckerlkäse in dazugeben und verrühren. Er sollte in 2-3 Teile geteilt werden.</p><blockquote><p>Tipp: Zu jedem Bissen ein wenig vom Eckerlkäse auf die Gabel geben.</p></blockquote>
-35;1;Step1;<p>Geschälte und in größere Würfeln geschnittene Kartoffel in Kelomat (5min) oder Wasser (15-20 min) kochen.</p><p>Butter in Topf schmelzen und Kartoffeln gekochte, geschälte Kartoffeln hinzufügen. Milch dazugeben und mit Stampfer bearbeiten und gelegentlich Milch hinzufügen, bis gewünschte Textur erreicht ist. Ausgiebig salzen.</p>
-36;1;Step1;<p>Schupfnudeln in Wasser kochen (wie es auf der Packung steht)</p><p>Lauch, gewürfelter Bratschinken und Champignons anrösten und fertig gekochte Schupfnudeln dazugeben.</p>
-37;1;Step1;<ol><li>Nudelnwasser hinstellen und salzen, wenns kocht Nudeln zugeben und Timer stellen.</li><li>Würfelig geschnittenen Speck und den klein geschnitten Knoblauch mit Bratöl in einer Pfanne anbraten.</li><li>Anschließend gewürfelten Kürbis zugeben und weiter anbraten.</li><li>Schlagobers zugeben und mit Salz, Pfeffer und Oregano (oder anderem Grünzeug) würzen. Einmal aufkochen lassen.</li><li>Geriebener Parmesan zugeben und köcheln lassen, bis die Nudeln fertig sind.</li><li>Servieren.</li></ol>
-38;1;Step1;<p>Zwiebel im Topf anschwitzen und Reis dazugeben. Diesen leichte anbraten und Wein dazugeben. Kochen bis der Wein weg ist und dann Wasser hinzufügen und kochen bis der Reis durch ist. Mit Salz, Pfeffer und Suppengewürz würzen.</p><p>Währenddessen Knoblauch mit Wurst in einer Pfanne anbraten und Kürbis hinzufügen. Mit ein wenig Wasser schmoren lassen bis Kürbis weich ist.</p><p>Den gekochten Reis in die Pfanne geben und mit geriebenem Parmesan vermischen.</p><p>Genießen</p>
-39;1;Step1;<p>Vanillezucker, Zucker und Ei schaumig schlagen, Rahm und Öl dazumischen, verrühren, Kakao + Mandeln oder Kokos dazugeben, verrühren, Backpulver und Mehl + Gewürz dazugeben.</p><p>Form einfetten und in den Ofen geben</p><p>170 Grad Celsius und ca. 45 min</p>
-40;1;Step1;<p>Zwiebel in Topf anrösten.</p><p>Knoblauch und Erbsen dazugeben und mit Wasser kochen, bis sie die gewünschte Härte erreicht haben.</p>
-41;1;Step1;<p>Maiskolben der Länge nach vierteln. Die Gewürze und das Olivenöl vermischen und auf den Mais schmieren.</p><p>Die Kolben für ca. 10 min bei 200°C grillen/backen/airfryen.</p><p>Für die Sauce die Mayonnaise, Jalapeno (in adobo sauce?), Zitronensaft und etwas Salz vermischen.</p><p>Sauce zusammen mit etwas Parmesan und frischem Koriander über den Mais geben und genießen.</p>
-43;1;Step1;<p>Wasser in Topf kochen. Salz dazugeben.</p><p>Wenn das Wasser heiß ist es mit einem Kochlöffel in eine Drehbewegung versetzen, sodass eine Art Wasservortex versteht. Dahinein das Ei geben. Kochen lassen.</p><p>Das Ei sollte außen weiß und gut gekocht sein, innen sollte der gelbe Dotter weich sein.</p>
-44;1;Step1;<p>Grillgemüse in Pfanne aufwärmen und ein wenig anbraten. Ein wenig Milch dazugeben und würzen.</p><p>Gouda als Block abschneiden, hineinstellen und mitbruzzeln lassen.</p>
-45;1;Step1;<ol><li>Nudeln kochen.</li><li>Huhn in Topf mit Öl kochen.</li><li>Wenn Huhn fertig Knoblauch geschnitten hineingeben.</li><li>Spinat dazugeben, mit Salz und Pfeffer würzen.</li><li>Schlagobers/Creme Fraiche dazugeben.</li><li>Kurz aufkochen lassen.</li><li>Nudeln und Parmesan dazugeben und kurz kochen.</li><li>Mit Petersilie serviern.</li></ol>
-46;1;Step1;<p>Süßkartoffel würflig schneiden. Paprika und Zwiebel schneiden.</p><p>Öl und Knoblauch in eine Pfanne geben.</p><p>Faschiertes dazugeben und kochen (durch 5-7 min).</p><p>Faschiertes auf Teller geben, zudecken und auf die Seite stellen.</p><p>In dieselbe Pfanne Zwiebel, Paprika und Süßkartoffel geben und anbraten.</p><p>Ein bisschen Wasser, Suppengewürz, Senf und Tomatensauce dazugeben. Zudecken und 12-15 min köcheln lassen.</p><p>Dann Mais und Fleisch dazugeben.</p><p>Mit Oregano, Chili Pulver, Salz und Pfeffer würzen.</p><p>Gut verrühren und noch mal 2 min kochen.</p>
-47;1;Step1;<p>Zwiebel in Topf anschwitzen, Reis dazu und kurz anbraten. Dann doppelte Menge an Wasser dazu, mit Salz würzen und zugedeckt kochen lassen.</p>
-48;1;Step1;<p>Zwiebel in Topf anschwitzen, Reis dazu und kurz anbraten. Dann doppelte Menge an Wasser dazu, mit Salz würzen und zugedeckt kochen lassen.</p>
-49;1;Step1;<p>Quinoa mit kochendem Wasser waschen.</p><p>Danach mit Gewürzen nach Wunsch vereinen und mit der doppelten Menge Wasser zum Kochen bringen.</p><p>Zugedeckt ca. 10 min köcheln lassen.</p><p>Herdplatte abschalten und ca. 15 min ausquellen lassen.</p>
-50;1;Step1;<p>Nudeln kochen.</p><p>Backblech vorbereiten.</p><p>Schafkäse in die Mitte vom Blech legen.</p><p>Geschnittene Zucchini, Paprika, Zwiebel und ganze Knoblauchzehen dazulegen. Mit Olivenöl, Salz und Gewürzen würzen.</p><p>Für 20 min backen.</p><p>Mit Nudeln und Schlagobers vermischen.</p>
-51;1;Step1;<p>Nudeln kochen.</p><p>Butter in Pfanne schmelzen. Knoblauch dazugeben. Pfeffer und Mehl dazugeben. Vermischen. Milch, Schlagobers und Zitronensaft dazugeben. Für 3-5 Minuten kochen und rühren.</p><p>Warm servieren.</p>
-52;1;Step1;<p>Nudeln kochen.</p><p>Butter in Pfanne schmelzen. Knoblauch dazugeben. Mehl dazugeben. Vermischen. Milch dazugeben und mit Salz und Pfeffer würzen. Parmesan dazugeben. Für 3-5 Minuten kochen und rühren.</p><p>Mit gehackter Petersilie warm servieren.</p>
-53;1;Step1;<p>Gekochte Eier und Essiggurken würflig schneiden. Mit Mayonnaise vermischen. Mit Salz und Pfeffer würzen.</p>
-54;1;Step1;<p>Kartoffel kochen, schälen und in Scheiben schneiden.</p><p>In Pfanne klein geschnittene Zwiebel anbraten und Kartoffel dazugeben. Anbraten und ein wenig verrühren.</p>
-55;1;Step1;<p>Huhn in Würfel schneiden 1-3 cm. Zwiebel groß schneiden bzw nur halbieren oder vierteln. Lauch groß schneiden. Zucchini groß schneiden.</p><p>Huhn in Pfanne braten, restliche Zutaten dazugeben und gut anrösten. Würzen und servieren.</p>
-56;1;Step1;<p>Erdäpfel speckig kochen und eventuell schälen. In Scheiben schneiden und in Pfanne mit Öl knusprig braten.</p><p>Salzen und servieren.</p>
-57;1;Step1;<p>Spaghetti mit heißem Wasser und Salz kochen.</p><p>Zwiebel zerkleinern und in Pfanne mit Öl anbraten. Fleisch dazugeben und braten, bis es fast nicht mehr rot ist.</p><p>Dann geriebene Karotten und geschnittene Zucchini dazugeben und mit Tomatenmark und Tomatensauce kochen.</p><p>Mit Salz und Pfeffer würzen.</p>
-58;1;Step1;<p>Mit ein wenig Wasser im Topf auftauen lassen und warm machen.</p>
-63;1;Step1;<blockquote><p>Umso weniger Belag oben ist, umso leichter geht es zum Rollen.</p></blockquote><p>Pizzateig ausrollen, mit Tomatenmark bestreichen und mit Thymian würzen. Anschließend Pizzakäse großzügig verteilen und Belag hinzufügen (z.B Mais, Schinken, Jungzwiebel, Paprika, Salami) und mit Oregano würzen.</p><p>Pizzeteig der Breite nach einrollen und ca. 2 cm Stücke abschneiden. Diese dann auf ein Blech legen (um 90° gedreht). ev. noch mit Öl bepinseln und nach Packungsangabe backen.</p><p>Heiß oder kalt snacken.</p>
-67;1;Step1;"<ol><li>Eier, Rohrzucker und Vanillezucker schaumig rühren.</li><li>Die zerlassene Butter oder MAgarine mit gemahlener Braunhirse, Weinsteinpulver und Erdmandeln verrühren und die Masse aus Eiern, Rohrzucker und Vanillezucker unterheben.</li><li>Bei 150 - 175 Grad Celsius (Heißluft) 35 - 40 Minutne backen</li><li>Nach Belieben glasieren (Marmelade, Schokolade, Rum oder Kokosflocken-Glasur)</li></ol><blockquote><p>Andreas Notizen: mit Ribiselmarmelade heiß bestreichen -&gt; 5 min 200 Grad Celsius</p><p>weiße Schoko-Glasur</p></blockquote>"
-68;1;Step1;<p>ca. 180 Grad Celsius</p><p>ca. 20 min</p>
-69;1;Step1;
-70;1;Step1;
-71;1;Step1;<p>Hirse mit kochendem Wasser ordentlich abspülen.</p><p>Geschnittener Speck mit Öl in der Pfanne anbraten. Dann Hirse dazu und kurz warten, dann plus fast die doppelte Menge Wasser.</p><p>Dann geschnittene Tomaten dazu und mit Salz, Pfeffer und Suppengewürz würzen. Deckel drauf und 20 min kochen lassen.</p><p>Geriebenen Emmentaler und Creme Fraiche dazu. Servieren.</p>
-72;1;Step1;<p>Wenig Wasser kochen und Kohlrabi schälen und würflig schneiden. 10 min mit Salz, Kümmel und Suppengewürz.</p><p>Inhalte aus Topf entfernen oder neuen Topf nehmen. Butter schmelzen und Mehl dazugeben. Mit Mich verrühren. Alle Inhalte zusammenfügen.</p><p>Creme fraiche dazugeben.</p><p>Gehackte Kohlrabi Blätter und Petersilie dazumengen.</p>
-73;1;Step1;<p>Wasser mir Zartweizen in einen Kochtopf geben uns kochen bis fertig.</p><p>60tel Tasse für 2 pers</p>
-74;1;Step1;<p>Hirse mit kochendem Wasser abspülen und mit Karotten, Kohlrabi, Salz und Suppenwürze 20 Minuten lang kochen.</p><p>In einer Pfanne Jungzwiebel/Lauch mit Zucchini und Champignons anbraten. Außerdem mit Salz und Oregano (oder anderen Kräutern würzen).</p><p>2 Eier mit dem Rahm oder ähnlichem verrühren.</p><p>Hirse, Gemüse, Mais und Tunke vermischen und in eine eingefettete Auflaufform geben. Dann mir Käse bedecken.</p><p>Nun bei 180°C ca. 40 Minuten lang backen.</p><p>Guten Appetit!</p>
-75;1;Step1;"<p>Eier, Zucker und Vanillezucker schaumig rühren</p><p>Öl und Eierlikör dazurühren und zum Schluss das mit Backpulver &nbsp;vermengte Mehl und Stärkemehl einrühren.</p><p>In Gugelhupf-Formen füllen und bei 180 Grad Celsius ca. 1 Stunde backen.</p><blockquote><p>Tipp: Rezept auch gut mit glutenfreiem Mehl</p></blockquote>"
-76;1;Step1;<p>Butter, Zucker, Dotter und Vanillezucker schaumig rühren. Milch dazugeben.</p><p>Mehl, Backpulver dazugeben und Eischnee unterheben.</p><p>1/3 in eigene Schüssel geben und mit Kakao verrühren.</p><p>Form einfetten und Teig dazugeben: ohne Kakao, mit Kakao, ohne Kakao.</p><p>Mit Löffelstiel in Form leicht vermengen.</p><p>bei 175 Grad Celsius 55 Minuten backen.</p><blockquote><p>Tipp: Rezept auch gut mit glutenfreiem Mehl</p></blockquote>
-77;1;Step1;<blockquote><p>Tipp: Anstatt Äpfel kann man auch 700 g Apfelmus nehmen</p></blockquote><p>Butter, Ei Zucer Vanillezucker und Zimt mixen und Mehl und Backpulver dazugeben.</p><p>2/3 des Teiges in Form drücken und geschnittene Äpfel oder Apfelmus verteilen.</p><p>Letzter Drittel des Teiges darüber bröseln.</p><p>Bei 170 Grad Celsius 40 Minuten backen.</p><blockquote><p>Tipp: Rezept auch gut mit glutenfreiem Mehl</p></blockquote>
-79;1;Step1;<p>Mengenangaben für 3 Portionen.</p><p>In einer Schüssel Mehl, Zucker, Salz und Dotter mit der Milch zu einem glatten, dickflüssigen Teig verrühren.</p><p>In einer anderen Schüssel die Eiklar zu einem steifen Schnee schlagen und danach unter den dickflüssigen Teig heben.</p><p>Rosinen (nach Bedarf) dazugeben, Butter in die Pfanne, Teig auf 1x hineingeben, 1x wenden, in Stücke reißen, mit Staubzucker bestreuen</p>
-80;1;Step1;<p>bei 180 Grad Celsius bei Ober-Unterhitze ca. 45 min backen</p>
-81;1;Step1;"<p>Butter, Zucker und Dotter schaumig rühren. Mandeln (oder 120g Erdmandeln) und ungeschlagenes Schlagobers dazu. Zu guter Creme machen.</p><p>Lagen schlichten. Beginnend mit Biskotten, welche vorher in das Milch/Mehl/Zucker-Gemisch getunkt wurden. Dann Creme.</p><p>insgesamt 3 Lagen. dann kühlstellen. Kurz vor dem Servieren mit Schlagobers garnieren.</p><p>Und Essen :)</p><p>&nbsp;</p>"
-82;1;Step1;<ol><li>Teil der Zutaten ist der Germteig.</li></ol><p>Ab 150 g Mehl sind es Streussel.</p><p><strong>Für den Germteig:</strong></p><p>Lauwarme Milch, Zucker und Germ verrühren (dampfl), an warmen Ort stellen und schauen ob Germ eh was tut. Wenn es funktioniert, passts.</p><p>Dann alles in eine Schüssel geben und kneten und an waremen Ort geben. Stehen lassen. 2x zusammenschlagen.</p><p><strong>Für Streussel:</strong></p><p>Butter geschmolzen und ausgekühlt mit Zutaten vermengen.</p><p>Germteig ausbreiten, mit Milch bestreichen. Streussel draufgeben.</p>
-83;1;Step1;"<p>Nudeln kochen wie immer.</p><p>&nbsp;</p><p>Zwiebel in Pfanne anbraten. Thunfisch und geschnittene Tomaten dazu. Kurz warten. Schlagobers/ähnliches dazu und würzen. Kochen lassen, bis die Nudeln fertig sind.</p>"
-84;1;Step1;<p>Kleine Erdäpfel waschen und schneiden. In Öl ca. 4 min anbraten und dann Knoblauch dazugeben.</p><p>Wasser, Sojasauce und Honig mischen und zu den Kartoffeln schütten. Umrühren und kochen bis die Flüssigkeit weg ist. Sesam dazugeben und kurz anbraten.</p><blockquote><p>Tipp: mit Schnittlauch servieren</p></blockquote>
-85;1;Step1;"<p>Die Kartoffel leicht fächrig einschneiden, mit etwas Öl beträufeln und mit Salz würzen. Bei 180 Grad Celsius in den Ofen geben. Nach ca. 30 Minuten herausnehmen und die Zucchini in Halbmonde schneiden. Diese in die Zwischenräume stecken und mit Bergkäse gratinieren. Nun für ca. 8 min bei Oberhitze im Ofen den Käse schmelzen lassen.&nbsp;</p>"
-86;1;Step1;"<p><a href=""https://youtu.be/AmC9SmCBUj4"">https://youtu.be/AmC9SmCBUj4</a></p><p>Stake 20 Min vor Zubereitung aus dem Kühlschrank nehmen.</p><p>Pfanne erhitzen.</p><p>Stake mit Salz und Pfeffer würzen.</p><p>Wenn die Pfanne heiß ist, Öl reingeben und die Steaks reingeben.</p><p>Nach 30 Sekunden umdrehen</p><p>Von hier an minütlich drehen.</p><p>Ganze leicht gebrochene Knoblauchzehen reingeben.</p><p>Thymian reingeben.</p><p>Eventuell mehr Öl hinzufügen.</p><p>Butter dazuwürfeln. Steaks in flüssiger Butter baden (übergießen).</p><p>Mit Knoblauchzehen einreiben.</p>"
-89;1;Step1;<p>Paprika und Zwiebel schneiden und in Pfanne mit Öl anbraten, mit Salz und Pfeffer würzen.</p><p>In Schüssel transferieren und mit Frischkäse, Cheddar, Pepper Jack (oder anderem Käse) vermischen.</p><p>Hühner mit Salz, Chilli, Kreuzkümmel und Knoblauch würzen. Einschneiden und mit der Fülle stopfen.</p><p>Ca. für 5 min auf beiden Seiten anbraten. Und mit Sour Creme servieren :)</p>
-90;1;Step1;<p>Pfefferschoten, Zwiebel und Knoblauch würfeln. Limette entsaften. Tomaten klein würfeln (am besten vorher blanchieren und schneiden).</p><p>Avokados halbieren, entkernen und zerkleinern. Avocadofleisch mit Limettensaft mit Gabel zerdrücken. Matsch mit Salz, Pfeffer und Tabasco abschmecken.</p><p>Alles andere dazugeben und 15 min warten.</p>
-91;1;Step1;<p>Nudeln kochen.</p><p>Butter schmelzen und Wurst und Champignons anbraten. Parmesan und Schlagobers (original Rezept noch anderer Käse und Milch) zugeben. Kochen lassen bis Nudeln fertig sind.</p><p>Nudeln in Pfanne geben kurz durchrühren und auf Teller geben. Mit frisch gehackter Petersilie bestreuen und servieren.</p>
-92;1;Step1;<p>Backofen auf 170°C Umluft vorheizen.</p><p>Äpfel schälen, würfelig schneiden mit Kristallzucker1 und Zimt vermischen.</p><p>Swirl: Geschmolzene Butter2, brauner Zucker und Zimt extra vermischen.</p><p>Nochmal in einer extra Schüssel Mehl, Backpulver, Kristallzucker2, Vanillezucker, Milch1, vorgeschlagene Eier und geschmolzene Butter1 mixen. Apfelmasse dazugeben.</p><p>Teigmasse in viereckige Form geben. Swirl darüber verteilen, mit Spieß verteilen. ca. 45 min backen.</p><p>Staubzucker mit Milch2 vermischen und über Kuchen verteilen.</p><p>Abkühlen lassen und genießen.</p>
-93;1;Step1;<p>Erdäpfel waschen und halbieren/vierteln. Knoblauch klein schneiden. Wenig Jungzwiebel schneiden.</p><p>Für die Sauce: Honig, Wasser und Sojasauce vermischen.</p><p>Erdäpfel in Pfanne anbraten, Knoblauch dazugeben. Dann Sauce dazulehren. Kochen lassen, bis sich die Sauce verdickt und die Erdäpfel weich sind. Sesam dazugeben und verrühren.</p><p>Auf Teller geben und mit Jungzwiebel bestreuen.</p>
-94;1;Step1;<p>Spinat in Pfanne (auftauen) und mit Knoblauch und Pinienkerne kurz anschwitzen.</p><p>Wrap mit Öl in Pfanne geben. Spinat auf einer Seite verteilen. Würzen und mit Feta belegen. Zusammenklappen und auf beiden Seiten gut anbraten.</p>
-95;1;Step1;<p>Reis kochen.</p><p>Ofen auf 180 Grad Celsius aufheizen.</p><p>Zucchini aushöhlen und mir Olivenöl bestreichen. Mit Salz und Pfeffer würzen. 10 - 15 min backen.</p><p>Zwiebel in Öl anbraten und Knoblauch dazugeben. Dann das Fleisch dazugeben. Alle Gewürze draufgeben und weiterkochen bis es schön braun ist. Vom Herd nehmen. Mais, Zucchinifleisch, Reis und Käse dazugeben. Mischung in die Zucchini füllen.</p><p>10 - 15 min backen.</p><blockquote><p><i>Serviertipp: Frischer Koreander</i> vor dem Servieren darüber streuen.</p></blockquote>
-96;1;Step1;<p>Nudeln kochen.</p><p>Alle anderen Zutaten (außer Jungzwiebel und Erdnüsse) vermischen.</p><p>Nudeln abseihen und Soße drüber geben.</p><p>Rest oben drüber geben und servieren. :)</p>
-97;1;Step1;"<p>Backofen auf ca. 180°C vorheizen&nbsp;</p><p>Schale von den 3 Zitronen abreiben.</p><p>Eier und Rohrzucker schaumig rühren. Mehl sieben und mit Vanillezucker, Backpulver, Zitronenschale und Butter nach und nach dazugeben. Alles gut mixen.&nbsp;</p><p>Teig auf ein mit Backblech ausgelegten Blech schmieren und ca. 20 min lang backen.</p><p>1-2 Zitronen auspressen und aus dem Saft und dem Staubzucker eine Glasur rühren. Die muss schön dickflüssig sein!</p><p>Kuchen noch warm mit Glasur bestreichen und kurz auskühlen lassen --&gt; genießen :)</p>"
-98;1;Step1;<p>Reis kochen oder alten Reis vorbereiten. Gemüse schneiden. Zwiebel eventuell streifenförmig. Pfanne erhitzen, Bratöl reingeben und Zutaten anbraten (Zwiebel, Knoblauch, dann Karotten, dann Mais, Erbsen, Paprika und Champingnos) und salzen.</p><p>Reis dazuklatschen, mit Sojasauce und schwarzem Pfeffer würzen. Gut mit hoher Hitze rühren. Sesamöl draufgeben. Zum Schluss beim Servieren Sesam und Jungzwiebel drüberstreuen.</p>
-99;1;Step1;<ol><li>Die Nudeln in reichlich Salzwasser bissfest garen. Wasser abgießen und abtropfen lassen. Den Spinat verlesen und waschen. Größere Blätter etwas zerrupfen.</li><li>Die Zwiebel und den Knoblauch schälen und in feine Würfel schneiden. Etwas Öl in einem großen Topf erhitzen und die Zwiebel- und Knoblauchwürfel darin glasig dünsten.</li><li>Den Spinat und die Pinienkerne zugeben und kurz anbraten, bis der Spinat zusammenfällt. Die Sahne zugeben, salzen und pfeffern und unter Rühren cremig einkochen lassen.</li><li>Die Nudeln mit der Spinatsauce vermengen und auf warmen Tellern servieren.</li></ol>
-100;1;Step1;"<p><strong>Sauce</strong></p><ul><li>Honig, Sojasauce, Knoblauch gewürfelt, Ingwer und Seseamsamen in einer Schüssel zusammenmischen.</li><li>&nbsp;</li><li><strong>Fleisch</strong></li><li>Fleisch in Öl anbraten, salzen und Pfeffern bis es braun ist.</li><li>Dann die Sauce dazuschütten und gut umrühren.</li><li>Sobald die Sauce blubbert, Brokkoli dazuklatschen und gut umrühren.</li><li>Kochen bis das Fleisch durch ist und das Gemüse weich.</li></ul><blockquote><p>Serviertipp:</p></blockquote><p>Entweder alleine oder mit Reis.</p><p>Quelle: <a href=""https://www.instagram.com/p/CM-xkvMgVAn/"">https://www.instagram.com/p/CM-xkvMgVAn/</a></p>"
-101;1;Step1;<p>Zwiebel im Topf anschwitzen und Reis dazugeben. Diesen leichte anbraten und Wein dazugeben. Kochen bis der Wein weg ist und dann Wasser hinzufügen und kochen bis der Reis durch ist. Mit Salz und Suppengewürz würzen.</p><p>Währenddessen Knoblauch und Lachs in einer Pfanne anbraten. Lauch hinzufügen.</p><p>Den gekochten Reis in die Pfanne geben und mit geriebenem Parmesan vermischen.</p><p>Genießen</p>
-102;1;Step1;<p>Zwiebel anschwitzen.</p><p>Mehl dazu. Mehl kurz durchrösten und umrühren.</p><p>Wasser drauf und geschnittenes, geschältes Gemüse und Erdäpfel rein. Salz, Pfeffer und Suppenwürze drauf. Alle Gewürze drauf.</p><p>20 Min kochen</p><p>Würschtel geschnitten dazugeben. Außerdem Petersilie gehackt und eventuell Schlagobers dazuschütten.</p>
-103;1;Step1;<p>Alter Reis (Beste).</p><p>2 grosse Eier, Rezept für 2 Personen</p><p>Gemüse in Öl mit Knoblauch anbraten. Reis dazugeben und kurz anbraten. Ei nebenbei mit Sesamöl vermischen und dazugeben und würzen. Kurz anbraten bis Ei aufgehört hat, flüssig zu sein.</p>
-104;1;Step1;<p>Kohlrabi schneiden.</p><p>Kohlrabi kochen (mit Salz, Kümmel, Muskatnuss und Suppenwürze). (wenig Wasser)</p><p>Wenn fertig Wasser rausholen und Butter in den Topf geben. Mehl dazugeben und rühren. (Einbrenn)</p><p>Wasser und Kohlrabi wieder zurück (nicht zu viel Wasser). Schlagobers/Creme Fraiche dazugeben und eventuell nachwürzen. Dann Petersilie dazugeben und fertig!</p>
-105;1;Step1;<p>Champignons und Zwiebel in Butter anbraten und Thymian dazugeben. Reis kurz anbraten. Wein dazugeben und dann das Wasser dazugeben. Erbsen dazugeben und Salz und Suppengewürze und Pfeffer. Kochen bis Wasser weg und Parmesan dazugeben.</p>
-106;1;Step1;<p>Hähnchenbruststreifen in ca. 1cm dicke Streifen schneiden.</p><p>Eier, Petersilie und Schnittlauch verquirlen und mit Salz und Pfeffer würzen.</p><p>Ein bisschen Mehl in eine extra Schüssel geben.</p><p>Fleischstreifen zuerst in Mehl, dann in Ei tunken. (vielleicht auch öfters)</p><p>In heißer Pfanne mit Butter anbraten bis durch und knackig.</p>
-107;1;Step1;<p>Schwammerl anbraten.</p><p>Zucchini, Knoblauch und Lauch dazugeben.</p><p>Kurz zugedeckt anbraten. Nach eigenem Ermessen würzen.</p>
-108;1;Step1;<p>Süßkartoffel schälen und in Scheiben schneiden.</p><p>Süßkartoffeln und Schwammerl anbraten. Zucchini, Knoblauch und Lauch dazugeben.</p><p>Kurz zugedeckt anbraten. Nach eigenem Ermessen würzen.</p>
-110;1;Step1;
-111;1;Step1;<p>Brokoli schneiden und 8 min kochen.</p><p>Währenddessen Blätterteig ausrollen, Schinken doppelt drauflegen und Käse reiben.</p><p>Brokoli absieben und auf den Blätterteig mit Schinken geben. Fast alles vom Käse drübergeben.</p><p>Blättterteig zuklappen und den restlichen Käse draufgeben.</p><p>Backen laut Beschreibung am Blätterteig.</p><p>Währenddessen Sauce zubereiten (Siehe Beilagen)</p>
-112;1;Step1;<p>Knoblauch entweder viel zerkleinern oder pressen.</p><p>Alle Zutaten nach Geschmack vermengen.</p>
-113;1;Step1;<p>Den Reis nach Packungsanleitung in Salzwasser kochen.<br><br>Paprika und Zucchini in Würfel schneiden und anbraten. Knoblauchzehen hacken und dazugeben, alles zusammen ca. 10 Minuten braten.<br><br>Danach den fertig gekochten Reis hinzugeben, Sojasauce und Cashewkerne dazugeben und noch ca. 5 Minuten unter Rühren braten.<br><br>Falls Nötig, würzen.</p>
-114;1;Step1;<ol><li>Kartoffeln kochen.</li><li>Schälen und würfeln.</li><li>Mit Petersilie vermischen.</li></ol>
-115;1;Step1;<p>Lachs gut würzen und mit Zitronensaft ein einreiben.</p><p>Auf beiden Seiten gut anbraten. (Falls Haut vorhanden diese ruhig stark anbraten.</p>
-116;1;Step1;<p>Reis kurz anbraten und mit viertel Tasse Weißwein abschrecken. Warten bis der Wein weg ist und 1,5 Tassen Wasser reingeben. Mit Suppengewürz und Salz würzen. Kochen, bis Reis fertig/Wasser weg.</p><p>Knoblauch leicht anbraten und (gefrohrenen) Spinat in Pfanne auftauen und ein wenig anrösten.</p><p>Parmesan reiben.</p><p>Reis in die Pfanne geben und mit Parmesan vermischen.</p>
-117;1;Step1;<ol><li>Butter für 15 min in Schüssel geben und weich werden lassen.</li><li>Gewürze dazugeben und verrühren/mixen.</li><li>Butter in den Kühlschrank stellen, damit sie fest wird.</li></ol>
-118;1;Step1;<p>Knoblauch, Zwiebel und Paprika schneiden. Faschiertes mit Bratöl in der Pfanne anbraten und geschnittenes Zeugs dazugeben. Warten bis Zwiebel weich ist. Den Reis, die doppelte Menge Wasser und etwas Tomatensauce dazugeben. Nach belieben würzen. Nach kurzem Aufkochen noch etwa 15 Minuten köcheln lassen. Dann noch mehr Tomatensauce untermischen und mit Mozzarella belegen. Deckel zu, bis der Mozzarella schmilzt und cinematisch in der Pfanne servieren.</p><p>Mahlzeit!</p>
-119;1;Step1;"<p>Tofu pressen.&nbsp;</p><p>Cashewnüsse ohne Öl anbraten und auf die Seite stellen.</p><p>Paprika und Tofu in Streifen schneiden. Tofu in Stärkemehl wälzen und anschließend im Sesamöl anbraten. Paprika dann dazugeben.</p><p>Für die Soße die Sojasoße, Wasser, Knoblauch, Ingwer und Chilliflocken vermischen. Zu Tofu dazuleeren und Kochen bis es verdickt. Cashewnüsse dazu.q</p><p>Jungzwiebel und Sesam nach belieben drüber streuen.</p>"
-120;1;Step1;"<p>Faschiertes mit Öl in Topf anbraten. Reis dazu und nochmal kurz anbraten. Doppelte Menge an Wasser dazu und mit Salz, Pfeffer und Majoran würzen. Außerdem die Tomaten schneiden und dazugeben.</p><p>Kochen bis das Wasser weg ist und dann den Mais und das Creme fraiche dazugeben.&nbsp;</p><p>Fertig!</p>"
-121;1;Step1;<ol><li>Zwiebel schneiden und anschwitzen in Öl.</li><li>Kürbis würfeln (nicht schälen) und dazu geben. Auch kurz anbraten.</li><li>Wasser dazu und würzen.</li><li>Kochen bis der Kürbis weich ist. Dann pürieren.</li><li>Schlagobers dazu bist es schön cremig ist.</li><li>Mit Kübriskernöl servieren.</li><li>Schmecken lassen. :)</li></ol>
-122;1;Step1;<p>Topfen in Geschirrtuch ausdrücken bis kein Wasser rauskommt.</p><p>zusammenmischen</p><p>Kugeln formen</p><p>In kochendes gesalzenes Wasser geben bis schwimmen + paar Minuten bis durch.</p><h4><i>Tipp: Davor Marillen, Mozartkugeln oder Kirschen reingeben. Oder einfach kleine machen und nachher in Marmelade eintunken oder Zwetschken dazuessen.</i></h4>
-123;1;Step1;<ol><li>Schokolade und Butter zusammenschmelzen und abkühlen lassen.</li><li>Mehl, Backpulver, Kakao und Zimt vermengen</li><li>Eier und Zucker in einer seperaten Schlüssel verquirrlen</li><li>Schoko aus Schritt 1 dazugeben</li><li>Mehlmischung gut aber kurz dazumischen</li><li>mindestens 6 Stunden kühlen</li><li>kleine Bällchen formen und in Staubzucker tunken</li><li>Bei 190°C Ober-Unterhitze 10-12 min backen</li></ol>
-124;1;Step1;<p>Trockene Zutaten vermischen, Rest dazumischen und kneten.</p><p>In den Kühlschrank (wenn der Teig kalt ist lässt er sich leichter auskneten)</p><p>Auf bemählter Oberfläche ausrollen und ausstechen</p><p>10-12 Min bei 180°C Ober-unter Hitze oder 160°C Heißluft backen</p><p>Nach Belieben verzieren</p>
-126;1;Step1;<ol><li>alles außer Roggenmehl und Erdmandeln gut verühren und über Nacht im Kühlschrank stehen lassen.</li><li>am nächsten Tag Erdmandeln und Roggen in den Teig einarbeiten bis er nicht mehr klebt.</li><li>Dick auswalken, austechen und mit Ei bestreichen</li><li>Bei Heißluft 170°C Umluft für 11 min backen.</li></ol><p>Nach Belieben verzieren</p>
-127;1;Step1;<p>100g Staubzucker und Vanillezucker ist für bestreuen.</p><p>Alles Andere vermischen und einkühlen.</p><p>Würschtel machen, in gleiche Scheiben schneiden und jede einzelne Scheibe wuzeln und Kipferl draus machen.</p><p>zwischen 170-180°C Heißluft 10-12 Min backen und wenn noch heiß sind, in Vanille+Staubzucker welzen. wenns nicht geht waren sie zu kurz im Rohr.</p>
-128;1;Step1;<p>Chremespinat auftauen, Knoblauch reingeben, in einer Schüssel mit Mehl und Wasser vermengen bis die Konsistenz passt. (dickflüssig)</p><p>In der Pfanne die restlichen Zutaten anbraten und mit Mascarpone vermischen und würzen.</p><p>Großen Topf Salzwasser kochen, Spätzle mit dem Spätzlemacher hineinmachen und kochen bis sie aufschwimmen. Herausfischen und in Warmhaltebox geben, damit sie noch weiter abtropfen können. In die Pfanne werfen und vermengen. Servieren.</p><blockquote><p><i>Tipp: Mehr spätzle machen und einkühlen um später Käse-Spätzle oder Eiernockerl zu machen.</i></p></blockquote>
-129;1;Step1;<p>Nudlen kochen.</p><p>Lauch waschen, halbieren und in Halbkreise schneiden. Lachs häuten und in Würfel schneiden. Lauch anbraten dann Lachs dazu. Wenn das gut ausschaut Schlagobers dazu, würzen und kurz aufkochen lassen. Fertig.</p><p>Servieren.</p>
-130;1;Step1;<p>Backofen auf 180°C Umluft vorheizen.</p><p>Erdäpfel waschen und in Achtel oder Viertel schneiden.</p><p>Alle Zutaten in einen Top oder Ovenform geben und vermischen.</p><p>Gries oben draufsträußeln.</p><p>50 Minuten zugedäckt backen.</p><p>10-20 Minunten aufgedäckt backen bis sie gut aussehen.</p>
-131;1;Step1;<p>Wasser erhitzen bis es kocht.</p><p>Wasser trinken</p>
-132;1;Step1;<p>Zwiebeln klein schneiden und in Topf mit 3 Tl Olivenöl und ein bisschen Wasser mit Deckel weichkochen lassen, dann Deckel abnehgmen und Wasser verdampfen lassen.</p><p>Die Erbsen gefrohren, die geschnitteneen Tomaten, Pfeffer, Salz, 1/8 l Wasser und den Dill dazugeben und ca. 1 Stunde mit Deckel köcheln lassen. Hin und wieder umrühren.</p>
-133;1;Step1;"<p>Zwiebel in Streifen schneiden.</p><p>Kartoffel schälen und grob reiben/hexeln.</p><p>Parmesan in Würfel schneiden.</p><p>&nbsp;</p><p>Zwiebel mit Butter leicht anbraten, Kartoffeln dazuhauen. Bissi braten und immer zerstückeln.</p><p>Käse dazugeben und so lange wenden und zerstückeln bis der Käse geschmolzen ist.</p><p>Dann auf einer Seite anbraten lassen, wenden und auf der anderen Seite anbraten lassen.</p>"
-134;1;Step1;"<p>Backoven auf 200 °C Ober-Unterhitze vorheizen.</p><p>Auf einem Blech oder in einer Garform die großen Tomaten geviertelt hineinlegen, dazwischen geviertelt die Zwiebel und durchgeschnitten den Knoblauch verteilen und mit Olivenöl übergießen. Thymian drüberlegen.</p><p>50 Minuten im Ofen garen lassen, danach mit dem Wasser und den restlichen Gewürzen in einen Topf geben und pürieren.</p><p>Schlagobers dazugeben und mit Basilikumblatt servieren.<br>&nbsp;</p><blockquote><p><i><strong>Serviertipp:</strong> </i>Getostetes Brot, Parmesanstücke oder Backerbsen passen gut dazu.</p></blockquote>"
-136;1;Step1;<p>Spaghetti kochen.</p><p>Öl und Butter in eine Pfanne geben und schmelzen.</p><p>geschnittene Zwiebel und geschnittene Champingnons dazugeben.</p><p>Ein wenig anrösten.</p><p>Einen Löffel Tomatenmark dazugeben.</p><p>Kurz rösten.</p><p>Wenn die Champingnon weich sind, Schlagobers und Gewürze dazugeben.</p><p>Wenn die Nudeln fertig sind diese in die Pfanne geben und gut vermischen.</p><p>Mit frischen Basilikumblättern servieren.</p>
-137;1;Step1;<p>Backofen auf 180°C Ober-Unterhitze aufheizen.</p><p>Gemüse in mundgerechte Stücke schneiden. Zwiebeln achteln.</p><p>Sauce: Knoblauch klein hacken. Öl, Balsamico, italienische Kräuter, Salz, Pfeffer und Knoblauch verrühren.</p><p>Gemüse mit Marinade vermischen und auf ein Backpapierbelegtes Blech legen. Ev. Rosmarinzweige drauflegen.</p><p>für 30 Minuten backen.</p><p>Falls das Gemüse dann noch nicht besonders schwarz ist, kann man es kurz mit der Grillfunktion des Backoven oben grillen, falls vorhanden.</p>
-138;1;Step1;<p>Speise: Sommergetränk</p><p>Zitrone und Orange in Scheiben schneiden. Mit Eiswürfel in ein Behältnis (Krug, Bowl) geben. Die Flasche Rotwein und Zitronensaft drübergießen.</p><p>Genießen.</p>
-139;1;Step1;"<p>Tunfisch, Cheddar und Ei vermischen. Mit Pfeffer uns Salz würzen.</p><p>In kleine längliche Sticks formen und auf Backpapier auflegen.</p><p>Im Ofen mit 200 °C Ober-Unterhitze für 20 min backen.</p><p>Mit Sauce Tartare genießen.</p><p>&nbsp;</p><blockquote><p><i>Instagram Credit: </i><a href=""https://www.instagram.com/reel/CtRgzV5PNZw/?igshid=MzRlODBiNWFlZA==""><i>https://www.instagram.com/reel/CtRgzV5PNZw/?igshid=MzRlODBiNWFlZA==</i></a></p></blockquote><p><br>&nbsp;</p>"
-140;1;Step1;<ol><li>Backofen auf 180 °C Umluft aufheizen.</li><li>Butter und Zartbitterschokolade auf dem Herd schmelzen und abkühlen lassen.</li><li>Währenddessen Eier aufschäumfen und in einer extra Schüssel Mehl + Kakaopulver vermengen.</li><li>Wenn die Masse einwenig abgekühlt ist, Sriracha, Zucker und geschlagene Eier dazugeben.</li><li>Mehl und Kakaopulver unterrühren und Milchschokoladenstücke dazugeben.</li><li>Auf ein mit Backpapier ausgelegtes Backblech gießen und für 25 min backen.</li><li>Abkühlen und genießen.</li></ol>
-141;1;Step1;<p>Hühnerbrust in jeweils 3 längliche Filets schneiden.</p><p>Hühnerbrüste 2 min pro Seite in Butter stark anbraten, danach auf einen Teller auslagern. (Das Fleisch ist noch nicht durch)</p><p>In dieselbe Pfanne wieder ein Stück Butter reingeben und Zwiebel und Knoblauch anrösten. Danach Champingnons dazuzugeben und 2-3 min rösten.</p><p>1TL Mehl dazugeben und unterrühren. Danach mit Gemüsebrühe ablöschen und Sahne und Senf hinzufügen. Kurz aufkochen lassen.</p><p>Nun die Hühnerfilets in die Sauce geben und 5-10 Minuten köcheln lassen.</p><p>Danach mit Salz und Gewürzen abschmecken.</p>
-142;1;Step1;<p>Wasser im Topf aufkochen und Reis gleichmäßig in Topf verteilen. Danach gleich die Tiefkühlerbsen dazugeben. Auf geringer Hitze kochen bis Reis gewollte Konsistenz hat.</p>
-143;1;Step1;"<p>Erdäpfel schälen und würfeln.&nbsp;<br>Lauch in Öl anschwitzen. Mehl dazugeben und einrühren (Einbrenn).&nbsp;<br>Mit Wasser aufgießen. Salz, Pfeffer, Suppengewürze und Muskatnuss hinein.&nbsp;<br>Lange kochen lassen.&nbsp;<br>Schlagobers dazugeben.&nbsp;<br>Würste (optional) schneiden und dazuhauen.&nbsp;<br>kurz aufkochen und genießen</p>"
-144;1;Step1;<p>Ofen auf 180°C Umluft vorheizen.</p><p>Banane, Haferflocken, Ei und Joghurt pürieren.</p><p>Restliche Zutaten dazugeben und vermischen.</p><p>In eine eingefettete Backform geben. (eventuell mit Backpapier auslegen damit es sich leichter entfernen lässt.)</p><p>Oben Kochschokolade drübersträußeln.</p><p>25 min im Ofen backen.</p>
-145;1;Step1;"<p>Salzwasser zum Kochen bringen und geschnittenen Brokkoli 5 min kochen.</p><p>Nudlen kochen.</p><p>Lauch und Knoblauch schneiden und in etwas Öl anbraten. Brokkoli abseihen, zerkleinern und in die Pfanne dazugeben. Gewürze dazugeben und dann Brösel und Parmesan. Nudeln (plus etwas Nudelwasser) in die Pfanne dazugeben und gut umrühren.</p><p>Servieren &amp; den restlichen Parmesan zur freien Entnahme auf den Tisch stellen.</p>"
-146;1;Step1;"<ul><li><i>Die kursiven Anweisungen nur durchführen wenn man keinen Ofen mit Fleischtemperatursensor hat.</i></li></ul><p>Gabelbein herausschneiden (wenns geht)</p><p>Hühnerkäule bis zum Knochen einschneiden (2-3 mal)<br>Schenkel 1-2 mal einschneiden</p><p>Öl in die kalte Pfanne und Huhn hinein. Nochmal Öl aufs Huhn, viel Salz, Pfeffer und Knoblauchpulver. Das Huhn in der Pfanne drehen und mit dem Zeug einschmieren</p><p>Geviertelte rote Zwiebel, Zitrone, Rosmarin (ganz) und Knoblauch ins Huhn stopfen</p><p>Den Herd auf mittlere Hitze aufdrehen und das Huhn mit Brust nach Oben 15 Minuten anbraten. <i>Währenddessen den Ofen auf 200 Grad vorheizen.</i></p><p><i>Ca 1 Stunde backen. Dabei kann man das Huhn direkt in der Pfanne lassen, vorausgesetzt die Pfanne ist für Öfen geeignet.</i></p><h4>Mit high-tech Backofen:</h4><ul><li>Den Temperatursensor von der Seite komplett ins Huhn stecken. Das Programm Umluftgrillen auswählen.<br>Meine Einstellungen: 210 °C, ca. 1h20min, Dampf 1, Backen bis Innentemperatur des Fleisches 85 °C erreicht.</li></ul><blockquote><p>Ich lege das Huhn gerne auf den Grillrost und stelle eine Ofenfeste Schüssel mit in wedges geschnittenen Erdäpfeln drunter. In die Schüssel kommt das Fett, welches vorher in der Pfanne aus dem Huhn gekommen ist. Wenn das Huhn fertig ist stelle ich die Schüssel (achtung heiß) noch einmal weiter nach Oben und wähle das Programm Grill, kleine Fläche aus, bis die oberen Kartoffeln neis und crispy Ecken haben.</p></blockquote><p>Quellen: Adam Ragusea</p><ul><li><a href=""https://youtu.be/OETLkPgt_pw?si=ASQLoQ1YVu_Q54Pn"">https://youtu.be/OETLkPgt_pw?si=ASQLoQ1YVu_Q54Pn</a></li><li><a href=""https://youtu.be/OETLkPgt_pw?si=ASQLoQ1YVu_Q54Pn"">https://youtu.be/G8Q3BSF9-1U?si=r0U7SD0wEmR386Yy</a></li></ul>"
-148;1;Step1;<p>Den Ofen auf 220 Grad Ober-Unterhitze vorheizen.</p><p>Kartoffeln waschen oder schälen.<br>In 1cm dicke Scheiben schneiden.</p><p>In einer Schüssel Kartoffelscheiben mit Olivenöl und Gewürzen vermsichen.</p><p>Nebeneinander auf dem Blech auflegen und 30 Minuten backen.</p><p>Währenddessen eine Zwiebel würfeln. In den Ofen dazugeben und vermengen. Weitere 15-20 Minuten backen.</p>
-149;1;Step1;<p>Das Huhn in Gulaschgroße Würfel schneiden und in einer Schüssel im Ananassaft einlegen (10-15min).</p><p>Währenddessen die Zwiebel würfeln und Ingwer fein hacken oder reiben (Bio Ingwer muss man nicht schälen). Ananas in Stücke schneiden.</p><p>Saft vom Fleisch abgießen.<br>In eine Pfanne ohne Fett das Fleisch und die Zwiebeln geben und mit Pfeffer, Salz und Currypulver würzen.<br>Bei großer Hitze anbraten und nach 2-3 Minuten den Ingwer dazugeben.</p><p>Wenn das Fleisch angebraten ist, alles aus der Pfanne auf einen Teller legen.</p><p>In dieselbe Pfanne die Ananasstücke geben und für 2-3 Minuten anbraten.<br>Mit der Brühe/Fond ablöschen und die Kokosmilch dazugeben.</p><p>Jetzt das Fleisch dazumichschen.</p><p>Wenn man etwas dicker möchte kann man bisschen Speisestärke in kaltem Wasser anrühren und dazumischen.</p><p>Eventuell nachpfeffern und salzen.</p><p>Alles kurz aufkochen lassen und mit Reis servieren.</p>
-150;1;Step1;<ol><li>Karotten schälen und hexeln</li><li>Eier, Käse, Mehl und Gewürze dazugeben</li><li>In heiße Pfanne mit Öl geben und anbraten.</li><li>Mit sauce tartare essen</li></ol>
-151;1;Step1;"<ol><li>Backofen auf 160°C Umluft vorheizen&nbsp;</li><li>Springform mit Butter einfetten &amp; etwas Erdmandeln ausstreuen&nbsp;</li><li>Butter, Zucker, Eier schaumig rühren</li><li>Vanillepuddingpulver, Vanillezucker, Backpulver, Magerquark dazugeben &amp; gut vermischen und in die Springform geben</li><li>Mischung mit den restlichen Erdmandeln bestreuen&nbsp;</li><li>80-90 min backen&nbsp;</li><li>gut abkühlen lassen &amp; genießen :)</li></ol>"
+recipeId;stepNumber;name;description;unterRezeptId
+17;1;Zwiebeln anschwitzen;Zwiebel im Topf mit ein bisschen Öl anschwitzen.
+17;2;Reis dazugeben;Reis dazugeben und kurz anbraten
+17;3;mit Wein ablöschen;Mit Wein ablöschen und kochen bis der Wein weg ist
+17;4;Deckel drauf;Wasser hinzufügen und mit Salz, Pfeffer und Suppengewürz würzen. Kochen bis der Reis durch ist.
+18;1;Milch erhitzen;Die ganze Milch in einen Topf geben und erhitzen.
+18;2;Griesbrei dazugeben;Dann den Griesbrei dazugeben und umrühren.
+18;3;Aufkochen;nochmal aufkochen lassen
+18;4;stehen lassen;10 min stehen lassen
+18;5;Serviertipp;mit Zimmt gesprenkelt
+20;1;in einer Schüssel;Butter cremig schlagen, Zucker, Ei und Vanille dazu.
+20;2;in einer weiteren Schüssel;Die trockenen Zutaten in einer separaten Schüssel vermischen und zur Butter dazu mixen.
+20;3;alles vermischen;Dann die Milch und die Schokostückchen zur Butter untermischen und den Teig lange im Kühlschrank ruhen lassen.
+20;4;backen;Cookies formen und bei 175°C 10 min backen.
+20;5;abkühlen;5 Minuten abkühlen lassen
+21;1;Risottoreis zubereiten;;17
+21;2;Währenddessen anbraten;Währenddessen Knoblauch mit Wurst in einer Pfanne anbraten und Zucchini hinzufügen.
+21;3;Zucchini kochen;Mit ein wenig Wasser schmoren lassen bis Zucchini weich ist.
+21;4;Ab in die Pfanne!;Den gekochten Reis in die Pfanne geben und mit geriebenem Parmesan vermischen.
+22;1;Schritt 1;Erdäpfel in Wedgesform bringen. ev. davor schälen.
+22;2;Schritt 2;In eine Schüssel geben und nach eigenem Ermessen die Gewürze, das Öl und den Parmesan dazu geben und gut durchmischen
+22;3;Schritt 3;Alles auf einem Backblech + Papier austeilen und bei 200°C, 40-50 Minuten lang backen. :)
+23;1;Schritt 1;In einen Topf das Öl geben und den Boden mit Poppcornmais bedecken. Einen Deckel draufgeben und alle paar Sekunden den Topf schütteln. Nachdem die meisten Popcorn gepoppt sind und die Pops länger 3 Sekunden auseinander liegen sind die Popcorn fertig. Danach würzen (Salz, Kräuter-Salu Mischungen, alles Mögliche, ...)
+24;1;Schritt 1;Nudelnwasser hinstellen und salzen, wenns kocht Nudeln zugeben und Timer stellen.
+24;2;Schritt 2;Würfelig geschnittenen Speck und den klein geschnitten Knoblauch mit Bratöl in einer Pfanne anbraten.
+24;3;Schritt 3;Anschließend gewürfelten Zucchini zugeben und weiter anbraten.
+24;4;Schritt 4;Schlagobers zugeben und mit Salz, Pfeffer und Oregano (oder anderem Grünzeug) würzen. Einmal aufkochen lassen.
+24;5;Schritt 5;Geriebener Parmesan zugeben und köcheln lassen, bis die Nudeln fertig sind.
+24;6;Schritt 6;Servieren.
+25;1;Schritt 1;Olivenöl in Pfanne heiß machen und Ei hineingehen. (Dotter nicht zerstören)
+25;2;Schritt 2;Heiß brutzeln und schwenken, damit sich das Ei zusammenzieht. Heißes Öl über Ei gießen.
+25;3;Schritt 3;Eventuell Pfanne zudecken.
+25;4;Schritt 4;Wenn es knusprig genug ist, mit Salz und Pfeffer würzen und servieren.
+26;1;Schritt 1;In Pfanne Butter schmelzen.
+26;2;Schritt 2;Ei in Glas mixen, bis es gut vermengt und durchgängig Gelb ist. Salzen
+26;3;Schritt 3;In Pfanne gießen und viel verrühren bis es fertig ist. Zum Schluss pfeffern.
+27;1;Schritt 1;Fett in Pfanne erwärmen und Ei dazugeben.
+27;2;Schritt 2;Kochen solange man es mag.
+27;3;Schritt 3;Wenn man den Dotter durch haben möchte kann man die Pfanne zudecken.
+28;1;Schritt 1;Wurst, Zwiebeln und Champions schneiden.
+28;2;Schritt 2;Zwiebeln, Wurst und Champignons in Pfanne anbraten.
+28;3;Schritt 3;Ei dazugeben, warten bis es teilweise hart geworden ist, zerstören und Dotter kaputt machen.
+28;4;Schritt 4;Salzen und Pfeffern.
+28;5;Schritt 5;Eckerlkäse als Ganzes oder als Hälfte dazugeben und kurz in der Pfanne lassen.
+28;6;Schritt 6;Servieren
+29;1;Schritt 1;Nudelwasser hinstellen und salzen. Wenns kocht Nudel hinein und Timer stellen.
+29;2;Schritt 2;Lauch/Jungzwiebel anrösten in einer Pfanne kurz anrösten.
+29;3;Schritt 3;Schinken dazu und Brokkoli dazu. 5 Minuten Deckel drauf und kochen lassen.
+29;4;Schritt 4;Anschließend Tunke dazu (Creme fraiche oder Schlagobers) und mit Salz, Pfeffer, Muskat und etwas Suppenwürze würzen.
+29;5;Schritt 5;Servieren :)
+31;1;Schritt 1;ev. Karotten in Wasser geben und kochen lassen. Erbsen nach Abseihen dazu geben. Sonst nur Erbsen mit wenig Wasser kochen lassen.
+31;2;Schritt 2;Bratöl in dem Topf und geschnittenes Fleisch mit Pfeffer und Paprikapulver kurz anrösten
+31;3;Schritt 3;Mit Wasser ablöschen - so viel wie man Saft haben will (Fleisch bedeckt). Salzen, Tomatenmark dazu geben und 25 Minuten kochen lassen.
+31;4;Schritt 4;Dann Creme Fraiche/Schalgobers mit Maizena verrühren, in den Topf geben und aufkochen lassen.
+31;5;Schritt 5;Fleisch mit Saft, Gemüse und Reis servieren.
+32;1;Schritt 1;Milchreis/Risotto Reis und Milch im Verhältnis 1:4 vorbereiten.
+32;2;Schritt 2;In einen Topf geben und warten bis es aufkocht. Regelmässig rühren. Wenn es aufkocht zurück drehen und Ahornsirup hineinmischen. Regelmässig rühren damit es nicht anbrennt. Fertig ist es, wenn man mit einem Löffel den Reis am Boden entlangziehen kann und den Boden kurz sieht. (Bis die Milch wieder kommt)
+34;1;Schritt 1;Zwiebel, Champignons und Wurst schneiden und in einer große Pfanne anbraten. Zuccini gewürfelt hinzufügen und kochen.
+34;2;Schritt 2;Währenddessen Kartoffel kochen und in Scheiben schneiden. Alles in der Pfanne vermengen.
+34;3;Schritt 3;Nach Geschmack abbraten, salzen und pfeffern.
+34;4;Schritt 4;Eier hinzufügen, kurz warten und dann verrühren.
+34;5;Schritt 5;Schlussendlich Eckerlkäse in dazugeben und verrühren. Er sollte in 2-3 Teile geteilt werden.
+34;6;Schritt 6;Tipp: Zu jedem Bissen ein wenig vom Eckerlkäse auf die Gabel geben.
+35;1;Schritt 1;Geschälte und in größere Würfeln geschnittene Kartoffel in Kelomat (5min) oder Wasser (15-20 min) kochen.
+35;2;Schritt 2;Butter in Topf schmelzen und Kartoffeln gekochte, geschälte Kartoffeln hinzufügen. Milch dazugeben und mit Stampfer bearbeiten und gelegentlich Milch hinzufügen, bis gewünschte Textur erreicht ist. Ausgiebig salzen.
+36;1;Schritt 1;Schupfnudeln in Wasser kochen (wie es auf der Packung steht)
+36;2;Schritt 2;Lauch, gewürfelter Bratschinken und Champignons anrösten und fertig gekochte Schupfnudeln dazugeben.
+37;1;Schritt 1;Nudelnwasser hinstellen und salzen, wenns kocht Nudeln zugeben und Timer stellen.
+37;2;Schritt 2;Würfelig geschnittenen Speck und den klein geschnitten Knoblauch mit Bratöl in einer Pfanne anbraten.
+37;3;Schritt 3;Anschließend gewürfelten Kürbis zugeben und weiter anbraten.
+37;4;Schritt 4;Schlagobers zugeben und mit Salz, Pfeffer und Oregano (oder anderem Grünzeug) würzen. Einmal aufkochen lassen.
+37;5;Schritt 5;Geriebener Parmesan zugeben und köcheln lassen, bis die Nudeln fertig sind.
+37;6;Schritt 6;Servieren.
+38;1;Schritt 1;Zwiebel im Topf anschwitzen und Reis dazugeben. Diesen leichte anbraten und Wein dazugeben. Kochen bis der Wein weg ist und dann Wasser hinzufügen und kochen bis der Reis durch ist. Mit Salz, Pfeffer und Suppengewürz würzen.
+38;2;Schritt 2;Währenddessen Knoblauch mit Wurst in einer Pfanne anbraten und Kürbis hinzufügen. Mit ein wenig Wasser schmoren lassen bis Kürbis weich ist.
+38;3;Schritt 3;Den gekochten Reis in die Pfanne geben und mit geriebenem Parmesan vermischen.
+38;4;Schritt 4;Genießen
+39;1;Schritt 1;Vanillezucker, Zucker und Ei schaumig schlagen, Rahm und Öl dazumischen, verrühren, Kakao + Mandeln oder Kokos dazugeben, verrühren, Backpulver und Mehl + Gewürz dazugeben.
+39;2;Schritt 2;Form einfetten und in den Ofen geben
+39;3;Schritt 3;170 Grad Celsius und ca. 45 min
+40;1;Schritt 1;Zwiebel in Topf anrösten.
+40;2;Schritt 2;Knoblauch und Erbsen dazugeben und mit Wasser kochen, bis sie die gewünschte Härte erreicht haben.
+41;1;Schritt 1;Maiskolben der Länge nach vierteln. Die Gewürze und das Olivenöl vermischen und auf den Mais schmieren.
+41;2;Schritt 2;Die Kolben für ca. 10 min bei 200°C grillen/backen/airfryen.
+41;3;Schritt 3;Für die Sauce die Mayonnaise, Jalapeno (in adobo sauce?), Zitronensaft und etwas Salz vermischen.
+41;4;Schritt 4;Sauce zusammen mit etwas Parmesan und frischem Koriander über den Mais geben und genießen.
+43;1;Schritt 1;Wasser in Topf kochen. Salz dazugeben.
+43;2;Schritt 2;Wenn das Wasser heiß ist es mit einem Kochlöffel in eine Drehbewegung versetzen, sodass eine Art Wasservortex versteht. Dahinein das Ei geben. Kochen lassen.
+43;3;Schritt 3;Das Ei sollte außen weiß und gut gekocht sein, innen sollte der gelbe Dotter weich sein.
+44;1;Schritt 1;Grillgemüse in Pfanne aufwärmen und ein wenig anbraten. Ein wenig Milch dazugeben und würzen.
+44;2;Schritt 2;Gouda als Block abschneiden, hineinstellen und mitbruzzeln lassen.
+45;1;Schritt 1;Nudeln kochen.
+45;2;Schritt 2;Huhn in Topf mit Öl kochen.
+45;3;Schritt 3;Wenn Huhn fertig Knoblauch geschnitten hineingeben.
+45;4;Schritt 4;Spinat dazugeben, mit Salz und Pfeffer würzen.
+45;5;Schritt 5;Schlagobers/Creme Fraiche dazugeben.
+45;6;Schritt 6;Kurz aufkochen lassen.
+45;7;Schritt 7;Nudeln und Parmesan dazugeben und kurz kochen.
+45;8;Schritt 8;Mit Petersilie serviern.
+46;1;Schritt 1;Süßkartoffel würflig schneiden. Paprika und Zwiebel schneiden.
+46;2;Schritt 2;Öl und Knoblauch in eine Pfanne geben.
+46;3;Schritt 3;Faschiertes dazugeben und kochen (durch 5-7 min).
+46;4;Schritt 4;Faschiertes auf Teller geben, zudecken und auf die Seite stellen.
+46;5;Schritt 5;In dieselbe Pfanne Zwiebel, Paprika und Süßkartoffel geben und anbraten.
+46;6;Schritt 6;Ein bisschen Wasser, Suppengewürz, Senf und Tomatensauce dazugeben. Zudecken und 12-15 min köcheln lassen.
+46;7;Schritt 7;Dann Mais und Fleisch dazugeben.
+46;8;Schritt 8;Mit Oregano, Chili Pulver, Salz und Pfeffer würzen.
+46;9;Schritt 9;Gut verrühren und noch mal 2 min kochen.
+47;1;Schritt 1;Zwiebel in Topf anschwitzen, Reis dazu und kurz anbraten. Dann doppelte Menge an Wasser dazu, mit Salz würzen und zugedeckt kochen lassen.
+48;1;Schritt 1;Zwiebel in Topf anschwitzen, Reis dazu und kurz anbraten. Dann doppelte Menge an Wasser dazu, mit Salz würzen und zugedeckt kochen lassen.
+49;1;Schritt 1;Quinoa mit kochendem Wasser waschen.
+49;2;Schritt 2;Danach mit Gewürzen nach Wunsch vereinen und mit der doppelten Menge Wasser zum Kochen bringen.
+49;3;Schritt 3;Zugedeckt ca. 10 min köcheln lassen.
+49;4;Schritt 4;Herdplatte abschalten und ca. 15 min ausquellen lassen.
+50;1;Schritt 1;Nudeln kochen.
+50;2;Schritt 2;Backblech vorbereiten.
+50;3;Schritt 3;Schafkäse in die Mitte vom Blech legen.
+50;4;Schritt 4;Geschnittene Zucchini, Paprika, Zwiebel und ganze Knoblauchzehen dazulegen. Mit Olivenöl, Salz und Gewürzen würzen.
+50;5;Schritt 5;Für 20 min backen.
+50;6;Schritt 6;Mit Nudeln und Schlagobers vermischen.
+51;1;Schritt 1;Nudeln kochen.
+51;2;Schritt 2;Butter in Pfanne schmelzen. Knoblauch dazugeben. Pfeffer und Mehl dazugeben. Vermischen. Milch, Schlagobers und Zitronensaft dazugeben. Für 3-5 Minuten kochen und rühren.
+51;3;Schritt 3;Warm servieren.
+52;1;Schritt 1;Nudeln kochen.
+52;2;Schritt 2;Butter in Pfanne schmelzen. Knoblauch dazugeben. Mehl dazugeben. Vermischen. Milch dazugeben und mit Salz und Pfeffer würzen. Parmesan dazugeben. Für 3-5 Minuten kochen und rühren.
+52;3;Schritt 3;Mit gehackter Petersilie warm servieren.
+53;1;Schritt 1;Gekochte Eier und Essiggurken würflig schneiden. Mit Mayonnaise vermischen. Mit Salz und Pfeffer würzen.
+54;1;Schritt 1;Kartoffel kochen, schälen und in Scheiben schneiden.
+54;2;Schritt 2;In Pfanne klein geschnittene Zwiebel anbraten und Kartoffel dazugeben. Anbraten und ein wenig verrühren.
+55;1;Schritt 1;Huhn in Würfel schneiden 1-3 cm. Zwiebel groß schneiden bzw nur halbieren oder vierteln. Lauch groß schneiden. Zucchini groß schneiden.
+55;2;Schritt 2;Huhn in Pfanne braten, restliche Zutaten dazugeben und gut anrösten. Würzen und servieren.
+56;1;Schritt 1;Erdäpfel speckig kochen und eventuell schälen. In Scheiben schneiden und in Pfanne mit Öl knusprig braten.
+56;2;Schritt 2;Salzen und servieren.
+57;1;Schritt 1;Spaghetti mit heißem Wasser und Salz kochen.
+57;2;Schritt 2;Zwiebel zerkleinern und in Pfanne mit Öl anbraten. Fleisch dazugeben und braten, bis es fast nicht mehr rot ist.
+57;3;Schritt 3;Dann geriebene Karotten und geschnittene Zucchini dazugeben und mit Tomatenmark und Tomatensauce kochen.
+57;4;Schritt 4;Mit Salz und Pfeffer würzen.
+58;1;Schritt 1;Mit ein wenig Wasser im Topf auftauen lassen und warm machen.
+63;1;Schritt 1;Umso weniger Belag oben ist, umso leichter geht es zum Rollen.
+63;2;Schritt 2;Pizzateig ausrollen, mit Tomatenmark bestreichen und mit Thymian würzen. Anschließend Pizzakäse großzügig verteilen und Belag hinzufügen (z.B Mais, Schinken, Jungzwiebel, Paprika, Salami) und mit Oregano würzen.
+63;3;Schritt 3;Pizzeteig der Breite nach einrollen und ca. 2 cm Stücke abschneiden. Diese dann auf ein Blech legen (um 90° gedreht). ev. noch mit Öl bepinseln und nach Packungsangabe backen.
+63;4;Schritt 4;Heiß oder kalt snacken.
+67;1;Schritt 1;Eier, Rohrzucker und Vanillezucker schaumig rühren.
+67;2;Schritt 2;Die zerlassene Butter oder MAgarine mit gemahlener Braunhirse, Weinsteinpulver und Erdmandeln verrühren und die Masse aus Eiern, Rohrzucker und Vanillezucker unterheben.
+67;3;Schritt 3;Bei 150 - 175 Grad Celsius (Heißluft) 35 - 40 Minutne backen
+67;4;Schritt 4;Nach Belieben glasieren (Marmelade, Schokolade, Rum oder Kokosflocken-Glasur)
+67;5;Schritt 5;Andreas Notizen: mit Ribiselmarmelade heiß bestreichen  5 min 200 Grad Celsius
+67;6;Schritt 6;weiße Schoko-Glasur
+68;1;Schritt 1;ca. 180 Grad Celsius
+68;2;Schritt 2;ca. 20 min
+69;1;Schritt 1;Keine Schritte vorhanden
+70;1;Schritt 1;Keine Schritte vorhanden
+71;1;Schritt 1;Hirse mit kochendem Wasser ordentlich abspülen.
+71;2;Schritt 2;Geschnittener Speck mit Öl in der Pfanne anbraten. Dann Hirse dazu und kurz warten, dann plus fast die doppelte Menge Wasser.
+71;3;Schritt 3;Dann geschnittene Tomaten dazu und mit Salz, Pfeffer und Suppengewürz würzen. Deckel drauf und 20 min kochen lassen.
+71;4;Schritt 4;Geriebenen Emmentaler und Creme Fraiche dazu. Servieren.
+72;1;Schritt 1;Wenig Wasser kochen und Kohlrabi schälen und würflig schneiden. 10 min mit Salz, Kümmel und Suppengewürz.
+72;2;Schritt 2;Inhalte aus Topf entfernen oder neuen Topf nehmen. Butter schmelzen und Mehl dazugeben. Mit Mich verrühren. Alle Inhalte zusammenfügen.
+72;3;Schritt 3;Creme fraiche dazugeben.
+72;4;Schritt 4;Gehackte Kohlrabi Blätter und Petersilie dazumengen.
+73;1;Schritt 1;Wasser mir Zartweizen in einen Kochtopf geben uns kochen bis fertig.
+73;2;Schritt 2;60tel Tasse für 2 pers
+74;1;Schritt 1;Hirse mit kochendem Wasser abspülen und mit Karotten, Kohlrabi, Salz und Suppenwürze 20 Minuten lang kochen.
+74;2;Schritt 2;In einer Pfanne Jungzwiebel/Lauch mit Zucchini und Champignons anbraten. Außerdem mit Salz und Oregano (oder anderen Kräutern würzen).
+74;3;Schritt 3;2 Eier mit dem Rahm oder ähnlichem verrühren.
+74;4;Schritt 4;Hirse, Gemüse, Mais und Tunke vermischen und in eine eingefettete Auflaufform geben. Dann mir Käse bedecken.
+74;5;Schritt 5;Nun bei 180°C ca. 40 Minuten lang backen.
+74;6;Schritt 6;Guten Appetit!
+75;1;Schritt 1;Eier, Zucker und Vanillezucker schaumig rühren
+75;2;Schritt 2;Öl und Eierlikör dazurühren und zum Schluss das mit Backpulver vermengte Mehl und Stärkemehl einrühren.
+75;3;Schritt 3;In Gugelhupf-Formen füllen und bei 180 Grad Celsius ca. 1 Stunde backen.
+75;4;Schritt 4;Tipp: Rezept auch gut mit glutenfreiem Mehl
+76;1;Schritt 1;Butter, Zucker, Dotter und Vanillezucker schaumig rühren. Milch dazugeben.
+76;2;Schritt 2;Mehl, Backpulver dazugeben und Eischnee unterheben.
+76;3;Schritt 3;1/3 in eigene Schüssel geben und mit Kakao verrühren.
+76;4;Schritt 4;Form einfetten und Teig dazugeben: ohne Kakao, mit Kakao, ohne Kakao.
+76;5;Schritt 5;Mit Löffelstiel in Form leicht vermengen.
+76;6;Schritt 6;bei 175 Grad Celsius 55 Minuten backen.
+76;7;Schritt 7;Tipp: Rezept auch gut mit glutenfreiem Mehl
+77;1;Schritt 1;Tipp: Anstatt Äpfel kann man auch 700 g Apfelmus nehmen
+77;2;Schritt 2;Butter, Ei Zucer Vanillezucker und Zimt mixen und Mehl und Backpulver dazugeben.
+77;3;Schritt 3;2/3 des Teiges in Form drücken und geschnittene Äpfel oder Apfelmus verteilen.
+77;4;Schritt 4;Letzter Drittel des Teiges darüber bröseln.
+77;5;Schritt 5;Bei 170 Grad Celsius 40 Minuten backen.
+77;6;Schritt 6;Tipp: Rezept auch gut mit glutenfreiem Mehl
+79;1;Schritt 1;Mengenangaben für 3 Portionen.
+79;2;Schritt 2;In einer Schüssel Mehl, Zucker, Salz und Dotter mit der Milch zu einem glatten, dickflüssigen Teig verrühren.
+79;3;Schritt 3;In einer anderen Schüssel die Eiklar zu einem steifen Schnee schlagen und danach unter den dickflüssigen Teig heben.
+79;4;Schritt 4;Rosinen (nach Bedarf) dazugeben, Butter in die Pfanne, Teig auf 1x hineingeben, 1x wenden, in Stücke reißen, mit Staubzucker bestreuen
+80;1;Schritt 1;bei 180 Grad Celsius bei Ober-Unterhitze ca. 45 min backen
+81;1;Schritt 1;Butter, Zucker und Dotter schaumig rühren. Mandeln (oder 120g Erdmandeln) und ungeschlagenes Schlagobers dazu. Zu guter Creme machen.
+81;2;Schritt 2;Lagen schlichten. Beginnend mit Biskotten, welche vorher in das Milch/Mehl/Zucker-Gemisch getunkt wurden. Dann Creme.
+81;3;Schritt 3;insgesamt 3 Lagen. dann kühlstellen. Kurz vor dem Servieren mit Schlagobers garnieren.
+81;4;Schritt 4;Und Essen :)
+82;1;Schritt 1;Teil der Zutaten ist der Germteig.
+82;2;Schritt 2;Ab 150 g Mehl sind es Streussel.
+82;3;Schritt 3;Für den Germteig:
+82;4;Schritt 4;Lauwarme Milch, Zucker und Germ verrühren (dampfl), an warmen Ort stellen und schauen ob Germ eh was tut. Wenn es funktioniert, passts.
+82;5;Schritt 5;Dann alles in eine Schüssel geben und kneten und an waremen Ort geben. Stehen lassen. 2x zusammenschlagen.
+82;6;Schritt 6;Für Streussel:
+82;7;Schritt 7;Butter geschmolzen und ausgekühlt mit Zutaten vermengen.
+82;8;Schritt 8;Germteig ausbreiten, mit Milch bestreichen. Streussel draufgeben.
+83;1;Schritt 1;Nudeln kochen wie immer.
+83;2;Schritt 2;Zwiebel in Pfanne anbraten. Thunfisch und geschnittene Tomaten dazu. Kurz warten. Schlagobers/ähnliches dazu und würzen. Kochen lassen, bis die Nudeln fertig sind.
+84;1;Schritt 1;Kleine Erdäpfel waschen und schneiden. In Öl ca. 4 min anbraten und dann Knoblauch dazugeben.
+84;2;Schritt 2;Wasser, Sojasauce und Honig mischen und zu den Kartoffeln schütten. Umrühren und kochen bis die Flüssigkeit weg ist. Sesam dazugeben und kurz anbraten.
+84;3;Schritt 3;Tipp: mit Schnittlauch servieren
+85;1;Schritt 1;Die Kartoffel leicht fächrig einschneiden, mit etwas Öl beträufeln und mit Salz würzen. Bei 180 Grad Celsius in den Ofen geben. Nach ca. 30 Minuten herausnehmen und die Zucchini in Halbmonde schneiden. Diese in die Zwischenräume stecken und mit Bergkäse gratinieren. Nun für ca. 8 min bei Oberhitze im Ofen den Käse schmelzen lassen.
+86;1;Schritt 1;https://youtu.be/AmC9SmCBUj4
+86;2;Schritt 2;Stake 20 Min vor Zubereitung aus dem Kühlschrank nehmen.
+86;3;Schritt 3;Pfanne erhitzen.
+86;4;Schritt 4;Stake mit Salz und Pfeffer würzen.
+86;5;Schritt 5;Wenn die Pfanne heiß ist, Öl reingeben und die Steaks reingeben.
+86;6;Schritt 6;Nach 30 Sekunden umdrehen
+86;7;Schritt 7;Von hier an minütlich drehen.
+86;8;Schritt 8;Ganze leicht gebrochene Knoblauchzehen reingeben.
+86;9;Schritt 9;Thymian reingeben.
+86;10;Schritt 10;Eventuell mehr Öl hinzufügen.
+86;11;Schritt 11;Butter dazuwürfeln. Steaks in flüssiger Butter baden (übergießen).
+86;12;Schritt 12;Mit Knoblauchzehen einreiben.
+89;1;Schritt 1;Paprika und Zwiebel schneiden und in Pfanne mit Öl anbraten, mit Salz und Pfeffer würzen.
+89;2;Schritt 2;In Schüssel transferieren und mit Frischkäse, Cheddar, Pepper Jack (oder anderem Käse) vermischen.
+89;3;Schritt 3;Hühner mit Salz, Chilli, Kreuzkümmel und Knoblauch würzen. Einschneiden und mit der Fülle stopfen.
+89;4;Schritt 4;Ca. für 5 min auf beiden Seiten anbraten. Und mit Sour Creme servieren :)
+90;1;Schritt 1;Pfefferschoten, Zwiebel und Knoblauch würfeln. Limette entsaften. Tomaten klein würfeln (am besten vorher blanchieren und schneiden).
+90;2;Schritt 2;Avokados halbieren, entkernen und zerkleinern. Avocadofleisch mit Limettensaft mit Gabel zerdrücken. Matsch mit Salz, Pfeffer und Tabasco abschmecken.
+90;3;Schritt 3;Alles andere dazugeben und 15 min warten.
+91;1;Schritt 1;Nudeln kochen.
+91;2;Schritt 2;Butter schmelzen und Wurst und Champignons anbraten. Parmesan und Schlagobers (original Rezept noch anderer Käse und Milch) zugeben. Kochen lassen bis Nudeln fertig sind.
+91;3;Schritt 3;Nudeln in Pfanne geben kurz durchrühren und auf Teller geben. Mit frisch gehackter Petersilie bestreuen und servieren.
+92;1;Schritt 1;Backofen auf 170°C Umluft vorheizen.
+92;2;Schritt 2;Äpfel schälen, würfelig schneiden mit Kristallzucker1 und Zimt vermischen.
+92;3;Schritt 3;Swirl: Geschmolzene Butter2, brauner Zucker und Zimt extra vermischen.
+92;4;Schritt 4;Nochmal in einer extra Schüssel Mehl, Backpulver, Kristallzucker2, Vanillezucker, Milch1, vorgeschlagene Eier und geschmolzene Butter1 mixen. Apfelmasse dazugeben.
+92;5;Schritt 5;Teigmasse in viereckige Form geben. Swirl darüber verteilen, mit Spieß verteilen. ca. 45 min backen.
+92;6;Schritt 6;Staubzucker mit Milch2 vermischen und über Kuchen verteilen.
+92;7;Schritt 7;Abkühlen lassen und genießen.
+93;1;Schritt 1;Erdäpfel waschen und halbieren/vierteln. Knoblauch klein schneiden. Wenig Jungzwiebel schneiden.
+93;2;Schritt 2;Für die Sauce: Honig, Wasser und Sojasauce vermischen.
+93;3;Schritt 3;Erdäpfel in Pfanne anbraten, Knoblauch dazugeben. Dann Sauce dazulehren. Kochen lassen, bis sich die Sauce verdickt und die Erdäpfel weich sind. Sesam dazugeben und verrühren.
+93;4;Schritt 4;Auf Teller geben und mit Jungzwiebel bestreuen.
+94;1;Schritt 1;Spinat in Pfanne (auftauen) und mit Knoblauch und Pinienkerne kurz anschwitzen.
+94;2;Schritt 2;Wrap mit Öl in Pfanne geben. Spinat auf einer Seite verteilen. Würzen und mit Feta belegen. Zusammenklappen und auf beiden Seiten gut anbraten.
+95;1;Schritt 1;Reis kochen.
+95;2;Schritt 2;Ofen auf 180 Grad Celsius aufheizen.
+95;3;Schritt 3;Zucchini aushöhlen und mir Olivenöl bestreichen. Mit Salz und Pfeffer würzen. 10 - 15 min backen.
+95;4;Schritt 4;Zwiebel in Öl anbraten und Knoblauch dazugeben. Dann das Fleisch dazugeben. Alle Gewürze draufgeben und weiterkochen bis es schön braun ist. Vom Herd nehmen. Mais, Zucchinifleisch, Reis und Käse dazugeben. Mischung in die Zucchini füllen.
+95;5;Schritt 5;10 - 15 min backen.
+95;6;Schritt 6;Serviertipp: Frischer Koreander vor dem Servieren darüber streuen.
+96;1;Schritt 1;Nudeln kochen.
+96;2;Schritt 2;Alle anderen Zutaten (außer Jungzwiebel und Erdnüsse) vermischen.
+96;3;Schritt 3;Nudeln abseihen und Soße drüber geben.
+96;4;Schritt 4;Rest oben drüber geben und servieren. :)
+97;1;Schritt 1;Backofen auf ca. 180°C vorheizen
+97;2;Schritt 2;Schale von den 3 Zitronen abreiben.
+97;3;Schritt 3;Eier und Rohrzucker schaumig rühren. Mehl sieben und mit Vanillezucker, Backpulver, Zitronenschale und Butter nach und nach dazugeben. Alles gut mixen.
+97;4;Schritt 4;Teig auf ein mit Backblech ausgelegten Blech schmieren und ca. 20 min lang backen.
+97;5;Schritt 5;1-2 Zitronen auspressen und aus dem Saft und dem Staubzucker eine Glasur rühren. Die muss schön dickflüssig sein!
+97;6;Schritt 6;Kuchen noch warm mit Glasur bestreichen und kurz auskühlen lassen - genießen :)
+98;1;Schritt 1;Reis kochen oder alten Reis vorbereiten. Gemüse schneiden. Zwiebel eventuell streifenförmig. Pfanne erhitzen, Bratöl reingeben und Zutaten anbraten (Zwiebel, Knoblauch, dann Karotten, dann Mais, Erbsen, Paprika und Champingnos) und salzen.
+98;2;Schritt 2;Reis dazuklatschen, mit Sojasauce und schwarzem Pfeffer würzen. Gut mit hoher Hitze rühren. Sesamöl draufgeben. Zum Schluss beim Servieren Sesam und Jungzwiebel drüberstreuen.
+99;1;Schritt 1;Die Nudeln in reichlich Salzwasser bissfest garen. Wasser abgießen und abtropfen lassen. Den Spinat verlesen und waschen. Größere Blätter etwas zerrupfen.
+99;2;Schritt 2;Die Zwiebel und den Knoblauch schälen und in feine Würfel schneiden. Etwas Öl in einem großen Topf erhitzen und die Zwiebel- und Knoblauchwürfel darin glasig dünsten.
+99;3;Schritt 3;Den Spinat und die Pinienkerne zugeben und kurz anbraten, bis der Spinat zusammenfällt. Die Sahne zugeben, salzen und pfeffern und unter Rühren cremig einkochen lassen.
+99;4;Schritt 4;Die Nudeln mit der Spinatsauce vermengen und auf warmen Tellern servieren.
+100;1;Schritt 1;Sauce
+100;2;Schritt 2;Honig, Sojasauce, Knoblauch gewürfelt, Ingwer und Seseamsamen in einer Schüssel zusammenmischen.
+100;3;Schritt 3;Fleisch
+100;4;Schritt 4;Fleisch in Öl anbraten, salzen und Pfeffern bis es braun ist.
+100;5;Schritt 5;Dann die Sauce dazuschütten und gut umrühren.
+100;6;Schritt 6;Sobald die Sauce blubbert, Brokkoli dazuklatschen und gut umrühren.
+100;7;Schritt 7;Kochen bis das Fleisch durch ist und das Gemüse weich.
+100;8;Schritt 8;Serviertipp:
+100;9;Schritt 9;Entweder alleine oder mit Reis.
+100;10;Schritt 10;Quelle: https://www.instagram.com/p/CM-xkvMgVAn/
+101;1;Schritt 1;Zwiebel im Topf anschwitzen und Reis dazugeben. Diesen leichte anbraten und Wein dazugeben. Kochen bis der Wein weg ist und dann Wasser hinzufügen und kochen bis der Reis durch ist. Mit Salz und Suppengewürz würzen.
+101;2;Schritt 2;Währenddessen Knoblauch und Lachs in einer Pfanne anbraten. Lauch hinzufügen.
+101;3;Schritt 3;Den gekochten Reis in die Pfanne geben und mit geriebenem Parmesan vermischen.
+101;4;Schritt 4;Genießen
+102;1;Schritt 1;Zwiebel anschwitzen.
+102;2;Schritt 2;Mehl dazu. Mehl kurz durchrösten und umrühren.
+102;3;Schritt 3;Wasser drauf und geschnittenes, geschältes Gemüse und Erdäpfel rein. Salz, Pfeffer und Suppenwürze drauf. Alle Gewürze drauf.
+102;4;Schritt 4;20 Min kochen
+102;5;Schritt 5;Würschtel geschnitten dazugeben. Außerdem Petersilie gehackt und eventuell Schlagobers dazuschütten.
+103;1;Schritt 1;Alter Reis (Beste).
+103;2;Schritt 2;2 grosse Eier, Rezept für 2 Personen
+103;3;Schritt 3;Gemüse in Öl mit Knoblauch anbraten. Reis dazugeben und kurz anbraten. Ei nebenbei mit Sesamöl vermischen und dazugeben und würzen. Kurz anbraten bis Ei aufgehört hat, flüssig zu sein.
+104;1;Schritt 1;Kohlrabi schneiden.
+104;2;Schritt 2;Kohlrabi kochen (mit Salz, Kümmel, Muskatnuss und Suppenwürze). (wenig Wasser)
+104;3;Schritt 3;Wenn fertig Wasser rausholen und Butter in den Topf geben. Mehl dazugeben und rühren. (Einbrenn)
+104;4;Schritt 4;Wasser und Kohlrabi wieder zurück (nicht zu viel Wasser). Schlagobers/Creme Fraiche dazugeben und eventuell nachwürzen. Dann Petersilie dazugeben und fertig!
+105;1;Schritt 1;Champignons und Zwiebel in Butter anbraten und Thymian dazugeben. Reis kurz anbraten. Wein dazugeben und dann das Wasser dazugeben. Erbsen dazugeben und Salz und Suppengewürze und Pfeffer. Kochen bis Wasser weg und Parmesan dazugeben.
+106;1;Schritt 1;Hähnchenbruststreifen in ca. 1cm dicke Streifen schneiden.
+106;2;Schritt 2;Eier, Petersilie und Schnittlauch verquirlen und mit Salz und Pfeffer würzen.
+106;3;Schritt 3;Ein bisschen Mehl in eine extra Schüssel geben.
+106;4;Schritt 4;Fleischstreifen zuerst in Mehl, dann in Ei tunken. (vielleicht auch öfters)
+106;5;Schritt 5;In heißer Pfanne mit Butter anbraten bis durch und knackig.
+107;1;Schritt 1;Schwammerl anbraten.
+107;2;Schritt 2;Zucchini, Knoblauch und Lauch dazugeben.
+107;3;Schritt 3;Kurz zugedeckt anbraten. Nach eigenem Ermessen würzen.
+108;1;Schritt 1;Süßkartoffel schälen und in Scheiben schneiden.
+108;2;Schritt 2;Süßkartoffeln und Schwammerl anbraten. Zucchini, Knoblauch und Lauch dazugeben.
+108;3;Schritt 3;Kurz zugedeckt anbraten. Nach eigenem Ermessen würzen.
+110;1;Schritt 1;Keine Schritte vorhanden
+111;1;Schritt 1;Brokoli schneiden und 8 min kochen.
+111;2;Schritt 2;Währenddessen Blätterteig ausrollen, Schinken doppelt drauflegen und Käse reiben.
+111;3;Schritt 3;Brokoli absieben und auf den Blätterteig mit Schinken geben. Fast alles vom Käse drübergeben.
+111;4;Schritt 4;Blättterteig zuklappen und den restlichen Käse draufgeben.
+111;5;Schritt 5;Backen laut Beschreibung am Blätterteig.
+111;6;Schritt 6;Währenddessen Sauce zubereiten (Siehe Beilagen)
+112;1;Schritt 1;Knoblauch entweder viel zerkleinern oder pressen.
+112;2;Schritt 2;Alle Zutaten nach Geschmack vermengen.
+113;1;Schritt 1;Den Reis nach Packungsanleitung in Salzwasser kochen.Paprika und Zucchini in Würfel schneiden und anbraten. Knoblauchzehen hacken und dazugeben, alles zusammen ca. 10 Minuten braten.Danach den fertig gekochten Reis hinzugeben, Sojasauce und Cashewkerne dazugeben und noch ca. 5 Minuten unter Rühren braten.Falls Nötig, würzen.
+114;1;Schritt 1;Kartoffeln kochen.
+114;2;Schritt 2;Schälen und würfeln.
+114;3;Schritt 3;Mit Petersilie vermischen.
+115;1;Schritt 1;Lachs gut würzen und mit Zitronensaft ein einreiben.
+115;2;Schritt 2;Auf beiden Seiten gut anbraten. (Falls Haut vorhanden diese ruhig stark anbraten.
+116;1;Schritt 1;Reis kurz anbraten und mit viertel Tasse Weißwein abschrecken. Warten bis der Wein weg ist und 1,5 Tassen Wasser reingeben. Mit Suppengewürz und Salz würzen. Kochen, bis Reis fertig/Wasser weg.
+116;2;Schritt 2;Knoblauch leicht anbraten und (gefrohrenen) Spinat in Pfanne auftauen und ein wenig anrösten.
+116;3;Schritt 3;Parmesan reiben.
+116;4;Schritt 4;Reis in die Pfanne geben und mit Parmesan vermischen.
+117;1;Schritt 1;Butter für 15 min in Schüssel geben und weich werden lassen.
+117;2;Schritt 2;Gewürze dazugeben und verrühren/mixen.
+117;3;Schritt 3;Butter in den Kühlschrank stellen, damit sie fest wird.
+118;1;Schritt 1;Knoblauch, Zwiebel und Paprika schneiden. Faschiertes mit Bratöl in der Pfanne anbraten und geschnittenes Zeugs dazugeben. Warten bis Zwiebel weich ist. Den Reis, die doppelte Menge Wasser und etwas Tomatensauce dazugeben. Nach belieben würzen. Nach kurzem Aufkochen noch etwa 15 Minuten köcheln lassen. Dann noch mehr Tomatensauce untermischen und mit Mozzarella belegen. Deckel zu, bis der Mozzarella schmilzt und cinematisch in der Pfanne servieren.
+118;2;Schritt 2;Mahlzeit!
+119;1;Schritt 1;Tofu pressen.
+119;2;Schritt 2;Cashewnüsse ohne Öl anbraten und auf die Seite stellen.
+119;3;Schritt 3;Paprika und Tofu in Streifen schneiden. Tofu in Stärkemehl wälzen und anschließend im Sesamöl anbraten. Paprika dann dazugeben.
+119;4;Schritt 4;Für die Soße die Sojasoße, Wasser, Knoblauch, Ingwer und Chilliflocken vermischen. Zu Tofu dazuleeren und Kochen bis es verdickt. Cashewnüsse dazu.q
+119;5;Schritt 5;Jungzwiebel und Sesam nach belieben drüber streuen.
+120;1;Schritt 1;Faschiertes mit Öl in Topf anbraten. Reis dazu und nochmal kurz anbraten. Doppelte Menge an Wasser dazu und mit Salz, Pfeffer und Majoran würzen. Außerdem die Tomaten schneiden und dazugeben.
+120;2;Schritt 2;Kochen bis das Wasser weg ist und dann den Mais und das Creme fraiche dazugeben.
+120;3;Schritt 3;Fertig!
+121;1;Schritt 1;Zwiebel schneiden und anschwitzen in Öl.
+121;2;Schritt 2;Kürbis würfeln (nicht schälen) und dazu geben. Auch kurz anbraten.
+121;3;Schritt 3;Wasser dazu und würzen.
+121;4;Schritt 4;Kochen bis der Kürbis weich ist. Dann pürieren.
+121;5;Schritt 5;Schlagobers dazu bist es schön cremig ist.
+121;6;Schritt 6;Mit Kübriskernöl servieren.
+121;7;Schritt 7;Schmecken lassen. :)
+122;1;Schritt 1;Topfen in Geschirrtuch ausdrücken bis kein Wasser rauskommt.
+122;2;Schritt 2;zusammenmischen
+122;3;Schritt 3;Kugeln formen
+122;4;Schritt 4;In kochendes gesalzenes Wasser geben bis schwimmen + paar Minuten bis durch.
+123;1;Schritt 1;Schokolade und Butter zusammenschmelzen und abkühlen lassen.
+123;2;Schritt 2;Mehl, Backpulver, Kakao und Zimt vermengen
+123;3;Schritt 3;Eier und Zucker in einer seperaten Schlüssel verquirrlen
+123;4;Schritt 4;Schoko aus Schritt 1 dazugeben
+123;5;Schritt 5;Mehlmischung gut aber kurz dazumischen
+123;6;Schritt 6;mindestens 6 Stunden kühlen
+123;7;Schritt 7;kleine Bällchen formen und in Staubzucker tunken
+123;8;Schritt 8;Bei 190°C Ober-Unterhitze 10-12 min backen
+124;1;Schritt 1;Trockene Zutaten vermischen, Rest dazumischen und kneten.
+124;2;Schritt 2;In den Kühlschrank (wenn der Teig kalt ist lässt er sich leichter auskneten)
+124;3;Schritt 3;Auf bemählter Oberfläche ausrollen und ausstechen
+124;4;Schritt 4;10-12 Min bei 180°C Ober-unter Hitze oder 160°C Heißluft backen
+124;5;Schritt 5;Nach Belieben verzieren
+126;1;Schritt 1;alles außer Roggenmehl und Erdmandeln gut verühren und über Nacht im Kühlschrank stehen lassen.
+126;2;Schritt 2;am nächsten Tag Erdmandeln und Roggen in den Teig einarbeiten bis er nicht mehr klebt.
+126;3;Schritt 3;Dick auswalken, austechen und mit Ei bestreichen
+126;4;Schritt 4;Bei Heißluft 170°C Umluft für 11 min backen.
+126;5;Schritt 5;Nach Belieben verzieren
+127;1;Schritt 1;100g Staubzucker und Vanillezucker ist für bestreuen.
+127;2;Schritt 2;Alles Andere vermischen und einkühlen.
+127;3;Schritt 3;Würschtel machen, in gleiche Scheiben schneiden und jede einzelne Scheibe wuzeln und Kipferl draus machen.
+127;4;Schritt 4;zwischen 170-180°C Heißluft 10-12 Min backen und wenn noch heiß sind, in Vanille+Staubzucker welzen. wenns nicht geht waren sie zu kurz im Rohr.
+128;1;Schritt 1;Chremespinat auftauen, Knoblauch reingeben, in einer Schüssel mit Mehl und Wasser vermengen bis die Konsistenz passt. (dickflüssig)
+128;2;Schritt 2;In der Pfanne die restlichen Zutaten anbraten und mit Mascarpone vermischen und würzen.
+128;3;Schritt 3;Großen Topf Salzwasser kochen, Spätzle mit dem Spätzlemacher hineinmachen und kochen bis sie aufschwimmen. Herausfischen und in Warmhaltebox geben, damit sie noch weiter abtropfen können. In die Pfanne werfen und vermengen. Servieren.
+128;4;Schritt 4;Tipp: Mehr spätzle machen und einkühlen um später Käse-Spätzle oder Eiernockerl zu machen.
+129;1;Schritt 1;Nudlen kochen.
+129;2;Schritt 2;Lauch waschen, halbieren und in Halbkreise schneiden. Lachs häuten und in Würfel schneiden. Lauch anbraten dann Lachs dazu. Wenn das gut ausschaut Schlagobers dazu, würzen und kurz aufkochen lassen. Fertig.
+129;3;Schritt 3;Servieren.
+130;1;Schritt 1;Backofen auf 180°C Umluft vorheizen.
+130;2;Schritt 2;Erdäpfel waschen und in Achtel oder Viertel schneiden.
+130;3;Schritt 3;Alle Zutaten in einen Top oder Ovenform geben und vermischen.
+130;4;Schritt 4;Gries oben draufsträußeln.
+130;5;Schritt 5;50 Minuten zugedäckt backen.
+130;6;Schritt 6;10-20 Minunten aufgedäckt backen bis sie gut aussehen.
+131;1;Schritt 1;Wasser erhitzen bis es kocht.
+131;2;Schritt 2;Wasser trinken
+132;1;Schritt 1;Zwiebeln klein schneiden und in Topf mit 3 Tl Olivenöl und ein bisschen Wasser mit Deckel weichkochen lassen, dann Deckel abnehgmen und Wasser verdampfen lassen.
+132;2;Schritt 2;Die Erbsen gefrohren, die geschnitteneen Tomaten, Pfeffer, Salz, 1/8 l Wasser und den Dill dazugeben und ca. 1 Stunde mit Deckel köcheln lassen. Hin und wieder umrühren.
+133;1;Schritt 1;Zwiebel in Streifen schneiden.
+133;2;Schritt 2;Kartoffel schälen und grob reiben/hexeln.
+133;3;Schritt 3;Parmesan in Würfel schneiden.
+133;4;Schritt 4;Zwiebel mit Butter leicht anbraten, Kartoffeln dazuhauen. Bissi braten und immer zerstückeln.
+133;5;Schritt 5;Käse dazugeben und so lange wenden und zerstückeln bis der Käse geschmolzen ist.
+133;6;Schritt 6;Dann auf einer Seite anbraten lassen, wenden und auf der anderen Seite anbraten lassen.
+134;1;Schritt 1;Backoven auf 200 °C Ober-Unterhitze vorheizen.
+134;2;Schritt 2;Auf einem Blech oder in einer Garform die großen Tomaten geviertelt hineinlegen, dazwischen geviertelt die Zwiebel und durchgeschnitten den Knoblauch verteilen und mit Olivenöl übergießen. Thymian drüberlegen.
+134;3;Schritt 3;50 Minuten im Ofen garen lassen, danach mit dem Wasser und den restlichen Gewürzen in einen Topf geben und pürieren.
+134;4;Schritt 4;Schlagobers dazugeben und mit Basilikumblatt servieren.
+134;5;Schritt 5;Serviertipp: Getostetes Brot, Parmesanstücke oder Backerbsen passen gut dazu.
+136;1;Schritt 1;Spaghetti kochen.
+136;2;Schritt 2;Öl und Butter in eine Pfanne geben und schmelzen.
+136;3;Schritt 3;geschnittene Zwiebel und geschnittene Champingnons dazugeben.
+136;4;Schritt 4;Ein wenig anrösten.
+136;5;Schritt 5;Einen Löffel Tomatenmark dazugeben.
+136;6;Schritt 6;Kurz rösten.
+136;7;Schritt 7;Wenn die Champingnon weich sind, Schlagobers und Gewürze dazugeben.
+136;8;Schritt 8;Wenn die Nudeln fertig sind diese in die Pfanne geben und gut vermischen.
+136;9;Schritt 9;Mit frischen Basilikumblättern servieren.
+137;1;Schritt 1;Backofen auf 180°C Ober-Unterhitze aufheizen.
+137;2;Schritt 2;Gemüse in mundgerechte Stücke schneiden. Zwiebeln achteln.
+137;3;Schritt 3;Sauce: Knoblauch klein hacken. Öl, Balsamico, italienische Kräuter, Salz, Pfeffer und Knoblauch verrühren.
+137;4;Schritt 4;Gemüse mit Marinade vermischen und auf ein Backpapierbelegtes Blech legen. Ev. Rosmarinzweige drauflegen.
+137;5;Schritt 5;für 30 Minuten backen.
+137;6;Schritt 6;Falls das Gemüse dann noch nicht besonders schwarz ist, kann man es kurz mit der Grillfunktion des Backoven oben grillen, falls vorhanden.
+138;1;Schritt 1;Speise: Sommergetränk
+138;2;Schritt 2;Zitrone und Orange in Scheiben schneiden. Mit Eiswürfel in ein Behältnis (Krug, Bowl) geben. Die Flasche Rotwein und Zitronensaft drübergießen.
+138;3;Schritt 3;Genießen.
+139;1;Schritt 1;Tunfisch, Cheddar und Ei vermischen. Mit Pfeffer uns Salz würzen.
+139;2;Schritt 2;In kleine längliche Sticks formen und auf Backpapier auflegen.
+139;3;Schritt 3;Im Ofen mit 200 °C Ober-Unterhitze für 20 min backen.
+139;4;Schritt 4;Mit Sauce Tartare genießen.
+139;5;Schritt 5;Instagram Credit: https://www.instagram.com/reel/CtRgzV5PNZw/?igshid=MzRlODBiNWFlZA==
+140;1;Schritt 1;Backofen auf 180 °C Umluft aufheizen.
+140;2;Schritt 2;Butter und Zartbitterschokolade auf dem Herd schmelzen und abkühlen lassen.
+140;3;Schritt 3;Währenddessen Eier aufschäumfen und in einer extra Schüssel Mehl + Kakaopulver vermengen.
+140;4;Schritt 4;Wenn die Masse einwenig abgekühlt ist, Sriracha, Zucker und geschlagene Eier dazugeben.
+140;5;Schritt 5;Mehl und Kakaopulver unterrühren und Milchschokoladenstücke dazugeben.
+140;6;Schritt 6;Auf ein mit Backpapier ausgelegtes Backblech gießen und für 25 min backen.
+140;7;Schritt 7;Abkühlen und genießen.
+141;1;Schritt 1;Hühnerbrust in jeweils 3 längliche Filets schneiden.
+141;2;Schritt 2;Hühnerbrüste 2 min pro Seite in Butter stark anbraten, danach auf einen Teller auslagern. (Das Fleisch ist noch nicht durch)
+141;3;Schritt 3;In dieselbe Pfanne wieder ein Stück Butter reingeben und Zwiebel und Knoblauch anrösten. Danach Champingnons dazuzugeben und 2-3 min rösten.
+141;4;Schritt 4;1TL Mehl dazugeben und unterrühren. Danach mit Gemüsebrühe ablöschen und Sahne und Senf hinzufügen. Kurz aufkochen lassen.
+141;5;Schritt 5;Nun die Hühnerfilets in die Sauce geben und 5-10 Minuten köcheln lassen.
+141;6;Schritt 6;Danach mit Salz und Gewürzen abschmecken.
+142;1;Schritt 1;Wasser im Topf aufkochen und Reis gleichmäßig in Topf verteilen. Danach gleich die Tiefkühlerbsen dazugeben. Auf geringer Hitze kochen bis Reis gewollte Konsistenz hat.
+143;1;Schritt 1;Erdäpfel schälen und würfeln.Lauch in Öl anschwitzen. Mehl dazugeben und einrühren (Einbrenn).Mit Wasser aufgießen. Salz, Pfeffer, Suppengewürze und Muskatnuss hinein.Lange kochen lassen.Schlagobers dazugeben.Würste (optional) schneiden und dazuhauen.kurz aufkochen und genießen
+144;1;Schritt 1;Ofen auf 180°C Umluft vorheizen.
+144;2;Schritt 2;Banane, Haferflocken, Ei und Joghurt pürieren.
+144;3;Schritt 3;Restliche Zutaten dazugeben und vermischen.
+144;4;Schritt 4;In eine eingefettete Backform geben. (eventuell mit Backpapier auslegen damit es sich leichter entfernen lässt.)
+144;5;Schritt 5;Oben Kochschokolade drübersträußeln.
+144;6;Schritt 6;25 min im Ofen backen.
+145;1;Schritt 1;Salzwasser zum Kochen bringen und geschnittenen Brokkoli 5 min kochen.
+145;2;Schritt 2;Nudlen kochen.
+145;3;Schritt 3;Lauch und Knoblauch schneiden und in etwas Öl anbraten. Brokkoli abseihen, zerkleinern und in die Pfanne dazugeben. Gewürze dazugeben und dann Brösel und Parmesan. Nudeln (plus etwas Nudelwasser) in die Pfanne dazugeben und gut umrühren.
+145;4;Schritt 4;Servieren  den restlichen Parmesan zur freien Entnahme auf den Tisch stellen.
+146;1;Schritt 1;Die kursiven Anweisungen nur durchführen wenn man keinen Ofen mit Fleischtemperatursensor hat.
+146;2;Schritt 2;Gabelbein herausschneiden (wenns geht)
+146;3;Schritt 3;Hühnerkäule bis zum Knochen einschneiden (2-3 mal)Schenkel 1-2 mal einschneiden
+146;4;Schritt 4;Öl in die kalte Pfanne und Huhn hinein. Nochmal Öl aufs Huhn, viel Salz, Pfeffer und Knoblauchpulver. Das Huhn in der Pfanne drehen und mit dem Zeug einschmieren
+146;5;Schritt 5;Geviertelte rote Zwiebel, Zitrone, Rosmarin (ganz) und Knoblauch ins Huhn stopfen
+146;6;Schritt 6;Den Herd auf mittlere Hitze aufdrehen und das Huhn mit Brust nach Oben 15 Minuten anbraten. Währenddessen den Ofen auf 200 Grad vorheizen.
+146;7;Schritt 7;Ca 1 Stunde backen. Dabei kann man das Huhn direkt in der Pfanne lassen, vorausgesetzt die Pfanne ist für Öfen geeignet.
+146;8;Schritt 8;Den Temperatursensor von der Seite komplett ins Huhn stecken. Das Programm Umluftgrillen auswählen.Meine Einstellungen: 210 °C, ca. 1h20min, Dampf 1, Backen bis Innentemperatur des Fleisches 85 °C erreicht.
+146;9;Schritt 9;Ich lege das Huhn gerne auf den Grillrost und stelle eine Ofenfeste Schüssel mit in wedges geschnittenen Erdäpfeln drunter. In die Schüssel kommt das Fett, welches vorher in der Pfanne aus dem Huhn gekommen ist. Wenn das Huhn fertig ist stelle ich die Schüssel (achtung heiß) noch einmal weiter nach Oben und wähle das Programm Grill, kleine Fläche aus, bis die oberen Kartoffeln neis und crispy Ecken haben.
+146;10;Schritt 10;Quellen: Adam Ragusea
+146;11;Schritt 11;https://youtu.be/OETLkPgt_pw?si=ASQLoQ1YVu_Q54Pn
+146;12;Schritt 12;https://youtu.be/G8Q3BSF9-1U?si=r0U7SD0wEmR386Yy
+148;1;Schritt 1;Den Ofen auf 220 Grad Ober-Unterhitze vorheizen.
+148;2;Schritt 2;Kartoffeln waschen oder schälen.In 1cm dicke Scheiben schneiden.
+148;3;Schritt 3;In einer Schüssel Kartoffelscheiben mit Olivenöl und Gewürzen vermsichen.
+148;4;Schritt 4;Nebeneinander auf dem Blech auflegen und 30 Minuten backen.
+148;5;Schritt 5;Währenddessen eine Zwiebel würfeln. In den Ofen dazugeben und vermengen. Weitere 15-20 Minuten backen.
+149;1;Schritt 1;Das Huhn in Gulaschgroße Würfel schneiden und in einer Schüssel im Ananassaft einlegen (10-15min).
+149;2;Schritt 2;Währenddessen die Zwiebel würfeln und Ingwer fein hacken oder reiben (Bio Ingwer muss man nicht schälen). Ananas in Stücke schneiden.
+149;3;Schritt 3;Saft vom Fleisch abgießen.In eine Pfanne ohne Fett das Fleisch und die Zwiebeln geben und mit Pfeffer, Salz und Currypulver würzen.Bei großer Hitze anbraten und nach 2-3 Minuten den Ingwer dazugeben.
+149;4;Schritt 4;Wenn das Fleisch angebraten ist, alles aus der Pfanne auf einen Teller legen.
+149;5;Schritt 5;In dieselbe Pfanne die Ananasstücke geben und für 2-3 Minuten anbraten.Mit der Brühe/Fond ablöschen und die Kokosmilch dazugeben.
+149;6;Schritt 6;Jetzt das Fleisch dazumichschen.
+149;7;Schritt 7;Wenn man etwas dicker möchte kann man bisschen Speisestärke in kaltem Wasser anrühren und dazumischen.
+149;8;Schritt 8;Eventuell nachpfeffern und salzen.
+149;9;Schritt 9;Alles kurz aufkochen lassen und mit Reis servieren.
+150;1;Schritt 1;Karotten schälen und hexeln
+150;2;Schritt 2;Eier, Käse, Mehl und Gewürze dazugeben
+150;3;Schritt 3;In heiße Pfanne mit Öl geben und anbraten.
+150;4;Schritt 4;Mit sauce tartare essen
+151;1;Schritt 1;Backofen auf 160°C Umluft vorheizen
+151;2;Schritt 2;Springform mit Butter einfetten  etwas Erdmandeln ausstreuen
+151;3;Schritt 3;Butter, Zucker, Eier schaumig rühren
+151;4;Schritt 4;Vanillepuddingpulver, Vanillezucker, Backpulver, Magerquark dazugeben  gut vermischen und in die Springform geben
+151;5;Schritt 5;Mischung mit den restlichen Erdmandeln bestreuen
+151;6;Schritt 6;80-90 min backen
+151;7;Schritt 7;gut abkühlen lassen  genießen :)

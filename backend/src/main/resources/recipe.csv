@@ -1,7 +1,8 @@
 id;name;description;numberofServings;forkedFrom;ownerid
-18;Griesbrei;imported from bignom;2;;1
-20;Cookies;imported from bignom;2;;1
-21;Risotto (Zuchini);imported from bignom;2;;1
+17;Risottoreis plain;Unterrezept für alle möchlichen Risottos;4;;1
+18;Griesbrei;griessig bereiig guut;2;;1
+20;Cookies;richtig geil;2;;1
+21;Risotto (Zuchini);so muss risotto schmecken;2;;1
 22;Potato-Wedges;imported from bignom;2;;1
 23;Popcorn;imported from bignom;2;;1
 24;Zucchini-Nudeln;imported from bignom;2;;1
