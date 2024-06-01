@@ -1,4 +1,10 @@
 recipeid;ingredientName;amount;unit
+15;Wasser;2;l
+15;Erdäpfel;1;kg
+16;Nudeln;250;g
+16;Wasser;3;l
+16;Salz;;
+16;Olivenöl;;
 17;Risottoreis;1;Tasse
 17;Weißwein;0.5;Tasse
 17;Wasser;2;Tasse
@@ -61,7 +67,6 @@ recipeid;ingredientName;amount;unit
 28;Eckerlkäse;1;
 28;Zwiebel;1;
 28;Champignon;4;
-29;Nudeln;250;g
 29;Salz;;
 29;Lauch/Jungzwiebel;20;g
 29;Schinken;20;g
@@ -96,6 +101,7 @@ recipeid;ingredientName;amount;unit
 35;Kartoffel meelig;;
 35;Milch;;
 35;Salz;;
+35;Muskatnuss;;
 36;Wasser;;
 36;gefrorene Schupfnudeln;;
 36;Bratschinken;;
@@ -104,7 +110,6 @@ recipeid;ingredientName;amount;unit
 36;Salz;;
 36;schwarzer Pfeffer;;
 36;Champignon;;
-37;Nudeln;250;g
 37;Salz;;
 37;Speck;;
 37;Kürbis;;
@@ -113,11 +118,7 @@ recipeid;ingredientName;amount;unit
 37;Parmesan;;
 37;schwarzer Pfeffer;;
 37;Knoblauch;;
-38;Risottoreis;;
-38;Weißwein;;
 38;Salz;;
-38;Suppengewürz;;
-38;Zwiebel;;
 38;Olivenöl;;
 38;Kürbis;;
 38;Speck;;
@@ -159,8 +160,6 @@ recipeid;ingredientName;amount;unit
 44;Grillgemüse gefroren;;
 44;Milch;;
 44;Gouda;;
-45;Nudeln;200;g
-45;Wasser;;
 45;Salz;;
 45;Schlagobers;1;Becher
 45;Blattspinat;;

@@ -1,4 +1,10 @@
 recipeId;stepNumber;name;description;unterRezeptId
+15;1;Wasser aufkochen;Wasser im Topf zum Kochen bringen
+15;2;Erdäpfel;schälen oder waschen
+15;3;Kochen;Erdäpfel in das kochende Wasser geben und kochen lassen (15-30 min, kommt auf Größe an) Mit der Gabel testen ob sie weich sind.
+16;1;Wasser kochen;Wasser in einem Topf zum Kochen bringen, Salz und Öl dazugeben.
+16;2;Nudeln hinein;Wie auf der Packung steht kochen.
+16;3;Abseihen;Nudeln abseihen und in die Pfanne geben.
 17;1;Zwiebeln anschwitzen;Zwiebel im Topf mit ein bisschen Öl anschwitzen.
 17;2;Reis dazugeben;Reis dazugeben und kurz anbraten
 17;3;mit Wein ablöschen;Mit Wein ablöschen und kochen bis der Wein weg ist
@@ -17,101 +23,111 @@ recipeId;stepNumber;name;description;unterRezeptId
 21;2;Währenddessen anbraten;Währenddessen Knoblauch mit Wurst in einer Pfanne anbraten und Zucchini hinzufügen.
 21;3;Zucchini kochen;Mit ein wenig Wasser schmoren lassen bis Zucchini weich ist.
 21;4;Ab in die Pfanne!;Den gekochten Reis in die Pfanne geben und mit geriebenem Parmesan vermischen.
-22;1;Schritt 1;Erdäpfel in Wedgesform bringen. ev. davor schälen.
-22;2;Schritt 2;In eine Schüssel geben und nach eigenem Ermessen die Gewürze, das Öl und den Parmesan dazu geben und gut durchmischen
-22;3;Schritt 3;Alles auf einem Backblech + Papier austeilen und bei 200°C, 40-50 Minuten lang backen. :)
-23;1;Schritt 1;In einen Topf das Öl geben und den Boden mit Poppcornmais bedecken. Einen Deckel draufgeben und alle paar Sekunden den Topf schütteln. Nachdem die meisten Popcorn gepoppt sind und die Pops länger 3 Sekunden auseinander liegen sind die Popcorn fertig. Danach würzen (Salz, Kräuter-Salu Mischungen, alles Mögliche, ...)
-24;1;Schritt 1;Nudelnwasser hinstellen und salzen, wenns kocht Nudeln zugeben und Timer stellen.
-24;2;Schritt 2;Würfelig geschnittenen Speck und den klein geschnitten Knoblauch mit Bratöl in einer Pfanne anbraten.
-24;3;Schritt 3;Anschließend gewürfelten Zucchini zugeben und weiter anbraten.
-24;4;Schritt 4;Schlagobers zugeben und mit Salz, Pfeffer und Oregano (oder anderem Grünzeug) würzen. Einmal aufkochen lassen.
-24;5;Schritt 5;Geriebener Parmesan zugeben und köcheln lassen, bis die Nudeln fertig sind.
-24;6;Schritt 6;Servieren.
-25;1;Schritt 1;Olivenöl in Pfanne heiß machen und Ei hineingehen. (Dotter nicht zerstören)
-25;2;Schritt 2;Heiß brutzeln und schwenken, damit sich das Ei zusammenzieht. Heißes Öl über Ei gießen.
-25;3;Schritt 3;Eventuell Pfanne zudecken.
-25;4;Schritt 4;Wenn es knusprig genug ist, mit Salz und Pfeffer würzen und servieren.
-26;1;Schritt 1;In Pfanne Butter schmelzen.
-26;2;Schritt 2;Ei in Glas mixen, bis es gut vermengt und durchgängig Gelb ist. Salzen
-26;3;Schritt 3;In Pfanne gießen und viel verrühren bis es fertig ist. Zum Schluss pfeffern.
-27;1;Schritt 1;Fett in Pfanne erwärmen und Ei dazugeben.
-27;2;Schritt 2;Kochen solange man es mag.
-27;3;Schritt 3;Wenn man den Dotter durch haben möchte kann man die Pfanne zudecken.
-28;1;Schritt 1;Wurst, Zwiebeln und Champions schneiden.
-28;2;Schritt 2;Zwiebeln, Wurst und Champignons in Pfanne anbraten.
-28;3;Schritt 3;Ei dazugeben, warten bis es teilweise hart geworden ist, zerstören und Dotter kaputt machen.
-28;4;Schritt 4;Salzen und Pfeffern.
-28;5;Schritt 5;Eckerlkäse als Ganzes oder als Hälfte dazugeben und kurz in der Pfanne lassen.
-28;6;Schritt 6;Servieren
-29;1;Schritt 1;Nudelwasser hinstellen und salzen. Wenns kocht Nudel hinein und Timer stellen.
-29;2;Schritt 2;Lauch/Jungzwiebel anrösten in einer Pfanne kurz anrösten.
-29;3;Schritt 3;Schinken dazu und Brokkoli dazu. 5 Minuten Deckel drauf und kochen lassen.
-29;4;Schritt 4;Anschließend Tunke dazu (Creme fraiche oder Schlagobers) und mit Salz, Pfeffer, Muskat und etwas Suppenwürze würzen.
-29;5;Schritt 5;Servieren :)
-31;1;Schritt 1;ev. Karotten in Wasser geben und kochen lassen. Erbsen nach Abseihen dazu geben. Sonst nur Erbsen mit wenig Wasser kochen lassen.
-31;2;Schritt 2;Bratöl in dem Topf und geschnittenes Fleisch mit Pfeffer und Paprikapulver kurz anrösten
-31;3;Schritt 3;Mit Wasser ablöschen - so viel wie man Saft haben will (Fleisch bedeckt). Salzen, Tomatenmark dazu geben und 25 Minuten kochen lassen.
-31;4;Schritt 4;Dann Creme Fraiche/Schalgobers mit Maizena verrühren, in den Topf geben und aufkochen lassen.
-31;5;Schritt 5;Fleisch mit Saft, Gemüse und Reis servieren.
-32;1;Schritt 1;Milchreis/Risotto Reis und Milch im Verhältnis 1:4 vorbereiten.
-32;2;Schritt 2;In einen Topf geben und warten bis es aufkocht. Regelmässig rühren. Wenn es aufkocht zurück drehen und Ahornsirup hineinmischen. Regelmässig rühren damit es nicht anbrennt. Fertig ist es, wenn man mit einem Löffel den Reis am Boden entlangziehen kann und den Boden kurz sieht. (Bis die Milch wieder kommt)
-34;1;Schritt 1;Zwiebel, Champignons und Wurst schneiden und in einer große Pfanne anbraten. Zuccini gewürfelt hinzufügen und kochen.
-34;2;Schritt 2;Währenddessen Kartoffel kochen und in Scheiben schneiden. Alles in der Pfanne vermengen.
-34;3;Schritt 3;Nach Geschmack abbraten, salzen und pfeffern.
-34;4;Schritt 4;Eier hinzufügen, kurz warten und dann verrühren.
-34;5;Schritt 5;Schlussendlich Eckerlkäse in dazugeben und verrühren. Er sollte in 2-3 Teile geteilt werden.
-34;6;Schritt 6;Tipp: Zu jedem Bissen ein wenig vom Eckerlkäse auf die Gabel geben.
-35;1;Schritt 1;Geschälte und in größere Würfeln geschnittene Kartoffel in Kelomat (5min) oder Wasser (15-20 min) kochen.
-35;2;Schritt 2;Butter in Topf schmelzen und Kartoffeln gekochte, geschälte Kartoffeln hinzufügen. Milch dazugeben und mit Stampfer bearbeiten und gelegentlich Milch hinzufügen, bis gewünschte Textur erreicht ist. Ausgiebig salzen.
-36;1;Schritt 1;Schupfnudeln in Wasser kochen (wie es auf der Packung steht)
-36;2;Schritt 2;Lauch, gewürfelter Bratschinken und Champignons anrösten und fertig gekochte Schupfnudeln dazugeben.
-37;1;Schritt 1;Nudelnwasser hinstellen und salzen, wenns kocht Nudeln zugeben und Timer stellen.
-37;2;Schritt 2;Würfelig geschnittenen Speck und den klein geschnitten Knoblauch mit Bratöl in einer Pfanne anbraten.
-37;3;Schritt 3;Anschließend gewürfelten Kürbis zugeben und weiter anbraten.
-37;4;Schritt 4;Schlagobers zugeben und mit Salz, Pfeffer und Oregano (oder anderem Grünzeug) würzen. Einmal aufkochen lassen.
-37;5;Schritt 5;Geriebener Parmesan zugeben und köcheln lassen, bis die Nudeln fertig sind.
-37;6;Schritt 6;Servieren.
-38;1;Schritt 1;Zwiebel im Topf anschwitzen und Reis dazugeben. Diesen leichte anbraten und Wein dazugeben. Kochen bis der Wein weg ist und dann Wasser hinzufügen und kochen bis der Reis durch ist. Mit Salz, Pfeffer und Suppengewürz würzen.
-38;2;Schritt 2;Währenddessen Knoblauch mit Wurst in einer Pfanne anbraten und Kürbis hinzufügen. Mit ein wenig Wasser schmoren lassen bis Kürbis weich ist.
-38;3;Schritt 3;Den gekochten Reis in die Pfanne geben und mit geriebenem Parmesan vermischen.
-38;4;Schritt 4;Genießen
-39;1;Schritt 1;Vanillezucker, Zucker und Ei schaumig schlagen, Rahm und Öl dazumischen, verrühren, Kakao + Mandeln oder Kokos dazugeben, verrühren, Backpulver und Mehl + Gewürz dazugeben.
-39;2;Schritt 2;Form einfetten und in den Ofen geben
-39;3;Schritt 3;170 Grad Celsius und ca. 45 min
-40;1;Schritt 1;Zwiebel in Topf anrösten.
-40;2;Schritt 2;Knoblauch und Erbsen dazugeben und mit Wasser kochen, bis sie die gewünschte Härte erreicht haben.
-41;1;Schritt 1;Maiskolben der Länge nach vierteln. Die Gewürze und das Olivenöl vermischen und auf den Mais schmieren.
-41;2;Schritt 2;Die Kolben für ca. 10 min bei 200°C grillen/backen/airfryen.
-41;3;Schritt 3;Für die Sauce die Mayonnaise, Jalapeno (in adobo sauce?), Zitronensaft und etwas Salz vermischen.
-41;4;Schritt 4;Sauce zusammen mit etwas Parmesan und frischem Koriander über den Mais geben und genießen.
-43;1;Schritt 1;Wasser in Topf kochen. Salz dazugeben.
-43;2;Schritt 2;Wenn das Wasser heiß ist es mit einem Kochlöffel in eine Drehbewegung versetzen, sodass eine Art Wasservortex versteht. Dahinein das Ei geben. Kochen lassen.
-43;3;Schritt 3;Das Ei sollte außen weiß und gut gekocht sein, innen sollte der gelbe Dotter weich sein.
-44;1;Schritt 1;Grillgemüse in Pfanne aufwärmen und ein wenig anbraten. Ein wenig Milch dazugeben und würzen.
-44;2;Schritt 2;Gouda als Block abschneiden, hineinstellen und mitbruzzeln lassen.
-45;1;Schritt 1;Nudeln kochen.
-45;2;Schritt 2;Huhn in Topf mit Öl kochen.
-45;3;Schritt 3;Wenn Huhn fertig Knoblauch geschnitten hineingeben.
-45;4;Schritt 4;Spinat dazugeben, mit Salz und Pfeffer würzen.
-45;5;Schritt 5;Schlagobers/Creme Fraiche dazugeben.
-45;6;Schritt 6;Kurz aufkochen lassen.
-45;7;Schritt 7;Nudeln und Parmesan dazugeben und kurz kochen.
-45;8;Schritt 8;Mit Petersilie serviern.
-46;1;Schritt 1;Süßkartoffel würflig schneiden. Paprika und Zwiebel schneiden.
-46;2;Schritt 2;Öl und Knoblauch in eine Pfanne geben.
-46;3;Schritt 3;Faschiertes dazugeben und kochen (durch 5-7 min).
-46;4;Schritt 4;Faschiertes auf Teller geben, zudecken und auf die Seite stellen.
-46;5;Schritt 5;In dieselbe Pfanne Zwiebel, Paprika und Süßkartoffel geben und anbraten.
-46;6;Schritt 6;Ein bisschen Wasser, Suppengewürz, Senf und Tomatensauce dazugeben. Zudecken und 12-15 min köcheln lassen.
-46;7;Schritt 7;Dann Mais und Fleisch dazugeben.
-46;8;Schritt 8;Mit Oregano, Chili Pulver, Salz und Pfeffer würzen.
-46;9;Schritt 9;Gut verrühren und noch mal 2 min kochen.
-47;1;Schritt 1;Zwiebel in Topf anschwitzen, Reis dazu und kurz anbraten. Dann doppelte Menge an Wasser dazu, mit Salz würzen und zugedeckt kochen lassen.
-48;1;Schritt 1;Zwiebel in Topf anschwitzen, Reis dazu und kurz anbraten. Dann doppelte Menge an Wasser dazu, mit Salz würzen und zugedeckt kochen lassen.
-49;1;Schritt 1;Quinoa mit kochendem Wasser waschen.
-49;2;Schritt 2;Danach mit Gewürzen nach Wunsch vereinen und mit der doppelten Menge Wasser zum Kochen bringen.
-49;3;Schritt 3;Zugedeckt ca. 10 min köcheln lassen.
-49;4;Schritt 4;Herdplatte abschalten und ca. 15 min ausquellen lassen.
+22;1;Erdäpfel wedgen;Erdäpfel in Wedgesform bringen. ev. davor schälen.
+22;2;Alles vermischen;In eine Schüssel geben und nach eigenem Ermessen die Gewürze, das Öl und den Parmesan dazu geben und gut durchmischen
+22;3;Backen Backen Backen!;Alles auf einem Backblech + Papier austeilen und bei 200°C, 40-50 Minuten lang backen. :)
+23;1;In einen großen Topf;In einen Topf das Öl geben und den Boden mit Poppcornmais bedecken. Einen Deckel draufgeben und alle paar Sekunden den Topf schütteln.
+23;2;Wann fertig?;Nachdem die meisten Popcorn gepoppt sind und die Pops länger 3 Sekunden auseinander liegen sind die Popcorn fertig.
+23;3;Würzen;Danach würzen (Salz, Kräuter-Salz Mischungen, alles Mögliche, ...)
+24;1;Nudeln zubereiten;;16
+24;2;Währenddessen anbraten;Würfelig geschnittenen Speck und den klein geschnitten Knoblauch mit Bratöl in einer Pfanne anbraten.
+24;3;Zucchini zrrr;Anschließend gewürfelten Zucchini zugeben und weiter anbraten.
+24;4;Sauce machen;Schlagobers zugeben und mit Salz, Pfeffer und Oregano (oder anderem Grünzeug) würzen. Einmal aufkochen lassen.
+24;5;Gleich fertig;Geriebener Parmesan zugeben und köcheln lassen, bis die Nudeln fertig sind.
+24;6;Nudeln dazu;Nudeln in die Pfanne und paar mal schwenken.
+25;1;Öl und Ei;Olivenöl in Pfanne heiß machen und Ei hineingehen. (Dotter nicht zerstören)
+25;2;Bruzzeln;Heiß brutzeln und schwenken, damit sich das Ei zusammenzieht. Heißes Öl über Ei gießen.
+25;3;Würzen;Wenn es knusprig genug ist, mit Salz und Pfeffer würzen und servieren.
+26;1;Butter schmelzen;In Pfanne Butter schmelzen.
+26;2;Ei zerstören;Ei in Glas mixen, bis es gut vermengt und durchgängig Gelb ist. Salzen
+26;3;Kochen und rühren;In Pfanne gießen und viel verrühren bis es fertig ist. Zum Schluss pfeffern.
+27;1;Ei und Pfanne;Fett in Pfanne erwärmen und Ei dazugeben.
+27;2;Kochen;Kochen solange man es mag.
+27;3;für die Ei-Hasser;Wenn man den Dotter durch haben möchte kann man die Pfanne zudecken.
+28;1;Zeug schneiden;Wurst, Zwiebeln und Champions schneiden.
+28;2;Zeug anbraten;Zwiebeln, Wurst und Champignons in Pfanne anbraten.
+28;3;Ei dazu;Ei dazugeben, warten bis es teilweise hart geworden ist, zerstören und Dotter kaputt machen.
+28;4;Würzen;Salzen und Pfeffern.
+28;5;Veredeln;Eckerlkäse als Ganzes oder als Hälfte dazugeben und kurz in der Pfanne lassen.
+28;6;Servieren;Servieren
+29;1;Nudeln zubereiten;;16
+29;2;Anrösten;Lauch/Jungzwiebel anrösten in einer Pfanne kurz anrösten.
+29;3;Brokoli dazu;Schinken dazu und Brokkoli dazu. 5 Minuten Deckel drauf und kochen lassen. Eventuell bissi wasser dazuhauen damit der Brokoli schön gedämpft wird.
+29;4;zur Sauce;Anschließend Tunke dazu (Creme fraiche oder Schlagobers) und mit Salz, Pfeffer, Muskat und etwas Suppenwürze würzen.
+29;5;Nudeln dazu;gekochte Nudeln dazu und schwenken
+31;1;Reis!;;47
+31;2;Erbsen und Karotten?;Wenn man mag Karotten in Wasser geben und kochen lassen. Erbsen nach Abseihen dazu geben. Sonst nur Erbsen mit wenig Wasser kochen lassen.
+31;3;Fleisch!;Bratöl in dem Topf und geschnittenes Fleisch mit Pfeffer und Paprikapulver kurz anrösten
+31;4;Wasser!;Mit Wasser ablöschen - so viel wie man Saft haben will (Fleisch bedeckt). Salzen, Tomatenmark dazu geben und 25 Minuten kochen lassen.
+31;5;Sauce!;Dann Creme Fraiche/Schalgobers mit Maizena verrühren, in den Topf geben und aufkochen lassen.
+31;6;Servieren!;Fleisch mit Saft, Gemüse und Reis servieren.
+32;1;Reis und Milch;Milchreis/Risotto Reis und Milch im Verhältnis 1:4 in einen Topf geben und warten bis es aufkocht. Dabei regelmäßig umrühren.
+32;2;es Kocht?;Wenn es aufkocht zurück drehen und Ahornsirup hineinmischen.
+32;3;Köcheln lassem;Regelmässig rühren damit es nicht anbrennt. Fertig ist es, wenn man mit einem Löffel den Reis am Boden entlangziehen kann und den Boden kurz sieht. (Bis die Milch wieder kommt)
+34;1;Erdäpfel kochen;;15
+34;1;Würfeln und anbraten;Zwiebel, Champignons und Wurst schneiden und in einer große Pfanne anbraten. Zuccini gewürfelt hinzufügen und kochen.
+34;2;Erdäpfel scheiben;Währenddessen Kartoffel kochen und in Scheiben schneiden. Alles in der Pfanne vermengen.
+34;3;Abbraten;Nach Geschmack abbraten, salzen und pfeffern.
+34;4;Eier;Eier hinzufügen, kurz warten und dann verrühren.
+34;5;Veredeln;Schlussendlich Eckerlkäse in dazugeben und verrühren. Er sollte in 2-3 Teile geteilt werden.
+34;6;Essetipp;Tipp: Zu jedem Bissen ein wenig vom Eckerlkäse auf die Gabel geben.
+35;1;Kartoffeln schälen, würfeln und kochen;Geschälte und in größere Würfeln geschnittene Kartoffel in Kelomat (5min) oder Wasser (15-20 min) kochen bis bei Gabelstich zerfallen.
+35;2;Wasser weg;Wasser abseihen
+35;3;Alles rein;Milch, bissi gerieben Muskatnuss, Butter und Salz dazugeben und mit Stampfer bearbeiten.
+36;1;Kochen;Schupfnudeln in Wasser kochen (wie es auf der Packung steht)
+36;2;Nebenbei anbraten;Lauch, gewürfelter Bratschinken und Champignons anrösten und fertig gekochte Schupfnudeln dazugeben.
+37;1;Nudeln kochen;;16
+37;2;Braten;Würfelig geschnittenen Speck und den klein geschnitten Knoblauch mit Bratöl in einer Pfanne anbraten.
+37;3;Kürbis rein;Anschließend gewürfelten Kürbis zugeben und weiter anbraten.
+37;4;Sauce;Schlagobers zugeben und mit Salz, Pfeffer und Oregano (oder anderem Grünzeug) würzen. Einmal aufkochen lassen.
+37;5;Veredeln;Geriebener Parmesan zugeben und köcheln lassen, bis die Nudeln fertig sind.
+37;6;Nudeln hinein und;schwenken
+38;1;Risottoreis vorbereiten;;17
+38;2;Daweil;Währenddessen Knoblauch mit Wurst in einer Pfanne anbraten und Kürbis hinzufügen. Mit ein wenig Wasser schmoren lassen bis Kürbis weich ist.
+38;3;Alles zam;Den gekochten Reis in die Pfanne geben und mit geriebenem Parmesan vermischen.
+39;1;Zucker und Ei;Vanillezucker, Zucker und Ei schaumig schlagen
+39;2;Rahm und Öl;Rahm und Öl dazumischen, verrühren
+39;3;Kakao und Mandeln;Kakao + Mandeln oder Kokos dazugeben, verrühren
+39;4;Backpulver und Mehl;Backpulver und Mehl + Gewürz dazugeben.
+39;5;In die Form;Form einfetten und Masse hineingeben.
+39;5;In den Ofen;in den Ofen bei 170 Grad Celsius ca. 45 min backen.
+40;1;Zwiebel;Zwiebel in Topf anrösten.
+40;2;Knoblauch und Erbsen;Knoblauch und Erbsen dazugeben
+40;3;Kochen;bissiWasser hinein und kochen, bis sie die gewünschte Härte erreicht haben.
+41;1;Mais vierteln;Maiskolben der Länge nach vierteln. Die Gewürze und das Olivenöl vermischen und auf den Mais schmieren.
+41;2;in den Gerät;Die Kolben für ca. 10 min bei 200°C grillen/backen/airfryen.
+41;3;Sauce;Für die Sauce die Mayonnaise, Jalapeno (in adobo sauce?), Zitronensaft und etwas Salz vermischen.
+41;4;ins Maul;Sauce zusammen mit etwas Parmesan und frischem Koriander über den Mais geben und genießen.
+43;1;Wasser kochen;Wasser in Topf kochen. Salz dazugeben.
+43;2;Vortex und Ei;Wenn das Wasser heiß ist es mit einem Kochlöffel in eine Drehbewegung versetzen, sodass eine Art Wasservortex versteht. Dahinein das Ei geben. Kochen lassen.
+43;3;rechtzeig retten;Das Ei sollte außen weiß und gut gekocht sein, innen sollte der gelbe Dotter weich sein.
+44;1;Gemüse;Grillgemüse in Pfanne aufwärmen und ein wenig anbraten. Ein wenig Milch dazugeben und würzen.
+44;2;Gouda;Gouda als Block abschneiden, hineinstellen und mitbruzzeln lassen.
+45;1;Nudeln zubereiten;;16
+45;2;Huhn;gewürfeltes Huhn in Topf mit Öl anbraten.
+45;3;Knoblauch;Wenn Huhn fertig Knoblauch geschnitten hineingeben.
+45;4;Spinat;Spinat dazugeben, mit Salz und Pfeffer würzen.
+45;5;Sauce;Schlagobers/Creme Fraiche dazugeben.
+45;6;Aufkochen;Kurz aufkochen lassen.
+45;7;Alles zam;Nudeln und Parmesan dazugeben und kurz kochen.
+45;8;Petersilie;Mit Petersilie serviern.
+46;1;Vollkornreis;;48
+46;2;Schneiden;Süßkartoffel würflig schneiden. Paprika und Zwiebel schneiden.
+46;3;Faschiertes;Faschiertes in heißer Pfanne anbraten, dann Knoblauch dazugeben.
+46;4;Swap;Faschiertes auf Teller geben, zudecken und auf die Seite stellen.
+46;5;Jetzt Gemüse;In dieselbe Pfanne Zwiebel, Paprika und Süßkartoffel geben und anbraten.
+46;6;Sauce;Ein bisschen Wasser, Suppengewürz, Senf und Tomatensauce dazugeben. Zudecken und 12-15 min köcheln lassen.
+46;7;Wieder zam;Dann Mais und Fleisch dazugeben.
+46;8;Würzen;Mit Oregano, Chili Pulver, Salz und Pfeffer würzen.
+46;9;Kochen;Gut verrühren und noch mal 2 min kochen.
+47;1;Zwiebeln anschwitzen;Zwiebel in Topf anschwitzen
+47;2;Reis dazu;Reis dazu und kurz anbraten
+47;3;Wasser, Salz und Pfeffer;Dann doppelte Menge an Wasser dazu, mit Salz würzen und zugedeckt kochen lassen.
+48;1;Wie auf der Packung;Reis wie auf der Packung steht zubereiten
+49;1;Waschen;Quinoa mit kochendem Wasser waschen.
+49;2;Kochen;Danach mit Gewürzen nach Wunsch vereinen und mit der doppelten Menge Wasser zum Kochen bringen.
+49;3;Köcheln;Zugedeckt ca. 10 min köcheln lassen.
+49;4;ausquellen;Herdplatte abschalten und ca. 15 min ausquellen lassen.
 50;1;Schritt 1;Nudeln kochen.
 50;2;Schritt 2;Backblech vorbereiten.
 50;3;Schritt 3;Schafkäse in die Mitte vom Blech legen.
@@ -203,7 +219,7 @@ recipeId;stepNumber;name;description;unterRezeptId
 83;1;Schritt 1;Nudeln kochen wie immer.
 83;2;Schritt 2;Zwiebel in Pfanne anbraten. Thunfisch und geschnittene Tomaten dazu. Kurz warten. Schlagobers/ähnliches dazu und würzen. Kochen lassen, bis die Nudeln fertig sind.
 84;1;Schritt 1;Kleine Erdäpfel waschen und schneiden. In Öl ca. 4 min anbraten und dann Knoblauch dazugeben.
-84;2;Schritt 2;Wasser, Sojasauce und Honig mischen und zu den Kartoffeln schütten. Umrühren und kochen bis die Flüssigkeit weg ist. Sesam dazugeben und kurz anbraten.
+84;2;Schritt 2;Wasser, Sojasauce und Honig mischen und zu den Erdäpfel schütten. Umrühren und kochen bis die Flüssigkeit weg ist. Sesam dazugeben und kurz anbraten.
 84;3;Schritt 3;Tipp: mit Schnittlauch servieren
 85;1;Schritt 1;Die Kartoffel leicht fächrig einschneiden, mit etwas Öl beträufeln und mit Salz würzen. Bei 180 Grad Celsius in den Ofen geben. Nach ca. 30 Minuten herausnehmen und die Zucchini in Halbmonde schneiden. Diese in die Zwischenräume stecken und mit Bergkäse gratinieren. Nun für ca. 8 min bei Oberhitze im Ofen den Käse schmelzen lassen.
 86;1;Schritt 1;https://youtu.be/AmC9SmCBUj4
@@ -311,7 +327,7 @@ recipeId;stepNumber;name;description;unterRezeptId
 112;1;Schritt 1;Knoblauch entweder viel zerkleinern oder pressen.
 112;2;Schritt 2;Alle Zutaten nach Geschmack vermengen.
 113;1;Schritt 1;Den Reis nach Packungsanleitung in Salzwasser kochen.Paprika und Zucchini in Würfel schneiden und anbraten. Knoblauchzehen hacken und dazugeben, alles zusammen ca. 10 Minuten braten.Danach den fertig gekochten Reis hinzugeben, Sojasauce und Cashewkerne dazugeben und noch ca. 5 Minuten unter Rühren braten.Falls Nötig, würzen.
-114;1;Schritt 1;Kartoffeln kochen.
+114;1;Schritt 1;Erdäpfel kochen.
 114;2;Schritt 2;Schälen und würfeln.
 114;3;Schritt 3;Mit Petersilie vermischen.
 115;1;Schritt 1;Lachs gut würzen und mit Zitronensaft ein einreiben.
@@ -386,7 +402,7 @@ recipeId;stepNumber;name;description;unterRezeptId
 133;1;Schritt 1;Zwiebel in Streifen schneiden.
 133;2;Schritt 2;Kartoffel schälen und grob reiben/hexeln.
 133;3;Schritt 3;Parmesan in Würfel schneiden.
-133;4;Schritt 4;Zwiebel mit Butter leicht anbraten, Kartoffeln dazuhauen. Bissi braten und immer zerstückeln.
+133;4;Schritt 4;Zwiebel mit Butter leicht anbraten, Erdäpfel dazuhauen. Bissi braten und immer zerstückeln.
 133;5;Schritt 5;Käse dazugeben und so lange wenden und zerstückeln bis der Käse geschmolzen ist.
 133;6;Schritt 6;Dann auf einer Seite anbraten lassen, wenden und auf der anderen Seite anbraten lassen.
 134;1;Schritt 1;Backoven auf 200 °C Ober-Unterhitze vorheizen.
@@ -450,12 +466,12 @@ recipeId;stepNumber;name;description;unterRezeptId
 146;6;Schritt 6;Den Herd auf mittlere Hitze aufdrehen und das Huhn mit Brust nach Oben 15 Minuten anbraten. Währenddessen den Ofen auf 200 Grad vorheizen.
 146;7;Schritt 7;Ca 1 Stunde backen. Dabei kann man das Huhn direkt in der Pfanne lassen, vorausgesetzt die Pfanne ist für Öfen geeignet.
 146;8;Schritt 8;Den Temperatursensor von der Seite komplett ins Huhn stecken. Das Programm Umluftgrillen auswählen.Meine Einstellungen: 210 °C, ca. 1h20min, Dampf 1, Backen bis Innentemperatur des Fleisches 85 °C erreicht.
-146;9;Schritt 9;Ich lege das Huhn gerne auf den Grillrost und stelle eine Ofenfeste Schüssel mit in wedges geschnittenen Erdäpfeln drunter. In die Schüssel kommt das Fett, welches vorher in der Pfanne aus dem Huhn gekommen ist. Wenn das Huhn fertig ist stelle ich die Schüssel (achtung heiß) noch einmal weiter nach Oben und wähle das Programm Grill, kleine Fläche aus, bis die oberen Kartoffeln neis und crispy Ecken haben.
+146;9;Schritt 9;Ich lege das Huhn gerne auf den Grillrost und stelle eine Ofenfeste Schüssel mit in wedges geschnittenen Erdäpfeln drunter. In die Schüssel kommt das Fett, welches vorher in der Pfanne aus dem Huhn gekommen ist. Wenn das Huhn fertig ist stelle ich die Schüssel (achtung heiß) noch einmal weiter nach Oben und wähle das Programm Grill, kleine Fläche aus, bis die oberen Erdäpfel neis und crispy Ecken haben.
 146;10;Schritt 10;Quellen: Adam Ragusea
 146;11;Schritt 11;https://youtu.be/OETLkPgt_pw?si=ASQLoQ1YVu_Q54Pn
 146;12;Schritt 12;https://youtu.be/G8Q3BSF9-1U?si=r0U7SD0wEmR386Yy
 148;1;Schritt 1;Den Ofen auf 220 Grad Ober-Unterhitze vorheizen.
-148;2;Schritt 2;Kartoffeln waschen oder schälen.In 1cm dicke Scheiben schneiden.
+148;2;Schritt 2;Erdäpfel waschen oder schälen.In 1cm dicke Scheiben schneiden.
 148;3;Schritt 3;In einer Schüssel Kartoffelscheiben mit Olivenöl und Gewürzen vermsichen.
 148;4;Schritt 4;Nebeneinander auf dem Blech auflegen und 30 Minuten backen.
 148;5;Schritt 5;Währenddessen eine Zwiebel würfeln. In den Ofen dazugeben und vermengen. Weitere 15-20 Minuten backen.
