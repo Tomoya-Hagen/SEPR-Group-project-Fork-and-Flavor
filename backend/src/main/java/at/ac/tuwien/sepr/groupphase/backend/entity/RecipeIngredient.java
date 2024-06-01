@@ -86,6 +86,9 @@ public class RecipeIngredient {
     private BigDecimal amount;
 
     public BigDecimal getAmount() {
+        if (amount == null) {
+            return new BigDecimal(0);
+        }
         return amount;
     }
 
