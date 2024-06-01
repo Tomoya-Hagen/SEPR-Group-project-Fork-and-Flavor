@@ -1,4 +1,8 @@
 recipeId;categoryName
+14;Beilage
+15;Beilage
+16;Beilage
+17;Beilage
 18;Snack
 20;Hauptspeise
 20;Dessert
@@ -34,3 +38,18 @@ recipeId;categoryName
 63;Dessert
 63;Frühstück
 67;Hauptspeise
+72;Jause
+73;Jause
+75;Hauptspeise
+76;Hauptspeise
+77;Hauptspeise
+79;Hauptspeise
+81;Hauptspeise
+82;Hauptspeise
+84;Jause
+85;Jause
+90;Jause
+92;Hauptspeise
+94;Frühstück
+97;Hauptspeise
+98;Jause
