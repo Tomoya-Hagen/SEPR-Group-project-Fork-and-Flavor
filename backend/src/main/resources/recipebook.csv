@@ -1,10 +1,10 @@
 id;titel;beschreibung;ownerId;recipeId1,recipeId2,...
-1;Italienische Küche;Eine Sammlung klassischer italienischer Rezepte von Pasta bis Pizza.;1;21,105,38,101,21,116,57,136
+1;Italienische Küche;Eine Sammlung klassischer italienischer Rezepte von Pasta bis Pizza.;1;21,38,21,57
 2;Indische Spezialitäten;Ein Kochbuch mit authentischen indischen Rezepten und Gewürzen.;1;149
 3;Russische Delikatessen;Traditionelle russische Rezepte von Borschtsch bis Bliny.;1;
-4;Vegetarische Gerichte;Gesunde und leckere vegetarische Rezepte für jeden Tag.;1;18,21,22,23,25,26,27,28,34,36,38,40,41,43,46,47,48,49,53,54,55,56,57,58,63,67,69,71,73,75,77,84,85,86,90,93,94,96,97,98,100,101,102,103,105,106,107,111,113,114,115,116,117,119,120,124,126,127,130,131,132,133,137,138,142,145,146,148,149
-5;Dessertträume;Süße Köstlichkeiten und Desserts für besondere Anlässe.;1;20,70,126,32
+4;Vegetarische Gerichte;Gesunde und leckere vegetarische Rezepte für jeden Tag.;1;18,21,22,23,25,26,27,28,34,36,38,40,41,43,46,47,48,49,53,54,55,56,57,58,63,67,69,71
+5;Dessertträume;Süße Köstlichkeiten und Desserts für besondere Anlässe.;1;20,32
 6;Salate der Welt;Eine Vielfalt an frischen und gesunden Salatrezepten aus aller Welt.;1;
 7;Japanische Küche;Ein Kochbuch mit klassischen und modernen japanischen Rezepten.;1;
 8;Mexikanische Fiesta;Würzige und bunte Rezepte für eine mexikanische Fiesta.;1;
-9;Backen mit Liebe;Leckere Kuchen, Torten und Gebäck für jede Gelegenheit.;1;20,32,39,67,68,69,70,75,76,77,78,79,80,81,82,92,97,122,123,124,126,127,140,144,151
+9;Backen mit Liebe;Leckere Kuchen, Torten und Gebäck für jede Gelegenheit.;1;20,32,39,67
