@@ -435,10 +435,8 @@ recipeid;ingredientName;amount;unit
 95;Kreuzkümmel;;
 95;Paprikapulver;;
 95;Mais;1;
-95;Reis Vollkorn;1;
 95;Cheddar;1;
 95;Koreander;;
-96;Nudeln;220;g
 96;Sojasauce;2;el
 96;Erdnussbutter;2;el
 96;Sesamöl;1;el
@@ -457,7 +455,6 @@ recipeid;ingredientName;amount;unit
 97;Backpulver;;
 97;Ei;6;Stück
 97;Staubzucker;300;g
-98;Reis;1;
 98;Bratöl;;
 98;Zwiebel;;
 98;Mais;;
@@ -472,7 +469,6 @@ recipeid;ingredientName;amount;unit
 98;Sesam;;
 98;Paprika;;
 98;Knoblauch;;
-99;Nudeln;200;g
 99;Blattspinat;250;g
 99;Parmesan;;
 99;Knoblauch;1;
