@@ -53,6 +53,12 @@ public interface RecipeBookRepository extends JpaRepository<RecipeBook, Long> {
     @Query("SELECT rb FROM RecipeBook rb WHERE rb.owner.id = :userId OR :user MEMBER OF rb.sharedUsers")
     List<RecipeBook> findRecipeBooksByOwnerOrSharedUser(@Param("userId") long userId);
 
+    /**
+     * This method is used to check if a recipe book with the given name exists.
+     *
+     * @param name represents the name of the recipe book.
+     * @return true if a recipe book with the given name exists, false otherwise.
+     */
     Boolean existsByName(String name);
 
 }
