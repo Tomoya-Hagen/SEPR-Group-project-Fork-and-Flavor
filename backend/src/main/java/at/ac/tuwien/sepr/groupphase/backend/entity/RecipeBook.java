@@ -130,28 +130,6 @@ public class RecipeBook {
         this.editors = editors;
     }
 
-    @Override
-    public String toString() {
-        return "RecipeBook{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", description='" + description + '\'' +
-            ", owner=" + owner.toString()+
-            ", recipes=" + recipes +
-            ", weeklyPlanner=" + weeklyPlanner +
-            ", editors=" + editors +
-            '}';
-    }
-
-    public String toStringSmall() {
-        return "RecipeBook{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", description='" + description + '\'' +
-            ", ownerId=" + owner.getId() +
-            '}';
-    }
-
     public static final class RecipeBookBuilder {
         private long id;
         private String name;

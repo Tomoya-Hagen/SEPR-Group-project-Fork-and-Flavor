@@ -64,7 +64,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
 
     /**
-     * This method returns a recipe by it id.
+     * Gets a recipe by id.
      *
      * @param id represents the id of a recipe.
      * @return a recipe entity.
@@ -72,7 +72,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     Recipe findById(long id);
 
     /**
-     * This method checks if a recipe with the given id exists.
+     * Checks if a recipe with the given id exists.
      *
      * @param id represents the id of the recipe.
      * @return true if a recipe with the given name exists, false otherwise.
@@ -80,7 +80,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     Boolean existsById(long id);
 
     /**
-     * This method returns all names of recipes as list.
+     * returns all names as list.
      *
      * @return a list of recipe names.
      */
@@ -88,7 +88,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<String> getAllNames();
 
     /**
-     * This method returns a recipe by its id.
+     * Returns the first recipe by id.
      *
      * @param id represents the id of a recipe.
      * @return a recipe entity.

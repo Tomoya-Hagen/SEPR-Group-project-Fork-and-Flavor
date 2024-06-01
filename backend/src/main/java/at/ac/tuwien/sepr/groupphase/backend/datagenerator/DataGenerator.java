@@ -60,7 +60,12 @@ public class DataGenerator implements CommandLineRunner {
 
     private List<Long> skippedRecipes = new ArrayList<>();
 
-    public DataGenerator(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, CategoryRepository categoryRepository, IngredientRepository ingredientRepository, AllergenRepository allergenRepository, NutritionRepository nutritionRepository, RecipeBookRepository recipeBookRepository, RecipeRepository recipeRepository, RecipeIngredientRepository recipeIngredientRepository, RecipeStepRepository recipeStepRepository, ResourceLoader resourceLoader) {
+    public DataGenerator(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder,
+                         CategoryRepository categoryRepository, IngredientRepository ingredientRepository,
+                         AllergenRepository allergenRepository, NutritionRepository nutritionRepository,
+                         RecipeBookRepository recipeBookRepository, RecipeRepository recipeRepository,
+                         RecipeIngredientRepository recipeIngredientRepository,
+                         RecipeStepRepository recipeStepRepository, ResourceLoader resourceLoader) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -299,7 +304,6 @@ public class DataGenerator implements CommandLineRunner {
                 if (skippedRecipes.contains(Long.parseLong(fields.get(0)))) {
                     continue;
                 }
-                Recipe recipe = recipeRepository.findById(Long.parseLong(fields.get(0)));
                 RecipeIngredient.Unit unit = RecipeIngredient.getUnitFromString(fields.get(3));
                 if (unit == null) {
                     unit = RecipeIngredient.Unit.EMPTY;
@@ -311,9 +315,9 @@ public class DataGenerator implements CommandLineRunner {
                 } catch (NumberFormatException e) {
                     amountGiven = false;
                 }
+                Recipe recipe = recipeRepository.findById(Long.parseLong(fields.get(0)));
+                Ingredient ingredient = ingredientRepository.findByName(fields.get(1)).get();
                 RecipeIngredient recipeIngredient;
-                Ingredient ingredient = null;
-                ingredient = ingredientRepository.findByName(fields.get(1)).get();
                 if (amountGiven) {
                     recipeIngredient = RecipeIngredient.RecipeIngredientBuilder.aRecipeIngredient()
                         .withRecipe(recipe)
@@ -377,9 +381,9 @@ public class DataGenerator implements CommandLineRunner {
                 }
                 Recipe recipe = recipeRepository.findById(Long.parseLong(fields.get(0)));
                 RecipeStep recipeStep;
-                if(fields.size() == 4) {
+                if (fields.size() == 4) {
                     // Beschreibungsschritt
-                     recipeStep = RecipeDescriptionStep.RecipeDescriptionStepBuilder.aRecipeDescriptionStep()
+                    recipeStep = RecipeDescriptionStep.RecipeDescriptionStepBuilder.aRecipeDescriptionStep()
                         .withRecipe(recipe)
                         .withStepNumber(Integer.parseInt(fields.get(1)))
                         .withName(fields.get(2))
@@ -426,9 +430,9 @@ public class DataGenerator implements CommandLineRunner {
                     List<String> recipeIds;
                     recipeIds = parseCsvLine(fields.get(4), ',');
                     List<Recipe> recipes = new java.util.ArrayList<>(List.of());
-                    if (!recipeIds.isEmpty()){
+                    if (!recipeIds.isEmpty()) {
                         for (String recipeId : recipeIds) {
-                            if (recipeId.isEmpty()){
+                            if (recipeId.isEmpty()) {
                                 continue;
                             }
                             Recipe recipe = recipeRepository.findById(Long.parseLong(recipeId));

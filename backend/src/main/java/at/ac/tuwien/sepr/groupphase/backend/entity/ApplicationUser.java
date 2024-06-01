@@ -43,7 +43,7 @@ public class ApplicationUser {
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private List<RecipeBook> ownedRecipeBooks;
 
-/*    @ManyToMany(mappedBy = "sharedUsers")
+    /*@ManyToMany(mappedBy = "sharedUsers")
     private List<RecipeBook> sharedRecipeBooks;*/
 
     public long getId() {

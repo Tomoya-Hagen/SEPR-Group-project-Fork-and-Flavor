@@ -84,7 +84,9 @@ public interface RecipeStepMapper {
     }
 
     default Long mapToLong(Object value) {
-        if (value == null) return null;
+        if (value == null) {
+            return null;
+        }
         if (value instanceof Number) {
             return ((Number) value).longValue();
         }
