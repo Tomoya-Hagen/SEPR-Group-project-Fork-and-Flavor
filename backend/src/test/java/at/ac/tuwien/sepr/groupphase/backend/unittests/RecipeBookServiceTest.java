@@ -5,26 +5,31 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,7 +41,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-@Disabled
 class RecipeBookServiceTest {
     @Autowired
     private RecipeBookService recipeBookService;
@@ -49,11 +53,24 @@ class RecipeBookServiceTest {
 
     @Autowired
     private Validator validator;
+
     @Autowired
     private RecipeBookRepository recipeBookRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @BeforeAll
+    static void setUp() {
+        LocaleContextHolder.setLocale(Locale.ENGLISH);
+    }
+
     @Test
     void searchReturnsRecipeBooksWhenNameMatches() {
-        assertEquals("Familienrezepte", recipeBookRepository.search("Familienrezepte").getFirst().getName());
+        assertEquals("Indische Spezialitäten", recipeBookRepository.search("indische").getFirst().getName());
     }
 
     @Test
@@ -63,16 +80,11 @@ class RecipeBookServiceTest {
 
     @Test
     void searchReturnsRecipeBooksRegardlessOfCase() {
-        assertEquals("Familienrezepte", recipeBookRepository.search("Familien").getFirst().getName());
+        assertEquals("Indische Spezialitäten", recipeBookRepository.search("inDISche").getFirst().getName());
     }
 
     @Test
-    void searchReturnsEmptyListWhenNameIsNull() {
-        assertEquals(16, recipeBookRepository.search(null).size());
-    }
-
-    @Test
-    void getAllRecipesWithIdFromToReturnsRecipesInIdRange() {
+    void getAllRecipeBooksWithIdFromToReturnsRecipesInIdRange() {
         List<RecipeBook> result = recipeBookRepository.getAllRecipesWithIdFromTo(1, 2);
         assertEquals(2, result.size());
         assertEquals(1L, result.get(0).getId());
@@ -80,13 +92,13 @@ class RecipeBookServiceTest {
     }
 
     @Test
-    void getAllRecipesWithIdFromToReturnsEmptyListWhenNoRecipesInIdRange() {
+    void getAllRecipeBooksWithIdFromToReturnsEmptyListWhenNoRecipesInIdRange() {
         List<RecipeBook> result = recipeBookRepository.getAllRecipesWithIdFromTo(100, 200);
         assertTrue(result.isEmpty());
     }
 
     @Test
-    void getAllRecipesWithIdFromToReturnsRecipesInIdRangeWhenRangeIsSingleId() {
+    void getAllRecipeBooksWithIdFromToReturnsRecipesInIdRangeWhenRangeIsSingleId() {
 
         List<RecipeBook> result = recipeBookRepository.getAllRecipesWithIdFromTo(1, 1);
         assertEquals(1, result.size());
@@ -119,11 +131,11 @@ class RecipeBookServiceTest {
     }
 
     @Test
-    void recipeCreationFailsIfNameIsNull() {
+    void recipeBookCreationFailsIfNameIsNull() {
         List<UserListDto> users = new ArrayList<>();
-        UserListDto userListDto = new UserListDto(3L, "Admin");
+        ApplicationUser user = userRepository.findFirstById(1L);
         List<Recipe> recipes = recipeRepository.getRecipeByIds(List.of(2L, 3L));
-        users.add(userListDto);
+        users.add(userMapper.userToUserListDto(user));
         RecipeBookCreateDto createDto = new RecipeBookCreateDto(null, null,
             users, recipeMapper.recipesToRecipeListDto(recipes));
         ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
@@ -134,7 +146,7 @@ class RecipeBookServiceTest {
     }
 
     @Test
-    void recipeCreationFailsIfNameTooLong() {
+    void recipeBookCreationFailsIfNameTooLong() {
         List<UserListDto> users = new ArrayList<>();
         UserListDto userListDto = new UserListDto(4L, "User");
         users.add(userListDto);

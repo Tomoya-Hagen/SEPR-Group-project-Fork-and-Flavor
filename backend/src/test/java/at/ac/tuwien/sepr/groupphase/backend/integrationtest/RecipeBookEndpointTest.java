@@ -40,40 +40,36 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-@Disabled
 class RecipeBookEndpointTest implements TestData {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private RecipeBookRepository recipeBookRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private JwtTokenizer jwtTokenizer;
 
     @Autowired
     private SecurityProperties securityProperties;
+
     @Autowired
     private ObjectMapper objectMapper;
+
     @Autowired
     private RecipeBookMapper recipeBookMapper;
 
     @Test
     void searchRecipeBooksReturnsRecipeBook() throws Exception {
         mockMvc.perform(get("/api/v1/recipebook/search")
-                .param("name", "Familienrezepte")
+                .param("name", "Italienische Küche")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0].name", org.hamcrest.Matchers.is("Familienrezepte")));
+            .andExpect(jsonPath("$[0].name", org.hamcrest.Matchers.is("Italienische Küche")));
     }
 
     @Test
@@ -135,7 +131,7 @@ class RecipeBookEndpointTest implements TestData {
         mockMvc.perform(get("/api/v1/recipebook")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(16)));
+            .andExpect(jsonPath("$", hasSize(9)));
     }
 
     @Test
@@ -162,7 +158,7 @@ class RecipeBookEndpointTest implements TestData {
 
     @Test
     void serviceShouldAddARecipeToARecipeBook() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(patch(RECIPE_BOOK_BASE_URI + "/16/spoon/2")
+        MvcResult mvcResult = this.mockMvc.perform(patch(RECIPE_BOOK_BASE_URI + "/7/spoon/2")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
@@ -178,7 +174,7 @@ class RecipeBookEndpointTest implements TestData {
 
     @Test
     void serviceShouldThrowAnMethodForbiddenExceptionIfTheUserIsNotTheOwnerOrInTheUsersListOfAnRecipeBook() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(patch(RECIPE_BOOK_BASE_URI + "/16/spoon/2")
+        MvcResult mvcResult = this.mockMvc.perform(patch(RECIPE_BOOK_BASE_URI + "/7/spoon/2")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("contributor@email.com", ADMIN_ROLES)))
             .andDo(print())
             .andReturn();
@@ -202,7 +198,7 @@ class RecipeBookEndpointTest implements TestData {
             RecipeBookListDto[].class));
         Assertions.assertAll(
             () -> Assertions.assertFalse(recipeBookListDtos.isEmpty()),
-            () -> assertEquals(6, recipeBookListDtos.size())
+            () -> assertEquals(9, recipeBookListDtos.size())
         );
     }
 }

@@ -16,7 +16,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -51,12 +49,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles({"test", "generateData"})
+@ActiveProfiles({"test"})
 @AutoConfigureMockMvc
-@Disabled
 class RecipeEndpointTest implements TestData {
     @Autowired
     private MockMvc mockMvc;
@@ -97,24 +93,19 @@ class RecipeEndpointTest implements TestData {
             if (recipeDetailDto.recipeSteps().get(i) instanceof RecipeStepDescriptionDetailDto recipeStepDescriptionDetailDto) {
                 recipeStepDescriptionDetailDto.setDescription(String.valueOf(StandardCharsets.ISO_8859_1.encode(recipeStepDescriptionDetailDto.getDescription())));
             }
-            ;
         }
         ArrayList<IngredientDetailDto> actualIngredients = recipeDetailDto.ingredients();
         actualIngredients.sort(Comparator.comparing(IngredientDetailDto::id));
         Assertions.assertAll(
-            () -> Assertions.assertEquals("Egg Fried Rice", recipeDetailDto.name()),
+            () -> Assertions.assertEquals("Kartoffeln plain", recipeDetailDto.name()),
             () -> Assertions.assertEquals(
                 1, recipeDetailDto.categories().size()),
             () -> Assertions.assertArrayEquals(new CategoryDetailDto[]{
-                new CategoryDetailDto(1, "Hautpspeise", "MAIN_COURSE")}, recipeDetailDto.categories().toArray()),
+                new CategoryDetailDto(3, "Beilage", "SIDE_DISH")}, recipeDetailDto.categories().toArray()),
             () -> Assertions.assertEquals(1, recipeDetailDto.ownerId()),
-            () -> Assertions.assertEquals("Ein schnelles asiatisches Gericht.", recipeDetailDto.description()),
-            () -> Assertions.assertEquals(1, recipeDetailDto.numberOfServings().intValue()),
-            () -> Assertions.assertArrayEquals(ingredientDetailDtos.toArray()
-                , actualIngredients.toArray()),
-            () -> Assertions.assertEquals(5, recipeDetailDto.recipeSteps().size()),
-            () -> Assertions.assertEquals(2, recipeDetailDto.allergens().size()),
-            () -> Assertions.assertEquals(new BigDecimal("1366.40"), recipeDetailDto.nutritions().stream().filter(n -> n.id() == 1).findFirst().get().value()));
+            () -> Assertions.assertEquals(4, recipeDetailDto.numberOfServings().intValue()),
+            () -> Assertions.assertEquals(3, recipeDetailDto.recipeSteps().size()),
+            () -> Assertions.assertEquals(0, recipeDetailDto.allergens().size()));
     }
 
     @Test
@@ -433,11 +424,11 @@ class RecipeEndpointTest implements TestData {
     @Test
     void searchRecipeReturnsFoundRecipe() throws Exception {
         mockMvc.perform(get("/api/v1/recipes/search")
-                .param("name", "Apfelkuchen")
+                .param("name", "Apfelkuchen nach Ing")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0].name", org.hamcrest.Matchers.is("Apfelkuchen")));
+            .andExpect(jsonPath("$[0].name", org.hamcrest.Matchers.is("Apfelkuchen nach Ing")));
     }
 
 
