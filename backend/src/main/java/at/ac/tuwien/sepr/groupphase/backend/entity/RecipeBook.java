@@ -42,14 +42,6 @@ public class RecipeBook {
 
     @ManyToMany
     @JoinTable(
-        name = "Shared_RecipeBooks",
-        joinColumns = @JoinColumn(name = "recipe_book_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
-    )
-    private Set<ApplicationUser> sharedUsers = new HashSet<>();
-
-    @ManyToMany
-    @JoinTable(
         name = "recipe_recipe_book",
         joinColumns = @JoinColumn(name = "recipe_book_id", referencedColumnName = "id"),
         inverseJoinColumns = @JoinColumn(name = "recipe_id", referencedColumnName = "id")
@@ -136,7 +128,6 @@ public class RecipeBook {
         private String name;
         private String description;
         private ApplicationUser owner;
-        private Set<ApplicationUser> sharedUsers;
         private List<Recipe> recipes;
         private List<WeeklyPlanner> weeklyPlanner;
         private List<ApplicationUser> editors;
@@ -168,11 +159,6 @@ public class RecipeBook {
             return this;
         }
 
-        public RecipeBookBuilder withSharedUsers(Set<ApplicationUser> sharedUsers) {
-            this.sharedUsers = sharedUsers;
-            return this;
-        }
-
         public RecipeBookBuilder withRecipes(List<Recipe> recipes) {
             this.recipes = recipes;
             return this;
@@ -196,7 +182,6 @@ public class RecipeBook {
             recipeBook.setRecipes(recipes);
             recipeBook.setEditors(editors);
             recipeBook.weeklyPlanner = this.weeklyPlanner;
-            recipeBook.sharedUsers = this.sharedUsers;
             recipeBook.owner = this.owner;
             return recipeBook;
         }
