@@ -93,8 +93,7 @@ public interface RecipeStepMapper {
         try {
             return Long.parseLong(value.toString());
         } catch (NumberFormatException e) {
-            // Handle the case where conversion is not possible
-            return null; // or handle differently based on your logic
+            return null;
         }
     }
 
