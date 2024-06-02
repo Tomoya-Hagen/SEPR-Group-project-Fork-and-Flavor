@@ -45,5 +45,55 @@ public class RecipeDescriptionStep extends RecipeStep {
     public int hashCode() {
         return Objects.hash(getId(), description);
     }
+
+    public static final class RecipeDescriptionStepBuilder {
+        private String description;
+        private long id;
+        private String name;
+        private Recipe recipe;
+        private Integer stepNumber;
+
+        private RecipeDescriptionStepBuilder() {
+        }
+
+        public static RecipeDescriptionStepBuilder aRecipeDescriptionStep() {
+            return new RecipeDescriptionStepBuilder();
+        }
+
+        public RecipeDescriptionStepBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public RecipeDescriptionStepBuilder withId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public RecipeDescriptionStepBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public RecipeDescriptionStepBuilder withRecipe(Recipe recipe) {
+            this.recipe = recipe;
+            return this;
+        }
+
+        public RecipeDescriptionStepBuilder withStepNumber(Integer stepNumber) {
+            this.stepNumber = stepNumber;
+            return this;
+        }
+
+        public RecipeDescriptionStep build() {
+            RecipeDescriptionStep recipeDescriptionStep = new RecipeDescriptionStep();
+            recipeDescriptionStep.setDescription(description);
+            recipeDescriptionStep.setId(id);
+            recipeDescriptionStep.setName(name);
+            recipeDescriptionStep.setRecipe(recipe);
+            recipeDescriptionStep.setStepNumber(stepNumber);
+            return recipeDescriptionStep;
+        }
+    }
 }
 

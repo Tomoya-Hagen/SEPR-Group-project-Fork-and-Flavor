@@ -104,7 +104,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         }
         ApplicationUser user = userRepository.findFirstUserByEmail(email);
         return recipeBookMapper.recipeBookListToRecipeBookListDto(recipeBookRepository
-            .getRecipeBooksThatAnUserHasWriteAccessToByUserId(user.getId()));
+            .findRecipeBooksByOwnerOrSharedUser(user.getId()));
     }
 
     @Override
@@ -113,7 +113,8 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         RecipeBook recipeBook = new RecipeBook();
         recipeBook.setName(recipeBookCreateDto.name());
         recipeBook.setDescription(recipeBookCreateDto.description());
-        recipeBook.setOwnerId(ownerId);
+        ApplicationUser owner = userRepository.findById(ownerId).orElseThrow(() -> new NotFoundException("owner not found"));
+        recipeBook.setOwner(owner);
         List<Long> userIds = recipeBookCreateDto.users().stream().map(UserListDto::id).toList();
         List<ApplicationUser> users = userRepository.findAllById(userIds);
         recipeBook.setEditors(users);

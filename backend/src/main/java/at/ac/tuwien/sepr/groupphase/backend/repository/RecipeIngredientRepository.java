@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  */
 @DynamicInsert
 @DynamicUpdate
+@Repository
 public interface RecipeIngredientRepository extends JpaRepository<RecipeIngredient, Long> {
     /**
      * This method searches for a RecipeIngredients by the given recipe id.

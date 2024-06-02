@@ -21,7 +21,7 @@ export class RecipeComponent implements OnInit, OnDestroy {
     name: string;
   };
   page =1;
-  step = 50; //all recipe
+  step = 5000; //all recipe
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;

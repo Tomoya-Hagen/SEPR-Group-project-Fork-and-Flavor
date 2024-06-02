@@ -1,0 +1,600 @@
+recipeid;ingredientName;amount;unit
+14;Wasser;4;l
+14;Salz;;
+14;Olivenöl;;
+14;Spaghetti;250;g
+15;Wasser;2;l
+15;Erdäpfel;1;kg
+16;Nudeln;250;g
+16;Wasser;3;l
+16;Salz;;
+16;Olivenöl;;
+17;Risottoreis;1;Tasse
+17;Weißwein;0.5;Tasse
+17;Wasser;2;Tasse
+17;Zwiebel;1;
+17;Salz;;
+17;Suppengewürz;;
+17;schwarzer Pfeffer;;
+18;Gries;50;g
+18;Mehl;25;g
+20;Butter;115;g
+20;Zucker;100;g
+20;brauner Zucker;100;g
+20;Ei;73;g
+20;Vanilleextrakt;1;tl
+20;Backkakao;55;g
+20;Backpulver;1;tl
+20;Salz;1;Priese
+20;weiße Schokolade;225;g
+20;Milch;30;ml
+20;Mehl Glutenfrei;125;g
+21;Bratschinken;;
+21;Knoblauch;1;
+21;Bratöl;;
+21;Parmesan;;
+21;Wasser;;
+22;Erdäpfel;6;
+22;Parmesan;;
+22;Oregano;;
+22;Paprikapulver;;
+22;Olivenöl;;
+22;Salz;;
+22;Knoblauchpulver/granulat;;
+22;schwarzer Pfeffer;;
+23;Popcornmais;;
+23;Bratöl;;
+23;Salz;;
+24;Nudeln;250;g
+24;Salz;;
+24;Speck;30;g
+24;Knoblauch;2;Zehe
+24;Zucchini;1;
+24;Schlagobers;1;Becher
+24;Parmesan;20;g
+24;Oregano;;
+24;Bratöl;;
+25;Ei;1;
+25;Salz;;
+25;Olivenöl;;
+26;Ei;1;
+26;Butter;;
+26;Salz;;
+27;Ei;1;
+27;Bratöl;;
+27;Salz;;
+28;Ei;3;
+28;Bratöl;;
+28;Salz;;
+28;Bratschinken;;
+28;schwarzer Pfeffer;;
+28;Eckerlkäse;1;
+28;Zwiebel;1;
+28;Champignon;4;
+29;Salz;;
+29;Lauch/Jungzwiebel;20;g
+29;Schinken;20;g
+29;Brokkoli;40;g
+29;Schlagobers;1;Becher
+29;Suppengewürz;;
+29;Muskatnuss;;
+29;weißer Pfeffer;;
+31;Zwiebel;1;Stück
+31;Reis;1;Tasse
+31;Erbsen;;
+31;Karotten;2;Stück
+31;Putengeschnetzeltes;;
+31;Tomatenmark;;
+31;Schlagobers;;
+31;Maizena;;
+31;Bratöl;;
+31;Paprikapulver;;
+32;Milchreis Reis;100;g
+32;Ahornsirup;;
+32;Milch;400;g
+34;Bratöl;;
+34;Erdäpfel;;
+34;Ei;2;
+34;schwarzer Pfeffer;4;
+34;Bratschinken;;
+34;Zwiebel;1;
+34;Eckerlkäse;2;
+34;Salz;;
+34;Champignon;4;
+35;Butter;;
+35;Kartoffel meelig;;
+35;Milch;;
+35;Salz;;
+35;Muskatnuss;;
+36;Wasser;;
+36;gefrorene Schupfnudeln;;
+36;Bratschinken;;
+36;Lauch;;
+36;Bratöl;;
+36;Salz;;
+36;schwarzer Pfeffer;;
+36;Champignon;;
+37;Salz;;
+37;Speck;;
+37;Kürbis;;
+37;Bratöl;;
+37;Schlagobers;;
+37;Parmesan;;
+37;schwarzer Pfeffer;;
+37;Knoblauch;;
+38;Salz;;
+38;Olivenöl;;
+38;Kürbis;;
+38;Speck;;
+38;Knoblauch;;
+38;Parmesan;;
+39;Rahm;1;Becher
+39;Ei;3;
+39;Kristallzucker;1;Becher
+39;Vanillezucker;1;Packung
+39;Backkakao;1;Becher
+39;Kakao;1;el
+39;Mehl;1;Becher
+39;Mandeln;1;Becher
+39;Kokosstücke;1;Becher
+39;Backpulver;1;Becher
+39;Bratöl;1;
+39;Lebkuchengewürz;;
+40;Erbsen;;
+40;Knoblauch;2;Zehe
+40;Zwiebel;1;
+40;Bratöl;;
+40;Wasser;;
+41;Maiskolben;;
+41;Olivenöl;;
+41;Knoblauchpulver/granulat;;
+41;Chillipulver;;
+41;schwarzer Pfeffer;;
+41;Paprikapulver;;
+41;Salz;;
+41;Zitronen Pfeffer;;
+41;Mayonnaise;;
+41;Jalapeno;;
+41;Zitrone;;
+41;Parmesan;;
+41;frischer Koriander;;
+43;Ei;1;
+43;Wasser;;
+43;Salz;;
+44;Grillgemüse gefroren;;
+44;Milch;;
+44;Gouda;;
+45;Salz;;
+45;Schlagobers;1;Becher
+45;Blattspinat;;
+45;Knoblauch;3;
+45;Huhn;;
+45;weißer Pfeffer;;
+45;Parmesan;;
+45;Petersilie;;
+46;Olivenöl;1;tl
+46;Faschiertes;500;g
+46;Knoblauch;2;Zehe
+46;Zwiebel;1;
+46;Paprika Rot;2;
+46;Süßkartoffel;2;
+46;Mais;1;Dose
+46;Suppengewürz;;
+46;Senf mild;;
+46;Tomatensauce;1;
+46;Oregano;1;tl
+46;Chillipulver;;
+46;Salz;;
+46;schwarzer Pfeffer;;
+46;Petersilie;;
+47;Reis;1;Tasse
+47;Wasser;2;Tasse
+47;Zwiebel;1;
+47;Salz;;
+48;Reis Vollkorn;1;Tasse
+48;Salz;;
+48;Wasser;2;Tasse
+48;Suppengewürz;;
+48;Zwiebel;;
+49;Quinoa;100;g
+49;Wasser;200;g
+51;Nudeln;200;g
+51;Wasser;;
+51;Butter;3;tl
+51;Knoblauch;4;Zehe
+51;schwarzer Pfeffer;;
+51;Salz;;
+51;Mehl;1;tl
+51;Schlagobers;1;Becher
+51;Milch;1;
+51;Zitrone;1;
+52;Nudeln;200;g
+52;Butter;3;tl
+52;Knoblauch;2;Zehe
+52;Mehl;3;
+52;Milch;3;
+52;Parmesan;1;Tasse
+52;Petersilie;;
+52;Salz;;
+52;schwarzer Pfeffer;;
+53;Ei;3;
+53;Mayonnaise;;
+53;Essiggurken;;
+53;Salz;;
+53;schwarzer Pfeffer;;
+54;Erdäpfel;4;
+54;Salz;;
+54;Bratöl;;
+54;Zwiebel;1;
+55;Huhn;;
+55;Zwiebel;;
+55;Zucchini;;
+55;Salz;;
+55;schwarzer Pfeffer;;
+55;Lauch/Jungzwiebel;;
+55;Brokkoli;;
+56;Erdäpfel;;
+56;Bratöl;;
+56;Salz;;
+57;Faschiertes;300;g
+57;Bratöl;;
+57;Zwiebel;2;
+57;Karotten;;
+57;Zucchini;1;
+57;Salz;;
+57;schwarzer Pfeffer;;
+57;Tomatenmark;;
+57;Tomatensauce;;
+58;Chremespinat gefroren;;
+58;Wasser;;
+63;Pizzateig;;
+63;Tomatenmark;;
+63;Pizzakäse;;
+63;Oregano;;
+63;Thymian;;
+67;Braunhirse;200;g
+67;Erdmandel;200;g
+67;Rohrzucker;200;g
+67;Butter;250;g
+67;Ei;5;
+67;Vanillezucker;3;tl
+67;Weinsteinpulver;1;
+71;Hirse;1;Tasse
+71;Speck;;
+71;Tomaten;;
+71;Salz;;
+71;schwarzer Pfeffer;;
+71;Bratöl;;
+71;Emmentaler;;
+71;Creme Fraiche;;
+72;Kohlrabi;;
+72;Wasser;;
+72;Petersilie;;
+72;Salz;;
+72;Suppengewürz;;
+72;Kümmel;;
+72;Butter;;
+72;Milch;;
+72;Mehl;;
+72;Schlagobers;;
+73;Zartweizen;1;
+73;Wasser;2;
+73;Salz;;
+73;Suppengewürz;;
+74;Hirse;;
+74;Karotten;;
+74;Zucchini;;
+74;Champignon;;
+74;Lauch/Jungzwiebel;;
+74;Kohlrabi;;
+74;Mais;;
+74;Emmentaler;;
+74;Schafkäse;;
+74;Salz;;
+74;weißer Pfeffer;;
+74;Suppengewürz;;
+74;Oregano;;
+74;Schlagobers;;
+75;Ei;5;
+75;Staubzucker;250;g
+75;Vanillezucker;2;Packung
+75;Backpulver;1;Packung
+75;Mehl;125;g
+75;Stärkemehl;125;g
+75;Bratöl;1;
+75;Eierlikör;1;
+76;Butter;200;g
+76;Zucker;380;g
+76;Vanillezucker;1;Packung
+76;Milch;1;Tasse
+76;Mehl;500;g
+76;Backpulver;1;Packung
+76;Ei;5;
+76;Kakao;3;el
+77;Butter;250;g
+77;Ei;1;
+77;brauner Zucker;200;g
+77;Vanillezucker;1;Packung
+77;Mehl;500;g
+77;Backpulver;1;Packung
+77;Apfel;;
+77;Zimt;;
+79;Ei;4;
+79;Staubzucker;100;g
+79;Milch;300;ml
+79;Mehl;100;g
+79;Salz;;
+79;Rosinen;;
+81;Butter;150;g
+81;Zucker;150;g
+81;Dotter;3;
+81;Mandeln;150;g
+81;Milch;125;ml
+81;Rum;;
+81;Vanillezucker;;
+81;Schlagobers;;
+82;Mehl;450;g
+82;Zucker;60;g
+82;Butter;180;g
+82;Ei;1;
+82;Salz;;
+82;Zitronenschale;;
+82;Milch;1;
+82;Germ;15;g
+82;Staubzucker;100;g
+82;Zimt;;
+83;Salz;;
+83;Dosen-Thunfisch;;
+83;Tomaten;;
+83;Zwiebel;;
+83;schwarzer Pfeffer;;
+83;Oregano;;
+83;Basilikum;;
+83;Thymian;;
+83;Schlagobers;;
+84;Erdäpfel;;
+84;Sojasauce;;
+84;Honig;;
+84;Wasser;;
+84;Bratöl;;
+84;Knoblauch;;
+84;Sesam;;
+85;Erdäpfel;;
+85;Olivenöl;;
+85;Salz;;
+85;Zucchini;;
+85;Bergkäse;;
+86;Steak;2;
+86;Olivenöl;;
+86;Knoblauch;2;
+86;Thymian;;
+86;Butter;;
+86;Salz;;
+86;schwarzer Pfeffer;;
+89;Paprika;;
+89;Zwiebel;;
+89;Hühnerbrust;;
+89;Bratöl;;
+89;Frischkäse;;
+89;Salz;;
+89;schwarzer Pfeffer;;
+89;Pepper Jack;;
+89;Chillipulver;;
+89;Knoblauchpulver/granulat;;
+89;Kreuzkümmel;;
+89;Sour Creme;;
+90;Avokado;2;Stück
+90;milde rote Pfefferschoten;2;Stück
+90;Limetten;1;Stück
+90;Tabasco;1;
+90;Salz;;
+90;Tomaten;2;Stück
+90;schwarzer Pfeffer;;
+90;rote Zwiebel;;
+90;Knoblauch;2;Zehe
+91;Nudeln;;
+91;Butter;;
+91;Champignon;;
+91;Parmesan;;
+91;Wurst;;
+91;Schlagobers;;
+91;Petersilie;;
+91;Salz;;
+91;weißer Pfeffer;;
+92;Apfel;2;Stück
+92;Kristallzucker;245;g
+92;Zimt;;
+92;Mehl;360;g
+92;Backpulver;;
+92;Milch;340;ml
+92;Vanillezucker;;
+92;Ei;2;Stück
+92;Butter;230;g
+92;brauner Zucker;150;g
+92;Puderzucker;200;g
+94;Wraps;4;Stück
+94;Blattspinat;240;g
+94;Feta;200;g
+94;Pinienkerne;;
+94;Knoblauch;;
+94;Salz;;
+95;Zucchini;2;
+95;Salz;;
+95;schwarzer Pfeffer;;
+95;Olivenöl;;
+95;Zwiebel;1;
+95;Faschiertes;200;g
+95;Knoblauch;1;
+95;Chillipulver;;
+95;Kreuzkümmel;;
+95;Paprikapulver;;
+95;Mais;1;
+95;Cheddar;1;
+95;Koreander;;
+96;Sojasauce;2;el
+96;Erdnussbutter;2;el
+96;Sesamöl;1;el
+96;Sesam;1;
+96;Chillipulver;1;tl
+96;brauner Zucker;1;tl
+96;Knoblauch;1;
+96;Wasser;1;
+96;Erdnüsse;;
+96;Jungzwiebel;;
+97;Zitrone;3;Stück
+97;Butter;350;g
+97;Mehl;350;g
+97;Rohrzucker;350;g
+97;Vanillezucker;;
+97;Backpulver;;
+97;Ei;6;Stück
+97;Staubzucker;300;g
+98;Bratöl;;
+98;Zwiebel;;
+98;Mais;;
+98;Erbsen;;
+98;Karotten;;
+98;Champignon;;
+98;Sojasauce;;
+98;Lauch/Jungzwiebel;;
+98;Salz;;
+98;schwarzer Pfeffer;;
+98;Sesamöl;;
+98;Sesam;;
+98;Paprika;;
+98;Knoblauch;;
+99;Blattspinat;250;g
+99;Parmesan;;
+99;Knoblauch;1;
+99;Olivenöl;;
+99;schwarzer Pfeffer;1;
+99;Pinienkerne;1;
+99;Schlagobers;100;g
+99;Salz;;
+99;Zwiebel;1;
+100;Rindfleisch;455;g
+100;Salz;1;tl
+100;schwarzer Pfeffer;1;tl
+100;Brokkoli;;
+100;Sojasauce;1;
+100;Honig;1;
+100;Knoblauch;2;Zehe
+100;Ingwer;1;tl
+100;Sesam;1;tl
+101;Bratöl;;
+101;Parmesan;;
+101;Lauch;;
+101;Lachs;;
+101;Knoblauch;;
+101;Salz;;
+102;Zwiebel;;
+102;Mehl;;
+102;Suppengrün;;
+102;Erdäpfel;;
+102;Salz;;
+102;schwarzer Pfeffer;;
+102;Suppengewürz;;
+102;Lorbeerblatt;;
+102;Wacholderbeeren;;
+102;Kardamon;;
+102;Frankfurter;;
+102;Bratöl;;
+102;Wasser;;
+103;Basmatireis;2;
+103;Knoblauch;1;
+103;Bratöl;;
+103;Sesamöl;2;el
+103;Ei;2;
+103;Karotten;1;
+103;Erbsen;;
+103;Mais;;
+103;Lauch/Jungzwiebel;;
+103;Salz;;
+103;schwarzer Pfeffer;;
+104;Kohlrabi;;
+104;Mehl;;
+104;Petersilie;;
+104;Schlagobers;;
+104;Salz;;
+104;schwarzer Pfeffer;;
+104;Kümmel;;
+104;Suppengewürz;;
+104;Muskatnuss;;
+104;Butter;;
+105;Risottoreis;;
+105;Butter;;
+105;Champignon;;
+105;Erbsen;;
+105;Zwiebel;;
+105;Thymian;;
+105;Knoblauch;;
+105;Weißwein;;
+105;Suppengewürz;;
+105;Parmesan;;
+106;Butter;;
+106;Mehl Glutenfrei;;
+106;Ei;1;
+106;Petersilie;;
+106;Schnittlauch;;
+106;Hühnerbrust;300;g
+106;Salz;;
+106;schwarzer Pfeffer;;
+107;Zucchini;;
+107;Lauch;;
+107;Knoblauch;;
+107;Schwammerl;;
+107;Salz;;
+107;schwarzer Pfeffer;;
+107;Basilikum;;
+107;Rosmarin;;
+107;Italienische Gewürzmischung;;
+107;Scharfmacher;;
+107;Thymian;;
+107;Olivenöl;;
+108;Süßkartoffel;;
+108;Zucchini;;
+108;Lauch;;
+108;Knoblauch;;
+108;Schwammerl;;
+108;Salz;;
+108;schwarzer Pfeffer;;
+108;Schlagobers;;
+108;Parmesan;;
+108;Basilikum;;
+108;Rosmarin;;
+108;Italienische Gewürzmischung;;
+108;Scharfmacher;;
+108;Thymian;;
+110;Bratöl;;
+110;Erdäpfel;;
+110;Süßkartoffel;;
+110;Zucchini;;
+110;Lauch/Jungzwiebel;;
+110;Schafkäse;;
+110;Schlagobers;;
+110;Salz;;
+110;schwarzer Pfeffer;;
+110;Muskatnuss;;
+111;Brokkoli;2;
+111;Salz;;
+111;Blätterteig glutenfrei;;
+111;Emmentaler;;
+111;Schinken;;
+112;Knoblauch;2;
+112;Sauerrahm;1;
+112;Salz;;
+112;schwarzer Pfeffer;;
+113;Paprika;2;
+113;Zucchini;1;
+113;Knoblauch;2;
+113;Sojasauce;8;el
+113;Cashewkerne;80;g
+113;Bratöl;;
+114;Erdäpfel;;
+114;Salz;;
+114;Petersilie;;
+115;Lachs;;
+115;Zitronensaft;;
+115;Salz;;
+115;schwarzer Pfeffer;;
+115;Bratöl;;

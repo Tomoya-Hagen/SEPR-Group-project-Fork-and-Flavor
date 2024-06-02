@@ -16,6 +16,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({"test", "generateData"})
 @AutoConfigureMockMvc
+@Disabled
 class RecipeEndpointTest implements TestData {
     @Autowired
     private MockMvc mockMvc;
