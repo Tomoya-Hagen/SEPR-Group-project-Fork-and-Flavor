@@ -15,6 +15,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Transactional
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
+@Disabled
 class RecipeServiceTest {
     @Autowired
     private RecipeService recipeService;

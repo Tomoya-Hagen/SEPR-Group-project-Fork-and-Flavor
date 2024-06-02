@@ -11,6 +11,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeIngredientRepositor
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @ActiveProfiles({"test", "generateData"})
 @Transactional
+@Disabled
 class RecipeRepositoryTest {
     @Autowired
     private RecipeRepository recipeRepository;

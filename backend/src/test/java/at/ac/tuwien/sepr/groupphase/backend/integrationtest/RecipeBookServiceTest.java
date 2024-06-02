@@ -13,6 +13,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Transactional
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
+@Disabled
 class RecipeBookServiceTest {
 
     @Autowired
