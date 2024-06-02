@@ -21,7 +21,7 @@ recipeid;ingredientName;amount;unit
 20;Butter;115;g
 20;Zucker;100;g
 20;brauner Zucker;100;g
-20;Ei;1;
+20;Ei;73;g
 20;Vanilleextrakt;1;tl
 20;Backkakao;55;g
 20;Backpulver;1;tl
@@ -325,12 +325,6 @@ recipeid;ingredientName;amount;unit
 79;Mehl;100;g
 79;Salz;;
 79;Rosinen;;
-80;Ei;4;
-80;Staubzucker;225;g
-80;Yoghurt;1;Becher
-80;Bratöl;1;
-80;Mehl griffig;340;g
-80;Backpulver;1;
 81;Butter;150;g
 81;Zucker;150;g
 81;Dotter;3;

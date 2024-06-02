@@ -58,6 +58,7 @@ public class DataGenerator implements CommandLineRunner {
 
     private final ResourceLoader resourceLoader;
 
+    private HashMap<Long, Long> idMap;
     private List<Long> skippedRecipes = new ArrayList<>();
 
     public DataGenerator(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder,
@@ -78,6 +79,7 @@ public class DataGenerator implements CommandLineRunner {
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.recipeStepRepository = recipeStepRepository;
         this.resourceLoader = resourceLoader;
+        this.idMap = new HashMap<>();
     }
 
     @Override
@@ -274,15 +276,15 @@ public class DataGenerator implements CommandLineRunner {
                     skippedRecipes.add(id);
                     continue;
                 }
-                ApplicationUser user = userRepository.findFirstById(1L);
+                ApplicationUser user = userRepository.findFirstById(Long.parseLong(fields.get(5)));
                 Recipe recipe = Recipe.RecipeBuilder.aRecipe()
-                    .withId(id)
                     .withName(fields.get(1))
                     .withDescription(fields.get(2))
                     .withNumberOfServings(Short.parseShort(fields.get(3)))
                     .withOwner(user)
                     .build();
                 recipeRepository.save(recipe);
+                idMap.put(id, recipe.getId());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -315,7 +317,7 @@ public class DataGenerator implements CommandLineRunner {
                 } catch (NumberFormatException e) {
                     amountGiven = false;
                 }
-                Recipe recipe = recipeRepository.findById(Long.parseLong(fields.get(0)));
+                Recipe recipe = recipeRepository.findById(idMap.get(Long.parseLong(fields.get(0)))).orElse(null);
                 Ingredient ingredient = ingredientRepository.findByName(fields.get(1)).get();
                 RecipeIngredient recipeIngredient;
                 if (amountGiven) {
@@ -354,7 +356,7 @@ public class DataGenerator implements CommandLineRunner {
                 if (skippedRecipes.contains(Long.parseLong(fields.get(0)))) {
                     continue;
                 }
-                Recipe recipe = recipeRepository.findById(Long.parseLong(fields.get(0)));
+                Recipe recipe = recipeRepository.findById(idMap.get(Long.parseLong(fields.get(0)))).orElse(null);
                 List<Category> category = categoryRepository.findByName(fields.get(1));
                 recipe.setCategories(category);
                 recipeRepository.save(recipe);
@@ -379,7 +381,7 @@ public class DataGenerator implements CommandLineRunner {
                 if (skippedRecipes.contains(Long.parseLong(fields.get(0)))) {
                     continue;
                 }
-                Recipe recipe = recipeRepository.findById(Long.parseLong(fields.get(0)));
+                Recipe recipe = recipeRepository.findById(idMap.get(Long.parseLong(fields.get(0)))).orElse(null);
                 RecipeStep recipeStep;
                 if (fields.size() == 4) {
                     // Beschreibungsschritt
@@ -425,7 +427,6 @@ public class DataGenerator implements CommandLineRunner {
                         continue;
                     }
                     String description = fields.get(2).trim();
-                    Long id = Long.parseLong(fields.get(0));
                     Long userid = Long.parseLong(fields.get(3));
                     List<String> recipeIds;
                     recipeIds = parseCsvLine(fields.get(4), ',');
@@ -435,15 +436,11 @@ public class DataGenerator implements CommandLineRunner {
                             if (recipeId.isEmpty()) {
                                 continue;
                             }
-                            Recipe recipe = recipeRepository.findById(Long.parseLong(recipeId));
-                            if (recipe != null) {
-                                recipes.add(recipe);
-                            }
+                            recipeRepository.findById(idMap.get(Long.parseLong(recipeId))).ifPresent(recipes::add);
                         }
                     }
                     ApplicationUser user = userRepository.findFirstById(userid);
                     RecipeBook recipeBook = RecipeBook.RecipeBookBuilder.aRecipeBook()
-                        .withId(id)
                         .withName(name)
                         .withDescription(description)
                         .withOwner(user)

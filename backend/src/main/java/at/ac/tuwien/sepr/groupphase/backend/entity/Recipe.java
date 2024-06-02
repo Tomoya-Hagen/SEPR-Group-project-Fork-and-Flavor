@@ -23,6 +23,7 @@ import java.util.Objects;
 @Entity
 @DynamicUpdate
 public class Recipe {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
     private long id;

@@ -25,6 +25,7 @@ import java.util.Objects;
 @Table(name = "Recipe_Book", schema = "PUBLIC", catalog = "DB")
 public class RecipeBook {
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
     private long id;
@@ -35,7 +36,7 @@ public class RecipeBook {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private ApplicationUser owner;
 
