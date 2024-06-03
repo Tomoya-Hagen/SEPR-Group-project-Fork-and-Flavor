@@ -7,6 +7,7 @@ public record RecipeBookListDto(
     long id,
     @NotNull
     String name,
+    @NotNull
     String description,
     long ownerId) {
 }

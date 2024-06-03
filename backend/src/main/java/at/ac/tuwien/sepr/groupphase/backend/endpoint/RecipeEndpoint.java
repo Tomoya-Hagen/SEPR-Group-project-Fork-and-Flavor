@@ -102,7 +102,7 @@ public class RecipeEndpoint {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(recipeService.updateRecipe(recipeUpdatedto));
         } catch (Exception e) {
             LOGGER.warn("Error updating recipe book: {}", recipeUpdatedto, e);
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 

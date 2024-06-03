@@ -87,9 +87,9 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public ArrayList<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber) {
         LOGGER.trace("getRecipesFromPageInSteps({},{})", pageNumber, stepNumber);
-        int from = ((pageNumber - 1) * stepNumber) + 1;
-        int to = pageNumber * stepNumber;
-        ArrayList<Recipe> recipes = (ArrayList<Recipe>) recipeRepository.getAllRecipesWithIdFromTo(from, to);
+        Long from = (long) (((pageNumber - 1) * stepNumber) + 1);
+        Long to = (long) (pageNumber * stepNumber);
+        ArrayList<Recipe> recipes = (ArrayList<Recipe>) recipeRepository.findByIdBetweenOrderById(from, to);
         ArrayList<Long> ratings = new ArrayList<>();
         for (Recipe recipe : recipes) {
             ratings.add(calculateAverageTasteRating(recipe.getRatings()));
