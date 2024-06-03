@@ -1,11 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from "@angular/common";
 import {SlickCarouselModule} from "ngx-slick-carousel";
-import {RecipeService} from "../../../../services/recipe.service";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
-import {RecipeBookService} from "../../../../services/recipebook.service";
-import {RecipeBookDetailDto} from "../../../../dtos/recipe-book";
+import {RecipeBookService} from "../../../services/recipebook.service";
+import {RecipeBookDetailDto} from "../../../dtos/recipe-book";
 import { Title } from '@angular/platform-browser';
 
 @Component({
@@ -27,6 +26,7 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
     description: "",
     id: 0,
     ownerId: 0,
+    owner: null,
     recipes: [],
     users: []
   }

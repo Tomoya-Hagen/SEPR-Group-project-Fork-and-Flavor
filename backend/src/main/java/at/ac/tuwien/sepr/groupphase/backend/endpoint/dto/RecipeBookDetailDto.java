@@ -11,6 +11,7 @@ public record RecipeBookDetailDto(
     String name,
     String description,
     long ownerId,
+    UserDto owner,
     List<UserListDto> users,
     List<RecipeListDto> recipes) {
 }

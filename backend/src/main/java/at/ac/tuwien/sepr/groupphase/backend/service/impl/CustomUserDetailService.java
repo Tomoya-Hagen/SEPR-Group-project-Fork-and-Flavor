@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
@@ -122,5 +123,11 @@ public class CustomUserDetailService implements UserService {
         userRepository.flush();
 
         return login(userRegisterDtoMapper.toUserLoginDto(userRegisterDto));
+    }
+
+    @Override
+    public UserDto findUserById(Long id) throws NotFoundException {
+        LOGGER.trace("findUserById(id)");
+        return userMapper.userToUserDto(userRepository.findById(id).orElseThrow(NotFoundException::new));
     }
 }

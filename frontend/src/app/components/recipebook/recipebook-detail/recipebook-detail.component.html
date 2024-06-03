@@ -21,5 +21,21 @@
         </tbody>
       </table>
     </div>
+    <div class="col-2">
+      <p class="fs-4">Owner:</p>
+      <table class="table">
+        <tbody>
+        <td>{{ recipeBook.owner.name }}</td>
+        </tbody>
+      </table>
+      <p class="fs-4">Contributors:</p>
+      <table class="table">
+        <tbody>
+        <tr *ngFor="let users of recipeBook.users">
+          <td>{{ users.name }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

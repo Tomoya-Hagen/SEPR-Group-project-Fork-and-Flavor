@@ -13,7 +13,7 @@ import java.util.List;
  * It uses MapStruct, a code generator that simplifies the implementation of mappings between Java bean types.
  */
 @Mapper(uses = {RecipeStepMapper.class, CategoryMapper.class, AllergenMapper.class,
-    IngredientMapper.class, NutritionMapper.class})
+    IngredientMapper.class, NutritionMapper.class, UserMapper.class})
 public interface RecipeBookMapper {
 
     /**
