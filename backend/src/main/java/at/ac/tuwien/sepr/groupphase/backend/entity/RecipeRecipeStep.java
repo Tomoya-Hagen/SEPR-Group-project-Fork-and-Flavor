@@ -47,4 +47,54 @@ public class RecipeRecipeStep extends RecipeStep {
     public int hashCode() {
         return Objects.hash(getId(), recipeRecipe);
     }
+
+    public static final class RecipeRecipeStepBuilder {
+        private Recipe recipeRecipe;
+        private long id;
+        private String name;
+        private Recipe recipe;
+        private Integer stepNumber;
+
+        private RecipeRecipeStepBuilder() {
+        }
+
+        public static RecipeRecipeStepBuilder aRecipeRecipeStep() {
+            return new RecipeRecipeStepBuilder();
+        }
+
+        public RecipeRecipeStepBuilder withRecipeRecipe(Recipe recipeRecipe) {
+            this.recipeRecipe = recipeRecipe;
+            return this;
+        }
+
+        public RecipeRecipeStepBuilder withId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public RecipeRecipeStepBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public RecipeRecipeStepBuilder withRecipe(Recipe recipe) {
+            this.recipe = recipe;
+            return this;
+        }
+
+        public RecipeRecipeStepBuilder withStepNumber(Integer stepNumber) {
+            this.stepNumber = stepNumber;
+            return this;
+        }
+
+        public RecipeRecipeStep build() {
+            RecipeRecipeStep recipeRecipeStep = new RecipeRecipeStep();
+            recipeRecipeStep.setRecipeRecipe(recipeRecipe);
+            recipeRecipeStep.setId(id);
+            recipeRecipeStep.setName(name);
+            recipeRecipeStep.setRecipe(recipe);
+            recipeRecipeStep.setStepNumber(stepNumber);
+            return recipeRecipeStep;
+        }
+    }
 }

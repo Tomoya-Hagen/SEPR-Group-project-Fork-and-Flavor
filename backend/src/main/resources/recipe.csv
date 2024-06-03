@@ -1,51 +1,82 @@
-id;name;description;numberofServings;forkedFrom
-3;Becherkuchen;;;
-4;Beef und Brokkoli Soja;;;
-5;Bratkartoffel;;;
-6;Braunhirse Erdmandel Schnitten;;;
-7;Brokkoli Strude;;;
-8;Brokkoli-Lauch-Nudeln;;;
-9;Brokkoli-Nudeln;;;
-10;Cake Pops;;;
-11;Champion Spaghetti;;;
-12;Champions-Huhn;;;
-13;Cookies;;;
-14;Ei knusprig mit Olivenöl;;;
-15;Ei scrambled;;;
-16;Ei Spiegelei;;;
-17;Eieraufstrich;;;
-18;Eierlikör-Gugelhupf;;;
-19;ErbsenChampingnon Risotto;;;
-20;Erdnuss Chili Nudeln;;;
-21;Erdäpfel asiatisch;;;
-22;Erdäpfel griechisch;;;
-23;Erdäpfel Lauch Suppe;;;
-24;Faschiertes mit Gemüse;;;
-25;Feta Nudeln;;;
-26;Gebrannte Mandeln;;;
-27;Gefüllte Zucchini;;;
-28;Gemüse mit Huhn;;;
-29;Gratin;;;
-30;Griechische Erbsen nach HE;;;
-31;Griesbrei;;;
-32;Grillgemüse;;;
-33;Grillhuhn;;;
-34;Guacamole;;;
-35;Hirse mit Tomaten und Speck;;;
-36;Hirseauflauf mit Gemüse;;;
-37;Hühnerbrust gefüllt;;;
-38;Hähnchenbruststreifen im Kräutermantel;;;
-39;Joghurtgugelhupf;;;
-40;Kaiserschmarren;;;
-41;Kürbiscremesuppe;;;
-42;Käsekuchen;;;
-43;Lachsnudeln;;;
-44;Mais-Ripperl;;;
-45;Nudeln mit Spinatsauce;;;
-46;Pizzaschnecke;;;
-47;Rahmkohlrabi;;;
-48;Spaghetti Bolognese;;;
-49;Steak nach Gordon Ramsay;;;
-50;Zitronenkuchen;;;
-51;Apfelkuchen;;;
-52;Banenenkuchen;;;
+id;name;description;numberofServings;forkedFrom;ownerid
+14;Spagehtti plain;Unterrezept für alle möglichen Nudelgerichte;2;;1
+15;Kartoffeln plain;Unterrezept für Kartoffelgerichte;4;;1
+16;Nudeln plain;Unterrezept für Nudelgerichte;2;;1
+17;Risottoreis plain;Unterrezept für alle möchlichen Risottos;4;;1
+18;Griesbrei;griessig bereiig guut;2;;1
+20;Cookies;richtig geil;2;;1
+21;Risotto (Zuchini);so muss risotto schmecken;2;;1
+22;Potato-Wedges;schnell zubereitet, lange im Ofen;2;;1
+23;Popcorn;Selber machen? SELBER MACHEN!;2;;1
+24;Zucchini-Nudeln;nommige Nudeln;2;;1
+25;Ei knusprig in Olivenöl;So knusprig kann Ei sein;2;;1
+26;Ei scrambled;So scrambeld kann Ei sein;2;;1
+27;Ei Spiegelei;So spiegelig kann Ei sein;2;;1
+28;Ei auf Martin Art;So martin kann Ei sein;2;;1
+29;Brokkoli-Nudeln;nudeln sind auch kein Brokoli;2;;1
+31;Putengeschnetzeltes mit Gemüse;Klassiker;2;;1
+32;Milchreis;so muss Milchreis schmecken;2;;1
+34;Alles Speise;Alles Speisen;2;;1
+35;Kartoffelpüree;einfach und geil;2;;1
+36;pikante Schupfnudeln;Einfach und überraschend gut;2;;1
+37;Kürbis-Nudeln;guade nudeln;2;;1
+38;Kürbis-Risotto;guades Herbstgericht;2;;1
+39;Becherkuchen;Becher statt Wage!;2;;1
+40;Erbsen (griechisch);passt gut zu gebratenem;2;;1
+41;Mais-Ripperl;Für die Grillfans;2;;1
+43;Ei UFO;pochiertes ei;2;;1
+44;Grillgemüse (fertig) mit mehr premium;Gemüse und Gouda;2;;1
+45;Nudeln mit Huhn-Spinat Soße;Nudel Tag;2;;1
+46;Faschiertes mit Gemüse;Gut zum Mitnehmen und aufwärmen;2;;1
+47;Reis;passt zu Allem;2;;1
+48;Reis Vollkorn;passt zu Vielem;2;;1
+49;Quinoa;muss man mögen;2;;1
+51;Nudeln mit Zitronensauce;Nudelkreation;2;;1
+52;Nudeln mit Parmesansauce;Nudelkreation;2;;1
+53;Eieraufstrich;hacken hacken hacken;2;;1
+54;Kartoffelgröschti;passt gut dazu;2;;1
+55;Gemüse mit Huhn;klingt gut, ist gut;2;;1
+56;Bratkartoffel;einfach und fett;2;;1
+57;Spaghetti Bolognese;mit unauffälligem Gemüse;2;;1
+58;Spinat Creme;gute Beilage;2;;1
+63;Pizzaschnecken;Partysnack!;2;;1
+67;Braunhirse Erdmandel Schnitten;etwas für Gluten und Nussalergiker;2;;1
+71;Hirse mit Tomaten und Speck;gut zum Mitnehmen und aufwärmen;2;;1
+72;Kohlrabi Rahm;gschmackig;2;;1
+73;Zartweizen;Beilagige Beilage;2;;1
+74;Hirseauflauf mit Gemüse;Auf lauf;2;;1
+75;Eierlikör-Gugelhupf;gut hut;2;;1
+76;Marmorgugelhupf;gut hut;2;;1
+77;Apfelkuchen nach Ing;Blechkuchen;2;;1
+79;Kaiserschmarren;typisch Österreichisch;3;;1
+81;Malakoff-Torte;Torte unter Torten;2;;1
+82;Streusselkuchen;Streussel auf Kuchen;2;;1
+83;Thunfisch-Nudeln;Essen tun fisch;2;;1
+84;Knusprige Kartoffel Asiatisch;guad;2;;1
+85;Zucchini-Kartoffel;fancy;2;;1
+86;Steak nach Gordon Ramsay;get out of my kitchen;2;;1
+89;Hühnerbrust gefüllt;fancy fancy;2;;1
+90;Guacamole;Dip;2;;1
+91;Nudeln mit Champignons;fancy noodles;2;;1
+92;Apfelkuchen;I have an apple;2;;1
+94;Spinatwraps;gute frühstück noms;2;;1
+95;Gefüllte Zucchini;fancy;2;;1
+96;Erdnuss Chili Nudeln;muss man mögen;2;;1
+97;Zitronenkuchen;immer gut;2;;1
+98;Reis Soja Gemüse;gutes packed lunch;2;;1
+99;Nudeln mit Spinatsauce;nudeln nledun;2;;1
+100;Beef und Brokkoli Soja;nix für Sojahasser;2;;1
+101;Lachs-Risotto;Risotto;2;;1
+102;Suppe nach Oma Kutler;Suppe;2;;1
+103;Eierreis;gute Snackung;2;;1
+104;Rahmkohlrabi;rahmig gutig;2;;1
+105;ErbsenChampingnon Risotto;Risotto;2;;1
+106;Hähnchenbruststreifen im Kräutermantel;fancy dish;2;;1
+107;ZucchiniGemüse;Gemüse immer gut;2;;1
+108;SüßkartoffelGemüse;Gemüse immer gut gut;2;;1
+110;Gratin;gratöüä, Unterrezept;2;;1
+111;Brokkoli Strudel;Studel;2;;1
+112;Knoblauchsauce;schnell selbst gemacht;2;;1
+113;Reispfanne mit Cashewkernen;gut auch zum Mitnehmen;2;;1
+114;Petersilkartoffeln;Beilagige Beilagen;2;;1
+115;Lachs gebraten;Lax supa;2;;1

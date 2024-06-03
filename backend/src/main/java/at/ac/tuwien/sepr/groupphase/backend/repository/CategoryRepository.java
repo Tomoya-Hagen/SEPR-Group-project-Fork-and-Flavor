@@ -26,4 +26,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Query("SELECT i FROM Category i WHERE i.name LIKE %:name%")
     List<Category> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
+
+    List<Category> findByName(String name);
 }

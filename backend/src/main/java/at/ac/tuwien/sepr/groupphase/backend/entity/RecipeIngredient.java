@@ -23,6 +23,18 @@ public class RecipeIngredient {
         mg,
         g,
         L,
+        el,
+        tl,
+        ml,
+        Priese,
+        Stück,
+        Dose,
+        Packung,
+        Zehe,
+        Flasche,
+        Becher,
+        Tasse,
+        EMPTY
     }
 
     public RecipeIngredient(Recipe recipe, Ingredient ingredient, BigDecimal amount, Unit unit) {
@@ -74,6 +86,9 @@ public class RecipeIngredient {
     private BigDecimal amount;
 
     public BigDecimal getAmount() {
+        if (amount == null) {
+            return new BigDecimal(0);
+        }
         return amount;
     }
 
@@ -115,6 +130,60 @@ public class RecipeIngredient {
             return Unit.valueOf(input);
         } catch (IllegalArgumentException e) {
             return null;
+        }
+    }
+
+    public String toString() {
+        return "RecipeIngredient(id=" + this.getId() + ", recipe=" + this.getRecipe() + ", ingredient=" + this.getIngredient() + ", amount=" + this.getAmount() + ", unit=" + this.getUnit() + ")";
+    }
+
+    public static final class RecipeIngredientBuilder {
+        private long id;
+        private Recipe recipe;
+        private Ingredient ingredient;
+        private BigDecimal amount;
+        private Unit unit;
+
+        private RecipeIngredientBuilder() {
+        }
+
+        public static RecipeIngredientBuilder aRecipeIngredient() {
+            return new RecipeIngredientBuilder();
+        }
+
+        public RecipeIngredientBuilder withId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public RecipeIngredientBuilder withRecipe(Recipe recipe) {
+            this.recipe = recipe;
+            return this;
+        }
+
+        public RecipeIngredientBuilder withIngredient(Ingredient ingredient) {
+            this.ingredient = ingredient;
+            return this;
+        }
+
+        public RecipeIngredientBuilder withAmount(BigDecimal amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public RecipeIngredientBuilder withUnit(Unit unit) {
+            this.unit = unit;
+            return this;
+        }
+
+        public RecipeIngredient build() {
+            RecipeIngredient recipeIngredient = new RecipeIngredient();
+            recipeIngredient.setRecipe(recipe);
+            recipeIngredient.setIngredient(ingredient);
+            recipeIngredient.setAmount(amount);
+            recipeIngredient.setUnit(unit);
+            recipeIngredient.id = this.id;
+            return recipeIngredient;
         }
     }
 }
