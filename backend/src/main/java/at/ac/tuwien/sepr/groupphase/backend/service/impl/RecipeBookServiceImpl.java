@@ -60,7 +60,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     }
 
     @Override
-    public List<RecipeBookListDto> searchRecipeBooks(String name) throws NotFoundException {
+    public List<RecipeBookListDto> searchRecipeBooks(String name) {
         List<RecipeBook> searchedRecipeBooks = recipeBookRepository.search(name);
         return recipeBookMapper.recipeBookListToRecipeBookListDto(searchedRecipeBooks);
     }

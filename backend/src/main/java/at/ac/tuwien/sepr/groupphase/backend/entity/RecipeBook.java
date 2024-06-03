@@ -60,6 +60,10 @@ public class RecipeBook {
     @JoinColumn(name = "recipe_book_id", referencedColumnName = "id")
     private List<WeeklyPlanner> weeklyPlanner;
 
+    public ApplicationUser getOwner() {
+        return owner;
+    }
+
     public void setId(long id) {
         this.id = id;
     }
