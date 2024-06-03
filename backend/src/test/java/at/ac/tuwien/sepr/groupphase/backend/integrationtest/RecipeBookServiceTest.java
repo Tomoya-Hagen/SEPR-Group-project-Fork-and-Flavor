@@ -13,13 +13,11 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -29,13 +27,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-@Disabled
 class RecipeBookServiceTest {
 
     @Autowired
@@ -49,12 +45,12 @@ class RecipeBookServiceTest {
 
     @Test
     void searchRecipeBooksReturnsRecipeBooks() {
-        RecipeBookListDto recipeBookListDto = new RecipeBookListDto(15, "Familienrezepte", "Klassische und beliebte Rezepte für die ganze Familie.", 3);
+        RecipeBookListDto recipeBookListDto = new RecipeBookListDto(1, "Italienische Küche", "Eine Sammlung klassischer italienischer Rezepte von Pasta bis Pizza.", 1);
         List<RecipeBookListDto> recipeBookListDtoList = new java.util.ArrayList<>(List.of());
         recipeBookListDtoList.add(recipeBookListDto);
 
-        assertEquals(recipeBookService.searchRecipeBooks("Familienrezepte"), recipeBookListDtoList);
-        assertEquals(1, recipeBookService.searchRecipeBooks("Familienrezepte").size());
+        assertEquals(recipeBookService.searchRecipeBooks("Italienische Küche"), recipeBookListDtoList);
+        assertEquals(1, recipeBookService.searchRecipeBooks("Italienische Küche").size());
 
     }
 
@@ -82,7 +78,7 @@ class RecipeBookServiceTest {
 
     @Test
     void getRecipeBookReturnAllRecipeBooks() {
-        assertEquals(16, recipeBookService.getRecipeBooks().size());
+        assertEquals(9, recipeBookService.getRecipeBooks().size());
     }
 
     @Test
@@ -97,31 +93,32 @@ class RecipeBookServiceTest {
 
     @Test
     void serviceShouldThrowADuplicateObjectExceptionIfARecipeIsAddedToARecipeBookThatAlreadyContainsTheRecipe() {
-        Assertions.assertThrows(DuplicateObjectException.class, () -> recipeBookService.addRecipeToRecipeBook(16L, 1L, "admin@email.com"));
+        Assertions.assertThrows(DuplicateObjectException.class, () -> recipeBookService.addRecipeToRecipeBook(1L, 7L, "admin@email.com"));
     }
 
     @Test
     void serviceShouldAddARecipeToARecipeBook() {
-        RecipeBookDetailDto recipeBookDetailDto = recipeBookService.addRecipeToRecipeBook(16L, 2L, "admin@email.com");
+        RecipeBookDetailDto recipeBookDetailDto = recipeBookService.addRecipeToRecipeBook(1L, 2L, "admin@email.com");
         Assertions.assertEquals(1, recipeBookDetailDto.recipes().stream().filter(r -> r.id() == 2L).count());
     }
 
     @Test
     void serviceShouldThrowAMethodForbiddenExceptionIfTheUserIsNotTheOwnerOrInTheUsersListOfAnRecipeBook() {
-        Assertions.assertThrows(ForbiddenException.class, () -> recipeBookService.addRecipeToRecipeBook(16L, 2L, "not allowed username"));
+        Assertions.assertThrows(ForbiddenException.class, () -> recipeBookService.addRecipeToRecipeBook(1L, 2L, "not allowed username"));
     }
 
     @Test
     void serviceShouldReturnAllRecipeBooksThatAnUserHasWriteRightsFor() {
-        RecipeBook recipeBook = recipeBookRepository.findById(15L).get();
+        RecipeBook recipeBook = recipeBookRepository.findById(1L).get();
         List<ApplicationUser> editors = recipeBook.getEditors();
-        editors.add(userRepository.findById(1L).get());
+        editors.add(userRepository.findById(2L).get());
         recipeBook.setEditors(editors);
         recipeBookRepository.save(recipeBook);
-        List<RecipeBookListDto> recipeBookListDtos = recipeBookService.getRecipeBooksThatAnUserHasAccessToByUserId("admin@email.com");
+        recipeBookRepository.flush();
+        List<RecipeBookListDto> recipeBookListDtos = recipeBookService.getRecipeBooksThatAnUserHasAccessToByUserId("user@email.com");
         Assertions.assertAll(
             () -> Assertions.assertFalse(recipeBookListDtos.isEmpty()),
-            () -> Assertions.assertEquals(7, recipeBookListDtos.size()),
+            () -> Assertions.assertEquals(1, recipeBookListDtos.size()),
             () -> Assertions.assertTrue(recipeBookListDtos.contains(
                 recipeBookMapper.recipeBookListToRecipeBookListDto(List.of(recipeBook)).getFirst()))
         );

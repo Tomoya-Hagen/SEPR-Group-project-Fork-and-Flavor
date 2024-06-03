@@ -15,13 +15,11 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -39,21 +37,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest
-@ActiveProfiles({"test", "generateData"})
+@ActiveProfiles({"test"})
 @Transactional
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-@Disabled
 class RecipeServiceTest {
     @Autowired
     private RecipeService recipeService;
 
-
     @Autowired
     private RecipeRepository recipeRepository;
-
 
     @Test
     void ReturnARecipeDetailDtoIfARecipeWithTheGivenRecipeIdExists() {
@@ -72,19 +66,16 @@ class RecipeServiceTest {
         actualIngredients.sort(Comparator.comparing(IngredientDetailDto::id));
         Assertions.assertNotNull(recipe);
         Assertions.assertAll(
-            () -> Assertions.assertEquals("Egg Fried Rice", recipe.name()),
+            () -> Assertions.assertEquals("Kartoffeln plain", recipe.name()),
             () -> Assertions.assertEquals(
                 1, recipe.categories().size()),
             () -> Assertions.assertArrayEquals(new CategoryDetailDto[]{
-                new CategoryDetailDto(1, "Hautpspeise", "MAIN_COURSE")}, recipe.categories().toArray()),
+                new CategoryDetailDto(3, "Beilage", "SIDE_DISH")}, recipe.categories().toArray()),
             () -> Assertions.assertEquals(1, recipe.ownerId()),
-            () -> Assertions.assertEquals("Ein schnelles asiatisches Gericht.", recipe.description()),
-            () -> Assertions.assertEquals(1, recipe.numberOfServings().intValue()),
-            () -> Assertions.assertArrayEquals(ingredientDetailDtos.toArray()
-                , actualIngredients.toArray()),
-            () -> Assertions.assertEquals(5, recipe.recipeSteps().size()),
-            () -> Assertions.assertEquals(2, recipe.allergens().size()),
-            () -> Assertions.assertEquals(new BigDecimal("1366.40"), recipe.nutritions().stream().filter(n -> n.id() == 1).findFirst().get().value()));
+            () -> Assertions.assertEquals("Unterrezept für Kartoffelgerichte", recipe.description()),
+            () -> Assertions.assertEquals(4, recipe.numberOfServings().intValue()),
+            () -> Assertions.assertEquals(3, recipe.recipeSteps().size()),
+            () -> Assertions.assertEquals(0, recipe.allergens().size()));
     }
 
     @Test
@@ -96,7 +87,7 @@ class RecipeServiceTest {
     @Test
     void ReturnAListOfOneRecipeListDtoFromGetAllFromPageOneWithStepOne() {
         List<RecipeListDto> expectedRecipeListDtos = List.of(
-            new RecipeListDto(1, "Reis", "So muss Reis schmecken!", 0));
+            new RecipeListDto(1, "Spagehtti plain", "Unterrezept für alle möglichen Nudelgerichte", 0));
         List<RecipeListDto> recipes = recipeService.getRecipesFromPageInSteps(1, 1);
         Assertions.assertEquals(1, recipes.size());
         Assertions.assertEquals(expectedRecipeListDtos, recipes);
@@ -161,24 +152,17 @@ class RecipeServiceTest {
     }
 
     @Test
-    public void searchByNameShouldFound() {
+    public void searchByNameShouldFind() {
 
         var recipe = recipeService.searchRecipe("Apfelkuchen");
         assertNotNull(recipe);
         assertThat(recipe)
-            .hasSize(1);
-
-        RecipeListDto recipeListDto = new RecipeListDto(13, "Cookies", "", 0);
-        List<RecipeListDto> recipeListDtoList = new java.util.ArrayList<>(List.of());
-        recipeListDtoList.add(recipeListDto);
-
-        assertEquals(recipeService.searchRecipe("Cookies"), recipeListDtoList);
-        assertEquals(1, recipeService.searchRecipe("Cookies").size());
-
+            .hasSize(2);
+        assertEquals("Apfelkuchen nach Ing", recipe.getFirst().name());
     }
 
     @Test
-    public void searchByNameShouldNoTFound() {
+    public void searchByNameShouldNotFind() {
 
         var recipe = recipeService.searchRecipe("Gurke");
         assertEquals("[]",recipe.toString());
