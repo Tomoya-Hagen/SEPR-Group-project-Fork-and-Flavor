@@ -9,7 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
@@ -41,7 +45,7 @@ public class UserEndPoint {
         } catch (NotFoundException e) {
             LOGGER.warn("Could not find User with id: {}", id, e);
             HttpStatus status = HttpStatus.NOT_FOUND;
-            logClientError(status, "no user with id "+ id +" found", e);
+            logClientError(status, "no user with id " + id + " found", e);
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
     }
