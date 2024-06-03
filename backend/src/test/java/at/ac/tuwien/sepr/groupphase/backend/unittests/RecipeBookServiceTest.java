@@ -9,6 +9,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
@@ -84,29 +85,34 @@ class RecipeBookServiceTest {
     }
 
     @Test
-    void getAllRecipeBooksWithIdFromToReturnsRecipesInIdRange() {
-        List<RecipeBook> result = recipeBookRepository.getAllRecipesWithIdFromTo(1, 2);
+    void searchReturnsEmptyListWhenNameIsNull() {
+        assertEquals(9, recipeBookRepository.search(null).size());
+    }
+
+    @Test
+    void getAllRecipesWithIdFromToReturnsRecipesInIdRange() {
+        List<RecipeBook> result = recipeBookRepository.findByIdBetweenOrderById(1L, 2L);
         assertEquals(2, result.size());
         assertEquals(1L, result.get(0).getId());
         assertEquals(2L, result.get(1).getId());
     }
 
     @Test
-    void getAllRecipeBooksWithIdFromToReturnsEmptyListWhenNoRecipesInIdRange() {
-        List<RecipeBook> result = recipeBookRepository.getAllRecipesWithIdFromTo(100, 200);
+    void getAllRecipesWithIdFromToReturnsEmptyListWhenNoRecipesInIdRange() {
+        List<RecipeBook> result = recipeBookRepository.findByIdBetweenOrderById(100L, 200L);
         assertTrue(result.isEmpty());
     }
 
     @Test
     void getAllRecipeBooksWithIdFromToReturnsRecipesInIdRangeWhenRangeIsSingleId() {
 
-        List<RecipeBook> result = recipeBookRepository.getAllRecipesWithIdFromTo(1, 1);
+        List<RecipeBook> result = recipeBookRepository.findByIdBetweenOrderById(1L, 1L);
         assertEquals(1, result.size());
         assertEquals(1L, result.getFirst().getId());
     }
 
     @Test
-    void createRecipeBookSuccessfully() {
+    void createRecipeBookSuccessfully() throws ValidationException {
         List<UserListDto> userRecipeBooks = new ArrayList<>();
         UserListDto userListDto = new UserListDto(3L, "a");
         userRecipeBooks.add(userListDto);

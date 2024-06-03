@@ -39,8 +39,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      * @param to represents the end value of ids which will be returned.
      * @return a list of recipes which hava an id in the range @from to @to.
      */
-    @Query("select r from Recipe r where r.id between :#{#from} and :#{#to} order by r.id")
-    List<Recipe> getAllRecipesWithIdFromTo(@Param("from") int from, @Param("to") int to);
+    List<Recipe> findByIdBetweenOrderById(Long from, Long to);
 
     @Query("SELECT COALESCE(MAX(i.id),0) FROM Recipe i")
     Long findMaxId();

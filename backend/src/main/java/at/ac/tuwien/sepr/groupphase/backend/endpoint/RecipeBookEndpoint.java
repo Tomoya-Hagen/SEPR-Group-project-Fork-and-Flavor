@@ -156,9 +156,10 @@ public class RecipeBookEndpoint {
         }
     }
 
+    @Secured("ROLE_USER")
     @PermitAll
     @PostMapping
-    public ResponseEntity<RecipeBookDetailDto> createRecipe(@RequestBody RecipeBookCreateDto recipeBook) {
+    public ResponseEntity<RecipeBookDetailDto> createRecipeBook(@RequestBody RecipeBookCreateDto recipeBook) {
         LOGGER.trace("Creating recipe book: {}", recipeBook);
         LOGGER.debug("Body of request: {}", recipeBook);
 
@@ -170,7 +171,7 @@ public class RecipeBookEndpoint {
             return ResponseEntity.status(HttpStatus.CREATED).body(recipeBookService.createRecipeBook(recipeBook, user.getId()));
         } catch (Exception e) {
             LOGGER.warn("Error creating recipe book: {}", recipeBook, e);
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 

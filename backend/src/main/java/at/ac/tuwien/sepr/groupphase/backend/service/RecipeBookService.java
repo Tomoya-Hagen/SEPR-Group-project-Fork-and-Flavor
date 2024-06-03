@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public interface RecipeBookService {
      * @return A list of RecipeBookListDto objects that represent the recipe books that match the search criteria.
      * @throws NotFoundException If no recipe books are found with the provided name.
      */
-    List<RecipeBookListDto> searchRecipeBooks(String name) throws NotFoundException;
+    List<RecipeBookListDto> searchRecipeBooks(String name);
 
     /**
      * This method is responsible for getting a list of recipe books by page and step.
@@ -79,5 +80,5 @@ public interface RecipeBookService {
      * @param ownerId Owner ID to be passed to the recipe book, this is the ID of the current user.
      * @return The created recipe book.
      */
-    RecipeBookDetailDto createRecipeBook(RecipeBookCreateDto recipeBook, Long ownerId);
+    RecipeBookDetailDto createRecipeBook(RecipeBookCreateDto recipeBook, Long ownerId) throws ValidationException;
 }

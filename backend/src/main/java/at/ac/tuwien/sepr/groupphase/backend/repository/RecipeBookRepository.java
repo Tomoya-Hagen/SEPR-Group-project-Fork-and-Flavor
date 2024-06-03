@@ -41,8 +41,7 @@ public interface RecipeBookRepository extends JpaRepository<RecipeBook, Long> {
      * @param to The end of the ID range.
      * @return A list of RecipeBook entities that are within the specified ID range.
      */
-    @Query("select r from RecipeBook r where r.id between :#{#from} and :#{#to} order by r.id")
-    List<RecipeBook> getAllRecipesWithIdFromTo(@Param("from") int from, @Param("to") int to);
+    List<RecipeBook> findByIdBetweenOrderById(Long from, Long to);
 
     /**
      * This method is used to get all recipe books a user has write access to.
