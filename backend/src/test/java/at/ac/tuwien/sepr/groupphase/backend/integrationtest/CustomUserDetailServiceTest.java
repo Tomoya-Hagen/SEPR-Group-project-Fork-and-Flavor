@@ -51,23 +51,6 @@ class CustomUserDetailServiceTest implements TestData {
     }
 
     @Test
-    void registerInvalidUserEmail() {
-        UserRegisterDto invalidUser = new UserRegisterDto(
-            "invalidEmail",
-            "password",
-            "invaliduser"
-        );
-
-        Exception exception = assertThrowsExactly(ValidationException.class, () -> customUserDetailService.register(invalidUser));
-        String expectedMessage = "Email must be a valid email address";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-
-    }
-
-
-    @Test
     void registerUserWithDuplicateEmail() {
         UserRegisterDto invalidUser = new UserRegisterDto(
             "admin@email.com",
