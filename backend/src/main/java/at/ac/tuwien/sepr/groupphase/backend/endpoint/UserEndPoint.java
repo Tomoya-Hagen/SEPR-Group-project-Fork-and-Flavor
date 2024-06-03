@@ -43,7 +43,6 @@ public class UserEndPoint {
         try {
             return userService.findUserById(id);
         } catch (NotFoundException e) {
-            LOGGER.warn("Could not find User with id: {}", id, e);
             HttpStatus status = HttpStatus.NOT_FOUND;
             logClientError(status, "no user with id " + id + " found", e);
             throw new ResponseStatusException(status, e.getMessage(), e);
