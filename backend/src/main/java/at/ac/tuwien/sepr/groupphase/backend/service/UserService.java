@@ -14,7 +14,6 @@ import java.util.List;
 
 /**
  * This is the interface for the user service extending UserDetailsService.
- *
  */
 public interface UserService extends UserDetailsService {
 
@@ -51,7 +50,7 @@ public interface UserService extends UserDetailsService {
     /**
      * find limited numbers users using names.
      *
-     * @param name the name to look for
+     * @param name  the name to look for
      * @param limit the number of users to get
      * @return a list of found users
      */
@@ -63,10 +62,17 @@ public interface UserService extends UserDetailsService {
      * @param userRegisterDto login credentials
      * @return the JWT, if successful
      * @throws org.springframework.security.authentication.BadCredentialsException if credentials are bad
-     * @throws ValidationException if the input is invalid
+     * @throws ValidationException                                                 if the input is invalid
      */
     String register(UserRegisterDto userRegisterDto) throws ValidationException;
 
 
     UserDto findUserById(Long id);
+
+    /**
+     * This method gets the currently logged-in user.
+     *
+     * @return the currently logged-in user entity.
+     */
+    ApplicationUser getCurrentUser();
 }

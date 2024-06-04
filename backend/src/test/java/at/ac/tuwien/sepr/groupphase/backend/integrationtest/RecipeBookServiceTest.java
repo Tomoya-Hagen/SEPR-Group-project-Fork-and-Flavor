@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeBookMapper;
@@ -32,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @Transactional
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-class RecipeBookServiceTest {
+class RecipeBookServiceTest implements TestData {
 
     @Autowired
     private RecipeBookService recipeBookService;
@@ -83,39 +84,42 @@ class RecipeBookServiceTest {
 
     @Test
     void serviceShouldThrowANotFoundExceptionIfARecipeIsAddedToARecipeBookThatDoesNotExist() {
-        Assertions.assertThrows(NotFoundException.class, () -> recipeBookService.addRecipeToRecipeBook(1600L, 3L, "admin@email.com"));
+        Assertions.assertThrows(NotFoundException.class, () -> recipeBookService.addRecipeToRecipeBook(1600L, 3L));
     }
 
     @Test
     void serviceShouldThrowANotFoundExceptionIfARecipeBookDoesNotExist() {
-        Assertions.assertThrows(NotFoundException.class, () -> recipeBookService.addRecipeToRecipeBook(20L, 1L, "admin@email.com"));
+        Assertions.assertThrows(NotFoundException.class, () -> recipeBookService.addRecipeToRecipeBook(20L, 1L));
     }
 
     @Test
     void serviceShouldThrowADuplicateObjectExceptionIfARecipeIsAddedToARecipeBookThatAlreadyContainsTheRecipe() {
-        Assertions.assertThrows(DuplicateObjectException.class, () -> recipeBookService.addRecipeToRecipeBook(1L, 7L, "admin@email.com"));
+        userAuthenticationByEmail("admin@email.com");
+        Assertions.assertThrows(DuplicateObjectException.class, () -> recipeBookService.addRecipeToRecipeBook(1L, 7L));
     }
 
     @Test
     void serviceShouldAddARecipeToARecipeBook() {
-        RecipeBookDetailDto recipeBookDetailDto = recipeBookService.addRecipeToRecipeBook(1L, 2L, "admin@email.com");
+        userAuthenticationByEmail("admin@email.com");
+        RecipeBookDetailDto recipeBookDetailDto = recipeBookService.addRecipeToRecipeBook(1L, 2L);
         Assertions.assertEquals(1, recipeBookDetailDto.recipes().stream().filter(r -> r.id() == 2L).count());
     }
 
     @Test
     void serviceShouldThrowAMethodForbiddenExceptionIfTheUserIsNotTheOwnerOrInTheUsersListOfAnRecipeBook() {
-        Assertions.assertThrows(ForbiddenException.class, () -> recipeBookService.addRecipeToRecipeBook(1L, 2L, "not allowed username"));
+        Assertions.assertThrows(ForbiddenException.class, () -> recipeBookService.addRecipeToRecipeBook(1L, 2L));
     }
 
     @Test
     void serviceShouldReturnAllRecipeBooksThatAnUserHasWriteRightsFor() {
+        userAuthenticationByEmail("user@email.com");
         RecipeBook recipeBook = recipeBookRepository.findById(1L).get();
         List<ApplicationUser> editors = recipeBook.getEditors();
         editors.add(userRepository.findById(2L).get());
         recipeBook.setEditors(editors);
         recipeBookRepository.save(recipeBook);
         recipeBookRepository.flush();
-        List<RecipeBookListDto> recipeBookListDtos = recipeBookService.getRecipeBooksThatAnUserHasAccessToByUserId("user@email.com");
+        List<RecipeBookListDto> recipeBookListDtos = recipeBookService.getRecipeBooksThatAnUserHasAccessTo();
         Assertions.assertAll(
             () -> Assertions.assertFalse(recipeBookListDtos.isEmpty()),
             () -> Assertions.assertEquals(1, recipeBookListDtos.size()),

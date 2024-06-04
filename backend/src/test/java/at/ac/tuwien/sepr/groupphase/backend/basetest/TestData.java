@@ -1,7 +1,14 @@
 package at.ac.tuwien.sepr.groupphase.backend.basetest;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public interface TestData {
 
@@ -21,4 +28,14 @@ public interface TestData {
 
     String AUTH_BASE_URI = BASE_URI + "/authentication";
 
+default void userAuthenticationByEmail(String email){
+    Authentication authentication = mock(Authentication.class);
+    SecurityContext securityContext = mock(SecurityContext.class);
+
+    when(securityContext.getAuthentication()).thenReturn(authentication);
+
+    SecurityContextHolder.setContext(securityContext);
+
+    when(SecurityContextHolder.getContext().getAuthentication().getName()).thenReturn(email);
+    }
 }

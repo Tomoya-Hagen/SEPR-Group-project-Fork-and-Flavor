@@ -6,7 +6,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.security.PermitAll;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -121,8 +119,7 @@ public class RecipeBookEndpoint {
                                      @PathVariable(name = "recipeId") Long recipeId) {
         LOGGER.info("PATCH /api/v1/recipebook/{}/spoon/{}", recipeBookId, recipeId);
         try {
-            String email = SecurityContextHolder.getContext().getAuthentication().getName();
-            return recipeBookService.addRecipeToRecipeBook(recipeBookId, recipeId, email);
+            return recipeBookService.addRecipeToRecipeBook(recipeBookId, recipeId);
         } catch (ForbiddenException e) {
             HttpStatus status = HttpStatus.FORBIDDEN;
             logClientError(status, "you are not allowed to add a recipe to this recipe book", e);
@@ -143,8 +140,7 @@ public class RecipeBookEndpoint {
     public List<RecipeBookListDto> getRecipeBooksThatAnUserHasWriteAccessTo() {
         LOGGER.info("GET /api/v1/recipebook/user");
         try {
-            String email = SecurityContextHolder.getContext().getAuthentication().getName();
-            return recipeBookService.getRecipeBooksThatAnUserHasAccessToByUserId(email);
+            return recipeBookService.getRecipeBooksThatAnUserHasAccessTo();
         } catch (ForbiddenException e) {
             HttpStatus status = HttpStatus.FORBIDDEN;
             logClientError(status, "you are not allowed to get the recipe books from this user", e);
@@ -162,13 +158,9 @@ public class RecipeBookEndpoint {
     public ResponseEntity<RecipeBookDetailDto> createRecipeBook(@RequestBody RecipeBookCreateDto recipeBook) {
         LOGGER.trace("Creating recipe book: {}", recipeBook);
         LOGGER.debug("Body of request: {}", recipeBook);
-
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        ApplicationUser user = userService.findApplicationUserByEmail(email);
-
         try {
-            LOGGER.debug("Created recipe book: {}, with the owner id: {}", recipeBook, user.getId());
-            return ResponseEntity.status(HttpStatus.CREATED).body(recipeBookService.createRecipeBook(recipeBook, user.getId()));
+            LOGGER.debug("Created recipe book: {}", recipeBook);
+            return ResponseEntity.status(HttpStatus.CREATED).body(recipeBookService.createRecipeBook(recipeBook));
         } catch (Exception e) {
             LOGGER.warn("Error creating recipe book: {}", recipeBook, e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
