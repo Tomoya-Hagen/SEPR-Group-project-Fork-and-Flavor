@@ -1,105 +1,117 @@
-<div style="position: relative; text-align: center;">
-  <h1 class="display-5">{{ heading }}</h1>
-</div>
-
 <form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
-  <div class="form-group wrapper">
-    <h4 for="name">Name </h4>
-    <input  type="text"
-            id="name"
-            name="name"
-            placeholder="Choose a name"
-            [class]="'input-spacing'"
-            [(ngModel)]="recipeBook.name"
-            #nameModel="ngModel"
-            required
-    >
-    <div class="invalid-feedback">
-      Name is required
+  <div class="container mt-5">
+    <div style="position: relative; text-align: center;">
+      <h1 class="text-center mb-4">{{ heading }}</h1>
     </div>
-  </div>
-  <div class="form-group wrapper">
-    <h4 for="description">Description </h4>
-    <textarea id="description"
-              class="form-control"
-              placeholder="Enter a description for the recipe book"
-              [(ngModel)]="recipeBook.description"
-              name="description" >
-    </textarea>
-  </div>
 
-  <div>
-    <h4>Recipes</h4>
-    <div class="row">
-      <div class="mb-2">
-        <app-automatic-complete
-          name="recipeSelection"
-          textInputClass="form-control"
-          [suggestions]="recipeSuggestions"
-          [formatModel]="formatRecipeName"
-          valueNeedsToMatchSuggestion="true"
-          [(ngModel)]="dummyRecipeSelectionModel"
-          (ngModelChange)="addRecipe($event)"
-        >
-        </app-automatic-complete>
+
+      <div class="form-group">
+        <label for="name">Name</label>
+          <input  type="text"
+                  id="name"
+                  name="name"
+                  class="form-control"
+                  placeholder="Choose a name"
+                  [(ngModel)]="recipeBook.name"
+                  #nameModel="ngModel"
+                  required
+          >
+          <div class="invalid-feedback">
+            Name is required
+          </div>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+          <textarea id="description"
+                    class="form-control"
+                    style="width: 100%;"
+                    placeholder="Enter a description for the recipe book"
+                    [(ngModel)]="recipeBook.description"
+                    name="description" >
+          </textarea>
       </div>
 
       <div>
-        <table class="table align-baseline">
-          <tbody>
-          <tr *ngFor="let recipe of recipes; index as i">
-            <td>{{formatRecipeName(recipe)}}</td>
-            <td style="text-align: right;" class="min-width">
-              <button type="button"
-                      class="btn btn-light ms-2"
-                      (click)="removeRecipe(i)"
-                      [style.visibility]="recipe ? 'visible' : 'hidden'">
-                <i class="bi-trash"></i>
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+        <label>Recipes</label>
+        <div class="row">
+          <div class="mb-2">
+            <app-automatic-complete
+              name="recipeSelection"
+              textInputClass="form-control"
+              [suggestions]="recipeSuggestions"
+              [formatModel]="formatRecipeName"
+              valueNeedsToMatchSuggestion="true"
+              [(ngModel)]="dummyRecipeSelectionModel"
+              (ngModelChange)="addRecipe($event)"
+            >
+            </app-automatic-complete>
+          </div>
 
-  <div>
-    <h4>Users</h4>
-    <div class="row">
-      <div class="mb-2">
-        <app-automatic-complete
-          name="userSelection"
-          textInputClass="form-control"
-          [suggestions]="userSuggestions"
-          [formatModel]="formatUserName"
-          valueNeedsToMatchSuggestion="true"
-          [(ngModel)]="dummyUserSelectionModel"
-          (ngModelChange)="addUser($event)"
-        >
-        </app-automatic-complete>
+          <div>
+            <table class="table align-baseline">
+              <tbody>
+              <tr *ngFor="let recipe of recipes; index as i">
+                <td>{{formatRecipeName(recipe)}}</td>
+                <td style="text-align: right;" class="min-width">
+                  <button type="button"
+                          class="btn btn-light ms-2"
+                          (click)="removeRecipe(i)"
+                          [style.visibility]="recipe ? 'visible' : 'hidden'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                      <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
       <div>
-        <table class="table align-baseline">
-          <tbody>
-          <tr *ngFor="let user of users; index as j">
-            <td>{{formatUserName(user)}}</td>
-            <td style="text-align: right;" class="min-width">
-              <button type="button"
-                      class="btn btn-light ms-2"
-                      (click)="removeUser(j)"
-                      [style.visibility]="user ? 'visible' : 'hidden'">
-                <i class="bi-trash"></i>
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+        <label>Users</label>
+        <div class="row">
+          <div class="mb-2">
+            <app-automatic-complete
+              name="userSelection"
+              textInputClass="form-control"
+              [suggestions]="userSuggestions"
+              [formatModel]="formatUserName"
+              valueNeedsToMatchSuggestion="true"
+              [(ngModel)]="dummyUserSelectionModel"
+              (ngModelChange)="addUser($event)"
+            >
+            </app-automatic-complete>
+          </div>
 
-  <button [disabled]="!form.valid || !isFormValid()" type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
+          <div>
+            <table class="table align-baseline">
+              <tbody>
+              <tr *ngFor="let user of users; index as j">
+                <td>{{formatUserName(user)}}</td>
+                <td style="text-align: right;" class="min-width">
+                  <button type="button"
+                          class="btn btn-light ms-2"
+                          (click)="removeUser(j)"
+                          [style.visibility]="user ? 'visible' : 'hidden'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                      <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end;">
+        <button [disabled]="!form.valid || !isFormValid()" type="submit"class="btn btn-primary">{{ submitButtonText }}</button>
+      </div>
+  </div>
 </form>
 
