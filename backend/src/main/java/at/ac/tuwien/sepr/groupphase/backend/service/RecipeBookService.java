@@ -56,29 +56,26 @@ public interface RecipeBookService {
      *
      * @param recipeBookId represents the id of an recipe book.
      * @param recipeId     represents the id of a recipe that should be added to a recipe book.
-     * @param email        represents the email address of the currently logged in user.
      * @return the recipe book with the newly added recipe.
      * @throws NotFoundException  if the recipe or the recipe book does not exist.
      * @throws ForbiddenException if the user is not allowed to add a recipe to the recipe book
      * @throws DuplicateObjectException if the recipe already exists in the recipe book
      */
-    RecipeBookDetailDto addRecipeToRecipeBook(long recipeBookId, long recipeId, String email) throws NotFoundException, ForbiddenException, DuplicateObjectException;
+    RecipeBookDetailDto addRecipeToRecipeBook(long recipeBookId, long recipeId) throws NotFoundException, ForbiddenException, DuplicateObjectException;
 
     /**
      * This method gets all recipe books that a user has write access.
      *
-     * @param email  represents the email address of the currently logged in user.
      * @return all recipes for that a user has write access.
      * @throws NotFoundException  if the recipe or the recipe book does not exist.
      */
-    List<RecipeBookListDto> getRecipeBooksThatAnUserHasAccessToByUserId(String email) throws NotFoundException;
+    List<RecipeBookListDto> getRecipeBooksThatAnUserHasAccessTo() throws NotFoundException;
 
     /**
      * This method creates a new recipe book.
      *
      * @param recipeBook the recipe book to create.
-     * @param ownerId Owner ID to be passed to the recipe book, this is the ID of the current user.
      * @return The created recipe book.
      */
-    RecipeBookDetailDto createRecipeBook(RecipeBookCreateDto recipeBook, Long ownerId) throws ValidationException;
+    RecipeBookDetailDto createRecipeBook(RecipeBookCreateDto recipeBook) throws ValidationException;
 }

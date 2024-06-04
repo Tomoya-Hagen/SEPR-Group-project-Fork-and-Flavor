@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
@@ -42,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Transactional
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-class RecipeServiceTest {
+class RecipeServiceTest implements TestData {
     @Autowired
     private RecipeService recipeService;
 
@@ -106,6 +107,7 @@ class RecipeServiceTest {
     }
     @Test
     void CreateRecipeShouldCreateRecipePlusDependencies() throws Exception{
+        userAuthenticationByEmail("admin@email.com");
         List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
         recipeCategoryDtoList.add(new RecipeCategoryDto(1));
 
@@ -126,7 +128,7 @@ class RecipeServiceTest {
         recipeCreateDto.setSteps(recipeStepDtoList);
         recipeCreateDto.setCategories(recipeCategoryDtoList);
 
-        DetailedRecipeDto ret = recipeService.createRecipe(recipeCreateDto,"admin@email.com");
+        DetailedRecipeDto ret = recipeService.createRecipe(recipeCreateDto);
         Assertions.assertNotNull(ret);
         Assertions.assertEquals(ret.getDescription(), "Beschreibung");
         Assertions.assertEquals(ret.getName(), "Name");
