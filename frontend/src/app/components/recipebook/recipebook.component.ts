@@ -20,10 +20,10 @@ import { RecipeBookListDto, RecipeBookSearch } from "../../dtos/recipe-book";
   styleUrls: ['./recipebook.component.scss']
 })
 export class RecipebookComponent implements OnInit {
-  steps = [3, 9, 30, 90, 300];
+  steps = [3, 6, 9, 30];
   page = 1;
-  step = 300;
-  oldStep = 300;
+  step = 6;
+  oldStep = 3;
   previousButtonDisabled = true;
   nextButtonDisabled = false;
   bannerError: string | null = null;
@@ -40,48 +40,72 @@ export class RecipebookComponent implements OnInit {
   }
 
   loadRecipes(isNext: boolean = true) {
-    this.updateButtonState();
+    console.log("Trying to get all recipe books.");
     this.service.getAllRecipeBooksBySteps(this.page, this.step).subscribe({
       next: items => {
+        console.log("Successfully received all recipe books");
+        if (items.length == 0) {
+          if (isNext) {
+            this.nextButtonDisabled = true;
+          } else {
+            this.previousButtonDisabled = true;
+          }
+          return;
+        }
         this.data = items;
-        this.updateButtonState(items.length > 0, isNext);
       },
-      error: error => this.handleLoadError(error)
-    });
+      error: error => {
+        console.error('Error fetching recipes', error);
+        this.bannerError = 'Could not fetch recipes: ' + error.message;
+        const errorMessage = error.status === 0
+          ? 'Is the backend up?'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Could Not Fetch Recipes');
+      }})
   }
 
   searchChanged(): void {
+    console.log("Trying to get the searched recipe books.");
     this.service.search(this.bookSearch).subscribe({
-      next: items => this.data = items,
-      error: error => this.handleLoadError(error)
-    });
+      next: items => {
+        console.log("Successfully received all recipe books");
+        this.data = items;
+
+      },
+      error: error => {
+        console.error('Error fetching recipes', error);
+        this.bannerError = 'Could not fetch recipe books: ' + error.message;
+        const errorMessage = error.status === 0
+          ? 'Is the backend up?'
+          : error.message.message;
+        this.notification.error(errorMessage, 'Could Not Fetch Recipes');
+      }})
   }
 
   loadNextPage() {
-    this.page++;
+    this.page += 1;
+    this.updateNavigationButtons();
     this.loadRecipes(true);
   }
 
   loadPreviousPage() {
     if (this.page > 1) {
-      this.page--;
-      this.loadRecipes(false);
+      this.page -= 1;
     }
+    this.updateNavigationButtons();
+    this.loadRecipes(false);
   }
 
   selectedStepChanged() {
-    const recipeNumber = this.oldStep * (this.page - 1) + this.step;
-    this.page = Math.floor(recipeNumber / this.step) + 1;
+    let recipeNumber = this.step * this.page;
+    this.page = Math.floor(recipeNumber / this.step);
     this.oldStep = this.step;
-    this.loadRecipes();
+    this.loadRecipes(true);
   }
 
-  private updateButtonState(hasData: boolean = true, isNext: boolean = true) {
-    if (isNext) {
-      this.nextButtonDisabled = !hasData;
-    } else {
-      this.previousButtonDisabled = this.page <= 1;
-    }
+  private updateNavigationButtons(): void {
+    this.previousButtonDisabled = this.page === 1;
+    this.nextButtonDisabled = false; // Reset to allow next page attempt
   }
 
   private handleLoadError(error: any) {
