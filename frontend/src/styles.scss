@@ -19,6 +19,10 @@ body {
   background-color: whitesmoke;
 }
 
+h1,h2 {
+  text-align: center;
+}
+
 .slick-prev,
 .slick-next {
   background: black !important;
@@ -80,4 +84,48 @@ body {
   border: 3px solid var(--acent-color);
   cursor: pointer;
   padding: 20px 20px;
+}
+
+#pageSize {
+  width: 60px;
+  margin: 1px;
+}
+
+label[for="pageSize"] {
+  margin: 1px 10px;
+}
+
+.navigation-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.RecipeCard {
+  cursor: pointer;
+}
+
+.RecipeCard:hover {
+  background-color: #f0f0f0;
+}
+
+.RecipeCard.link1{
+  background-color: var(--secondary-color);
+}
+
+.RecipeCard.link2{
+  background-color: var(--secondary-color);
+}
+
+.RecipeCard.link {
+  color: white;
+  text-align: center;
+  transition: background-color 0.5s ease;
+  border: none;
+  opacity: 90%;
+}
+
+.RecipeCard.link:hover {
+  background-color: var(--acent-color);
 }
