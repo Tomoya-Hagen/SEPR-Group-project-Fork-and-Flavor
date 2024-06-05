@@ -55,21 +55,6 @@ public class RecipeEndpoint {
         this.userService = userService;
     }
 
-
-    /**
-     * This method handles GET requests to search for recipe books by name.
-     *
-     * @param name The name of the recipe book.
-     * @return A list of recipe books that match the search criteria.
-     */
-    @PermitAll
-    @GetMapping("/search")
-    @Operation(summary = "Get a list of the searched recipe")
-    public List<RecipeListDto> search(@RequestParam(name = "name") String name) {
-        LOGGER.info("GET /api/v1/recipe/search");
-        return recipeService.searchRecipe(name);
-    }
-
     @PermitAll
     @GetMapping(value = "/details/{id}")
     @Operation(summary = "Get recipe details by id")
