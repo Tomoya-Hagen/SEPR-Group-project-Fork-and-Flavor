@@ -11,6 +11,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -59,21 +60,11 @@ public interface RecipeService {
     DetailedRecipeDto updateRecipe(RecipeUpdateDto recipeUpdateDto);
 
     /**
-     * This method finds a limited number of recipes with the name, or letters typed in by the user.
-     *
-     * @param name the name or parts of it of the recipe to look for.
-     * @param limit limit to specify the number of recipes to be found.
-     * @return A list of RecipeListDto.
-     */
-    List<RecipeListDto> getRecipesByNames(String name, int limit);
-
-    /**
      * This method finds a page of recipes by name.
      *
      * @param name the name or parts of it of the recipe to look for.
-     * @param page the page number to look for.
-     * @param size the size of the page.
+     * @param pageable the page information.
      * @return A list of RecipeListDto.
      */
-    Page<RecipeListDto> getRecipesByName(String name, int page, int size);
+    Page<RecipeListDto> getRecipesByName(String name, Pageable pageable);
 }

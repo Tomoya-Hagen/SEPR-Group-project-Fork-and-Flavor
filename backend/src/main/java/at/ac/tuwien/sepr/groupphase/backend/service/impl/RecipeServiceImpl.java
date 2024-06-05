@@ -86,8 +86,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Page<RecipeListDto> getRecipesByName(String name, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<RecipeListDto> getRecipesByName(String name, Pageable pageable) {
         Page<Recipe> recipePage = recipeRepository.findByNameContainingIgnoreCase(name, pageable);
 
         return recipePage.map(recipe -> {
@@ -122,12 +121,6 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Stream<SimpleRecipeResultDto> byname(String name, int limit) {
         return recipeRepository.findByNameContainingWithLimit(name, PageRequest.of(0, limit)).stream().map(recipeMapper::recipeToRecipeResultDto);
-    }
-
-    @Override
-    public List<RecipeListDto> getRecipesByNames(String name, int limit) {
-        List<Recipe> recipes = recipeRepository.findByNamesContainingIgnoreCase(name, limit);
-        return recipeMapper.recipesToRecipeListDto(recipes);
     }
 
     private long calculateAverageTasteRating(List<Rating> ratings) {
