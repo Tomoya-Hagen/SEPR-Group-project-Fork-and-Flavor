@@ -25,7 +25,7 @@
           </div>
           <div class="col-md-12 p-1 border" >
             <div class="row">
-              <div class="col-md-8 overflow-auto" style="height: 30vh">
+              <div class="col-md-8 overflow-auto ings">
                 <div class="col-md-12" *ngFor="let inneringredient of recipe.ingredients; let i = index">
                   <div class="d-flex align-items-center">
                     <app-ingredient
@@ -41,7 +41,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-4 overflow-auto" style="height: 30vh">
+              <div class="col-md-4 overflow-auto ings">
                 <div class="col-md-12" *ngFor="let incategory of recipe.categories; let i = index">
                   <div class="form-group">
                     <label for="incategory{{i}}">Category</label>
@@ -70,7 +70,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6 border overflow-auto" style="height: 60vh">
+        <div class="col-md-6 border overflow-auto paperbin-wrapper">
           <div *ngFor="let step of recipe.recipeSteps; let i = index">
             <div id="fullrecipestep{{i}}">
               <div class="form-group">
@@ -129,7 +129,7 @@
           </div>
         </div>
 
-        <div class="cbutton" style="top: 145px">
+        <div class="cbutton">
           <button [disabled]="returnIsSubmitDisabled()" type="submit" (click)="clickSubmit()" class="btn btn-primary"> Speichern</button>
         </div>
 
