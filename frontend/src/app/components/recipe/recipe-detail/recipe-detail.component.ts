@@ -65,7 +65,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
       observable.subscribe({
         next: data => {
           this.recipe = data;
-          this.recipeSteps=this.recipe.recipeSteps;
+          this.recipeSteps = this.recipe.recipeSteps;
           this.changeIngredientsToGramm();
           this.changeNutritionsToGramm();
           this.getForkedFromRecipeName();
@@ -88,7 +88,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     this.titleService.setTitle("Fork & Flavour");
   }
 
-    isRecipeDescriptionStep(recipeStep: any): boolean {
+  isRecipeDescriptionStep(recipeStep: any): boolean {
     return recipeStep.hasOwnProperty('description') && !('recipe' in recipeStep);
   }
 
@@ -150,15 +150,15 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
       );
     }
 
-    private defaultServiceErrorHandling(error: any) {
-      console.log(error);
-      this.error = true;
-      if (typeof error.error === 'object') {
-        this.errorMessage = error.error.error;
-      } else {
-        this.errorMessage = error.error;
-      }
+  private defaultServiceErrorHandling(error: any) {
+    console.log(error);
+    this.error = true;
+    if (typeof error.error === 'object') {
+      this.errorMessage = error.error.error;
+    } else {
+      this.errorMessage = error.error;
     }
+  }
 
   recipeBookSuggestions = (input: string): Observable<RecipeBookListDto[]> =>
     this.recipeBookService.getRecipeBooksTheUserHasWriteAccessTo()
@@ -169,23 +169,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         : `${recipeBook.name}`
     }
 
-    public selectRecipeBook(recipeBook: RecipeBookListDto | null) {
-      this.currentRecipeBook = recipeBook;
-    }
-
-  addRecipeStepsfromRecipe(recipeStep:RecipeStepRecipeDetailDto){
-    let recipeSteps = [];
-    for (let i = 0; i < this.recipeSteps.length; i++) {
-      if (this.recipeSteps[i]===recipeStep) {
-        for (let j = 0; j < recipeStep.recipe.recipeSteps.length; j++) {
-          recipeSteps.push(recipeStep.recipe.recipeSteps[j]);
-        }
-      } else{
-        let newRecipeStep = JSON.parse(JSON.stringify(this.recipeSteps[i]));
-        recipeSteps.push(newRecipeStep)
-      }
-    }
-    this.recipeSteps=recipeSteps;
+  public selectRecipeBook(recipeBook: RecipeBookListDto | null) {
+    this.currentRecipeBook = recipeBook;
   }
 
 
@@ -215,6 +200,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         this.recipe.nutritions[i].unit = "g";
       }
     }
+  }
+
+  navigateToDetails(index: number) {
+    this.router.navigate(['recipe', 'details', index]);
   }
 
 }

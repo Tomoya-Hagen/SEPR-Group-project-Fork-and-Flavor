@@ -113,9 +113,13 @@
             <img src="assets/images/icon_black.png" height="25px" alt="subrecepy" class="subrecepy-icon">
           </span>
           {{ step.name }}
+        <ng-container *ngIf="step.recipe">
+          (Dieser Schritt ist ein Unterrezept)
+        </ng-container>
         </h4>
         <p *ngIf="!step.recipe">{{ step.description }}</p>
         <div *ngIf="step.recipe && step.expanded">
+          <button type="button" class="btn btn-primary btn-sm" (click)="navigateToDetails(step.recipe.id)">Unterrezept anzeigen</button>
           <ng-container *ngFor="let subStep of step.recipe.recipeSteps">
             <div class="recipe-step">
               <h5>{{ subStep.name }}</h5>
