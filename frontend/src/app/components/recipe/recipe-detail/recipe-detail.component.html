@@ -61,9 +61,13 @@
         none
       </div>
     </div>
-    <div class="info-box clickable" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--acent-color);" (click)="toggleNutritionVisibility()">
-      <h4>Nährwerte:</h4>
-      Click to Show
+    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--acent-color);" *ngIf="isForkedFromRecipe()">
+      <h4>Geforkt von:</h4>
+      <div>
+        <span *ngFor="let forkedFrom of recipeForkedFrom; let isLast=last">
+           {{recipeForkedFrom}}{{isLast ? '' : ', '}}
+        </span>
+      </div>
     </div>
   </div>
 
@@ -82,13 +86,9 @@
       <h4>Beschreibung:</h4>
       <p>{{recipe.description}}</p>
     </div>
-    <div style="text-align: right;position: relative; margin: 30px">
-      <button type="button" class="btn btn-primary btn-sm" (click)="editRecipe()" style="margin-right: 10px;">Rezept bearbeiten</button>
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openSpoonModal(spoonRecipeModal)">Recipe spoonen</button>
-    </div>
 
     <!-- Nutrition Section -->
-    <div style="width: 49%; padding: 10px;" [class.collapse]="!showNutrition">
+    <div style="width: 49%; padding: 10px;">
       <h4 style="cursor: pointer;">Nährwerte:</h4>
       <div>
         <table class="table">
@@ -125,6 +125,10 @@
         </div>
       </div>
     </ng-container>
+      <div style="text-align: right;position: relative; margin: 30px">
+        <button type="button" class="btn btn-primary btn-sm" (click)="editRecipe()" style="margin-right: 10px;">Rezept bearbeiten</button>
+        <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openSpoonModal(spoonRecipeModal)">Recipe spoonen</button>
+      </div>
   </div>
 
 </div>

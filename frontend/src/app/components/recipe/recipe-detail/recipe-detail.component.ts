@@ -46,7 +46,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     "arrows" : true,
     "infinite" : false
   }
-  showNutrition: boolean = false;
+  recipeForkedFrom = [];
 
   constructor(
     private service: RecipeService,
@@ -66,6 +66,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         next: data => {
           this.recipe = data;
           this.recipeSteps=this.recipe.recipeSteps;
+          this.changeIngredientsToGramm();
+          this.changeNutritionsToGramm();
+          this.getForkedFromRecipeName();
           this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
         },
         error: error => {
@@ -94,6 +97,30 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   }
   isAllergensNotEmpty(): boolean{
     return this.recipe.allergens.length != 0;
+  }
+
+  isForkedFromRecipe(): boolean{
+    if (this.recipe.id == this.recipe.forkedFromId) {
+      return false;
+    }
+    return this.recipe.forkedFromId != 0 && this.recipe.forkedFromId != null;
+  }
+
+  getForkedFromRecipeName(): string[]{
+    if (this.recipe.forkedFromId == 0 || this.recipe.forkedFromId == null) {
+      return [];
+    }
+    this.service.getRecipeDetailsBy(this.recipe.forkedFromId).subscribe({
+      next: data => {
+        this.recipeForkedFrom.push(data.name);
+      },
+      error: error => {
+        console.error('Error fetching Recipe', error);
+        return [];
+      }
+    })
+    console.log(this.recipeForkedFrom);
+    return this.recipeForkedFrom;
   }
 
   openSpoonModal(spoonModal: TemplateRef<any>) {
@@ -161,9 +188,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     this.recipeSteps=recipeSteps;
   }
 
-  toggleNutritionVisibility() {
-    this.showNutrition = !this.showNutrition;
-  }
 
   toggleStep(step: any): void {
     if (step.recipe) {
@@ -173,6 +197,24 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   editRecipe() {
     this.router.navigate(['recipe', 'edit', this.recipe.id]);
+  }
+
+  changeIngredientsToGramm() {
+    for (let i = 0; i < this.recipe.ingredients.length; i++) {
+      if (this.recipe.ingredients[i].amount >= 1000 && this.recipe.ingredients[i].unit === "mg") {
+        this.recipe.ingredients[i].amount /= 1000;
+        this.recipe.ingredients[i].unit = "g";
+      }
+    }
+  }
+
+  changeNutritionsToGramm() {
+    for (let i = 0; i < this.recipe.nutritions.length; i++) {
+      if (this.recipe.nutritions[i].value >= 1000 && this.recipe.nutritions[i].unit === "mg") {
+        this.recipe.nutritions[i].value /= 1000;
+        this.recipe.nutritions[i].unit = "g";
+      }
+    }
   }
 
 }
