@@ -1,83 +1,72 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {RecipeListDto, RecipeSearch} from "../../dtos/recipe";
-import {RecipeService} from "../../services/recipe.service";
-import { Title } from '@angular/platform-browser';
-
-import {ToastrService} from "ngx-toastr";
-import {Router} from "@angular/router";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { RecipeService } from '../../services/recipe.service';
+import { RecipeListDto, RecipeSearch } from '../../dtos/recipe';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-recipe',
   templateUrl: './recipe.component.html',
-  styleUrl: './recipe.component.scss'
+  styleUrls: ['./recipe.component.scss']
 })
-
 export class RecipeComponent implements OnInit, OnDestroy {
-  bannerError: string | null = null;
   data: RecipeListDto[] = [];
-  recipeSearch: RecipeSearch = new class implements RecipeSearch {
-    name: string;
+  totalElements: number;
+  page: number = 1;
+  size: number = 24;
+  pageSizes: number[] = [3, 9, 24, 90, 300, 600];
+  recipeSearch: RecipeSearch = {
+    name: ''
   };
-  page =1;
-  step = 5000; //all recipe
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  pagedData: RecipeListDto[] = [];
+  searchSubscription: Subscription;
 
   constructor(
     private service: RecipeService,
     private notification: ToastrService,
-    private router: Router,
-    private titleService: Title,
-  ) {
-  }
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.loadPage()
-    this.titleService.setTitle("Fork & Flavour | Alle Rezepte");
+    this.searchChanged();
   }
 
-  ngOnDestroy() {
-    this.titleService.setTitle("Fork & Flavour");
-  }
-
-  loadPage() {
-    console.log("Trying to get all recipe books.");
-    this.service.getListByPageAndStep(this.page, this.step).subscribe({
-      next: items => {
-        console.log("Successfully received all recipe books");
-        this.data = items;
-      },
-      error: error => {
-        console.error('Error fetching recipes', error);
-        this.bannerError = 'Could not fetch recipes: ' + error.message;
-        const errorMessage = error.status === 0
-          ? 'Is the backend up?'
-          : error.message.message;
-        this.notification.error(errorMessage, 'Could Not Fetch Recipes');
-      }})
+  ngOnDestroy(): void {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
   }
 
   searchChanged(): void {
-    console.log("Trying to get the searched recipe.");
-    this.service.search(this.recipeSearch).subscribe({
-      next: items => {
-        console.log("Successfully received all recipe books");
-        this.data = items;
-      },
-      error: error => {
-        console.error('Error fetching recipes', error);
-        this.bannerError = 'Could not fetch recipe books: ' + error.message;
-        const errorMessage = error.status === 0
-          ? 'Is the backend up?'
-          : error.message.message;
-        this.notification.error(errorMessage, 'Could Not Fetch Recipes');
-      }})
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
+    this.searchSubscription = this.service.search(this.recipeSearch, this.page - 1, this.size)
+      .subscribe({
+        next: (data: any) => {
+          this.pagedData = data.content;
+          this.totalElements = data.totalElements;
+        },
+        error: (error: any) => {
+          console.error('Error fetching recipes', error);
+          this.notification.error('Could not fetch recipes', 'Error');
+        }
+      });
   }
 
-  detail(id:number){
+  onPageChange(pageNumber: number): void {
+    this.page = pageNumber;
+    this.searchChanged();
+  }
+
+  onPageSizeChange(event: Event): void {
+    this.size = +(event.target as HTMLSelectElement).value;
+    this.page = 1; // Reset to first page
+    this.searchChanged();
+  }
+
+  detail(id: number): void {
     this.router.navigate(['/recipe/details', id]);
   }
 }

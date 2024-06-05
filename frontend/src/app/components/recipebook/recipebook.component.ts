@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { RecipeBookService } from "../../services/recipebook.service";
 import { ToastrService } from "ngx-toastr";
 import { NgForOf } from "@angular/common";
-import { RouterLink } from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { CardComponent } from "../card/card.component";
 import { RecipeBookListDto, RecipeBookSearch } from "../../dtos/recipe-book";
+import {Subscription} from "rxjs";
+import {NgbPagination} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-recipebook',
@@ -14,104 +16,69 @@ import { RecipeBookListDto, RecipeBookSearch } from "../../dtos/recipe-book";
     NgForOf,
     RouterLink,
     FormsModule,
-    CardComponent
+    CardComponent,
+    NgbPagination
   ],
   templateUrl: './recipebook.component.html',
   styleUrls: ['./recipebook.component.scss']
 })
-export class RecipebookComponent implements OnInit {
-  steps = [3, 6, 9, 30];
-  page = 1;
-  step = 6;
-  oldStep = 3;
-  previousButtonDisabled = true;
-  nextButtonDisabled = false;
-  bannerError: string | null = null;
+export class RecipebookComponent implements OnInit,OnDestroy {
   data: RecipeBookListDto[] = [];
-  bookSearch: RecipeBookSearch = { name: '' };
+  totalElements: number;
+  page: number = 1;
+  size: number = 24;
+  pageSizes: number[] = [3, 9, 24, 90, 300, 600];
+  RecipeBookSearch: RecipeBookSearch = {
+    name: ''
+  };
+  pagedData: RecipeBookListDto[] = [];
+  searchSubscription: Subscription;
 
   constructor(
     private service: RecipeBookService,
     private notification: ToastrService,
-  ) {}
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.loadRecipes();
+    this.searchChanged();
   }
 
-  loadRecipes(isNext: boolean = true) {
-    console.log("Trying to get all recipe books.");
-    this.service.getAllRecipeBooksBySteps(this.page, this.step).subscribe({
-      next: items => {
-        console.log("Successfully received all recipe books");
-        if (items.length == 0) {
-          if (isNext) {
-            this.nextButtonDisabled = true;
-          } else {
-            this.previousButtonDisabled = true;
-          }
-          return;
-        }
-        this.data = items;
-      },
-      error: error => {
-        console.error('Error fetching recipes', error);
-        this.bannerError = 'Could not fetch recipes: ' + error.message;
-        const errorMessage = error.status === 0
-          ? 'Is the backend up?'
-          : error.message.message;
-        this.notification.error(errorMessage, 'Could Not Fetch Recipes');
-      }})
+  ngOnDestroy(): void {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
   }
 
   searchChanged(): void {
-    console.log("Trying to get the searched recipe books.");
-    this.service.search(this.bookSearch).subscribe({
-      next: items => {
-        console.log("Successfully received all recipe books");
-        this.data = items;
-
-      },
-      error: error => {
-        console.error('Error fetching recipes', error);
-        this.bannerError = 'Could not fetch recipe books: ' + error.message;
-        const errorMessage = error.status === 0
-          ? 'Is the backend up?'
-          : error.message.message;
-        this.notification.error(errorMessage, 'Could Not Fetch Recipes');
-      }})
-  }
-
-  loadNextPage() {
-    this.page += 1;
-    this.updateNavigationButtons();
-    this.loadRecipes(true);
-  }
-
-  loadPreviousPage() {
-    if (this.page > 1) {
-      this.page -= 1;
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
     }
-    this.updateNavigationButtons();
-    this.loadRecipes(false);
+    this.searchSubscription = this.service.search(this.RecipeBookSearch.name, this.page - 1, this.size)
+      .subscribe({
+        next: (data: any) => {
+          this.pagedData = data.content;
+          this.totalElements = data.totalElements;
+        },
+        error: (error: any) => {
+          console.error('Error fetching recipes', error);
+          this.notification.error('Could not fetch recipes', 'Error');
+        }
+      });
   }
 
-  selectedStepChanged() {
-    let recipeNumber = this.step * this.page;
-    this.page = Math.floor(recipeNumber / this.step);
-    this.oldStep = this.step;
-    this.loadRecipes(true);
+  onPageChange(pageNumber: number): void {
+    this.page = pageNumber;
+    this.searchChanged();
   }
 
-  private updateNavigationButtons(): void {
-    this.previousButtonDisabled = this.page === 1;
-    this.nextButtonDisabled = false; // Reset to allow next page attempt
+  onPageSizeChange(event: Event): void {
+    this.size = +(event.target as HTMLSelectElement).value;
+    this.page = 1; // Reset to first page
+    this.searchChanged();
   }
 
-  private handleLoadError(error: any) {
-    console.error('Error fetching recipes', error);
-    const errorMessage = error.status === 0 ? 'Is the backend up?' : error.message.message;
-    this.notification.error(errorMessage, 'Could Not Fetch Recipes');
-    this.bannerError = 'Could not fetch recipes: ' + error.message;
+  detail(id: number): void {
+    this.router.navigate(['/recipebook/details', id]);
   }
 }

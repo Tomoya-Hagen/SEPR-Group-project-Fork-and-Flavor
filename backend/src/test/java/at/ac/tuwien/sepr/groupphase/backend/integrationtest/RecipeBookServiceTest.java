@@ -19,14 +19,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -46,19 +50,17 @@ class RecipeBookServiceTest implements TestData {
 
     @Test
     void searchRecipeBooksReturnsRecipeBooks() {
-        RecipeBookListDto recipeBookListDto = new RecipeBookListDto(1, "Italienische Küche", "Eine Sammlung klassischer italienischer Rezepte von Pasta bis Pizza.", 1);
-        List<RecipeBookListDto> recipeBookListDtoList = new java.util.ArrayList<>(List.of());
-        recipeBookListDtoList.add(recipeBookListDto);
-
-        assertEquals(recipeBookService.searchRecipeBooks("Italienische Küche"), recipeBookListDtoList);
-        assertEquals(1, recipeBookService.searchRecipeBooks("Italienische Küche").size());
-
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<RecipeBookListDto> result = recipeBookService.searchRecipeBooksByName("Italienische Küche", pageable);
+        assertEquals(1, result.getTotalElements());
+        assertEquals("Italienische Küche", result.getContent().getFirst().name());
     }
 
     @Test
     void searchRecipeBooksReturnsEmptyListWhenNoMatch() {
-        assertEquals(new java.util.ArrayList<>(List.of()), recipeBookService.searchRecipeBooks("Nonexistent"));
-        assertEquals(0, recipeBookService.searchRecipeBooks("Nonexistent").size());
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<RecipeBookListDto> result = recipeBookService.searchRecipeBooksByName("Nonexistent", pageable);
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -68,18 +70,9 @@ class RecipeBookServiceTest implements TestData {
 
     @Test
     void getListByPageAndStepReturnsRecipeBooks() {
-        RecipeBookListDto recipeBookListDto = new RecipeBookListDto(1L, "Italienische Küche", "Eine Sammlung klassischer italienischer Rezepte von Pasta bis Pizza.", 1L);
-        assertEquals(Collections.singletonList(recipeBookListDto), recipeBookService.getRecipeBooksFromPageInSteps(1, 1));
-    }
-
-    @Test
-    void getListByPageAndStepReturnsEmptyListWhenNoMatch() {
-        assertEquals(Collections.emptyList(), recipeBookService.getRecipeBooksFromPageInSteps(-1, 1));
-    }
-
-    @Test
-    void getRecipeBookReturnAllRecipeBooks() {
-        assertEquals(9, recipeBookService.getRecipeBooks().size());
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<RecipeBookListDto> result = recipeBookService.getRecipeBooksPageable(pageable);
+        assertFalse(result.isEmpty());
     }
 
     @Test
@@ -121,9 +114,9 @@ class RecipeBookServiceTest implements TestData {
         recipeBookRepository.flush();
         List<RecipeBookListDto> recipeBookListDtos = recipeBookService.getRecipeBooksThatAnUserHasAccessTo();
         Assertions.assertAll(
-            () -> Assertions.assertFalse(recipeBookListDtos.isEmpty()),
+            () -> assertFalse(recipeBookListDtos.isEmpty()),
             () -> Assertions.assertEquals(1, recipeBookListDtos.size()),
-            () -> Assertions.assertTrue(recipeBookListDtos.contains(
+            () -> assertTrue(recipeBookListDtos.contains(
                 recipeBookMapper.recipeBookListToRecipeBookListDto(List.of(recipeBook)).getFirst()))
         );
     }

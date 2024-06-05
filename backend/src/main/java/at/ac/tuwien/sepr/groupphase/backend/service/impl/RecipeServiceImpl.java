@@ -32,7 +32,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -72,12 +74,6 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<RecipeListDto> searchRecipe(String name) throws NotFoundException {
-        List<Recipe> searchedRecipe = recipeRepository.search(name);
-        return recipeMapper.recipeListToRecipeListDto(searchedRecipe);
-    }
-
-    @Override
     public RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException {
         LOGGER.trace("getRecipeDetailDtoById({})", id);
         Recipe recipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
@@ -90,17 +86,15 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ArrayList<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber) {
-        LOGGER.trace("getRecipesFromPageInSteps({},{})", pageNumber, stepNumber);
-        Long from = (long) (((pageNumber - 1) * stepNumber) + 1);
-        Long to = (long) (pageNumber * stepNumber);
-        ArrayList<Recipe> recipes = (ArrayList<Recipe>) recipeRepository.findByIdBetweenOrderById(from, to);
-        ArrayList<Long> ratings = new ArrayList<>();
-        for (Recipe recipe : recipes) {
-            ratings.add(calculateAverageTasteRating(recipe.getRatings()));
-        }
-        return recipeMapper.recipeListAndRatingListToListOfRecipeRatingDto(recipes, ratings);
+    public Page<RecipeListDto> getRecipesByName(String name, Pageable pageable) {
+        Page<Recipe> recipePage = recipeRepository.findByNameContainingIgnoreCase(name, pageable);
+
+        return recipePage.map(recipe -> {
+            Long rating = calculateAverageTasteRating(recipe.getRatings());
+            return recipeMapper.recipeToRecipeListDto(recipe, rating);
+        });
     }
+
 
     @Override
     public DetailedRecipeDto createRecipe(RecipeCreateDto recipeDto) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException {
@@ -127,12 +121,6 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Stream<SimpleRecipeResultDto> byname(String name, int limit) {
         return recipeRepository.findByNameContainingWithLimit(name, PageRequest.of(0, limit)).stream().map(recipeMapper::recipeToRecipeResultDto);
-    }
-
-    @Override
-    public List<RecipeListDto> getRecipesByNames(String name, int limit) {
-        List<Recipe> recipes = recipeRepository.findByNamesContainingIgnoreCase(name, limit);
-        return recipeMapper.recipesToRecipeListDto(recipes);
     }
 
     private long calculateAverageTasteRating(List<Rating> ratings) {
