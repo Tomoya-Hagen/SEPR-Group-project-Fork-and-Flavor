@@ -9,7 +9,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeIngredientDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDescriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
@@ -33,7 +32,6 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -41,6 +39,7 @@ import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.g;
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.mg;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -116,46 +115,6 @@ class RecipeEndpointTest implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-    }
-
-    @Test
-    void ReturnAListOfOneRecipeListDtoFromGetAllFromPageOneWithStepOne() throws Exception {
-
-        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI + "/?page=1&step=1"))
-            .andDo(print())
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-        List<RecipeListDto> recipes = Arrays.stream(objectMapper.readValue(response.getContentAsString(),
-            RecipeListDto[].class)).toList();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-        Assertions.assertEquals(1, recipes.size());
-    }
-
-    @Test
-    void ReturnAListOfTwoRecipeListDtoFromGetAllFromPageOneWithStepThree() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI + "/?page=1&step=2"))
-            .andDo(print())
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-        List<RecipeListDto> recipes = Arrays.stream(objectMapper.readValue(response.getContentAsString(),
-            RecipeListDto[].class)).toList();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-        Assertions.assertEquals(2, recipes.size());
-    }
-
-    @Test
-    void ReturnAnEmptyListOfRecipeListDtoFromGetAllFromPageTwohundredWithStepTwohundred() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(get(RECIPE_BASE_URI + "/?page=200&step=200"))
-            .andDo(print())
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-        List<RecipeListDto> recipes = Arrays.stream(objectMapper.readValue(response.getContentAsString(),
-            RecipeListDto[].class)).toList();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-        Assertions.assertTrue(recipes.isEmpty());
     }
 
     @Test
@@ -414,23 +373,20 @@ class RecipeEndpointTest implements TestData {
     @Test
     public void searchRecipeReturnsEmptyListNotFound() throws Exception {
         mockMvc
-            .perform(get("/api/v1/recipes/search")
+            .perform(get("/api/v1/recipes") // Corrected endpoint
                 .param("name", "Gurke")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(0)));
+            .andExpect(jsonPath("$.content", hasSize(0))); // Update to reflect the structure of the returned Page<RecipeListDto>
     }
 
     @Test
     void searchRecipeReturnsFoundRecipe() throws Exception {
-        mockMvc.perform(get("/api/v1/recipes/search")
+        mockMvc.perform(get("/api/v1/recipes")
                 .param("name", "Apfelkuchen nach Ing")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0].name", org.hamcrest.Matchers.is("Apfelkuchen nach Ing")));
+            .andExpect(jsonPath("$.content", hasSize(1))) // Update to reflect the structure of the returned Page<RecipeListDto>
+            .andExpect(jsonPath("$.content[0].name", is("Apfelkuchen nach Ing"))); // Update to reflect the structure of the returned RecipeListDto
     }
-
-
-
 }

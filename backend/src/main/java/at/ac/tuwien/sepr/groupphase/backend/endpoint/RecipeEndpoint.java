@@ -6,7 +6,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -18,10 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -117,7 +116,9 @@ public class RecipeEndpoint {
                                                 @RequestParam(name = "page", defaultValue = "0") int page,
                                                 @RequestParam(name = "size", defaultValue = "9") int size) {
         LOGGER.info("GET /api/v1/recipes?page={}&size={}&name={}", page, size, name);
-        return recipeService.getRecipesByName(name, page, size);
+        Pageable pageable = PageRequest.of(page, size);
+
+        return recipeService.getRecipesByName(name, pageable);
     }
 
     private void logClientError(HttpStatus status, String message, Exception e) {
