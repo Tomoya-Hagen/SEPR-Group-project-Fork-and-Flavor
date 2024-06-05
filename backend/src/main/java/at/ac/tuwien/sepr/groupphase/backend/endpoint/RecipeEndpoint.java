@@ -87,14 +87,6 @@ public class RecipeEndpoint {
         }
     }
 
-/*    @PermitAll
-    @GetMapping("/")
-    @Operation(summary = "Get a list of recipes")
-    public List<RecipeListDto> getListByPageAndStep(@RequestParam(name = "page") int page, @RequestParam(name = "step") int step) {
-        LOGGER.info("GET /api/v1/recipe?page={}&step={}", page, step);
-        return recipeService.getRecipesFromPageInSteps(page, step);
-    }*/
-
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/simple")
