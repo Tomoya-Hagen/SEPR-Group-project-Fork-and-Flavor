@@ -32,13 +32,18 @@ export class RecipeService {
    * The name is considered a match, if the given parameter is a substring of the field in recipe.
    *
    * @param searchParams the parameters to use in searching.
+   * @param page the page number to get.
+   * @param size the number of elements per page.
    * @return an Observable for the recipes where all given parameters match.
    */
-  public search(searchParams: RecipeSearch): Observable<RecipeListDto[]> {
-    return this.http.get<RecipeListDto[]>(this.baseUri+"/search?name="+searchParams.name);
-
+  public search(searchParams: RecipeSearch, page: number, size: number): Observable<any> {
+    const params = {
+      name: searchParams.name,
+      page: page.toString(),  // Ensure zero-based page indexing
+      size: size.toString()
+    };
+    return this.http.get<any>(this.baseUri + '', { params });
   }
-
 
   recipesByName(name: string, limit: number): Observable<RecipeListDto[]> {
     let params = new HttpParams();
