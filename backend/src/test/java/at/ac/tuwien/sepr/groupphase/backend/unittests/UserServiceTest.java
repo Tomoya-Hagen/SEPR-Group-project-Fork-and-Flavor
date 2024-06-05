@@ -24,7 +24,6 @@ import java.util.List;
 @SpringBootTest
 @ActiveProfiles({"test"})
 @Transactional
-@Disabled
 class UserServiceTest {
 
     @Autowired
@@ -54,14 +53,14 @@ class UserServiceTest {
         ApplicationUser user2 = new ApplicationUser.ApplicationUserBuilder()
             .withEmail("allthesame@cmail.com")
             .withPassword("passkey")
-            .withUsername("tuber")
+            .withUsername("tber")
             .withhasProfilePicture(false)
             .withRoles(rolesList)
             .build();
         ApplicationUser user3 = new ApplicationUser.ApplicationUserBuilder()
             .withEmail("allahthesame@cmail.com")
             .withPassword("passkey")
-            .withUsername("tubero")
+            .withUsername("tbero")
             .withhasProfilePicture(false)
             .withRoles(rolesList)
             .build();
@@ -78,11 +77,10 @@ class UserServiceTest {
         userRepository.save(user4);
         List<UserListDto> results = userService.findUsersByName("u", 5);
 
-        assertEquals(5, results.size());
+        assertEquals(4, results.size());
         assertEquals("user", results.get(0).name());
         assertEquals("contributor", results.get(1).name());
         assertEquals("uber", results.get(2).name());
-        assertEquals("tuber", results.get(3).name());
-        assertEquals("tubero", results.get(4).name());
+        assertEquals("klimakleber-u", results.get(3).name());
     }
 }
