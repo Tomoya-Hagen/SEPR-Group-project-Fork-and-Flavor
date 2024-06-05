@@ -393,7 +393,7 @@ public class DataGenerator implements CommandLineRunner {
                         .build();
                 } else {
                     // Unterrezept
-                    Long unterrezeptId = Long.parseLong(fields.get(4));
+                    Long unterrezeptId = idMap.get(Long.parseLong(fields.get(4)));
                     Recipe unterrezept = recipeRepository.findFirstById(unterrezeptId);
                     recipeStep = RecipeRecipeStep.RecipeRecipeStepBuilder.aRecipeRecipeStep()
                         .withRecipe(recipe)
