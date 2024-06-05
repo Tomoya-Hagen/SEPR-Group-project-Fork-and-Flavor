@@ -13,6 +13,7 @@ import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -71,46 +74,19 @@ public class RecipeBookEndpoint {
         }
     }
 
-    /**
-     * This method handles GET requests to get a list of all recipe books.
-     *
-     * @return A list of all recipe books.
-     */
     @PermitAll
     @GetMapping("")
-    @Operation(summary = "Get a list of all recipe books")
-    public List<RecipeBookListDto> getRecipeBookList() {
-        LOGGER.info("GET /api/v1/recipebook");
-        return recipeBookService.getRecipeBooks();
-    }
-
-    /**
-     * This method handles GET requests to get a list of recipe books by page and step.
-     *
-     * @param page The page number.
-     * @param step The step size.
-     * @return A list of recipe books.
-     */
-    @PermitAll
-    @GetMapping("/")
     @Operation(summary = "Get a list of recipe books")
-    public List<RecipeBookListDto> getListByPageAndStep(@RequestParam(name = "page") int page, @RequestParam(name = "step") int step) {
-        LOGGER.info("GET /api/v1/recipebook?page={}&step={}", page, step);
-        return recipeBookService.getRecipeBooksFromPageInSteps(page, step);
-    }
-
-    /**
-     * This method handles GET requests to search for recipe books by name.
-     *
-     * @param name The name of the recipe book.
-     * @return A list of recipe books that match the search criteria.
-     */
-    @PermitAll
-    @GetMapping("/search")
-    @Operation(summary = "Get a list of the searched recipe books")
-    public List<RecipeBookListDto> search(@RequestParam(name = "name") String name) {
-        LOGGER.info("GET /api/v1/recipebook/search");
-        return recipeBookService.searchRecipeBooks(name);
+    public Page<RecipeBookListDto> getListByPageAndStep(@RequestParam(name = "name", required = false) String name,
+                                                        @RequestParam(name = "page", defaultValue = "0") int page,
+                                                        @RequestParam(name = "size", defaultValue = "9") int size) {
+        LOGGER.info("GET /api/v1/recipebook?page={}&size={}&name={}", page, size, name);
+        Pageable pageable = PageRequest.of(page, size);
+        if (name != null && !name.isEmpty()) {
+            return recipeBookService.searchRecipeBooksByName(name, pageable);
+        } else {
+            return recipeBookService.getRecipeBooksPageable(pageable);
+        }
     }
 
     @Secured("ROLE_USER")
