@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { RecipeService } from 'src/app/services/recipe.service';
-import { RecipeListDto } from 'src/app/dtos/recipe';
+import {Recipe, RecipeListDto} from 'src/app/dtos/recipe';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import {Page} from "../../models/page.model";
 
 @Component({
   selector: 'app-home',
@@ -11,14 +12,12 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  steps = [3, 9, 30, 90, 300];
-  page = 1;
-  step = 9;
-  oldStep = 9;
-  previousButtonDisabled = true;
-  nextButtonDisabled = false;
-  recipes: RecipeListDto[] = [];
+  recipes: Recipe[] = [];
+  totalElements: number;
+  page: number = 1;
+  size: number = 9;
   bannerError: string | null = null;
+  pageSizes: number[] = [3, 9, 30, 90];
 
   constructor(
     public authService: AuthService,
@@ -28,67 +27,25 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadRecipes();
+    this.getRecipes(this.page);
   }
 
-  loadRecipes(isNext: boolean = true): void {
-    this.recipeService.getListByPageAndStep(this.page, this.step).subscribe({
-      next: (data) => {
-        this.handleDataResponse(data, isNext);
-      },
-      error: (error) => {
-        this.handleError(error);
-      }
-    });
+  getRecipes(page: number): void {
+    this.recipeService.getRecipes('', page - 1, this.size) // Backend pagination is 0-based
+      .subscribe(data => {
+        this.recipes = data.content;
+        this.totalElements = data.totalElements;
+        this.page = data.number + 1; // ng-bootstrap pagination is 1-based
+      });
   }
 
-  handleDataResponse(data: RecipeListDto[], isNext: boolean): void {
-    if (data.length === 0) {
-      this.updateButtonDisabledState(isNext, true);
-      return;
-    }
-    this.recipes = data;
-    this.updateButtonDisabledState(isNext, false);
+  onPageSizeChange(newSize: number): void {
+    this.size = newSize;
+    this.getRecipes(1); // Reset to first page when changing page size
   }
 
   handleError(error: any): void {
     console.error('Error fetching recipes', error);
     this.bannerError = 'Could not fetch recipes: ' + error.message;
-  }
-
-  loadNextPage(): void {
-    this.page += 1;
-    this.updateNavigationButtons();
-    this.loadRecipes(true);
-  }
-
-  loadPreviousPage(): void {
-    if (this.page > 1) {
-      this.page -= 1;
-    }
-    this.updateNavigationButtons();
-    this.loadRecipes(false);
-  }
-
-  selectedStepChanged(): void {
-    if (this.oldStep !== this.step) {
-      const recipeNumber = this.oldStep * (this.page - 1); // calculate the first recipe index on the current page
-      this.page = Math.floor(recipeNumber / this.step) + 1; // adjust page number based on new step
-      this.oldStep = this.step; // Update oldStep to current step after adjustment
-      this.loadRecipes(true); // Load the new page with the updated step
-    }
-  }
-
-  private updateNavigationButtons(): void {
-    this.previousButtonDisabled = this.page === 1;
-    this.nextButtonDisabled = false; // Reset to allow next page attempt
-  }
-
-  private updateButtonDisabledState(isNext: boolean, disable: boolean): void {
-    if (isNext) {
-      this.nextButtonDisabled = disable;
-    } else {
-      this.previousButtonDisabled = disable;
-    }
   }
 }

@@ -35,7 +35,9 @@ export class RecipeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+/*
     this.loadPage()
+*/
     this.titleService.setTitle("Fork & Flavour | Alle Rezepte");
   }
 
@@ -43,7 +45,7 @@ export class RecipeComponent implements OnInit, OnDestroy {
     this.titleService.setTitle("Fork & Flavour");
   }
 
-  loadPage() {
+/*  loadPage() {
     console.log("Trying to get all recipe books.");
     this.service.getListByPageAndStep(this.page, this.step).subscribe({
       next: items => {
@@ -58,7 +60,7 @@ export class RecipeComponent implements OnInit, OnDestroy {
           : error.message.message;
         this.notification.error(errorMessage, 'Could Not Fetch Recipes');
       }})
-  }
+  }*/
 
   searchChanged(): void {
     console.log("Trying to get the searched recipe.");

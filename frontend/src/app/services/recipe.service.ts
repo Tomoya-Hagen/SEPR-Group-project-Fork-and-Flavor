@@ -10,6 +10,7 @@ import { map as rxjsMap} from 'rxjs/operators'
 import { Observable, catchError, throwError } from 'rxjs';
 import {Globals} from '../global/globals';
 import {RecipeSearch} from "../dtos/recipe";
+import { Page } from '../models/page.model';
 
 /**
  * Service for handling recipe books.
@@ -52,10 +53,13 @@ export class RecipeService {
       );
   }
 
-  public getListByPageAndStep(page: number, step: number): Observable<RecipeListDto[]> {
-    return this.http.get<RecipeListDto[]>(
-      this.baseUri + "/?page=" + page + "&step=" + step
-    );
+  getRecipes(name: string, page: number, size: number): Observable<Page<Recipe>> {
+    let params = new HttpParams()
+      .set('name', name)
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<Page<Recipe>>(this.baseUri, { params });
   }
 
 
