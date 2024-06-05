@@ -46,14 +46,16 @@ export class RecipeService {
   }
 
   recipesByName(name: string, limit: number): Observable<RecipeListDto[]> {
-    let params = new HttpParams();
-    params = params.append('name', name);
-    params = params.append('limit', limit.toString());
-    return this.http.get<RecipeListDto[]>(this.baseUri, {params})
+    let params = new HttpParams()
+      .set('name', name)
+      .set('limit', limit.toString());
+
+    return this.http.get<Page<RecipeListDto>>(this.baseUri, { params })
       .pipe(
+        rxjsMap((page: Page<RecipeListDto>) => page.content),  // Extract content from page object
         catchError((error) => {
           console.error(error);
-          throw error;
+          return throwError(() => new Error(error.message));
         })
       );
   }
