@@ -110,10 +110,13 @@ public class RecipeEndpoint {
         }
     }
 
+    @PermitAll
     @GetMapping
+    @Operation(summary = "Get a list of recipes")
     public Page<RecipeListDto> getRecipesByName(@RequestParam(name = "name", required = false, defaultValue = "") String name,
                                                 @RequestParam(name = "page", defaultValue = "0") int page,
-                                                @RequestParam(name = "size", defaultValue = "30") int size) {
+                                                @RequestParam(name = "size", defaultValue = "9") int size) {
+        LOGGER.info("GET /api/v1/recipes?page={}&size={}&name={}", page, size, name);
         return recipeService.getRecipesByName(name, page, size);
     }
 
