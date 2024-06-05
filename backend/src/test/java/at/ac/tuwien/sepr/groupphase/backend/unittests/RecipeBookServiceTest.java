@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests;
 
+import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
@@ -42,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-class RecipeBookServiceTest {
+class RecipeBookServiceTest implements TestData {
     @Autowired
     private RecipeBookService recipeBookService;
 
@@ -113,6 +114,7 @@ class RecipeBookServiceTest {
 
     @Test
     void createRecipeBookSuccessfully() throws ValidationException {
+        userAuthenticationByEmail("admin@email.com");
         List<UserListDto> userRecipeBooks = new ArrayList<>();
         UserListDto userListDto = new UserListDto(3L, "a");
         userRecipeBooks.add(userListDto);
@@ -122,7 +124,7 @@ class RecipeBookServiceTest {
         RecipeBookCreateDto createDto = new RecipeBookCreateDto("Fast Food", "This recipe contains fast food dishes",
             userRecipeBooks, r);
 
-        RecipeBookDetailDto recipeBook = recipeBookService.createRecipeBook(createDto, 1L);
+        RecipeBookDetailDto recipeBook = recipeBookService.createRecipeBook(createDto);
 
         assertAll(
             () -> assertNotNull(recipeBook),
@@ -146,7 +148,7 @@ class RecipeBookServiceTest {
             users, recipeMapper.recipesToRecipeListDto(recipes));
         ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             validate(createDto);
-            recipeBookService.createRecipeBook(createDto, 1L);
+            recipeBookService.createRecipeBook(createDto);
         });
         assertTrue(exception.getMessage().contains("Validation failed for name: must not be null"));
     }
@@ -165,7 +167,7 @@ class RecipeBookServiceTest {
 
         ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
             validate(createDto);
-            recipeBookService.createRecipeBook(createDto, 1L);
+            recipeBookService.createRecipeBook(createDto);
         });
         assertTrue(exception.getMessage().contains("between 1 and 100"));
     }

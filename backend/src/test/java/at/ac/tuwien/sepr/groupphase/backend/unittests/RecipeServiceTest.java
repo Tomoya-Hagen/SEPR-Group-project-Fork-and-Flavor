@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests;
 
+import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeIngredientDto;
@@ -31,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ActiveProfiles({"test"})
 @Transactional
-class RecipeServiceTest {
+class RecipeServiceTest implements TestData {
 
     @Autowired
     private RecipeService recipeService;
@@ -48,6 +49,7 @@ class RecipeServiceTest {
 
     @Test
     void EditRecipeSuccessfullyChangingTheStepsIngredientsAndTheNumberOfServings() {
+        userAuthenticationByEmail("admin@email.com");
         List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
         recipeStepDtoList.add(new RecipeStepDto("Dawai dawai","Schneller",0,true));
         recipeStepDtoList.add(new RecipeStepDto("Tamam hamam","Mit Sorgfalt rühren",0,true));

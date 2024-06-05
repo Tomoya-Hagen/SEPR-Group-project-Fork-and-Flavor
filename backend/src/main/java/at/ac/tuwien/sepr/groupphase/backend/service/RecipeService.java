@@ -27,10 +27,9 @@ public interface RecipeService {
      * Creates a new recipe entry.
      *
      * @param recipe to create
-     *               usermail for owner
      * @return created recipe entry
      */
-    DetailedRecipeDto createRecipe(RecipeCreateDto recipe, String usermail) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException;
+    DetailedRecipeDto createRecipe(RecipeCreateDto recipe) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException;
 
     /**
      * Find all recipes having a name like name.

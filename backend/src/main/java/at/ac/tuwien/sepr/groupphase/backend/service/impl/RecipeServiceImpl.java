@@ -26,13 +26,16 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
@@ -52,18 +55,20 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
     private final RecipeMapper recipeMapper;
     private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
     private final RecipeValidator recipeValidator;
+    private final UserService userService;
 
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
-                             RecipeMapper recipeMapper, UserRepository userRepository,
-                             CategoryRepository categoryRepository, RecipeValidator recipeValidator) {
+                             RecipeMapper recipeMapper,
+                             UserService userService,
+                             CategoryRepository categoryRepository,
+                             RecipeValidator recipeValidator) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
-        this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.recipeValidator = recipeValidator;
+        this.userService = userService;
     }
 
     @Override
@@ -98,7 +103,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public DetailedRecipeDto createRecipe(RecipeCreateDto recipeDto, String usermail) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException {
+    public DetailedRecipeDto createRecipe(RecipeCreateDto recipeDto) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException {
         LOGGER.debug("Publish new message {}", recipeDto);
 
         recipeValidator.validateCreate(recipeDto);
@@ -112,7 +117,7 @@ public class RecipeServiceImpl implements RecipeService {
         }
         recipe.setCategories(categories);
 
-        ApplicationUser owner = userRepository.findFirstUserByEmail(usermail);
+        ApplicationUser owner = userService.getCurrentUser();
         recipe.setOwner(owner);
         recipeRepository.save(recipe);
 
@@ -147,7 +152,9 @@ public class RecipeServiceImpl implements RecipeService {
         LOGGER.trace("updateRecipe({})", recipeUpdateDto);
         Recipe oldRecipe = recipeRepository.findById(recipeUpdateDto.id()).orElseThrow(NotFoundException::new);
         Recipe recipe = recipeMapper.recipeUpdateDtoToRecipe(recipeUpdateDto);
-
+        if (oldRecipe.getOwner().getId() != userService.getCurrentUser().getId()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
         List<RecipeIngredient> updatedIngredients = new ArrayList<>();
 
         for (RecipeIngredient recipeIngredient : recipe.getIngredients()) {

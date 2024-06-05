@@ -93,11 +93,6 @@ public class RecipeEndpoint {
     public ResponseEntity<DetailedRecipeDto> updateRecipe(@PathVariable("id") Long id, @RequestBody RecipeUpdateDto recipeUpdatedto) {
         LOGGER.info("PUT /api/v1/recipe/ + {} + {}", id, recipeUpdatedto);
         LOGGER.debug("Body of request: {}", recipeUpdatedto);
-        ApplicationUser user = userService.findApplicationUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        RecipeDetailDto recipe = recipeService.getRecipeDetailDtoById(recipeUpdatedto.id());
-        if (recipe.ownerId() != user.getId()) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
         try {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(recipeService.updateRecipe(recipeUpdatedto));
         } catch (Exception e) {
@@ -129,9 +124,8 @@ public class RecipeEndpoint {
     @Operation(summary = "Create a new Recipe", security = @SecurityRequirement(name = "apiKey"))
     public DetailedRecipeDto createnew(@Valid @RequestBody RecipeCreateDto recipeDto) {
         LOGGER.info("POST /api/v1/recipe body: {}", recipeDto);
-        var auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
-            return recipeService.createRecipe(recipeDto, (String) auth);
+            return recipeService.createRecipe(recipeDto);
         } catch (Exception e) {
             HttpStatus status = HttpStatus.BAD_REQUEST;
             throw new ResponseStatusException(status, e.getMessage(), e);
