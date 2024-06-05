@@ -17,6 +17,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -101,13 +102,13 @@ public class RecipeEndpoint {
         }
     }
 
-    @PermitAll
+/*    @PermitAll
     @GetMapping("/")
     @Operation(summary = "Get a list of recipes")
     public List<RecipeListDto> getListByPageAndStep(@RequestParam(name = "page") int page, @RequestParam(name = "step") int step) {
         LOGGER.info("GET /api/v1/recipe?page={}&step={}", page, step);
         return recipeService.getRecipesFromPageInSteps(page, step);
-    }
+    }*/
 
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
@@ -133,10 +134,10 @@ public class RecipeEndpoint {
     }
 
     @GetMapping
-    public ResponseEntity<List<RecipeListDto>> getRecipesByNames(@RequestParam(name = "name") String name, @RequestParam(name = "limit") int limit) {
-        LOGGER.info("Getting {} using {}", limit, name);
-        LOGGER.debug("Retrieving {} recipes using {}", limit, name);
-        return ResponseEntity.ok(recipeService.getRecipesByNames(name, limit));
+    public Page<RecipeListDto> getRecipesByName(@RequestParam(name = "name", required = false, defaultValue = "") String name,
+                                                @RequestParam(name = "page", defaultValue = "0") int page,
+                                                @RequestParam(name = "size", defaultValue = "30") int size) {
+        return recipeService.getRecipesByName(name, page, size);
     }
 
     private void logClientError(HttpStatus status, String message, Exception e) {

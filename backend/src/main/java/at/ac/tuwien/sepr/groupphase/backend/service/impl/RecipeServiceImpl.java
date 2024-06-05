@@ -32,7 +32,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -90,17 +92,16 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public ArrayList<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber) {
-        LOGGER.trace("getRecipesFromPageInSteps({},{})", pageNumber, stepNumber);
-        Long from = (long) (((pageNumber - 1) * stepNumber) + 1);
-        Long to = (long) (pageNumber * stepNumber);
-        ArrayList<Recipe> recipes = (ArrayList<Recipe>) recipeRepository.findByIdBetweenOrderById(from, to);
-        ArrayList<Long> ratings = new ArrayList<>();
-        for (Recipe recipe : recipes) {
-            ratings.add(calculateAverageTasteRating(recipe.getRatings()));
-        }
-        return recipeMapper.recipeListAndRatingListToListOfRecipeRatingDto(recipes, ratings);
+    public Page<RecipeListDto> getRecipesByName(String name, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Recipe> recipePage = recipeRepository.findByNameContainingIgnoreCase(name, pageable);
+
+        return recipePage.map(recipe -> {
+            Long rating = calculateAverageTasteRating(recipe.getRatings());
+            return recipeMapper.recipeToRecipeListDto(recipe, rating);
+        });
     }
+
 
     @Override
     public DetailedRecipeDto createRecipe(RecipeCreateDto recipeDto) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException {

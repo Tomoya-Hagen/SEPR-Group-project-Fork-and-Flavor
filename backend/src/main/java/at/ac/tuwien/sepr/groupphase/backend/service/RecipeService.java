@@ -10,6 +10,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,16 +59,6 @@ public interface RecipeService {
     DetailedRecipeDto updateRecipe(RecipeUpdateDto recipeUpdateDto);
 
     /**
-     * finds a list of RecipeListDto based on the given parameters.
-     *
-     * @param pageNumber represents the page number of recipes.
-     * @param stepNumber represents the number of how many recipes are shown per page.
-     * @return the recipes of the given page.
-     */
-
-    List<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber);
-
-    /**
      * Search for recipes in the persistent data store matching provided field.
      * The name is considered a match, if the search string is a substring of the field in recipes.
      *
@@ -86,4 +77,13 @@ public interface RecipeService {
      */
     List<RecipeListDto> getRecipesByNames(String name, int limit);
 
+    /**
+     * This method finds a page of recipes by name.
+     *
+     * @param name the name or parts of it of the recipe to look for.
+     * @param page the page number to look for.
+     * @param size the size of the page.
+     * @return A list of RecipeListDto.
+     */
+    Page<RecipeListDto> getRecipesByName(String name, int page, int size);
 }
