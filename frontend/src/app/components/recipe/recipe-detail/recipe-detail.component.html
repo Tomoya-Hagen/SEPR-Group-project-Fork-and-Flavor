@@ -1,8 +1,8 @@
 <div class="jumbotron mt-5">
   <div>
-    <div style="position: relative;">
-      <h1 class="display-4" *ngIf="!recipe.isDraft" style="text-align:center;">{{recipe.name}}</h1>
-      <h1 class="display-4" *ngIf="recipe.isDraft" style="text-align:center;">{{recipe.name}} (Template)</h1>
+    <div class="rcp-d">
+      <h1 class="display-4" *ngIf="!recipe.isDraft">{{recipe.name}}</h1>
+      <h1 class="display-4" *ngIf="recipe.isDraft">{{recipe.name}} (Template)</h1>
     </div>
   </div>
   <ng-template #spoonRecipeModal let-modal>
@@ -35,22 +35,22 @@
     </div>
   </ng-template>
   <br>
-  <div class="RecipeInfos" style="display: flex; justify-content: space-between; width: 100%;">
-    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-right: 1%; background-color: var(--box-2);">
+  <div class="RecipeInfos">
+    <div class="info-box info-box-1">
       <h4>Bewertung:</h4>
       {{recipe.rating}}/5 <!--Entwurf-->
     </div>
-    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-right: 1%; background-color: var(--box-3);">
+    <div class="info-box info-box-2">
       <h4>Portionen:</h4>
       {{recipe.numberOfServings}}
     </div>
-    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-right: 1%; background-color: var(--box-4);" *ngIf="isCategoriesNotEmpty()">
+    <div class="info-box info-box-3" *ngIf="isCategoriesNotEmpty()">
       <h4>Kategorien:</h4>
       <div *ngFor="let category of recipe.categories">
         {{category.name}}
       </div>
     </div>
-    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--box-5);">
+    <div class="info-box info-box-4">
       <h4>Allergene: </h4>
       <div>
         <span *ngFor="let allergen of recipe.allergens; let isLast=last">
@@ -71,25 +71,27 @@
     </div>
   </div>
 
-  <div style="display: flex; justify-content: space-between; width: 100%;">
+  <div class="ing-desc">
     <!-- Ingredients and Description Section -->
-    <div style="width: 49%; padding: 10px;">
-      <h4>Zutaten:</h4>
-      <table class="table">
-        <tbody>
-        <tr *ngFor="let ingredient of recipe.ingredients">
-          <td>{{ingredient.name}}</td>
-          <td>{{ingredient.amount}} {{ingredient.unit}}</td>
-        </tr>
-        </tbody>
-      </table>
-      <h4>Beschreibung:</h4>
-      <p>{{recipe.description}}</p>
+      <div class="columns">
+        <h4>Zutaten:</h4>
+        <table class="table">
+          <tbody>
+          <tr *ngFor="let ingredient of recipe.ingredients">
+            <td>{{ingredient.name}}</td>
+            <td>{{ingredient.amount}} {{ingredient.unit}}</td>
+          </tr>
+          </tbody>
+        </table>
+        <h4>Beschreibung:</h4>
+        <p>{{recipe.description}}</p>
+      </div>
+      <div class="edit-spoon">
     </div>
 
     <!-- Nutrition Section -->
-    <div style="width: 49%; padding: 10px;">
-      <h4 style="cursor: pointer;">Nährwerte:</h4>
+    <div class="columns" [class.collapse]="!showNutrition">
+      <h4 class="pointer">Nährwerte:</h4>
       <div>
         <table class="table">
           <tbody>
@@ -108,8 +110,8 @@
   <div class="recipe-steps">
     <ng-container *ngFor="let step of recipeSteps">
       <div [ngClass]="{'recipe-step': true, 'sub-recipe': step.recipe}">
-        <h4 (click)="step.recipe && toggleStep(step)" style="display: flex; align-items: center;">
-          <span *ngIf="step.recipe" style="margin-right: 10px; display: flex; align-items: center;">
+        <h4 (click)="step.recipe && toggleStep(step)" class="rec-step">
+          <span *ngIf="step.recipe">
             <img src="assets/images/icon_black.png" height="25px" alt="subrecepy" class="subrecepy-icon">
           </span>
           {{ step.name }}

@@ -7,3 +7,43 @@
 .modal-title {
   flex-grow: 1;
 }
+
+h2 {
+  text-align: left;
+}
+
+.rcp-d {
+  position: relative;
+}
+
+.ing-desc {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.columns {
+  width: 49%;
+  padding: 10px;
+}
+
+.edit-spoon {
+  text-align: right;
+  position: relative;
+  margin: 30px;
+}
+
+.edit-button {
+  margin-right: 10px;
+}
+
+h4.rec-step {
+  display: flex;
+  align-items: center;
+}
+
+h4.rec-step span {
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+}
