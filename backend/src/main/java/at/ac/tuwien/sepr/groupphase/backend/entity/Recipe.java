@@ -258,6 +258,9 @@ public class Recipe {
         }
 
         public RecipeBuilder withForkedFrom(Recipe forkedFrom) {
+            if (forkedFrom == null) {
+                return this;
+            }
             this.forkedFrom = forkedFrom;
             return this;
         }
