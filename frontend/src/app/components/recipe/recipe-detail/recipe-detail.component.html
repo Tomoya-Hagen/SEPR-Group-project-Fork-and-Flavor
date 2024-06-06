@@ -90,7 +90,7 @@
     </div>
 
     <!-- Nutrition Section -->
-    <div class="columns" [class.collapse]="!showNutrition">
+    <div class="columns">
       <h4 class="pointer">Nährwerte:</h4>
       <div>
         <table class="table">
@@ -115,13 +115,10 @@
             <img src="assets/images/icon_black.png" height="25px" alt="subrecepy" class="subrecepy-icon">
           </span>
           {{ step.name }}
-        <ng-container *ngIf="step.recipe">
-          (Dieser Schritt ist ein Unterrezept)
-        </ng-container>
         </h4>
+        <button *ngIf="step.recipe" type="button" class="btn btn-primary btn-sm float-right" (click)="navigateToDetails(step.recipe.id)">Unterrezept Details</button>
         <p *ngIf="!step.recipe">{{ step.description }}</p>
         <div *ngIf="step.recipe && step.expanded">
-          <button type="button" class="btn btn-primary btn-sm" (click)="navigateToDetails(step.recipe.id)">Unterrezept anzeigen</button>
           <ng-container *ngFor="let subStep of step.recipe.recipeSteps">
             <div class="recipe-step">
               <h5>{{ subStep.name }}</h5>
@@ -133,7 +130,7 @@
     </ng-container>
       <div style="text-align: right;position: relative; margin: 30px">
         <button type="button" class="btn btn-primary btn-sm" (click)="editRecipe()" style="margin-right: 10px;">Rezept bearbeiten</button>
-        <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openSpoonModal(spoonRecipeModal)">Recipe spoonen</button>
+        <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openSpoonModal(spoonRecipeModal)">Rezept spoonen</button>
       </div>
   </div>
 
