@@ -277,7 +277,7 @@ public class DataGenerator implements CommandLineRunner {
                     continue;
                 }
                 Recipe forkedFrom = null;
-                if (!fields.get(5).isEmpty()) {
+                if (!fields.get(4).isEmpty()) {
                     forkedFrom = recipeRepository.findFirstById(idMap.get(Long.parseLong(fields.get(4))));
                 }
                 ApplicationUser user = userRepository.findFirstById(Long.parseLong(fields.get(5)));
