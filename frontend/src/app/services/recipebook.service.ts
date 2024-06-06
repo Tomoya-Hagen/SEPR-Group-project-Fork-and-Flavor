@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import {environment} from '../../environments/environment';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {catchError, Observable} from 'rxjs';
 import {Globals} from '../global/globals';
-import {RecipeBookDetailDto, RecipeBookListDto, RecipeBookSearch} from "../dtos/recipe-book";
-import {RecipeSearch} from "../dtos/recipe";
+import {
+  RecipeBook,
+  RecipeBookCreateDto,
+  RecipeBookDetailDto,
+  RecipeBookListDto,
+} from "../dtos/recipe-book";
 
 @Injectable({
   providedIn: 'root'
@@ -53,5 +56,26 @@ export class RecipeBookService {
     };
     return this.http.get<any>(this.baseUri + '', { params });
   }
+
+  createRecipeBook(recipeBook: RecipeBookCreateDto): Observable<RecipeBook> {
+    return this.http.post<RecipeBook>(this.baseUri, recipeBook)
+      .pipe(
+        catchError((error) => {
+          console.error(error);
+          throw error;
+        })
+      );
+  }
+
+  getById(id: number): Observable<RecipeBook> {
+    return this.http.get<RecipeBook>(this.baseUri + '/' + id)
+      .pipe(
+        catchError((error) => {
+          console.error(error.error);
+          throw error;
+        })
+      );
+  }
+
 
 }

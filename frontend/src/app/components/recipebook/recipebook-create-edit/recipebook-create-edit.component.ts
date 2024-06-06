@@ -3,7 +3,7 @@ import {NgForm, NgModel} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable, of} from 'rxjs';
 import {RecipeBook, RecipeBookCreateDto} from '../../../dtos/recipe-book';
-import { RecipeBookService } from '../../../services/recipe-book.service';
+import { RecipeBookService } from '../../../services/recipebook.service';
 import { RecipeService } from 'src/app/services/recipe.service';
 import { UserService } from 'src/app/services/user.service';
 import { RecipeListDto } from 'src/app/dtos/recipe';
