@@ -116,7 +116,6 @@
           </span>
           {{ step.name }}
         </h4>
-        <button *ngIf="step.recipe" type="button" class="btn btn-primary btn-sm float-right" (click)="navigateToDetails(step.recipe.id)">Unterrezept Details</button>
         <p *ngIf="!step.recipe">{{ step.description }}</p>
         <div *ngIf="step.recipe && step.expanded">
           <ng-container *ngFor="let subStep of step.recipe.recipeSteps">
@@ -126,6 +125,7 @@
             </div>
           </ng-container>
         </div>
+        <button *ngIf="step.recipe && step.expanded" type="button" class="btn btn-primary btn-sm float-right" (click)="navigateToDetails(step.recipe.id)">zum Unterrezept</button>
       </div>
     </ng-container>
       <div style="text-align: right;position: relative; margin: 30px">
