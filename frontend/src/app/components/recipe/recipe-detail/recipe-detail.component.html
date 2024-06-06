@@ -61,6 +61,10 @@
         none
       </div>
     </div>
+    <div class="info-box info-box-5 clickable" *ngIf="screenWidth <= 767" style="box-shadow: 0 0 10px rgba(111, 66, 193, 0); background-color: rgba(111, 66, 193, 1);" (click)="toggleNutrition()">
+      <h4>Nährwerte:</h4>
+      Click to Show
+    </div>
     <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--acent-color);" *ngIf="isForkedFromRecipe()">
       <h4>Geforkt von:</h4>
       <div>
@@ -68,6 +72,21 @@
            {{recipeForkedFrom}}{{isLast ? '' : ', '}}
         </span>
       </div>
+    </div>
+  </div>
+
+
+  <div class="columns">
+    <div *ngIf="screenWidth <= 767 && showNutrition">
+      <h4>Nährwerte:</h4>
+      <table class="table">
+        <tbody>
+          <tr *ngFor="let nutrition of recipe.nutritions">
+            <td>{{nutrition.name}}</td>
+            <td>{{nutrition.value}} {{nutrition.unit}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -91,14 +110,14 @@
 
     <!-- Nutrition Section -->
     <div class="columns">
-      <h4 class="pointer">Nährwerte:</h4>
-      <div>
+      <div *ngIf="screenWidth > 767">
+        <h4>Nährwerte:</h4>
         <table class="table">
           <tbody>
-          <tr *ngFor="let nutrition of recipe.nutritions">
-            <td>{{nutrition.name}}</td>
-            <td>{{nutrition.value}} {{nutrition.unit}}</td>
-          </tr>
+            <tr *ngFor="let nutrition of recipe.nutritions">
+              <td>{{nutrition.name}}</td>
+              <td>{{nutrition.value}} {{nutrition.unit}}</td>
+            </tr>
           </tbody>
         </table>
       </div>

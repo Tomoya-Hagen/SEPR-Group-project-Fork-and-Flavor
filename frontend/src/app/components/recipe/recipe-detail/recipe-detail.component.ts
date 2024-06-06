@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, TemplateRef} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -47,6 +47,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     "infinite" : false
   }
   recipeForkedFrom = [];
+  showNutrition: boolean = false;
+  screenWidth: number;
 
   constructor(
     private service: RecipeService,
@@ -59,7 +61,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   ) { }
 
   ngOnInit(): void {
-
+    this.screenWidth = window.innerWidth;
     this.route.params.subscribe(params => {
       let observable = this.service.getRecipeDetailsBy(params['id']);
       observable.subscribe({
@@ -173,6 +175,14 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     this.currentRecipeBook = recipeBook;
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.screenWidth = window.innerWidth;
+  }
+
+  toggleNutrition() {
+    this.showNutrition = !this.showNutrition;
+  }
 
   toggleStep(step: any): void {
     if (step.recipe) {
