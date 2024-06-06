@@ -212,8 +212,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     }
   }
 
-  navigateToDetails(index: number) {
-    this.router.navigate(['recipe', 'details', index]);
+  navigateToDetailsInNewTab(index: number) {
+    const baseUrl = window.location.origin;
+  const url = `${baseUrl}/#/recipe/details/${index}`;
+    window.open(url, '_blank');
   }
 
 }

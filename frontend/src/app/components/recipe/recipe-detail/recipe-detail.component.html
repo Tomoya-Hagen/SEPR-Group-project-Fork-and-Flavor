@@ -144,7 +144,7 @@
             </div>
           </ng-container>
         </div>
-        <button *ngIf="step.recipe && step.expanded" type="button" class="btn btn-primary btn-sm float-right" (click)="navigateToDetails(step.recipe.id)">zum Unterrezept</button>
+        <button *ngIf="step.recipe && step.expanded" type="button" class="btn btn-primary btn-sm" (click)="navigateToDetailsInNewTab(step.recipe.id)">zum Unterrezept</button>
       </div>
     </ng-container>
       <div style="text-align: right;position: relative; margin: 30px">
