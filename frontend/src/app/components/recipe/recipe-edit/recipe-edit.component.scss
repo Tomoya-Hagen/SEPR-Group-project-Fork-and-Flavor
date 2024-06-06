@@ -1,6 +1,6 @@
 .cbutton{
     position: absolute;
-    top: 20vh
+    top: 20vh;
   }
 
 @media only screen and (max-width : 768px) {
@@ -12,4 +12,8 @@
     margin: 5px;
 }
 
+}
+
+.ings {
+  height: 30vh;
 }

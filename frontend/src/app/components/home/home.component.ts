@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
 import { RecipeService } from 'src/app/services/recipe.service';
-import {Recipe, RecipeListDto} from 'src/app/dtos/recipe';
+import {Recipe} from 'src/app/dtos/recipe';
+import {RecipeBook, RecipeBookListDto} from "../../dtos/recipe-book";
+import {RecipeBookService} from "../../services/recipebook.service";
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import {Page} from "../../models/page.model";
 
 @Component({
   selector: 'app-home',
@@ -13,39 +12,35 @@ import {Page} from "../../models/page.model";
 })
 export class HomeComponent implements OnInit {
   recipes: Recipe[] = [];
-  totalElements: number;
-  page: number = 1;
-  size: number = 9;
-  bannerError: string | null = null;
-  pageSizes: number[] = [3, 9, 30, 90];
+  recipeBooks: RecipeBookListDto[] = [];
 
   constructor(
-    public authService: AuthService,
     private recipeService: RecipeService,
-    private router: Router,
-    private toastr: ToastrService
+    private recipeBookService: RecipeBookService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.getRecipes(this.page);
+    this.getRecipes();
+    this.getRecipeBooks();
   }
 
-  getRecipes(page: number): void {
-    this.recipeService.getRecipes('', page - 1, this.size) // Backend pagination is 0-based
+  getRecipes(): void {
+    this.recipeService.getRecipes('', 0, 6)
       .subscribe(data => {
         this.recipes = data.content;
-        this.totalElements = data.totalElements;
-        this.page = data.number + 1; // ng-bootstrap pagination is 1-based
       });
   }
 
-  onPageSizeChange(newSize: number): void {
-    this.size = newSize;
-    this.getRecipes(1); // Reset to first page when changing page size
+  getRecipeBooks(): void {
+    this.recipeBookService.search('', 0, 6)
+      .subscribe(data => {
+      this.recipeBooks = data.content;
+    });
   }
 
-  handleError(error: any): void {
-    console.error('Error fetching recipes', error);
-    this.bannerError = 'Could not fetch recipes: ' + error.message;
+  navigateToRecipeSearch(): void {
+    this.router.navigate(['/recipe']);
   }
+
 }
