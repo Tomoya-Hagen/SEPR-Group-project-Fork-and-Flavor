@@ -3,21 +3,26 @@
   <hr class="my-4">
   <div class="row">
 
-    <div class="col-lg-4 p-2" *ngFor="let item of recipes">
-      <app-card [item]="item" [detailUrlPrefix]="'/recipe/details'"></app-card>
+    <div class="row">
+      <div class="col-lg-4 p-2" *ngFor="let item of recipes">
+        <app-card [item]="item" [detailUrlPrefix]="'/recipe/details'"></app-card>
+      </div>
     </div>
     <div class="navigation-bar">
-      <button type="button" class="btn btn-link" (click)="loadPreviousPage()" [disabled] = "previousButtonDisabled" aria-label="zurück">
-        <i class="bi bi-arrow-clockwise"></i>
-        < Zurück
-      </button>
-      <select [(ngModel)]="step" (change)="selectedStepChanged()">
-        <option *ngFor="let step of steps" value="{{step}}">Show {{step}} items</option>
-      </select>
-      <button  class="btn btn-link" (click)="loadNextPage()" [disabled]="nextButtonDisabled" aria-label="weiter">
-        <i class="bi bi-arrow-clockwise"></i>
-        Weiter >
-      </button>
+      <ngb-pagination
+        [collectionSize]="totalElements"
+        [(page)]="page"
+        [pageSize]="size"
+        (pageChange)="getRecipes($event)">
+      </ngb-pagination>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="pageSize" class="form-label">Page Size:</label>
+          <select id="pageSize" class="form-select" [(ngModel)]="size" (change)="onPageSizeChange(size)">
+            <option *ngFor="let ps of pageSizes" [value]="ps">{{ ps }}</option>
+          </select>
+        </div>
+      </div>
     </div>
   </div>
 

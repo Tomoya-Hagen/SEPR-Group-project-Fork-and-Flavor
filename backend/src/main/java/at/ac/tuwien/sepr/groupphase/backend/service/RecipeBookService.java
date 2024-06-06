@@ -7,6 +7,8 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,27 +31,17 @@ public interface RecipeBookService {
     /**
      * This method is responsible for getting a list of all recipe books.
      *
-     * @return A list of RecipeBookListDto objects that represent all recipe books.
+     * @return A list of RecipeBookListDto objects that contain the details of all recipe books.
      */
-    List<RecipeBookListDto> getRecipeBooks();
+    Page<RecipeBookListDto> getRecipeBooksPageable(Pageable pageable);
 
     /**
      * This method is responsible for searching for recipe books by name.
      *
      * @param name The name of the recipe book.
-     * @return A list of RecipeBookListDto objects that represent the recipe books that match the search criteria.
-     * @throws NotFoundException If no recipe books are found with the provided name.
+     * @return A list of RecipeBookListDto objects that contain the details of recipe books that match the search criteria.
      */
-    List<RecipeBookListDto> searchRecipeBooks(String name);
-
-    /**
-     * This method is responsible for getting a list of recipe books by page and step.
-     *
-     * @param page The page number.
-     * @param step The step size.
-     * @return A list of RecipeBookListDto objects that represent the recipe books on the specified page and step.
-     */
-    List<RecipeBookListDto> getRecipeBooksFromPageInSteps(int page, int step);
+    Page<RecipeBookListDto> searchRecipeBooksByName(String name, Pageable pageable);
 
     /**
      * This method represents spooning which simply adds a new recipe to a recipe book.

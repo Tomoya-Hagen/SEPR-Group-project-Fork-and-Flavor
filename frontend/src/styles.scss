@@ -81,3 +81,19 @@ body {
   cursor: pointer;
   padding: 20px 20px;
 }
+
+#pageSize {
+  width: 60px;
+  margin: 1px;
+}
+
+label[for="pageSize"] {
+  margin: 1px 10px;
+}
+
+.navigation-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}

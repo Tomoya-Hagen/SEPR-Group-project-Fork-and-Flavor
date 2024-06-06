@@ -5,15 +5,10 @@ import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeBookMapper;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
-import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,22 +17,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -59,26 +53,24 @@ class RecipeBookEndpointTest implements TestData {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private RecipeBookMapper recipeBookMapper;
-
     @Test
     void searchRecipeBooksReturnsRecipeBook() throws Exception {
-        mockMvc.perform(get("/api/v1/recipebook/search")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/recipebook")
                 .param("name", "Italienische Küche")
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0].name", org.hamcrest.Matchers.is("Italienische Küche")));
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.content").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].name").value("Italienische Küche"));
     }
 
     @Test
     void searchRecipeBooksReturnsEmptyListWhenNoMatch() throws Exception {
-        mockMvc.perform(get("/api/v1/recipebook/search")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/recipebook")
                 .param("name", "Nonexistent")
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(0)));
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.content").isEmpty());
     }
 
     @Test
@@ -89,50 +81,47 @@ class RecipeBookEndpointTest implements TestData {
 
     @Test
     void getListByPageAndStepReturnsRecipeBooks() throws Exception {
-        mockMvc.perform(get("/api/v1/recipebook/")
-                .param("page", "1")
-                .param("step", "1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/recipebook")
+                .param("name", "")
+                .param("page", "0")
+                .param("size", "1")
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0].name", org.hamcrest.Matchers.is("Italienische Küche")));
-    }
-
-    @Test
-    void getListByPageAndStepReturnsEmptyListWhenNoMatch() throws Exception {
-        mockMvc.perform(get("/api/v1/recipebook/")
-                .param("page", "-1")
-                .param("step", "1")
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(0)));
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.content").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].name").value("Italienische Küche"));
     }
 
     @Test
     void getListByPageAndStepReturnsBadRequestWhenPageIsNotNumber() throws Exception {
-        mockMvc.perform(get("/api/v1/recipebook/")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/recipebook")
+                .param("name", "")
                 .param("page", "notANumber")
-                .param("step", "1")
+                .param("size", "1")
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest());
+            .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     void getListByPageAndStepReturnsBadRequestWhenStepIsNotNumber() throws Exception {
-        mockMvc.perform(get("/api/v1/recipebook/")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/recipebook")
+                .param("name", "")
                 .param("page", "1")
-                .param("step", "notANumber")
+                .param("size", "notANumber")
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest());
+            .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     void getRecipeBookListReturnsRecipeBooks() throws Exception {
-        mockMvc.perform(get("/api/v1/recipebook")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/recipebook")
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(9)));
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.content").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.content.length()").value(9));
     }
+
 
     @Test
     void serviceShouldThrowANotFoundExceptionIfARecipeIsAddedToARecipeBookThatDoesNotExist() throws Exception {

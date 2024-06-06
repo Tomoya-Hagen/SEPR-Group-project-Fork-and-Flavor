@@ -24,6 +24,8 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -63,23 +65,15 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     }
 
     @Override
-    public List<RecipeBookListDto> getRecipeBooks() {
-        List<RecipeBook> allRecipeBooks = recipeBookRepository.findAll();
-        return recipeBookMapper.recipeBookListToRecipeBookListDto(allRecipeBooks);
+    public Page<RecipeBookListDto> getRecipeBooksPageable(Pageable pageable) {
+        Page<RecipeBook> recipeBooksPage = recipeBookRepository.findAll(pageable);
+        return recipeBooksPage.map(recipeBookMapper::recipeBookToRecipeBookListDto);
     }
 
     @Override
-    public List<RecipeBookListDto> searchRecipeBooks(String name) {
-        List<RecipeBook> searchedRecipeBooks = recipeBookRepository.search(name);
-        return recipeBookMapper.recipeBookListToRecipeBookListDto(searchedRecipeBooks);
-    }
-
-    @Override
-    public List<RecipeBookListDto> getRecipeBooksFromPageInSteps(int pageNumber, int stepNumber) {
-        Long from = (long) (((pageNumber - 1) * stepNumber) + 1);
-        Long to = (long) (pageNumber * stepNumber);
-        List<RecipeBook> recipes = recipeBookRepository.findByIdBetweenOrderById(from, to);
-        return recipeBookMapper.recipeBookListToRecipeBookListDto(recipes);
+    public Page<RecipeBookListDto> searchRecipeBooksByName(String name, Pageable pageable) {
+        Page<RecipeBook> recipeBooksPage = recipeBookRepository.findByNameContainingIgnoreCaseOrderByName(name, pageable);
+        return recipeBooksPage.map(recipeBookMapper::recipeBookToRecipeBookListDto);
     }
 
     @Override

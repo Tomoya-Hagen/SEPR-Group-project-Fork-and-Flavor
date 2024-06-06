@@ -217,4 +217,5 @@ public interface RecipeMapper {
 
     Recipe recipeListDtoToRecipe(RecipeListDto recipeListDto);
 
+    RecipeListDto recipeToRecipeListDto(Recipe recipe, Long rating);
 }
