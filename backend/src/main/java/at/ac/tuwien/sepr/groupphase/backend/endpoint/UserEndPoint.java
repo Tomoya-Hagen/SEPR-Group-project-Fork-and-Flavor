@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -39,7 +40,7 @@ public class UserEndPoint {
 
     @GetMapping("{id}/details")
     public UserDto getUser(@PathVariable(name = "id") Long id) {
-        LOGGER.info("GET /api/v1/recipebook/{}/details", id);
+        LOGGER.info("GET /api/v1/users/{}/details", id);
         try {
             return userService.findUserById(id);
         } catch (NotFoundException e) {
@@ -47,6 +48,12 @@ public class UserEndPoint {
             logClientError(status, "no user with id " + id + " found", e);
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
+    }
+
+    @GetMapping("{id}/recipebooks")
+    public List<RecipeBookListDto> getRecipeBooksByUserId(@PathVariable(name = "id") Long id) {
+        LOGGER.info("GET /api/v1/users/{}/recipebooks", id);
+        return userService.findRecipeBooksByUserId(id);
     }
 
     /**

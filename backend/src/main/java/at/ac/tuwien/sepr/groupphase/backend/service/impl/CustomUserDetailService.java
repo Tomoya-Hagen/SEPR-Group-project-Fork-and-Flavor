@@ -1,15 +1,15 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeBookMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserRegisterDtoMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
@@ -42,10 +42,13 @@ public class CustomUserDetailService implements UserService {
     private final UserRegisterDtoMapper userRegisterDtoMapper;
     private final RoleRepository rolesRepository;
     private final UserMapper userMapper;
+    private final RecipeBookMapper recipeBookMapper;
+    private final RecipeBookRepository recipeBookRepository;
 
     @Autowired
     public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserMapper userMapper,
-                                   UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository) {
+                                   UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository, RecipeBookMapper recipeBookMapper,
+                                   RecipeBookRepository recipeBookRepository) {
         this.userRepository = userRepository;
         this.userValidator = new UserValidator(userRepository);
         this.passwordEncoder = passwordEncoder;
@@ -53,6 +56,8 @@ public class CustomUserDetailService implements UserService {
         this.userRegisterDtoMapper = userRegisterDtoMapper;
         this.rolesRepository = rolesRepository;
         this.userMapper = userMapper;
+        this.recipeBookMapper = recipeBookMapper;
+        this.recipeBookRepository = recipeBookRepository;
     }
 
     @Override
@@ -144,5 +149,11 @@ public class CustomUserDetailService implements UserService {
             throw new NotFoundException("the logged-in user was not found in the system");
         }
         return userRepository.findFirstUserByEmail(email);
+    }
+
+    @Override
+    public List<RecipeBookListDto> findRecipeBooksByUserId(Long id) {
+        LOGGER.trace("findRecipeBooksByUserId(id)");
+        return recipeBookMapper.recipeBookListToRecipeBookListDto(recipeBookRepository.findRecipeBooksByOwnerOrSharedUser(id));
     }
 }

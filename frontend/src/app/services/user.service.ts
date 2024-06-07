@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable, catchError } from "rxjs";
 import {Globals} from '../global/globals';
 import {userDto, userListDto} from "../dtos/user";
+import {RecipeBookListDto} from "../dtos/recipe-book";
 
 /**
  * Service for handling users.
@@ -32,6 +33,10 @@ export class UserService {
 
     public getUser(id: number): Observable<userDto> {
       return this.http.get<userDto>(this.baseUri+"/"+id+"/details");
+    }
+
+    public getAllRecipeBooksForUserId(id:number): Observable<RecipeBookListDto[]> {
+      return this.http.get<RecipeBookListDto[]>(this.baseUri+"/"+id+"/recipebooks");
     }
 
 }
