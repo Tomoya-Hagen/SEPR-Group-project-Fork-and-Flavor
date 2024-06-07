@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {Router} from "@angular/router";
 import {NewUserRequest} from "../../dtos/new-user-request";
 import {AuthService} from "../../services/auth.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-register',
@@ -15,7 +16,10 @@ export class RegisterComponent implements OnInit {
   errorMessage = '';
   submitted = false;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private formBuilder: FormBuilder,
+              private authService: AuthService,
+              private notification: ToastrService,
+              private router: Router) {
     this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -44,20 +48,22 @@ export class RegisterComponent implements OnInit {
       this.authService.registerUser(newUserRequest).subscribe({
         next: () => {
           console.log(`Successfully registered user: ${newUserRequest.email}`);
+          this.notification.success("Successfully registered user:" + newUserRequest.email, "Registration Success:");
           this.router.navigate(['/']);  // Redirect after successful registration
         },
         error: (errorResponse) => {
           console.error('Registration error:', errorResponse);
           this.error = true;
-
           this.errorMessage = errorResponse.error;
-          //TODO: Toastr
+          this.notification.error('Registration error:' + errorResponse, "Registration Error");
         }
       });
     } else {
       console.error('Invalid input');
       this.error = true;
       this.errorMessage = 'Please check your input and try again.';
+      this.notification.error(this.errorMessage, "Registration Error");
+
     }
   }
 

@@ -60,9 +60,9 @@ export class RecipebookComponent implements OnInit,OnDestroy {
           this.pagedData = data.content;
           this.totalElements = data.totalElements;
         },
-        error: (error: any) => {
-          console.error('Error fetching recipes', error);
-          this.notification.error('Could not fetch recipes', 'Error');
+        error: error => {
+          console.error('Error fetching recipebook.', error);
+          this.notification.error('Could not fetch recipebook.', 'Backend Error - Recipebook');
         }
       });
   }

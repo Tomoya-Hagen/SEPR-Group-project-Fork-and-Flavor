@@ -8,6 +8,7 @@ import { RecipeService } from 'src/app/services/recipe.service';
 import { UserService } from 'src/app/services/user.service';
 import { RecipeListDto } from 'src/app/dtos/recipe';
 import {userListDto} from "../../../dtos/user";
+import {ToastrService} from "ngx-toastr";
 
 export enum RecipeBookCreateEditMode {
   create,
@@ -27,24 +28,24 @@ export class RecipebookCreateEditComponent implements OnInit {
     users: null,
     recipes: null
   };
-
+  bannerError: string | null = null;
   users: (userListDto | null)[] = [];
   recipes: (RecipeListDto | null)[] = [];
   dummyUserSelectionModel: unknown;
   dummyRecipeSelectionModel: unknown;
 
   constructor(
-    private recipeBookservice: RecipeBookService,
+    private recipeBookService: RecipeBookService,
     private recipeService: RecipeService,
     private userService: UserService,
     private router: Router,
     private route: ActivatedRoute,
-    // private notification: ToastrService,
+    private notification: ToastrService,
   ) { }
   ngOnInit(): void {
     var id = this.route.snapshot.params['id'];
     if (id) {
-      this.recipeBookservice.getById(id).subscribe(recipeBook => {
+      this.recipeBookService.getById(id).subscribe(recipeBook => {
         this.recipeBook = recipeBook;
         this.mode = RecipeBookCreateEditMode.edit;
       });
@@ -73,7 +74,7 @@ export class RecipebookCreateEditComponent implements OnInit {
         case RecipeBookCreateEditMode.create:
           this.recipeBook.recipes = this.recipes;
           this.recipeBook.users = this.users;
-          observable = this.recipeBookservice.createRecipeBook(this.recipeBook);
+          observable = this.recipeBookService.createRecipeBook(this.recipeBook);
           break;
         case RecipeBookCreateEditMode.edit:
           // observable = this.recipeBookservice.update(this.recipeBook);
@@ -89,12 +90,12 @@ export class RecipebookCreateEditComponent implements OnInit {
         },
         error: error => {
           if(this.mode === RecipeBookCreateEditMode.create) {
-            console.error('Error creating recipe book', error);
-            // this.notification.error('Could not create recipe book: ' + error.message);
+            console.error('Error creating recipebook', error);
+            this.notification.error('Could not create recipebook.', 'Backend Error - Recipebook Create');
           }
           if(this.mode === RecipeBookCreateEditMode.edit) {
-            console.error('Error updating recipe book', error);
-            // this.notification.error('Could not update recipe book: ' + error.message);
+            console.error('Error editing recipebook', error);
+            this.notification.error('Could not edit recipebook.', 'Backend Error - Recipebook Edit');
           }
         }
       });
@@ -138,7 +139,6 @@ export class RecipebookCreateEditComponent implements OnInit {
   public formatUserName(user: userListDto | null): string {
     return user?.name ?? '';
   }
-
 
   public dynamicCssClassesForInput(input: NgModel): any {
     return {

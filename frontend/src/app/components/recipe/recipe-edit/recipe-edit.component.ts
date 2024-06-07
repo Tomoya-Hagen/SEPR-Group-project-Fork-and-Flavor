@@ -52,6 +52,7 @@ export class RecipeEditComponent implements OnInit {
       if(i !== index && this.recipe.ingredients[i].id === updatedIngredient.id) {
         this.error = true;
         this.errorMessage = 'You cannot choose the same category twice!';
+        this.notification.error(this.errorMessage,"Recipe Error");
         // this.recipe.ingredients.splice(index, 1, { name: "", id: -1, amount: null, unit: null });
         this.validateForm()
         console.log('Duplicate found:', updatedIngredient);
@@ -124,8 +125,10 @@ export class RecipeEditComponent implements OnInit {
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;
+      this.notification.error('Could not update recipe:' + this.errorMessage, 'Backend Error - Recipe');
     } else {
       this.errorMessage = error.error;
+      this.notification.error( 'Could not update recipe:' + this.errorMessage, 'Backend Error - Recipe');
     }
   }
 
@@ -162,7 +165,7 @@ export class RecipeEditComponent implements OnInit {
       this.error = true;
       this.errorMessage = 'A recipe cannot reference itself as a step.';
       this.recipe.recipeSteps[index] = new Step();
-      // this.notification.error(this.errorMessage);
+      this.notification.error(this.errorMessage,"Recipe Error");
       return;
     }
 
