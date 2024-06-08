@@ -75,7 +75,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           this.changeNutritionsToGramm();
           this.getForkedFromRecipeName();
           this.isCurrentUserOwner();
-          console.log("ownerId: " + this.recipe.ownerId);
           this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
         },
         error: error => {
@@ -226,7 +225,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   isCurrentUserOwner() {
     this.userService.getCurrentUser().subscribe(currentUser => {
       if (currentUser && this.recipe.ownerId === currentUser.id) {
-        console.log("curUs: " + currentUser.id);
         this.isOwner = true;
       }
     });
