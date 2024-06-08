@@ -1,12 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {NgForOf} from "@angular/common";
 import {ActivatedRoute, RouterLink} from "@angular/router";
-import {RecipeBookDetailDto, RecipeBookListDto} from "../../dtos/recipe-book";
+import {RecipeBookListDto} from "../../dtos/recipe-book";
 import {userDto} from "../../dtos/user";
 import {RecipeListDto} from "../../dtos/recipe";
 import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
-import {observable} from "rxjs";
 
 @Component({
   selector: 'app-userpage',
@@ -61,6 +60,20 @@ export class UserpageComponent implements OnInit {
             ? 'Is the backend up?'
             : error.message.message;
           this.notification.error(errorMessage, 'Could not fetch user by id');
+        }
+      });
+      let observable3 = this.service.getAllRecipesForUserId(params['id']);
+      observable3.subscribe({
+        next: data => {
+          this.recipes = data;
+        },
+        error: error => {
+          console.error('Error fetching recipes by user id', error);
+          this.bannerError = 'Could not fetch recipes by user id: ' + error.message;
+          const errorMessage = error.status === 0
+            ? 'Is the backend up?'
+            : error.message.message;
+          this.notification.error(errorMessage, 'Could not fetch recipes by user id');
         }
       });
     });

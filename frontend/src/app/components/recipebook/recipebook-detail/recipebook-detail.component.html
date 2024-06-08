@@ -21,21 +21,15 @@
         </tbody>
       </table>
     </div>
-    <div class="col-2">
+    <div class="col-2" >
       <p class="fs-4">Owner:</p>
-      <table class="table">
-        <tbody>
-        <td [routerLink]="['/userpage', recipeBook.ownerId]" class="link-warning">{{ recipeBook.owner.name }}</td>
-        </tbody>
-      </table>
+      <ul>
+        <li><a (click)="openUserPage()" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{{ recipeBook.owner.name }}</a></li>
+      </ul>
       <p class="fs-4">Contributors:</p>
-      <table class="table">
-        <tbody>
-        <tr *ngFor="let users of recipeBook.users">
-          <td>{{ users.name }}</td>
-        </tr>
-        </tbody>
-      </table>
+      <ul class="list-style-none " *ngFor="let users of recipeBook.users">
+        <li class="mb-2" [routerLink]="['/userpage', users.id]"><a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{{ users.name }}</a></li>
+      </ul>
     </div>
   </div>
 </div>

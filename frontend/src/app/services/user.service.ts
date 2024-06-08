@@ -4,6 +4,7 @@ import { Observable, catchError } from "rxjs";
 import {Globals} from '../global/globals';
 import {userDto, userListDto} from "../dtos/user";
 import {RecipeBookListDto} from "../dtos/recipe-book";
+import {RecipeListDto} from "../dtos/recipe";
 
 /**
  * Service for handling users.
@@ -38,5 +39,9 @@ export class UserService {
     public getAllRecipeBooksForUserId(id:number): Observable<RecipeBookListDto[]> {
       return this.http.get<RecipeBookListDto[]>(this.baseUri+"/"+id+"/recipebooks");
     }
+
+  public getAllRecipesForUserId(id:number): Observable<RecipeListDto[]> {
+    return this.http.get<RecipeListDto[]>(this.baseUri+"/"+id+"/recipes");
+  }
 
 }
