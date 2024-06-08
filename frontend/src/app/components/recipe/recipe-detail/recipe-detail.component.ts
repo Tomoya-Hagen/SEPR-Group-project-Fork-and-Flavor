@@ -9,6 +9,7 @@ import { RecipeStepDetailDto, RecipeStepRecipeDetailDto } from 'src/app/dtos/rec
 import { RecipeService } from 'src/app/services/recipe.service';
 import { RecipeBookService } from 'src/app/services/recipebook.service';
 import { Title } from '@angular/platform-browser';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -49,6 +50,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   recipeForkedFrom = [];
   showNutrition: boolean = false;
   screenWidth: number;
+  isOwner: boolean = false;
 
   constructor(
     private service: RecipeService,
@@ -58,6 +60,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     private modalService: NgbModal,
     private recipeBookService: RecipeBookService,
     private titleService: Title,
+    private userService: UserService,
   ) { }
 
   ngOnInit(): void {
@@ -71,6 +74,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           this.changeIngredientsToGramm();
           this.changeNutritionsToGramm();
           this.getForkedFromRecipeName();
+          this.isCurrentUserOwner();
           this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
         },
         error: error => {
@@ -216,6 +220,14 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     const baseUrl = window.location.origin;
   const url = `${baseUrl}/#/recipe/details/${index}`;
     window.open(url, '_blank');
+  }
+
+  isCurrentUserOwner() {
+    this.userService.getCurrentUser().subscribe(currentUser => {
+      if (currentUser && this.recipe.ownerId === currentUser.id) {
+        this.isOwner = true;
+      }
+    });
   }
 
 }
