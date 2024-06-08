@@ -1,24 +1,27 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserRegisterDtoMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,7 +45,7 @@ public class CustomUserDetailService implements UserService {
 
     @Autowired
     public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserMapper userMapper,
-        UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository) {
+                                   UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository) {
         this.userRepository = userRepository;
         this.userValidator = new UserValidator(userRepository);
         this.passwordEncoder = passwordEncoder;
@@ -122,5 +125,24 @@ public class CustomUserDetailService implements UserService {
         userRepository.flush();
 
         return login(userRegisterDtoMapper.toUserLoginDto(userRegisterDto));
+    }
+
+    @Override
+    public UserDto findUserById(Long id) throws NotFoundException {
+        LOGGER.trace("findUserById(id)");
+        return userMapper.userToUserDto(userRepository.findById(id).orElseThrow(NotFoundException::new));
+    }
+
+    @Override
+    public ApplicationUser getCurrentUser() {
+        LOGGER.trace("getCurrentUser()");
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            throw new ForbiddenException("no user is currently logged in");
+        }
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (!userRepository.existsByEmail(email)) {
+            throw new NotFoundException("the logged-in user was not found in the system");
+        }
+        return userRepository.findFirstUserByEmail(email);
     }
 }

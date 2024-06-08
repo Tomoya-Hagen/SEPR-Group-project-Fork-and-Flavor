@@ -40,6 +40,7 @@ export class RegisterComponent implements OnInit {
         email: this.registerForm.controls.email.value,
         password: this.registerForm.controls.password.value
       };
+
       this.authService.registerUser(newUserRequest).subscribe({
         next: () => {
           console.log(`Successfully registered user: ${newUserRequest.email}`);
@@ -49,25 +50,8 @@ export class RegisterComponent implements OnInit {
           console.error('Registration error:', errorResponse);
           this.error = true;
 
-          try {
-            // Manually parsing the error response
-            const errorData = JSON.parse(errorResponse.error);
-
-            if (errorData && errorData.detail) {
-              const detailMessage = errorData.detail;
-              const startIndex = detailMessage.indexOf('Failed validations:');
-              if (startIndex !== -1) {
-                this.errorMessage = detailMessage.substring(startIndex);
-              } else {
-                this.errorMessage = detailMessage;
-              }
-            } else {
-              this.errorMessage = 'Unknown error occurred. Please try again.';
-            }
-          } catch (e) {
-            console.error('Error parsing error response:', e);
-            this.errorMessage = 'Error in processing error response. Please contact support.';
-          }
+          this.errorMessage = errorResponse.error;
+          //TODO: Toastr
         }
       });
     } else {

@@ -1,9 +1,8 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, catchError } from "rxjs";
-import { environment } from "src/environments/environment";
 import {Globals} from '../global/globals';
-import { userListDto } from "../dtos/user";
+import {userDto, userListDto} from "../dtos/user";
 
 /**
  * Service for handling users.
@@ -29,6 +28,10 @@ export class UserService {
                 throw error;
             })
         );
+    }
+
+    public getUser(id: number): Observable<userDto> {
+      return this.http.get<userDto>(this.baseUri+"/"+id+"/details");
     }
 
 }

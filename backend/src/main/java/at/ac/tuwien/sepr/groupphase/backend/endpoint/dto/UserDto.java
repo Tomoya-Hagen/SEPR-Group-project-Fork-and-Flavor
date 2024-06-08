@@ -1,13 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-public record RecipeBookListDto(
+public record UserDto(
     @NotNull
     long id,
     @NotNull
-    String name,
-    @NotNull
-    String description,
-    long ownerId) {
+    @Size(min = 1, max = 100)
+    String name
+) {
 }

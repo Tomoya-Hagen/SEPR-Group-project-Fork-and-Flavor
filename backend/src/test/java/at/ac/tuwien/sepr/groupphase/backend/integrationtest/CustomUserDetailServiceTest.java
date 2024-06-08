@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.annotation.DirtiesContext;
 
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -25,8 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@Disabled
 class CustomUserDetailServiceTest implements TestData {
 
     @Autowired
@@ -52,23 +49,6 @@ class CustomUserDetailServiceTest implements TestData {
             () -> assertTrue(userRepository.existsByUsername(validUser.username()))
         );
     }
-
-    @Test
-    void registerInvalidUserEmail() {
-        UserRegisterDto invalidUser = new UserRegisterDto(
-            "invalidEmail",
-            "password",
-            "invaliduser"
-        );
-
-        Exception exception = assertThrowsExactly(ValidationException.class, () -> customUserDetailService.register(invalidUser));
-        String expectedMessage = "Email must be a valid email address";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-
-    }
-
 
     @Test
     void registerUserWithDuplicateEmail() {

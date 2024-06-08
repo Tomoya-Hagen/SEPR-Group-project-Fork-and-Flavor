@@ -6,7 +6,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -17,10 +16,12 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -52,21 +52,6 @@ public class RecipeEndpoint {
     public RecipeEndpoint(RecipeService recipeService, UserService userService) {
         this.recipeService = recipeService;
         this.userService = userService;
-    }
-
-
-    /**
-     * This method handles GET requests to search for recipe books by name.
-     *
-     * @param name The name of the recipe book.
-     * @return A list of recipe books that match the search criteria.
-     */
-    @PermitAll
-    @GetMapping("/search")
-    @Operation(summary = "Get a list of the searched recipe")
-    public List<RecipeListDto> search(@RequestParam(name = "name") String name) {
-        LOGGER.info("GET /api/v1/recipe/search");
-        return recipeService.searchRecipe(name);
     }
 
     @PermitAll
@@ -93,25 +78,12 @@ public class RecipeEndpoint {
     public ResponseEntity<DetailedRecipeDto> updateRecipe(@PathVariable("id") Long id, @RequestBody RecipeUpdateDto recipeUpdatedto) {
         LOGGER.info("PUT /api/v1/recipe/ + {} + {}", id, recipeUpdatedto);
         LOGGER.debug("Body of request: {}", recipeUpdatedto);
-        ApplicationUser user = userService.findApplicationUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        RecipeDetailDto recipe = recipeService.getRecipeDetailDtoById(recipeUpdatedto.id());
-        if (recipe.ownerId() != user.getId()) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
         try {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(recipeService.updateRecipe(recipeUpdatedto));
         } catch (Exception e) {
             LOGGER.warn("Error updating recipe book: {}", recipeUpdatedto, e);
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-    }
-
-    @PermitAll
-    @GetMapping("/")
-    @Operation(summary = "Get a list of recipes")
-    public List<RecipeListDto> getListByPageAndStep(@RequestParam(name = "page") int page, @RequestParam(name = "step") int step) {
-        LOGGER.info("GET /api/v1/recipe?page={}&step={}", page, step);
-        return recipeService.getRecipesFromPageInSteps(page, step);
     }
 
     @Secured("ROLE_USER")
@@ -129,20 +101,24 @@ public class RecipeEndpoint {
     @Operation(summary = "Create a new Recipe", security = @SecurityRequirement(name = "apiKey"))
     public DetailedRecipeDto createnew(@Valid @RequestBody RecipeCreateDto recipeDto) {
         LOGGER.info("POST /api/v1/recipe body: {}", recipeDto);
-        var auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
-            return recipeService.createRecipe(recipeDto, (String) auth);
+            return recipeService.createRecipe(recipeDto);
         } catch (Exception e) {
             HttpStatus status = HttpStatus.BAD_REQUEST;
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
     }
 
+    @PermitAll
     @GetMapping
-    public ResponseEntity<List<RecipeListDto>> getRecipesByNames(@RequestParam(name = "name") String name, @RequestParam(name = "limit") int limit) {
-        LOGGER.info("Getting {} using {}", limit, name);
-        LOGGER.debug("Retrieving {} recipes using {}", limit, name);
-        return ResponseEntity.ok(recipeService.getRecipesByNames(name, limit));
+    @Operation(summary = "Get a list of recipes")
+    public Page<RecipeListDto> getRecipesByName(@RequestParam(name = "name", required = false, defaultValue = "") String name,
+                                                @RequestParam(name = "page", defaultValue = "0") int page,
+                                                @RequestParam(name = "size", defaultValue = "9") int size) {
+        LOGGER.info("GET /api/v1/recipes?page={}&size={}&name={}", page, size, name);
+        Pageable pageable = PageRequest.of(page, size);
+
+        return recipeService.getRecipesByName(name, pageable);
     }
 
     private void logClientError(HttpStatus status, String message, Exception e) {

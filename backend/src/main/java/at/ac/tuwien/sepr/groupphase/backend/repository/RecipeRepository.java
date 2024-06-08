@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.repository;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -39,13 +40,12 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      * @param to represents the end value of ids which will be returned.
      * @return a list of recipes which hava an id in the range @from to @to.
      */
-    @Query("select r from Recipe r where r.id between :#{#from} and :#{#to} order by r.id")
-    List<Recipe> getAllRecipesWithIdFromTo(@Param("from") int from, @Param("to") int to);
+    List<Recipe> findByIdBetweenOrderById(Long from, Long to);
 
     @Query("SELECT COALESCE(MAX(i.id),0) FROM Recipe i")
     Long findMaxId();
 
-    List<Recipe> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<Recipe> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
     /**
      * Search for recipes in the persistent data store matching  provided field.

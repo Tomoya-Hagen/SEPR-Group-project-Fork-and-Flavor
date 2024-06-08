@@ -3,6 +3,8 @@ package at.ac.tuwien.sepr.groupphase.backend.repository;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,15 +24,14 @@ public interface RecipeBookRepository extends JpaRepository<RecipeBook, Long> {
 
     /**
      * This method is responsible for searching for recipe books by name.
-     * It uses a custom query to select distinct recipe books where the name matches the provided name.
-     * The name matching is case-insensitive and allows for partial matches.
+     * It uses a custom query to select recipe books where the name contains the provided name value.
+     * The results are ordered by name.
      *
      * @param name The name of the recipe book.
-     * @return A list of RecipeBook entities that match the search criteria.
+     * @param pageable The page information.
+     * @return A Pageable object that contains the details of recipe books that match the search criteria.
      */
-    @Query("select distinct RecipeBook from RecipeBook RecipeBook"
-        + " where (?1 is null or UPPER(RecipeBook.name) like UPPER('%'||?1||'%'))")
-    List<RecipeBook> search(@Param("name") String name);
+    Page<RecipeBook> findByNameContainingIgnoreCaseOrderByName(String name, Pageable pageable);
 
     /**
      * This method is responsible for getting a range of recipe books by ID.
@@ -41,8 +42,7 @@ public interface RecipeBookRepository extends JpaRepository<RecipeBook, Long> {
      * @param to The end of the ID range.
      * @return A list of RecipeBook entities that are within the specified ID range.
      */
-    @Query("select r from RecipeBook r where r.id between :#{#from} and :#{#to} order by r.id")
-    List<RecipeBook> getAllRecipesWithIdFromTo(@Param("from") int from, @Param("to") int to);
+    List<RecipeBook> findByIdBetweenOrderById(Long from, Long to);
 
     /**
      * This method is used to get all recipe books a user has write access to.
@@ -50,7 +50,7 @@ public interface RecipeBookRepository extends JpaRepository<RecipeBook, Long> {
      * @param userId represents the user id of the user.
      * @return all recipe books the user has write access to.
      */
-    @Query("SELECT rb FROM RecipeBook rb WHERE rb.owner.id = :userId OR :user MEMBER OF rb.editors")
+    @Query("SELECT rb FROM RecipeBook rb WHERE rb.owner.id = :userId OR :userId IN (SELECT u.id FROM rb.editors u)")
     List<RecipeBook> findRecipeBooksByOwnerOrSharedUser(@Param("userId") long userId);
 
     /**

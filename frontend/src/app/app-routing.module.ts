@@ -9,9 +9,7 @@ import {RecipeCreateComponent} from "./components/recipe/recipe-create/recipe-cr
 import { RecipebookCreateEditComponent, RecipeBookCreateEditMode } from './components/recipebook/recipebook-create-edit/recipebook-create-edit.component';
 import {RegisterComponent} from "./components/register/register.component";
 import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail.component';
-import {
-  RecipebookDetailComponent
-} from "./components/recipebook/recipe-book-detail/recipebook-detail/recipebook-detail.component";
+import { RecipebookDetailComponent } from "./components/recipebook/recipebook-detail/recipebook-detail.component";
 import { RecipeEditComponent } from './components/recipe/recipe-edit/recipe-edit.component';
 
 const routes: Routes = [

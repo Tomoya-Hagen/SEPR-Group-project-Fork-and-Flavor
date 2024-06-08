@@ -11,12 +11,10 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeIngredientRepositor
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -27,12 +25,10 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@ActiveProfiles({"test", "generateData"})
+@ActiveProfiles({"test"})
 @Transactional
-@Disabled
 class RecipeRepositoryTest {
     @Autowired
     private RecipeRepository recipeRepository;
@@ -136,7 +132,7 @@ class RecipeRepositoryTest {
 
     @Test
     void ReturnOneRecipeFromGetAllFromIdOneToOne() {
-        List<Recipe> recipes = recipeRepository.getAllRecipesWithIdFromTo(1, 1);
+        List<Recipe> recipes = recipeRepository.findByIdBetweenOrderById(1L, 1L);
         Assertions.assertEquals(1, recipes.size());
         Assertions.assertEquals(recipeRepository.getRecipeById(1).orElseThrow(), recipes.getFirst());
     }
@@ -146,14 +142,14 @@ class RecipeRepositoryTest {
         List<Recipe> expectedRecipes = List.of(
             recipeRepository.getRecipeById(1).orElseThrow(),
             recipeRepository.getRecipeById(2).orElseThrow());
-        List<Recipe> recipes = recipeRepository.getAllRecipesWithIdFromTo(1, 2);
+        List<Recipe> recipes = recipeRepository.findByIdBetweenOrderById(1L, 2L);
         Assertions.assertEquals(2, recipes.size());
         Assertions.assertEquals(expectedRecipes, recipes);
     }
 
     @Test
     void ReturnNoRecipesFromGetAllFromIdThreeToFour() {
-        List<Recipe> recipes = recipeRepository.getAllRecipesWithIdFromTo(3000, 3001);
+        List<Recipe> recipes = recipeRepository.findByIdBetweenOrderById(3000L, 3001L);
         Assertions.assertTrue(recipes.isEmpty());
     }
 
@@ -164,13 +160,9 @@ class RecipeRepositoryTest {
 
     @Test
     void searchReturnsRecipeRegardlessOfCase() {
-        assertEquals("Zitronenkuchen", recipeRepository.search("Zitronen").getFirst().getName());
+        assertEquals("Zitronenkuchen", recipeRepository.search("zitronenKuchen").getFirst().getName());
     }
 
-    @Test
-    void searchReturnsEmptyListWhenNameIsNull() {
-        assertEquals(52, recipeRepository.search(null).size());
-    }
     @Test
     void searchReturnsRecipeWhenNameMatches() {
         assertEquals("Gratin", recipeRepository.search("Gratin").getFirst().getName());

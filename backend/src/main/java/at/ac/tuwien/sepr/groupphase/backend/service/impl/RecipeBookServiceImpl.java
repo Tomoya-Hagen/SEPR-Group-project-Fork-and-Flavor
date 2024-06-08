@@ -12,15 +12,20 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeBookValidator;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -33,18 +38,24 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     private final RecipeBookMapper recipeBookMapper;
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
+    private final RecipeBookValidator recipeBookValidator;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     public RecipeBookServiceImpl(RecipeBookRepository recipeBookRepository,
                                  RecipeMapper recipeMapper,
                                  RecipeBookMapper recipeBookMapper,
                                  RecipeRepository recipeRepository,
-                                 UserRepository userRepository) {
+                                 UserRepository userRepository,
+                                 RecipeBookValidator recipeBookValidator,
+                                 UserService userService) {
         this.recipeBookRepository = recipeBookRepository;
         this.recipeBookMapper = recipeBookMapper;
         this.recipeRepository = recipeRepository;
         this.recipeBookRecipeMapper = recipeMapper;
         this.userRepository = userRepository;
+        this.recipeBookValidator = recipeBookValidator;
+        this.userService = userService;
     }
 
     @Override
@@ -54,34 +65,24 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     }
 
     @Override
-    public List<RecipeBookListDto> getRecipeBooks() {
-        List<RecipeBook> allRecipeBooks = recipeBookRepository.findAll();
-        return recipeBookMapper.recipeBookListToRecipeBookListDto(allRecipeBooks);
+    public Page<RecipeBookListDto> getRecipeBooksPageable(Pageable pageable) {
+        Page<RecipeBook> recipeBooksPage = recipeBookRepository.findAll(pageable);
+        return recipeBooksPage.map(recipeBookMapper::recipeBookToRecipeBookListDto);
     }
 
     @Override
-    public List<RecipeBookListDto> searchRecipeBooks(String name) throws NotFoundException {
-        List<RecipeBook> searchedRecipeBooks = recipeBookRepository.search(name);
-        return recipeBookMapper.recipeBookListToRecipeBookListDto(searchedRecipeBooks);
+    public Page<RecipeBookListDto> searchRecipeBooksByName(String name, Pageable pageable) {
+        Page<RecipeBook> recipeBooksPage = recipeBookRepository.findByNameContainingIgnoreCaseOrderByName(name, pageable);
+        return recipeBooksPage.map(recipeBookMapper::recipeBookToRecipeBookListDto);
     }
 
     @Override
-    public List<RecipeBookListDto> getRecipeBooksFromPageInSteps(int pageNumber, int stepNumber) {
-        int from = ((pageNumber - 1) * stepNumber) + 1;
-        int to = pageNumber * stepNumber;
-        List<RecipeBook> recipes = recipeBookRepository.getAllRecipesWithIdFromTo(from, to);
-        return recipeBookMapper.recipeBookListToRecipeBookListDto(recipes);
-    }
-
-    @Override
-    public RecipeBookDetailDto addRecipeToRecipeBook(long recipeBookId, long recipeId, String email) throws NotFoundException, ForbiddenException, DuplicateObjectException {
+    public RecipeBookDetailDto addRecipeToRecipeBook(long recipeBookId, long recipeId) throws NotFoundException, ForbiddenException, DuplicateObjectException {
         LOGGER.trace("addRecipeToRecipeBook({}, {})", recipeBookId, recipeId);
         RecipeBook recipeBook = recipeBookRepository.findById(recipeBookId).orElseThrow(() -> new NotFoundException("recipe book not found"));
-        if (!(userRepository.existsById(recipeBook.getOwnerId())
-            && userRepository.findById(recipeBook.getOwnerId())
-            .orElseThrow(() -> new NotFoundException("user with the given id not found"))
-            .getEmail().equals(email))
-            && recipeBook.getEditors().stream().noneMatch(e -> e.getEmail().equals(email))
+        ApplicationUser currentUser = userService.getCurrentUser();
+        if (!(recipeBook.getOwnerId().equals(currentUser.getId()))
+            && recipeBook.getEditors().stream().noneMatch(e -> e.getId() == currentUser.getId())
         ) {
             throw new ForbiddenException("user has no writing access to this recipe book");
         }
@@ -97,26 +98,26 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     }
 
     @Override
-    public List<RecipeBookListDto> getRecipeBooksThatAnUserHasAccessToByUserId(String email) throws NotFoundException {
+    public List<RecipeBookListDto> getRecipeBooksThatAnUserHasAccessTo() throws NotFoundException {
         LOGGER.trace("getRecipeBooksThatAUserHasAccessToByUserId()");
-        if (!userRepository.existsByEmail(email)) {
-            throw new NotFoundException("user was not found");
-        }
-        ApplicationUser user = userRepository.findFirstUserByEmail(email);
+        ApplicationUser user = userService.getCurrentUser();
         return recipeBookMapper.recipeBookListToRecipeBookListDto(recipeBookRepository
             .findRecipeBooksByOwnerOrSharedUser(user.getId()));
     }
 
     @Override
-    public RecipeBookDetailDto createRecipeBook(@Valid RecipeBookCreateDto recipeBookCreateDto, Long ownerId) {
-        LOGGER.trace("createRecipeBook({}, {})", recipeBookCreateDto, ownerId);
+    public RecipeBookDetailDto createRecipeBook(@Valid RecipeBookCreateDto recipeBookCreateDto) throws ValidationException {
+        LOGGER.trace("createRecipeBook({})", recipeBookCreateDto);
+        recipeBookValidator.validateCreate(recipeBookCreateDto);
         RecipeBook recipeBook = new RecipeBook();
         recipeBook.setName(recipeBookCreateDto.name());
         recipeBook.setDescription(recipeBookCreateDto.description());
-        ApplicationUser owner = userRepository.findById(ownerId).orElseThrow(() -> new NotFoundException("owner not found"));
+
+        ApplicationUser owner = userService.getCurrentUser();
         recipeBook.setOwner(owner);
         List<Long> userIds = recipeBookCreateDto.users().stream().map(UserListDto::id).toList();
         List<ApplicationUser> users = userRepository.findAllById(userIds);
+
         recipeBook.setEditors(users);
         recipeBook.setRecipes(recipeBookRecipeMapper.listOfRecipeListDtoToRecipeList(recipeBookCreateDto.recipes()));
         recipeBookRepository.save(recipeBook);

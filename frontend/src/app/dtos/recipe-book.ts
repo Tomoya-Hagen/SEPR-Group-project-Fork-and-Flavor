@@ -1,4 +1,4 @@
-import {userListDto} from "./user";
+import {userDto, userListDto} from "./user";
 import {RecipeListDto} from "./recipe"
 
 export interface RecipeBookDetailDto {
@@ -6,6 +6,7 @@ export interface RecipeBookDetailDto {
   name: string,
   description: string,
   ownerId: number,
+  owner: userDto,
   users: userListDto[],
   recipes: RecipeListDto[]
 }

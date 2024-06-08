@@ -25,7 +25,7 @@
         </div>
         <div class="col-md-12 p-1">
           <div class="row">
-            <div class="col-md-8 overflow-auto" style="height: 40vh">
+            <div class="col-md-8 overflow-auto ings">
               <div class="col-md-12" *ngFor="let inneringredient of recipe.ingredients; let i = index">
                 <app-ingredient
                   (ingredientChange)="ingredientChangeHandler($event, i)"
@@ -33,7 +33,7 @@
                 </app-ingredient>
               </div>
             </div>
-            <div class="col-md-4 overflow-auto border-start" style="height: 40vh">
+            <div class="col-md-4 overflow-auto border-start ings">
               <div class="col-md-12" *ngFor="let incategory of recipe.categories; let i = index">
                 <div class="form-group">
                   <label for="incategory{{i}}">Category</label>
@@ -54,7 +54,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6 border overflow-auto" style="height: 60vh">
+      <div class="col-md-6 border overflow-auto stepsh">
         <div *ngFor="let step of recipe.steps; let i = index">
           <div id="fullrecipestep{{i}}">
             <div class="form-group">
@@ -98,7 +98,7 @@
         </div>
       </div>
 
-      <div class="cbutton" style="top: 145px">
+      <div class="cbutton">
         <button [disabled]="!(stepbool && ingbool)" type="submit" class="btn btn-primary">Create Recipe</button>
       </div>
 

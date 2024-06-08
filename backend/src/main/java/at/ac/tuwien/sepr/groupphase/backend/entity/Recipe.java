@@ -63,23 +63,11 @@ public class Recipe {
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(
-        name = "favorite",
-        joinColumns = @JoinColumn(name = "recipe_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<ApplicationUser> favorites;
-
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinTable(
         name = "recipe_recipe_book",
         joinColumns = @JoinColumn(name = "recipe_id"),
         inverseJoinColumns = @JoinColumn(name = "recipe_book_id")
     )
     private List<RecipeBook> recipeBooks;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<Cooked> cooked;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
@@ -233,9 +221,7 @@ public class Recipe {
         private ApplicationUser owner;
         private List<Category> categories;
         private Boolean isDraft;
-        private List<ApplicationUser> favorites;
         private List<RecipeBook> recipeBooks;
-        private List<Cooked> cooked;
         private List<Rating> ratings;
         private List<RecipeStep> recipeSteps;
         private List<RecipeStep> recipeRecipeSteps;
@@ -272,6 +258,9 @@ public class Recipe {
         }
 
         public RecipeBuilder withForkedFrom(Recipe forkedFrom) {
+            if (forkedFrom == null) {
+                return this;
+            }
             this.forkedFrom = forkedFrom;
             return this;
         }
@@ -291,18 +280,8 @@ public class Recipe {
             return this;
         }
 
-        public RecipeBuilder withFavorites(List<ApplicationUser> favorites) {
-            this.favorites = favorites;
-            return this;
-        }
-
         public RecipeBuilder withRecipeBooks(List<RecipeBook> recipeBooks) {
             this.recipeBooks = recipeBooks;
-            return this;
-        }
-
-        public RecipeBuilder withCooked(List<Cooked> cooked) {
-            this.cooked = cooked;
             return this;
         }
 
@@ -355,10 +334,8 @@ public class Recipe {
             recipe.setIngredients(ingredients);
             recipe.recipesForkedFromThis = this.recipesForkedFromThis;
             recipe.recipeRecipeSteps = this.recipeRecipeSteps;
-            recipe.cooked = this.cooked;
             recipe.ratings = this.ratings;
             recipe.recipeBooks = this.recipeBooks;
-            recipe.favorites = this.favorites;
             recipe.weeklyPlanner = this.weeklyPlanner;
             recipe.recipesVerified = this.recipesVerified;
             return recipe;

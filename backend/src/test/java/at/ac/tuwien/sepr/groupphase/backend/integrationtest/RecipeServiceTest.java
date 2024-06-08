@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
@@ -15,13 +16,14 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -38,22 +40,19 @@ import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.util.AssertionErrors.assertTrue;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest
-@ActiveProfiles({"test", "generateData"})
+@ActiveProfiles({"test"})
 @Transactional
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
-@Disabled
-class RecipeServiceTest {
+class RecipeServiceTest implements TestData {
     @Autowired
     private RecipeService recipeService;
 
-
     @Autowired
     private RecipeRepository recipeRepository;
-
 
     @Test
     void ReturnARecipeDetailDtoIfARecipeWithTheGivenRecipeIdExists() {
@@ -72,19 +71,16 @@ class RecipeServiceTest {
         actualIngredients.sort(Comparator.comparing(IngredientDetailDto::id));
         Assertions.assertNotNull(recipe);
         Assertions.assertAll(
-            () -> Assertions.assertEquals("Egg Fried Rice", recipe.name()),
+            () -> Assertions.assertEquals("Kartoffeln plain", recipe.name()),
             () -> Assertions.assertEquals(
                 1, recipe.categories().size()),
             () -> Assertions.assertArrayEquals(new CategoryDetailDto[]{
-                new CategoryDetailDto(1, "Hautpspeise", "MAIN_COURSE")}, recipe.categories().toArray()),
+                new CategoryDetailDto(3, "Beilage", "SIDE_DISH")}, recipe.categories().toArray()),
             () -> Assertions.assertEquals(1, recipe.ownerId()),
-            () -> Assertions.assertEquals("Ein schnelles asiatisches Gericht.", recipe.description()),
-            () -> Assertions.assertEquals(1, recipe.numberOfServings().intValue()),
-            () -> Assertions.assertArrayEquals(ingredientDetailDtos.toArray()
-                , actualIngredients.toArray()),
-            () -> Assertions.assertEquals(5, recipe.recipeSteps().size()),
-            () -> Assertions.assertEquals(2, recipe.allergens().size()),
-            () -> Assertions.assertEquals(new BigDecimal("1366.40"), recipe.nutritions().stream().filter(n -> n.id() == 1).findFirst().get().value()));
+            () -> Assertions.assertEquals("Unterrezept für Kartoffelgerichte", recipe.description()),
+            () -> Assertions.assertEquals(4, recipe.numberOfServings().intValue()),
+            () -> Assertions.assertEquals(3, recipe.recipeSteps().size()),
+            () -> Assertions.assertEquals(0, recipe.allergens().size()));
     }
 
     @Test
@@ -95,47 +91,43 @@ class RecipeServiceTest {
 
     @Test
     void ReturnAListOfOneRecipeListDtoFromGetAllFromPageOneWithStepOne() {
-        List<RecipeListDto> expectedRecipeListDtos = List.of(
-            new RecipeListDto(1, "Reis", "So muss Reis schmecken!", 0));
-        List<RecipeListDto> recipes = recipeService.getRecipesFromPageInSteps(1, 1);
-        Assertions.assertEquals(1, recipes.size());
-        Assertions.assertEquals(expectedRecipeListDtos, recipes);
-    }
-
-    @Test
-    void ReturnAListOfTwoRecipeListDtoFromGetAllFromPageOneWithStepThree() {
-        List<RecipeListDto> recipes = recipeService.getRecipesFromPageInSteps(1, 2);
-        Assertions.assertEquals(2, recipes.size());
+        Pageable pageable = PageRequest.of(0, 1);
+        Page<RecipeListDto> recipes = recipeService.getRecipesByName("Spagehtti plain", pageable);
+        assertEquals(1, recipes.getTotalElements());
+        assertEquals("Spagehtti plain", recipes.getContent().get(0).name());
     }
 
     @Test
     void ReturnAnEmptyListOfRecipeListDtoFromGetAllFromPageTwohundredWithStepTwohundred() {
-        List<RecipeListDto> recipes = recipeService.getRecipesFromPageInSteps(200, 200);
+        Pageable pageable = PageRequest.of(0, 200);
+        Page<RecipeListDto> recipes = recipeService.getRecipesByName("Nonexistent", pageable);
         Assertions.assertTrue(recipes.isEmpty());
     }
+
     @Test
-    void CreateRecipeShouldCreateRecipePlusDependencies() throws Exception{
+    void CreateRecipeShouldCreateRecipePlusDependencies() throws Exception {
+        userAuthenticationByEmail("admin@email.com");
         List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
         recipeCategoryDtoList.add(new RecipeCategoryDto(1));
 
         List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
-        recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));
-        recipeIngredientDtos.add(new RecipeIngredientDto(132,new BigDecimal(12.5),"g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(1, new BigDecimal(6), "g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132, new BigDecimal(12.5), "g"));
 
         List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
-        recipeStepDtoList.add(new RecipeStepDto("Step eins","Beschreibung von Step 1",0,true ));
-        recipeStepDtoList.add(new RecipeStepDto("Step zwei","Beschreibung von Step 2",0,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step eins", "Beschreibung von Step 1", 0, true));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei", "Beschreibung von Step 2", 0, true));
 
         RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
         recipeCreateDto.setName("Name");
         recipeCreateDto.setDescription("Beschreibung");
-        recipeCreateDto.setServings((short)42);
+        recipeCreateDto.setServings((short) 42);
 
         recipeCreateDto.setIngredients(recipeIngredientDtos);
         recipeCreateDto.setSteps(recipeStepDtoList);
         recipeCreateDto.setCategories(recipeCategoryDtoList);
 
-        DetailedRecipeDto ret = recipeService.createRecipe(recipeCreateDto,"admin@email.com");
+        DetailedRecipeDto ret = recipeService.createRecipe(recipeCreateDto);
         Assertions.assertNotNull(ret);
         Assertions.assertEquals(ret.getDescription(), "Beschreibung");
         Assertions.assertEquals(ret.getName(), "Name");
@@ -144,8 +136,8 @@ class RecipeServiceTest {
         Recipe recipefDB = recipeRepository.getRecipeById(retid).get();
         Assertions.assertNotNull(recipefDB);
 
-        Assertions.assertEquals(recipefDB.getName(),recipeCreateDto.getName());
-        Assertions.assertEquals(recipefDB.getDescription(),recipeCreateDto.getDescription());
+        Assertions.assertEquals(recipefDB.getName(), recipeCreateDto.getName());
+        Assertions.assertEquals(recipefDB.getDescription(), recipeCreateDto.getDescription());
         Assertions.assertEquals(recipefDB.getNumberOfServings(), recipeCreateDto.getServings());
 
         Assertions.assertTrue(
@@ -157,34 +149,24 @@ class RecipeServiceTest {
         Assertions.assertTrue(
             IntStream.range(0, recipeCategoryDtoList.size())
                 .allMatch(i -> recipefDB.getCategories().get(i).getId() == recipeCategoryDtoList.get(i).getId()));
-
     }
 
     @Test
-    public void searchByNameShouldFound() {
-
-        var recipe = recipeService.searchRecipe("Apfelkuchen");
-        assertNotNull(recipe);
-        assertThat(recipe)
-            .hasSize(1);
-
-        RecipeListDto recipeListDto = new RecipeListDto(13, "Cookies", "", 0);
-        List<RecipeListDto> recipeListDtoList = new java.util.ArrayList<>(List.of());
-        recipeListDtoList.add(recipeListDto);
-
-        assertEquals(recipeService.searchRecipe("Cookies"), recipeListDtoList);
-        assertEquals(1, recipeService.searchRecipe("Cookies").size());
-
+    void searchByNameShouldFind() {
+        Pageable pageable = PageRequest.of(0, 10);
+        var recipePage = recipeService.getRecipesByName("Apfelkuchen", pageable);
+        assertNotNull(recipePage);
+        assertThat(recipePage.getContent()).hasSize(2);
+        assertEquals("Apfelkuchen nach Ing", recipePage.getContent().get(0).name());
     }
 
     @Test
-    public void searchByNameShouldNoTFound() {
+    void searchByNameShouldNotFind() {
+        Pageable pageable = PageRequest.of(0, 10);
+        var recipePage = recipeService.getRecipesByName("Gurke", pageable);
+        Assertions.assertTrue(recipePage.isEmpty());
 
-        var recipe = recipeService.searchRecipe("Gurke");
-        assertEquals("[]",recipe.toString());
-
-        assertEquals(new java.util.ArrayList<>(List.of()), recipeService.searchRecipe("Kaschew"));
-        assertEquals(0, recipeService.searchRecipe("Kaschew").size());
-
+        recipePage = recipeService.getRecipesByName("Kaschew", pageable);
+        Assertions.assertTrue(recipePage.isEmpty());
     }
 }
