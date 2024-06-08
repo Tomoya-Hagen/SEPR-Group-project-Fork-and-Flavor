@@ -61,12 +61,6 @@ public class UserEndPoint {
         LOGGER.warn("{} {}: {}: {}", status.value(), message, e.getClass().getSimpleName(), e.getMessage());
     }
 
-    /**
-     * This method returns the current user.
-     *
-     * @return The response entity OK or NOT_FOUND depending on whether a user was found.
-     *
-     */
     @GetMapping("/current")
     public ResponseEntity<ApplicationUser> getCurrentUser() {
         try {
