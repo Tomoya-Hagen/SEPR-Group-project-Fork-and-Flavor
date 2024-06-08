@@ -9,7 +9,7 @@ import { RecipeStepDetailDto, RecipeStepRecipeDetailDto } from 'src/app/dtos/rec
 import { RecipeService } from 'src/app/services/recipe.service';
 import { RecipeBookService } from 'src/app/services/recipebook.service';
 import { Title } from '@angular/platform-browser';
-import { AuthService } from 'src/app/services/auth.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -49,8 +49,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   }
   recipeForkedFrom = [];
   showNutrition: boolean = false;
-  currentUserId: number;
   screenWidth: number;
+  isOwner: boolean = false;
 
   constructor(
     private service: RecipeService,
@@ -60,14 +60,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     private modalService: NgbModal,
     private recipeBookService: RecipeBookService,
     private titleService: Title,
-    private authService: AuthService
+    private userService: UserService,
   ) { }
 
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
-    this.currentUserId = this.authService.getCurrentUserId();
-    console.log("currentUserId: "+this.currentUserId);
-    console.log("owner: "+this.recipe.ownerId);
     this.route.params.subscribe(params => {
       let observable = this.service.getRecipeDetailsBy(params['id']);
       observable.subscribe({
@@ -77,6 +74,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           this.changeIngredientsToGramm();
           this.changeNutritionsToGramm();
           this.getForkedFromRecipeName();
+          this.isCurrentUserOwner();
+          console.log("ownerId: " + this.recipe.ownerId);
           this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
         },
         error: error => {
@@ -90,10 +89,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         }
       });
     });
-  }
-
-  public isOwner(): boolean {
-    return this.currentUserId === this.recipe.ownerId;
   }
 
   ngOnDestroy(): void {
@@ -226,6 +221,15 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     const baseUrl = window.location.origin;
   const url = `${baseUrl}/#/recipe/details/${index}`;
     window.open(url, '_blank');
+  }
+
+  isCurrentUserOwner() {
+    this.userService.getCurrentUser().subscribe(currentUser => {
+      if (currentUser && this.recipe.ownerId === currentUser.id) {
+        console.log("curUs: " + currentUser.id);
+        this.isOwner = true;
+      }
+    });
   }
 
 }

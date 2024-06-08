@@ -13,7 +13,6 @@ import {NewUserRequest} from "../dtos/new-user-request";
 export class AuthService {
 
   private authBaseUri: string = this.globals.backendUri + '/authentication';
-  private currentUserId: number | null = null;
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
   }
@@ -64,7 +63,6 @@ export class AuthService {
   logoutUser() {
     console.log('Logout');
     localStorage.removeItem('authToken');
-    this.currentUserId = null;
   }
 
   getToken() {
@@ -85,18 +83,6 @@ export class AuthService {
       }
     }
     return 'UNDEFINED';
-  }
-
-  getCurrentUserId(): number | null {
-    if (this.currentUserId === null && this.getToken() != null) {
-      this.decodeAndStoreUserId(this.getToken());
-    }
-    return this.currentUserId;
-  }
-
-  private decodeAndStoreUserId(token: string) {
-    const decoded: any = jwtDecode(this.getToken());
-    this.currentUserId = decoded.userId;
   }
 
   private setToken(authResponse: string) {

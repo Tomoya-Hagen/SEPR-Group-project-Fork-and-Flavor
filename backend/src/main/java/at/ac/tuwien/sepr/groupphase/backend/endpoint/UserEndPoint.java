@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
@@ -58,6 +59,24 @@ public class UserEndPoint {
      */
     private void logClientError(HttpStatus status, String message, Exception e) {
         LOGGER.warn("{} {}: {}: {}", status.value(), message, e.getClass().getSimpleName(), e.getMessage());
+    }
+
+    /**
+     * This method returns the current user.
+     *
+     * @return The response entity OK or NOT_FOUND depending on whether a user was found.
+     *
+     */
+    @GetMapping("/current")
+    public ResponseEntity<ApplicationUser> getCurrentUser() {
+        try {
+            ApplicationUser currentUser = userService.getCurrentUser();
+            return new ResponseEntity<>(currentUser, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no user with found", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
     }
 
 
