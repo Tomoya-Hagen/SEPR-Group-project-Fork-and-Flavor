@@ -7,6 +7,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -78,7 +79,7 @@ public interface UserService extends UserDetailsService {
      */
     ApplicationUser getCurrentUser();
 
-    List<RecipeBookListDto> findRecipeBooksByUserId(Long id);
+    List<RecipeBookListDto> findRecipeBooksByUserId(Long id) throws NotFoundException;
 
-    List<RecipeListDto> findRecipesByUserId(Long id);
+    List<RecipeListDto> findRecipesByUserId(Long id) throws NotFoundException;
 }

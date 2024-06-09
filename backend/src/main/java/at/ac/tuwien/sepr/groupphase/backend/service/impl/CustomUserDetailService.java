@@ -162,14 +162,16 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public List<RecipeBookListDto> findRecipeBooksByUserId(Long id) {
+    public List<RecipeBookListDto> findRecipeBooksByUserId(Long id) throws NotFoundException {
         LOGGER.trace("findRecipeBooksByUserId(id)");
+        userRepository.findById(id).orElseThrow(NotFoundException::new);
         return recipeBookMapper.recipeBookListToRecipeBookListDto(recipeBookRepository.findRecipeBooksByOwnerOrSharedUser(id));
     }
 
     @Override
-    public List<RecipeListDto> findRecipesByUserId(Long id) {
+    public List<RecipeListDto> findRecipesByUserId(Long id) throws NotFoundException {
         LOGGER.trace("findRecipesByUserId(id)");
+        userRepository.findById(id).orElseThrow(NotFoundException::new);
         return recipeMapper.recipesToRecipeListDto(recipeRepository.findRecipesByOwnerId(id));
     }
 }

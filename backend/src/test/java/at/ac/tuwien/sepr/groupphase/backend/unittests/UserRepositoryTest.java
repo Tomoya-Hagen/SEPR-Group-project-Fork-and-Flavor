@@ -38,4 +38,6 @@ class UserRepositoryTest implements TestData {
             () -> assertNotNull(userRepository.findById(user.getId()))
         );
     }
+
+
 }
