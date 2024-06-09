@@ -147,13 +147,7 @@ public interface RecipeMapper {
         return result;
     }
 
-    default List<RecipeListDto> recipesToRecipeListDto(List<Recipe> recipes) {
-        List<RecipeListDto> recipeList = new ArrayList<>();
-        for (Recipe recipe : recipes) {
-            recipeList.add(recipeAndAverageRatingToRecipeListDto(recipe, 0));
-        }
-        return recipeList;
-    }
+    List<RecipeListDto> recipesToRecipeListDto(List<Recipe> recipes);
 
     default Recipe recipeCreateDtoToRecipe(RecipeCreateDto recipeCreateDto, long id) throws RecipeStepNotParsableException, RecipeStepSelfReferenceException {
         Recipe current = new Recipe();

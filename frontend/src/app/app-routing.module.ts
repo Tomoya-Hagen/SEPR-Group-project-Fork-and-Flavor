@@ -11,6 +11,7 @@ import {RegisterComponent} from "./components/register/register.component";
 import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail.component';
 import { RecipebookDetailComponent } from "./components/recipebook/recipebook-detail/recipebook-detail.component";
 import { RecipeEditComponent } from './components/recipe/recipe-edit/recipe-edit.component';
+import {UserpageComponent} from "./components/userpage/userpage.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -29,6 +30,7 @@ const routes: Routes = [
       {path: 'edit/:id', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.edit}}
   ]},
   {path: 'weekplan', component: WeekplanComponent},
+  {path: 'userpage/:id', component: UserpageComponent},
 ];
 
 @NgModule({

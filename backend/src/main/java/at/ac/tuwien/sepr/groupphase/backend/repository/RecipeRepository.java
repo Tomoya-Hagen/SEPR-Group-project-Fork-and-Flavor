@@ -94,4 +94,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      * @return a recipe entity.
      */
     Recipe findFirstById(long id);
+
+    @Query("SELECT r FROM Recipe r WHERE r.owner.id = :ownerId ")
+    List<Recipe> findRecipesByOwnerId(@Param("ownerId") long ownerId);
 }

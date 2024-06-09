@@ -64,4 +64,7 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
     this.titleService.setTitle("Fork & Flavour");
   }
 
+  openUserPage() {
+    this.router.navigate(['/userpage', this.recipeBook.ownerId]);
+  }
 }
