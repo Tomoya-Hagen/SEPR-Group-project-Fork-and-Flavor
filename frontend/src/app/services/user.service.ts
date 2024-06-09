@@ -44,4 +44,14 @@ export class UserService {
     return this.http.get<RecipeListDto[]>(this.baseUri+"/"+id+"/recipes");
   }
 
+    public getCurrentUser(): Observable<userDto> {
+        return this.http.get<userDto>(`${this.baseUri}/current`)
+          .pipe(
+            catchError((error) => {
+              console.error(error);
+              throw error;
+            })
+          );
+      }
+
 }

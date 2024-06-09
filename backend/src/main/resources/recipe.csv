@@ -9,10 +9,10 @@ id;name;description;numberofServings;forkedFrom;ownerid
 22;Potato-Wedges;schnell zubereitet, lange im Ofen;2;;1
 23;Popcorn;Selber machen? SELBER MACHEN!;2;;1
 24;Zucchini-Nudeln;nommige Nudeln;2;;1
-25;Ei knusprig in Olivenöl;So knusprig kann Ei sein;2;;1
-26;Ei scrambled;So scrambeld kann Ei sein;2;;1
-27;Ei Spiegelei;So spiegelig kann Ei sein;2;;1
-28;Ei auf Martin Art;So martin kann Ei sein;2;;1
+25;Ei scrambled;So scrambeld kann Ei sein;2;;1
+26;Ei Spiegelei;So spiegelig kann Ei sein;2;;1
+27;Ei knusprig in Olivenöl;So knusprig kann Ei sein;2;26;1
+28;Ei auf Martin Art;So martin kann Ei sein;2;26;1
 29;Brokkoli-Nudeln;nudeln sind auch kein Brokoli;2;;1
 31;Putengeschnetzeltes mit Gemüse;Klassiker;2;;1
 32;Milchreis;so muss Milchreis schmecken;2;;1

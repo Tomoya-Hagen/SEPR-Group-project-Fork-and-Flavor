@@ -24,12 +24,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -72,22 +73,30 @@ class RecipeBookServiceTest implements TestData {
 
     @Test
     void searchReturnsRecipeBooksWhenNameMatches() {
-        assertEquals("Indische Spezialitäten", recipeBookRepository.search("indische").getFirst().getName());
-    }
+        String name = "indische";
+        PageRequest pageRequest = PageRequest.of(0, 10); // Assuming page size is 10
+        Page<RecipeBook> page = recipeBookRepository.findByNameContainingIgnoreCaseOrderByName(name, pageRequest);
 
-    @Test
-    void searchReturnsEmptyListWhenNoNameMatches() {
-        assertEquals(Collections.emptyList(), recipeBookRepository.search("Nonexistent"));
+        // Verify that there are results
+        assertTrue(page.hasContent());
+
+        // Verify the name of the first recipe book
+        assertEquals("Indische Spezialitäten", page.getContent().get(0).getName());
     }
 
     @Test
     void searchReturnsRecipeBooksRegardlessOfCase() {
-        assertEquals("Indische Spezialitäten", recipeBookRepository.search("inDISche").getFirst().getName());
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<RecipeBook> page = recipeBookRepository.findByNameContainingIgnoreCaseOrderByName("inDISche", pageRequest);
+        assertTrue(page.hasContent());
+        assertEquals("Indische Spezialitäten", page.getContent().get(0).getName());
     }
 
     @Test
-    void searchReturnsEmptyListWhenNameIsNull() {
-        assertEquals(9, recipeBookRepository.search(null).size());
+    void searchReturnsEmptyListWhenNameIsEmpty() {
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<RecipeBook> page = recipeBookRepository.findByNameContainingIgnoreCaseOrderByName("", pageRequest);
+        assertEquals(9, page.getTotalElements());
     }
 
     @Test

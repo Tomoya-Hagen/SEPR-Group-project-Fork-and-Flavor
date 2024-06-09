@@ -10,6 +10,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,32 +60,11 @@ public interface RecipeService {
     DetailedRecipeDto updateRecipe(RecipeUpdateDto recipeUpdateDto);
 
     /**
-     * finds a list of RecipeListDto based on the given parameters.
-     *
-     * @param pageNumber represents the page number of recipes.
-     * @param stepNumber represents the number of how many recipes are shown per page.
-     * @return the recipes of the given page.
-     */
-
-    List<RecipeListDto> getRecipesFromPageInSteps(int pageNumber, int stepNumber);
-
-    /**
-     * Search for recipes in the persistent data store matching provided field.
-     * The name is considered a match, if the search string is a substring of the field in recipes.
-     *
-     * @param name The name of the recipe.
-     * @return A list of RecipeListDto objects that represent the recipe that match the search criteria.
-     * @throws NotFoundException If no recipe are found with the provided name.
-     */
-    List<RecipeListDto> searchRecipe(String name) throws NotFoundException;
-
-    /**
-     * This method finds a limited number of recipes with the name, or letters typed in by the user.
+     * This method finds a page of recipes by name.
      *
      * @param name the name or parts of it of the recipe to look for.
-     * @param limit limit to specify the number of recipes to be found.
+     * @param pageable the page information.
      * @return A list of RecipeListDto.
      */
-    List<RecipeListDto> getRecipesByNames(String name, int limit);
-
+    Page<RecipeListDto> getRecipesByName(String name, Pageable pageable);
 }

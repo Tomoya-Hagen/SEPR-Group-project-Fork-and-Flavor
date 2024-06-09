@@ -276,12 +276,17 @@ public class DataGenerator implements CommandLineRunner {
                     skippedRecipes.add(id);
                     continue;
                 }
+                Recipe forkedFrom = null;
+                if (!fields.get(4).isEmpty()) {
+                    forkedFrom = recipeRepository.findFirstById(idMap.get(Long.parseLong(fields.get(4))));
+                }
                 ApplicationUser user = userRepository.findFirstById(Long.parseLong(fields.get(5)));
                 Recipe recipe = Recipe.RecipeBuilder.aRecipe()
                     .withName(fields.get(1))
                     .withDescription(fields.get(2))
                     .withNumberOfServings(Short.parseShort(fields.get(3)))
                     .withOwner(user)
+                    .withForkedFrom(forkedFrom)
                     .build();
                 recipeRepository.save(recipe);
                 idMap.put(id, recipe.getId());
@@ -393,7 +398,7 @@ public class DataGenerator implements CommandLineRunner {
                         .build();
                 } else {
                     // Unterrezept
-                    Long unterrezeptId = Long.parseLong(fields.get(4));
+                    Long unterrezeptId = idMap.get(Long.parseLong(fields.get(4)));
                     Recipe unterrezept = recipeRepository.findFirstById(unterrezeptId);
                     recipeStep = RecipeRecipeStep.RecipeRecipeStepBuilder.aRecipeRecipeStep()
                         .withRecipe(recipe)
