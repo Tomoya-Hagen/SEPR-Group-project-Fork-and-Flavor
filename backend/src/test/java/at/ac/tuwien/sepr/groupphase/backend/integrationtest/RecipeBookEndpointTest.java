@@ -122,7 +122,6 @@ class RecipeBookEndpointTest implements TestData {
             .andExpect(MockMvcResultMatchers.jsonPath("$.content.length()").value(9));
     }
 
-
     @Test
     void serviceShouldThrowANotFoundExceptionIfARecipeIsAddedToARecipeBookThatDoesNotExist() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(patch(RECIPE_BOOK_BASE_URI + "/16/spoon/-3")

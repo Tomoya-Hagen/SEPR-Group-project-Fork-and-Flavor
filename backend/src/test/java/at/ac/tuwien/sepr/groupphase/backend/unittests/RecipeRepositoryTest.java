@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -150,7 +151,7 @@ class RecipeRepositoryTest {
     @Test
     void ReturnNoRecipesFromGetAllFromIdThreeToFour() {
         List<Recipe> recipes = recipeRepository.findByIdBetweenOrderById(3000L, 3001L);
-        Assertions.assertTrue(recipes.isEmpty());
+        assertTrue(recipes.isEmpty());
     }
 
     @Test
@@ -166,6 +167,29 @@ class RecipeRepositoryTest {
     @Test
     void searchReturnsRecipeWhenNameMatches() {
         assertEquals("Gratin", recipeRepository.search("Gratin").getFirst().getName());
+    }
+
+    @Test
+    public void findRecipesByOwnerIdReturnsRecipesWhenUserExists() {
+        ApplicationUser user = new ApplicationUser();
+        user.setId(1L);
+
+        List<Recipe> result = recipeRepository.findRecipesByOwnerId(1L);
+        assertEquals(81, result.size());
+        assertEquals(user.getId(), result.get(0).getOwner().getId());
+        assertEquals(user.getId(), result.get(1).getOwner().getId());
+    }
+
+    @Test
+    public void findRecipesByOwnerIdReturnsEmptyListWhenUserHasNoRecipes() {
+        List<Recipe> result = recipeRepository.findRecipesByOwnerId(2L);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void findRecipesByOwnerIdReturnsEmptyListWhenUserDoesNotExist() {
+        List<Recipe> result = recipeRepository.findRecipesByOwnerId(999L);
+        assertTrue(result.isEmpty());
     }
 
 }

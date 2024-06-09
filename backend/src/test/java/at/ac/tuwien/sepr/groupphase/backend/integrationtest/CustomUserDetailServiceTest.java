@@ -6,23 +6,30 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.impl.CustomUserDetailService;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
 
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 class CustomUserDetailServiceTest implements TestData {
 
@@ -31,6 +38,9 @@ class CustomUserDetailServiceTest implements TestData {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @Test
     void registerValidUser() throws ValidationException {
@@ -80,6 +90,69 @@ class CustomUserDetailServiceTest implements TestData {
 
         assertTrue(actualMessage.contains(expectedMessage));
 
+    }
+
+    @Test
+    public void getRecipesByUserIdReturnsRecipesWhenUserExists() throws Exception {
+        mockMvc.perform(get("/api/v1/users/1/recipes")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(81)))
+            .andExpect(jsonPath("$[0].name", org.hamcrest.Matchers.is("Spagehtti plain")));
+    }
+
+    @Test
+    public void getRecipesByUserIdReturnsEmptyListWhenUserHasNoRecipes() throws Exception {
+        mockMvc.perform(get("/api/v1/users/2/recipes")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    public void getRecipesByUserIdReturnsNotFoundWhenUserDoesNotExist() throws Exception {
+        mockMvc.perform(get("/api/v1/users/0/recipes")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getRecipeBooksByUserIdReturnsRecipeBooksWhenUserExists() throws Exception {
+        mockMvc.perform(get("/api/v1/users/1/recipebooks")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(9)))
+            .andExpect(jsonPath("$[0].name", org.hamcrest.Matchers.is("Italienische Küche")));
+    }
+
+    @Test
+    public void getRecipeBooksByUserIdReturnsEmptyListWhenUserHasNoRecipeBooks() throws Exception {
+        mockMvc.perform(get("/api/v1/users/2/recipebooks")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    public void getRecipeBooksByUserIdReturnsNotFoundWhenUserDoesNotExist() throws Exception {
+        mockMvc.perform(get("/api/v1/users/0/recipebooks")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getUserReturnsUserWhenUserExists() throws Exception {
+        mockMvc.perform(get("/api/v1/users/1/details")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id", org.hamcrest.Matchers.is(1)));
+    }
+
+    @Test
+    public void getUserReturnsNotFoundWhenUserDoesNotExist() throws Exception {
+        mockMvc.perform(get("/api/v1/users/0/details")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
     }
 
 

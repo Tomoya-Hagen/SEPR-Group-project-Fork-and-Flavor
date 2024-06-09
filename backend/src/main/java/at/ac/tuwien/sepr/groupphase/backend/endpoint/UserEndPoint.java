@@ -1,7 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
@@ -39,7 +42,7 @@ public class UserEndPoint {
 
     @GetMapping("{id}/details")
     public UserDto getUser(@PathVariable(name = "id") Long id) {
-        LOGGER.info("GET /api/v1/recipebook/{}/details", id);
+        LOGGER.info("GET /api/v1/users/{}/details", id);
         try {
             return userService.findUserById(id);
         } catch (NotFoundException e) {
@@ -47,6 +50,18 @@ public class UserEndPoint {
             logClientError(status, "no user with id " + id + " found", e);
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
+    }
+
+    @GetMapping("{id}/recipebooks")
+    public List<RecipeBookListDto> getRecipeBooksByUserId(@PathVariable(name = "id") Long id) {
+        LOGGER.info("GET /api/v1/users/{}/recipebooks", id);
+        return userService.findRecipeBooksByUserId(id);
+    }
+
+    @GetMapping("{id}/recipes")
+    public List<RecipeListDto> getRecipesByUserId(@PathVariable(name = "id") Long id) {
+        LOGGER.info("GET /api/v1/users/{}/recipes", id);
+        return userService.findRecipesByUserId(id);
     }
 
     /**
@@ -58,6 +73,18 @@ public class UserEndPoint {
      */
     private void logClientError(HttpStatus status, String message, Exception e) {
         LOGGER.warn("{} {}: {}: {}", status.value(), message, e.getClass().getSimpleName(), e.getMessage());
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<ApplicationUser> getCurrentUser() {
+        try {
+            ApplicationUser currentUser = userService.getCurrentUser();
+            return new ResponseEntity<>(currentUser, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no user with found", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
     }
 
 
