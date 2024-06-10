@@ -14,6 +14,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RatingService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RatingValidator;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class RatingServiceImpl implements RatingService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -50,8 +52,8 @@ public class RatingServiceImpl implements RatingService {
         if (recipe.isEmpty()) {
             throw new NotFoundException("The recipe with the given id was not found");
         }
-        return ratingMapper.mapListOfRatingToListOfRatingListDto(
-            ratingRepository.getRatingsByRecipeId(recipeId).stream().toList());
+        List<Rating> ratings = ratingRepository.getRatingsByRecipeId(recipeId).stream().toList();
+        return ratingMapper.mapListOfRatingToListOfRatingListDto(ratings);
     }
 
     @Override

@@ -149,8 +149,25 @@
     </ng-container>
       <div style="text-align: right;position: relative; margin: 30px">
         <button *ngIf="isOwner" type="button" class="btn btn-primary btn-sm" (click)="editRecipe()" style="margin-right: 10px;">Rezept bearbeiten</button>
-        <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openSpoonModal(spoonRecipeModal)">Rezept spoonen</button>
+        <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openSpoonModal(spoonRecipeModal)" style="margin-right: 10px;">Rezept spoonen</button>
+        <button *ngIf="!areRatingsLoaded" type="button" class="btn btn-secondary btn-sm" (click)="loadRatings()">Load Ratings</button>
       </div>
   </div>
+  <div>
+    <ng-container *ngIf="ratings.length > 0 && areRatingsLoaded">
+      <div *ngFor="let rating of ratings">
+        <div>
+          <p>{{rating.user.name}}</p>
+          <p>cost: {{rating.cost}}/5</p>
+          <p>taste: {{rating.taste}}/5</p>
+          <p>ease of preparation: {{rating.easeOfPrep}}/5</p>
+          <p>{{rating.review}}</p>
+        </div>
+      </div>
 
+    </ng-container>
+    <div *ngIf="ratings.length == 0 && areRatingsLoaded">
+        <p>There are no Ratings available for this Recipe</p>
+    </div>
+  </div>
 </div>

@@ -10,6 +10,8 @@ import { RecipeService } from 'src/app/services/recipe.service';
 import { RecipeBookService } from 'src/app/services/recipebook.service';
 import { Title } from '@angular/platform-browser';
 import { UserService } from 'src/app/services/user.service';
+import { RatingCreateDto, RatingListDto } from 'src/app/dtos/rating';
+import { RatingService } from 'src/app/services/rating.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -32,6 +34,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     allergens: [],
     nutritions: []
   };
+
+  rating: RatingCreateDto = null;
+  ratings: RatingListDto[] = [];
   dummyRecipeBookSelectionModel: unknown;
   recipeSteps = [];
   returnClass = true;
@@ -51,8 +56,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   showNutrition: boolean = false;
   screenWidth: number;
   isOwner: boolean = false;
+  areRatingsLoaded: boolean = false;
 
   constructor(
+    private ratingService: RatingService,
     private service: RecipeService,
     private router: Router,
     private route: ActivatedRoute,
@@ -230,4 +237,18 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     });
   }
 
+  loadRatings(){
+    this.ratingService.getRatingsByRecipeId(this.recipe.id).subscribe({
+      next: data => {
+        this.notification.success(`Ratings loaded successfully.`);
+        this.ratings = data;
+        this.areRatingsLoaded = true;
+      },
+      error: error => {
+        this.notification.error(error);
+        this.defaultServiceErrorHandling(error);
+      }
+    }
+  );
+  }
 }
