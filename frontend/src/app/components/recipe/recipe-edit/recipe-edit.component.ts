@@ -125,10 +125,10 @@ export class RecipeEditComponent implements OnInit {
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;
-      this.notification.error('Could not update recipe:' + this.errorMessage, 'Backend Error - Recipe');
+      this.notification.error('Could not update recipe:' + this.errorMessage.toString(), 'Backend Error - Recipe');
     } else {
       this.errorMessage = error.error;
-      this.notification.error( 'Could not update recipe:' + this.errorMessage, 'Backend Error - Recipe');
+      this.notification.error( 'Could not update recipe:' + this.errorMessage.toString(), 'Backend Error - Recipe');
     }
   }
 

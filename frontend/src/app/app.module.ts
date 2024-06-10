@@ -67,7 +67,12 @@ import {MatIcon} from "@angular/material/icon";
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      timeOut: 10000,
+      positionClass: 'toast-top-left',
+      progressBar: true,
+      preventDuplicates: true,
+    }),
     // Needed for Toastr
     BrowserAnimationsModule,
     SlickCarouselModule,

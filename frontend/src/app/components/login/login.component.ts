@@ -51,8 +51,8 @@ export class LoginComponent implements OnInit {
     console.log('Try to authenticate user: ' + authRequest.email);
     this.authService.loginUser(authRequest).subscribe({
       next: () => {
-        console.log('Successfully logged in user: ' + authRequest.email);
-        this.notification.success('Successfully logged in as user ')
+        console.log('Successfully logged in user: ' + authRequest.email.toString());
+        this.notification.success('Successfully logged in as ' + authRequest.email.toString(), "Authentication Success")
         this.router.navigate(['/']);
       },
       error: error => {
@@ -61,10 +61,10 @@ export class LoginComponent implements OnInit {
         this.error = true;
         if (typeof error.error === 'object') {
           this.errorMessage = error.error.error;
-          this.notification.error('Could not log in due to:' + this.errorMessage, "Authentication Error");
+          this.notification.error(this.errorMessage, "Authentication Error");
         } else {
           this.errorMessage = error.error;
-          this.notification.error( 'Could not log in due to:' + this.errorMessage, "Authentication Error");
+          this.notification.error(this.errorMessage, "Authentication Error");
         }
       }
     });

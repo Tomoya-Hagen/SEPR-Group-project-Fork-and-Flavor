@@ -48,14 +48,14 @@ export class RegisterComponent implements OnInit {
       this.authService.registerUser(newUserRequest).subscribe({
         next: () => {
           console.log(`Successfully registered user: ${newUserRequest.email}`);
-          this.notification.success("Successfully registered user:" + newUserRequest.email, "Registration Success:");
+          this.notification.success("Successfully registered user:" + newUserRequest.email, "Registration Success");
           this.router.navigate(['/']);  // Redirect after successful registration
         },
         error: (errorResponse) => {
           console.error('Registration error:', errorResponse);
           this.error = true;
           this.errorMessage = errorResponse.error;
-          this.notification.error('Registration error:' + errorResponse, "Registration Error");
+          this.notification.error(this.errorMessage, "Registration Error");
         }
       });
     } else {

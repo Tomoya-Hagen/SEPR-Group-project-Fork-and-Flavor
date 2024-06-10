@@ -68,7 +68,7 @@ export class RecipeCreateComponent implements OnInit{
         }),
         catchError((error) => {
           console.error('Error:', error);
-          this.notification.error(error,'Backend Error - Recipe');
+          this.notification.error('You have to login as user to create recipe.' , 'Backend Error - Recipe');
           this.router.navigate(['/login']);
           return of(false); // Handle the error and return a fallback value
         })
@@ -109,10 +109,10 @@ export class RecipeCreateComponent implements OnInit{
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;
-      this.notification.error('You have to logged in to create recipe.' , 'Backend Error - Recipe');
+      this.notification.error(this.errorMessage, 'Backend Error - Recipe');
     } else {
       this.errorMessage = error.error;
-      this.notification.error( 'You have to logged in to create recipe.', 'Backend Error - Recipe');
+      this.notification.error( this.errorMessage, 'Backend Error - Recipe');
     }
   }
 
