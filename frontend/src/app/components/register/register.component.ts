@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {Router} from "@angular/router";
-import {NewUserRequest} from "../../dtos/new-user-request";
 import {AuthService} from "../../services/auth.service";
 import {ToastrService} from "ngx-toastr";
 
@@ -14,7 +13,6 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   error = false;
   errorMessage = '';
-  submitted = false;
 
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,
@@ -54,8 +52,12 @@ export class RegisterComponent implements OnInit {
         error: (errorResponse) => {
           console.error('Registration error:', errorResponse);
           this.error = true;
-          this.errorMessage = errorResponse.error;
-          this.notification.error(this.errorMessage, "Registration Error");
+
+          const errorMessage = errorResponse.error;
+          const validationErrors = this.parseValidationErrors(errorMessage);
+          validationErrors.forEach(error => {
+            this.notification.error(error, "Registration Error");
+          });
         }
       });
     } else {
@@ -63,17 +65,20 @@ export class RegisterComponent implements OnInit {
       this.error = true;
       this.errorMessage = 'Please check your input and try again.';
       this.notification.error(this.errorMessage, "Registration Error");
-
     }
+  }
+
+  parseValidationErrors(errorMessage) {
+    const validationErrorPattern = /Validation errors=\[(.*?)\]/;
+    const match = validationErrorPattern.exec(errorMessage);
+    if (match && match[1]) {
+      return match[1].split(', ').map(error => error.split(' ').slice(1).join(' '));
+    }
+    return ["An unexpected error occurred."];
   }
 
   goToLogin(): void {
     this.router.navigate(['/login']);
-  }
-
-  vanishError() {
-    this.error = false;
-    this.errorMessage = '';
   }
 
 }
