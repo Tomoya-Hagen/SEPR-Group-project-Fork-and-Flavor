@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -55,4 +57,8 @@ public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
     @Query("SELECT u FROM ApplicationUser u WHERE u.id = :id")
     ApplicationUser findFirstByIdWithEagerLoading(@Param("id") Long id);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE ApplicationUser u SET u.password = :password where u.id = :id")
+    void updatePassword(@Param("id") Long id, @Param("password") String password);
 }

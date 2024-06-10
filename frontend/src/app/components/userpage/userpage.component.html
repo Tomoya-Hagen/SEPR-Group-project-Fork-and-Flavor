@@ -3,7 +3,7 @@
     <div class="col-6 col-md-4">
       <div>
         <h1>{{ user.name }}</h1>
-        <button class="btn btn-light btn-sm " routerLink="/userpage/{{user.id}}/edit">Edit profile</button>
+        <button *ngIf="isMyPage" class="btn btn-light btn-sm " routerLink="/userpage/{{user.id}}/edit">Edit profile</button>
         <p> <i class="bi bi-receipt"></i> {{recipeBook.length}} RecipeBooks · {{recipes.length}} Recipes</p>
       </div>
       <div class="border-top">

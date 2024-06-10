@@ -5,6 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordChangeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeBookMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
@@ -173,5 +174,17 @@ public class CustomUserDetailService implements UserService {
         LOGGER.trace("findRecipesByUserId(id)");
         userRepository.findById(id).orElseThrow(NotFoundException::new);
         return recipeMapper.recipesToRecipeListDto(recipeRepository.findRecipesByOwnerId(id));
+    }
+
+    @Override
+    public void changePassword(Long id, UserPasswordChangeDto userPasswordChangeDto) throws NotFoundException, BadCredentialsException, ValidationException {
+        LOGGER.trace("changePassword(id, userPasswordChangeDto)");
+        userValidator.validateForPasswordChange(userPasswordChangeDto);
+        ApplicationUser applicationUser = userRepository.findById(id).orElseThrow(NotFoundException::new);
+        if (!passwordEncoder.matches(userPasswordChangeDto.oldPassword(), applicationUser.getPassword())) {
+            throw new BadCredentialsException("password is incorrect");
+        }
+
+        userRepository.updatePassword(id, passwordEncoder.encode(userPasswordChangeDto.newPassword()));
     }
 }

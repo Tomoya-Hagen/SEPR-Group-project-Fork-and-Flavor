@@ -1,10 +1,14 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordChangeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.impl.CustomUserDetailService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -22,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,6 +46,12 @@ class CustomUserDetailServiceTest implements TestData {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private SecurityProperties securityProperties;
 
     @Test
     void registerValidUser() throws ValidationException {
@@ -89,7 +100,6 @@ class CustomUserDetailServiceTest implements TestData {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
-
     }
 
     @Test
@@ -153,6 +163,59 @@ class CustomUserDetailServiceTest implements TestData {
         mockMvc.perform(get("/api/v1/users/0/details")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void changePasswordUpdatesPasswordForExistingUser() throws Exception {
+        String jwttoken = LoginHelper();
+
+        UserPasswordChangeDto userPasswordChangeDto = new UserPasswordChangeDto("password","newPassword");
+        mockMvc.perform(patch("/api/v1/users/changePassword/1")
+                .header(securityProperties.getAuthHeader(), jwttoken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(userPasswordChangeDto)))
+            .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void changePasswordReturnsNotFoundWhenUserDoesNotExist() throws Exception {
+        String jwttoken = LoginHelper();
+
+
+        UserPasswordChangeDto userPasswordChangeDto = new UserPasswordChangeDto("oldPassword","newPassword");
+        mockMvc.perform(patch("/api/v1/users/changePassword/999")
+                .header(securityProperties.getAuthHeader(), jwttoken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(userPasswordChangeDto)))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void changePasswordReturnsBadRequestWhenPasswordIsInvalid() throws Exception {
+        String jwttoken = LoginHelper();
+
+        UserPasswordChangeDto userPasswordChangeDto = new UserPasswordChangeDto("oldPassword","newPassword");
+        mockMvc.perform(patch("/api/v1/users/changePassword/1")
+                .header(securityProperties.getAuthHeader(), jwttoken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(userPasswordChangeDto)))
+            .andExpect(status().isBadRequest());
+    }
+
+    private String LoginHelper() throws Exception {
+        UserLoginDto userLoginDto = new UserLoginDto();
+        userLoginDto.setEmail("admin@email.com");
+        userLoginDto.setPassword("password");
+
+        String requestBody = objectMapper.writeValueAsString(userLoginDto);
+
+        MvcResult mvcResult = mockMvc.perform(post(AUTH_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isOk())
+            .andReturn();
+        return mvcResult.getResponse().getContentAsString();
     }
 
 
