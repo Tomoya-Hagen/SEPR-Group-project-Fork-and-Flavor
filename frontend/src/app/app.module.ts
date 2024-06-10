@@ -15,19 +15,19 @@ import {MatTableModule} from "@angular/material/table";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatSortModule} from "@angular/material/sort";
-import { RecipebookComponent } from './components/recipebook/recipebook.component';
-import { RecipebookCreateEditComponent } from './components/recipebook/recipebook-create-edit/recipebook-create-edit.component';
-import { RecipeComponent } from './components/recipe/recipe.component';
-import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail.component';
+import {RecipebookComponent } from './components/recipebook/recipebook.component';
+import {RecipebookCreateEditComponent } from './components/recipebook/recipebook-create-edit/recipebook-create-edit.component';
+import {RecipeComponent } from './components/recipe/recipe.component';
+import {RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail.component';
 import {RecipeCreateComponent} from "./components/recipe/recipe-create/recipe-create.component";
-import { ToastrModule } from 'ngx-toastr';
+import {ToastrModule } from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { SlickCarouselModule } from 'ngx-slick-carousel';
+import {SlickCarouselModule } from 'ngx-slick-carousel';
 import {RegisterComponent} from "./components/register/register.component";
-import { RecipeEditComponent } from './components/recipe/recipe-edit/recipe-edit.component';
-import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
-import { IngredientComponent } from './components/recipe/recipe-create/ingredient/ingredient.component';
-import { AutomaticCompleteComponent } from './components/automacomplete/automacomplete.component'
+import {RecipeEditComponent } from './components/recipe/recipe-edit/recipe-edit.component';
+import {AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import {IngredientComponent } from './components/recipe/recipe-create/ingredient/ingredient.component';
+import {AutomaticCompleteComponent } from './components/automacomplete/automacomplete.component'
 import {CardComponent} from "./components/card/card.component";
 import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -67,7 +67,12 @@ import {MatIcon} from "@angular/material/icon";
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      timeOut: 10000,
+      positionClass: 'toast-top-left',
+      progressBar: true,
+      preventDuplicates: true,
+    }),
     // Needed for Toastr
     BrowserAnimationsModule,
     SlickCarouselModule,
