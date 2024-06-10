@@ -69,12 +69,26 @@ export class RegisterComponent implements OnInit {
   }
 
   parseValidationErrors(errorMessage) {
-    const validationErrorPattern = /Validation errors=\[(.*?)\]/;
-    const match = validationErrorPattern.exec(errorMessage);
-    if (match && match[1]) {
-      return match[1].split(', ').map(error => error.split(' ').slice(1).join(' '));
+    let validationErrors = [];
+
+    const type1Pattern = /Validation errors=\[(.*?)\]/;
+    const type1Match = type1Pattern.exec(errorMessage);
+    if (type1Match && type1Match[1]) {
+      validationErrors = type1Match[1].split(', ').map(error => error.split(' ').slice(1).join(' '));
+    } else {
+      try {
+        const errorObj = JSON.parse(errorMessage);
+        if (errorObj.detail && errorObj.detail.includes('Failed validations:')) {
+          validationErrors = errorObj.detail.replace('Validation of input fields failed. Failed validations: ', '').split(', ');
+        } else {
+          validationErrors.push("An unexpected error occurred.");
+        }
+      } catch (e) {
+        validationErrors.push("An unexpected error occurred.");
+      }
     }
-    return ["An unexpected error occurred."];
+
+    return validationErrors;
   }
 
   goToLogin(): void {
