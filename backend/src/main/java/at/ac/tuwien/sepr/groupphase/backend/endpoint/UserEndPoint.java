@@ -4,7 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordChangeDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,9 +78,9 @@ public class UserEndPoint {
     }
 
     @GetMapping("/current")
-    public ResponseEntity<ApplicationUser> getCurrentUser() {
+    public ResponseEntity<UserDto> getCurrentUser() {
         try {
-            ApplicationUser currentUser = userService.getCurrentUser();
+            UserDto currentUser = userService.getCurrentUser();
             return new ResponseEntity<>(currentUser, HttpStatus.OK);
         } catch (NotFoundException e) {
             HttpStatus status = HttpStatus.NOT_FOUND;
@@ -87,5 +89,8 @@ public class UserEndPoint {
         }
     }
 
+    @PatchMapping("/password/{id}")
+    public void changePassword(@PathVariable(name = "id") Long id, @RequestBody UserPasswordChangeDto userPasswordChangeDto) {
 
+    }
 }

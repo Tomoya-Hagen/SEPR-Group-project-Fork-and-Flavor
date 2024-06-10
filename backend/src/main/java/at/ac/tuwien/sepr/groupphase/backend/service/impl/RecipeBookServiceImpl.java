@@ -17,7 +17,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
-import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeBookValidator;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -38,9 +38,9 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     private final RecipeBookMapper recipeBookMapper;
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
-    private final UserService userService;
     private final RecipeBookValidator recipeBookValidator;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final UserManager userManager;
 
     public RecipeBookServiceImpl(RecipeBookRepository recipeBookRepository,
                                  RecipeMapper recipeMapper,
@@ -48,14 +48,14 @@ public class RecipeBookServiceImpl implements RecipeBookService {
                                  RecipeRepository recipeRepository,
                                  UserRepository userRepository,
                                  RecipeBookValidator recipeBookValidator,
-                                 UserService userService) {
+                                 UserManager userManager) {
         this.recipeBookRepository = recipeBookRepository;
         this.recipeBookMapper = recipeBookMapper;
         this.recipeRepository = recipeRepository;
         this.recipeBookRecipeMapper = recipeMapper;
         this.userRepository = userRepository;
         this.recipeBookValidator = recipeBookValidator;
-        this.userService = userService;
+        this.userManager = userManager;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     public RecipeBookDetailDto addRecipeToRecipeBook(long recipeBookId, long recipeId) throws NotFoundException, ForbiddenException, DuplicateObjectException {
         LOGGER.trace("addRecipeToRecipeBook({}, {})", recipeBookId, recipeId);
         RecipeBook recipeBook = recipeBookRepository.findById(recipeBookId).orElseThrow(() -> new NotFoundException("recipe book not found"));
-        ApplicationUser currentUser = userService.getCurrentUser();
+        ApplicationUser currentUser = userManager.getCurrentUser();
         if (!(recipeBook.getOwnerId().equals(currentUser.getId()))
             && recipeBook.getEditors().stream().noneMatch(e -> e.getId() == currentUser.getId())
         ) {
@@ -100,7 +100,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     @Override
     public List<RecipeBookListDto> getRecipeBooksThatAnUserHasAccessTo() throws NotFoundException {
         LOGGER.trace("getRecipeBooksThatAUserHasAccessToByUserId()");
-        ApplicationUser user = userService.getCurrentUser();
+        ApplicationUser user = userManager.getCurrentUser();
         return recipeBookMapper.recipeBookListToRecipeBookListDto(recipeBookRepository
             .findRecipeBooksByOwnerOrSharedUser(user.getId()));
     }
@@ -113,7 +113,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         recipeBook.setName(recipeBookCreateDto.name());
         recipeBook.setDescription(recipeBookCreateDto.description());
 
-        ApplicationUser owner = userService.getCurrentUser();
+        ApplicationUser owner = userManager.getCurrentUser();
         recipeBook.setOwner(owner);
         List<Long> userIds = recipeBookCreateDto.users().stream().map(UserListDto::id).toList();
         List<ApplicationUser> users = userRepository.findAllById(userIds);

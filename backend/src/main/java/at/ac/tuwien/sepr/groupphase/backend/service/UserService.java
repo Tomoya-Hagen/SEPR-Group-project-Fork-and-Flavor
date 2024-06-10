@@ -77,7 +77,7 @@ public interface UserService extends UserDetailsService {
      *
      * @return the currently logged-in user entity.
      */
-    ApplicationUser getCurrentUser();
+    UserDto getCurrentUser();
 
     List<RecipeBookListDto> findRecipeBooksByUserId(Long id) throws NotFoundException;
 

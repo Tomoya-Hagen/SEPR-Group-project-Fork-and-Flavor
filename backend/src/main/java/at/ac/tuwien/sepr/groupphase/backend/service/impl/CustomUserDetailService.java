@@ -149,7 +149,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser getCurrentUser() {
+    public UserDto getCurrentUser() {
         LOGGER.trace("getCurrentUser()");
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             throw new ForbiddenException("no user is currently logged in");
@@ -158,7 +158,7 @@ public class CustomUserDetailService implements UserService {
         if (!userRepository.existsByEmail(email)) {
             throw new NotFoundException("the logged-in user was not found in the system");
         }
-        return userRepository.findFirstUserByEmail(email);
+        return userMapper.userToUserDto(userRepository.findFirstUserByEmail(email));
     }
 
     @Override
