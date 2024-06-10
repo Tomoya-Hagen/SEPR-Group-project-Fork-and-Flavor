@@ -76,9 +76,9 @@ public class UserEndPoint {
     }
 
     @GetMapping("/current")
-    public ResponseEntity<ApplicationUser> getCurrentUser() {
+    public ResponseEntity<UserDto> getCurrentUser() {
         try {
-            ApplicationUser currentUser = userService.getCurrentUser();
+            UserDto currentUser = userService.getCurrentUser();
             return new ResponseEntity<>(currentUser, HttpStatus.OK);
         } catch (NotFoundException e) {
             HttpStatus status = HttpStatus.NOT_FOUND;

@@ -19,6 +19,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
 import org.slf4j.Logger;
@@ -52,11 +53,13 @@ public class CustomUserDetailService implements UserService {
     private final RecipeBookRepository recipeBookRepository;
     private final RecipeRepository recipeRepository;
     private final RecipeMapper recipeMapper;
+    private final UserManager userManager;
 
     @Autowired
     public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserMapper userMapper,
                                    UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository, RecipeBookMapper recipeBookMapper,
-                                   RecipeBookRepository recipeBookRepository, RecipeMapper recipeMapper, RecipeRepository recipeRepository) {
+                                   RecipeBookRepository recipeBookRepository, RecipeMapper recipeMapper, RecipeRepository recipeRepository,
+                                   UserManager userManager) {
         this.userRepository = userRepository;
         this.userValidator = new UserValidator(userRepository);
         this.passwordEncoder = passwordEncoder;
@@ -68,6 +71,7 @@ public class CustomUserDetailService implements UserService {
         this.recipeBookRepository = recipeBookRepository;
         this.recipeMapper = recipeMapper;
         this.recipeRepository = recipeRepository;
+        this.userManager = userManager;
     }
 
     @Override
@@ -149,16 +153,8 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser getCurrentUser() {
-        LOGGER.trace("getCurrentUser()");
-        if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            throw new ForbiddenException("no user is currently logged in");
-        }
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (!userRepository.existsByEmail(email)) {
-            throw new NotFoundException("the logged-in user was not found in the system");
-        }
-        return userRepository.findFirstUserByEmail(email);
+    public UserDto getCurrentUser() {
+        return userMapper.userToUserDto(userManager.getCurrentUser());
     }
 
     @Override

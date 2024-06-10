@@ -5,6 +5,8 @@ import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
@@ -12,7 +14,11 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeIngredientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDescriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,6 +35,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
