@@ -32,6 +32,7 @@ import {CardComponent} from "./components/card/card.component";
 import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
+import {ResetPasswordComponent} from "./components/login/reset-password/reset-password.component";
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import {MatIcon} from "@angular/material/icon";
     AutocompleteComponent,
     RegisterComponent,
     RecipebookCreateEditComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,

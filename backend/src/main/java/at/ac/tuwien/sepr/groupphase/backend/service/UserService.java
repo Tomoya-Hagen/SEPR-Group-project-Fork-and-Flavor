@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordChangeDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -70,6 +71,14 @@ public interface UserService extends UserDetailsService {
      * @throws ValidationException                                                 if the input is invalid
      */
     String register(UserRegisterDto userRegisterDto) throws ValidationException;
+
+    /**
+     * Reset the password of a user.
+     *
+     * @param userPasswordResetDto the email address of the user
+     * @throws NotFoundException if the input is invalid
+     */
+    void resetPassword(UserPasswordResetDto userPasswordResetDto) throws NotFoundException;
 
 
     UserDto findUserById(Long id);

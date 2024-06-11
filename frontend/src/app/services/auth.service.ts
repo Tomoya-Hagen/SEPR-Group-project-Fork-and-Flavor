@@ -29,6 +29,10 @@ export class AuthService {
       );
   }
 
+  resetPassword(email: string): Observable<any> {
+    return this.httpClient.post(`${this.authBaseUri}/pwreset`, { email });
+  }
+
 
   /**
    * Is the user logged in
