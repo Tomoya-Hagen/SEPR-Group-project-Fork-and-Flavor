@@ -39,4 +39,13 @@ public class CategoryEndpoint {
         LOGGER.info("POST /api/v1/category params: {} {}", name, limit);
         return categoryService.byname(name, limit);
     }
+
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/all")
+    @Operation(summary = "Getting categories", security = @SecurityRequirement(name = "apiKey"))
+    public Stream<CategoryResultDto> get() {
+        LOGGER.info("POST /api/v1/category all");
+        return categoryService.all();
+    }
 }

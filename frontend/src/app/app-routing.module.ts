@@ -16,11 +16,11 @@ const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'recipecreate', component: RecipeCreateComponent},
   {path: 'recipe', children: [
       {path: '', component: RecipeComponent},
       {path: 'details/:id', component: RecipeDetailComponent},
-      {path: 'edit/:id', component: RecipeEditComponent}
+      {path: 'edit/:id', component: RecipeCreateComponent},
+      {path: 'create', component: RecipeCreateComponent}
   ]},
   {path: 'recipebook', children:[
       {path: '', component: RecipebookComponent},

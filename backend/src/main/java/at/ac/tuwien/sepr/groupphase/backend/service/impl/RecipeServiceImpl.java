@@ -103,19 +103,25 @@ public class RecipeServiceImpl implements RecipeService {
         recipeValidator.validateCreate(recipeDto);
 
 
-        Recipe recipe = recipeMapper.recipeCreateDtoToRecipe(recipeDto, recipeRepository.findMaxId() + 1);
+        Recipe simple = recipeMapper.recipeparsesimple(recipeDto);
+        ApplicationUser owner = userService.getCurrentUser();
+        simple.setOwner(owner);
+        recipeRepository.save(simple);
+
+        Recipe recipe = recipeMapper.recipeCreateDtoToRecipe(recipeDto, simple.getId());
 
         List<Category> categories = new ArrayList<>();
         for (Category category : recipe.getCategories()) {
             categories.add(categoryRepository.getById(category.getId()));
         }
-        recipe.setCategories(categories);
+        simple.setIngredients(recipe.getIngredients());
+        simple.setCategories(categories);
+        simple.setRecipeSteps(recipe.getRecipeSteps());
 
-        ApplicationUser owner = userService.getCurrentUser();
-        recipe.setOwner(owner);
-        recipeRepository.save(recipe);
 
-        return recipeMapper.recipeToDetailedRecipeDto(recipe);
+        recipeRepository.save(simple);
+        var x = recipeMapper.recipeToDetailedRecipeDto(simple);
+        return x;
     }
 
     @Override

@@ -1,24 +1,21 @@
-.cbutton{
-  position: absolute;
-  top: 145px;
+.create-height{
+  min-height: 80vh;
+  max-height: 90vh;
 }
 
-@media only screen and (max-width : 768px) {
-  .cbutton {
-    position: static;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 5px;
+.inner-create-height{
+  height: 70vh;
+}
+
+.sub-inner-height{
+  height: 45vh !important;
+}
+
+@media (max-width: 768px) {
+  .sub-inner-height{
+    height: 20vh !important;
   }
-
+  .inner-create-height{
+    height: 80vh;
+  }
 }
-
-.ings {
-  height: 40vh;
-}
-
-.stepsh {
-  height: 60vh;
-}
-

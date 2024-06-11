@@ -25,4 +25,10 @@ public class SimpleCategoryService implements CategoryService {
         var x = categoryRepository.findByNameContainingIgnoreCase(name, PageRequest.of(0, limit));
         return x.stream().map(categoryMapper::categoryToCategoryResultDto);
     }
+
+    @Override
+    public Stream<CategoryResultDto> all() {
+        var x = categoryRepository.findAll();
+        return x.stream().map(categoryMapper::categoryToCategoryResultDto);
+    }
 }

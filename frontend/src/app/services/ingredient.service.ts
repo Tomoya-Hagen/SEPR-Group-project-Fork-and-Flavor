@@ -23,4 +23,12 @@ export class IngredientService {
     }
     return this.httpClient.get<IngredientDetailDto[]>(this.ingredientBaseUri, { params });
   }
+
+  public allingredients(): Observable<IngredientDetailDto[]> {
+    return this.httpClient.get<IngredientDetailDto[]>(this.ingredientBaseUri + "/all");
+  }
+
+  public allunits(): Observable<string[]> {
+    return this.httpClient.get<string[]>(this.ingredientBaseUri + "/units");
+  }
 }

@@ -32,6 +32,17 @@ public class RecipeValidator {
     public void validateCreate(RecipeCreateDto recipe) throws ValidationException {
         List<String> validationErrors = new ArrayList<>();
 
+        if (recipe.getName() == null || recipe.getName().trim().equals("")) {
+            validationErrors.add("Recipe has no name");
+        }
+        if (recipe.getDescription() == null || recipe.getDescription().trim().equals("")) {
+            validationErrors.add("Recipe has no description");
+        }
+        if (recipe.getNumberOfServings() <= 0) {
+            validationErrors.add("Recipe has no servings");
+        }
+
+
         for (RecipeCategoryDto category : recipe.getCategories()) {
             if (!categoryRepository.existsById(category.getId())) {
                 validationErrors.add("Category " + category.getId() + " not found");
@@ -42,7 +53,7 @@ public class RecipeValidator {
                 validationErrors.add("Ingredient " + ingredient.getId() + " not found");
             }
         }
-        for (RecipeStepDto steps : recipe.getSteps()) {
+        for (RecipeStepDto steps : recipe.getRecipeSteps()) {
             if (steps.isCorrect()) {
                 if (!steps.isWhichstep() && !recipeRepository.existsById(steps.getRecipeId())) {
                     validationErrors.add("Step " + steps.getName() + " not found");
