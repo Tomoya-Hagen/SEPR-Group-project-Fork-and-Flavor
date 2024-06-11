@@ -54,7 +54,7 @@
       <h4>Allergene: </h4>
       <div>
         <span *ngFor="let allergen of recipe.allergens; let isLast=last">
-           {{allergen.name}}{{isLast ? '' : ', '}}
+           {{allergen.type}}{{isLast ? '' : ', '}}
         </span>
       </div>
       <div *ngIf="recipe.allergens.length === 0">
