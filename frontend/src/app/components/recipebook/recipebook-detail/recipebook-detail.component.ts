@@ -20,7 +20,6 @@ import { Title } from '@angular/platform-browser';
   styleUrl: './recipebook-detail.component.scss'
 })
 export class RecipebookDetailComponent implements OnInit, OnDestroy{
-  bannerError: string | null = null;
   recipeBook: RecipeBookDetailDto = {
     name: "",
     description: "",
@@ -49,12 +48,8 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
           this.titleService.setTitle("Fork & Flavour | " + this.recipeBook.name);
         },
         error: error => {
-          console.error('Error fetching recipe books', error);
-          this.bannerError = 'Could not fetch recipe books: ' + error.message;
-          const errorMessage = error.status === 0
-            ? 'Is the backend up?'
-            : error.message.message;
-          this.notification.error(errorMessage, 'Could not fetch recipe book');
+          console.error('Error fetching recipebook.', error);
+          this.notification.error('Could not fetch recipebook.', 'Backend Error - Recipebook');
         }
       });
     });

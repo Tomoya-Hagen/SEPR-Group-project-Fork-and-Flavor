@@ -78,12 +78,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
         },
         error: error => {
-          console.error('Error fetching Recipe', error);
-          this.bannerError = 'Could not fetch recipe: ' + error.message;
+          console.error('Error fetching recipe', error);
           const errorMessage = error.status === 0
             ? 'Is the backend up?'
             : error.message.message;
-          this.notification.error(errorMessage, 'Could Not Fetch Recipe');
+          this.notification.error('Could not fetch recipe' +errorMessage,"Backend Error - Recipe");
           this.router.navigate([''])
         }
       });
@@ -121,7 +120,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         this.recipeForkedFrom.push(data.name);
       },
       error: error => {
-        console.error('Error fetching Recipe', error);
+        console.error('Error forking recipe.', error);
+        const errorMessage = error.message.message;
+        this.notification.error('Could not fork recipe.', "Backend Error - Recipe");
         return [];
       }
     })
@@ -161,8 +162,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;
+      this.notification.error('Could not spoon recipe:' + this.errorMessage, 'Backend Error - Recipe');
     } else {
       this.errorMessage = error.error;
+      this.notification.error( 'Could not spoon recipe:' + this.errorMessage, 'Backend Error - Recipe');
     }
   }
 
