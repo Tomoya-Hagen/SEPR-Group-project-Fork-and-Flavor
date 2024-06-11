@@ -22,8 +22,7 @@ export class HeaderComponent implements OnInit {
         this.user = data;
       },
       error: (error: any) => {
-        console.error('Error fetching recipes', error);
-        this.notification.error('Could not fetch recipes', 'Error');
+        this.notification.error('You are not logged in as user', 'Authentication Error');
       }
     })
   }
