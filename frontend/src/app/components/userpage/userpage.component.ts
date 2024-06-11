@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {RecipeBookListDto} from "../../dtos/recipe-book";
 import {userDto} from "../../dtos/user";
@@ -12,7 +12,8 @@ import {ToastrService} from "ngx-toastr";
   standalone: true,
   imports: [
     NgForOf,
-    RouterLink
+    RouterLink,
+    NgIf
   ],
   templateUrl: './userpage.component.html',
   styleUrl: './userpage.component.scss'
@@ -24,6 +25,7 @@ export class UserpageComponent implements OnInit {
   recipes: RecipeListDto[] = [];
   bannerError: string | null = null;
   user: userDto;
+  isMyPage: boolean = false;
 
   constructor(
     private service: UserService,
@@ -76,6 +78,16 @@ export class UserpageComponent implements OnInit {
           this.notification.error(errorMessage, 'Could not fetch recipes by user id');
         }
       });
+      this.service.getCurrentUser().subscribe({
+        next: (data: userDto) => {
+          this.isMyPage = (data.id == params['id']);
+        },
+        error: (error: any) => {
+          console.error('Error fetching current User', error);
+          this.notification.error('Could not fetch current User', 'Error');
+        }
+      })
+
     });
 
   }
