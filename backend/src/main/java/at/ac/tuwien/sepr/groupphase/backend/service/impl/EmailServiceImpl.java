@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,6 +17,13 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private MailProperties mailProperties;
 
+    @Autowired
+    public EmailServiceImpl(JavaMailSender mailSender, MailProperties mailProperties) {
+        this.mailSender = mailSender;
+        this.mailProperties = mailProperties;
+    }
+
+    @Async
     @Override
     public void sendSimpleEmail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
