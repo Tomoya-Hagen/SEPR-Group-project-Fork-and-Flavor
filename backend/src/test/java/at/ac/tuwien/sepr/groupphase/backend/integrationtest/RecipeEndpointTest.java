@@ -244,10 +244,10 @@ class RecipeEndpointTest implements TestData {
         recipeIngredientDtos.add(new RecipeIngredientDto(10000,new BigDecimal(6),"g"));
 
         List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
-        recipeStepDtoList.add(new RecipeStepDto("Step eins",null,10000,true ));
-        recipeStepDtoList.add(new RecipeStepDto("Step zwei",null,10000,false ));
-        recipeStepDtoList.add(new RecipeStepDto("Step drei",null,-1,true ));
-        recipeStepDtoList.add(new RecipeStepDto("Step vier",null,-1,false ));
+        recipeStepDtoList.add(new RecipeStepDto("Step eins","",10000,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei","",10000,false ));
+        recipeStepDtoList.add(new RecipeStepDto("Step drei","",-1,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step vier","",-1,false ));
 
         RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
         recipeCreateDto.setName("Name");
