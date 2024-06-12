@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
+import {ResetPasswordComponent} from './components/login/reset-password/reset-password.component';
 import {RecipebookComponent} from "./components/recipebook/recipebook.component";
 import {WeekplanComponent} from "./components/weekplan/weekplan.component";
 import {RecipeComponent} from "./components/recipe/recipe.component";
@@ -16,7 +17,10 @@ import {UserpageEditComponent} from "./components/userpage/userpage-edit/userpag
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
-  {path: 'login', component: LoginComponent},
+  {path: 'login', children:[
+      {path: '', component: LoginComponent},
+      {path: 'reset', component: ResetPasswordComponent}
+    ]},
   {path: 'register', component: RegisterComponent},
   {path: 'recipecreate', component: RecipeCreateComponent},
   {path: 'recipe', children: [

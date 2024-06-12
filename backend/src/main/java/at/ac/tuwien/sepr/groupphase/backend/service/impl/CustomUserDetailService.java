@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordChangeDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeBookMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
@@ -20,6 +21,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
 import org.slf4j.Logger;
@@ -53,11 +55,12 @@ public class CustomUserDetailService implements UserService {
     private final RecipeBookRepository recipeBookRepository;
     private final RecipeRepository recipeRepository;
     private final RecipeMapper recipeMapper;
+    private final EmailService emailService;
 
     @Autowired
     public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserMapper userMapper,
                                    UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository, RecipeBookMapper recipeBookMapper,
-                                   RecipeBookRepository recipeBookRepository, RecipeMapper recipeMapper, RecipeRepository recipeRepository) {
+                                   RecipeBookRepository recipeBookRepository, RecipeMapper recipeMapper, RecipeRepository recipeRepository, EmailService emailService) {
         this.userRepository = userRepository;
         this.userValidator = new UserValidator(userRepository);
         this.passwordEncoder = passwordEncoder;
@@ -69,6 +72,7 @@ public class CustomUserDetailService implements UserService {
         this.recipeBookRepository = recipeBookRepository;
         this.recipeMapper = recipeMapper;
         this.recipeRepository = recipeRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -124,6 +128,19 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
+    public void resetPassword(UserPasswordResetDto userPasswordResetDto) throws NotFoundException {
+        LOGGER.debug("Reset password");
+        if (!userRepository.existsByEmail(userPasswordResetDto.email())) {
+            throw new NotFoundException("Could not find the user with the email address " + userPasswordResetDto.email());
+        }
+        ApplicationUser applicationUser = userRepository.findFirstUserByEmail(userPasswordResetDto.email());
+        String newPassword = passwordGenerator();
+        userRepository.updatePassword(applicationUser.getId(), passwordEncoder.encode(newPassword));
+        emailService.sendSimpleEmail(applicationUser.getEmail(), "Password Reset", "Ihr neues Passwort ist: "
+            + newPassword + " \nBitte ändern Sie es unverzüglich!");
+    }
+
+    @Override
     public String register(UserRegisterDto userRegisterDto) throws ValidationException {
         LOGGER.debug("Register a new user");
         userValidator.validateForCreate(userRegisterDto);
@@ -139,6 +156,8 @@ public class CustomUserDetailService implements UserService {
 
         // Ensure the user is persisted
         userRepository.flush();
+
+        emailService.sendSimpleEmail(applicationUser.getEmail(), "Welcome", "Danke für die Registrierung!");
 
         return login(userRegisterDtoMapper.toUserLoginDto(userRegisterDto));
     }
@@ -186,5 +205,13 @@ public class CustomUserDetailService implements UserService {
         }
 
         userRepository.updatePassword(id, passwordEncoder.encode(userPasswordChangeDto.newPassword()));
+    }
+
+    private String passwordGenerator() {
+        StringBuilder password = new StringBuilder();
+        for (int i = 0; i < 128; i++) {
+            password.append((char) ((int) (Math.random() * 26) + 97));
+        }
+        return password.toString();
     }
 }
