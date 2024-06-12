@@ -121,10 +121,10 @@ class RecipeServiceTest implements TestData {
         RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
         recipeCreateDto.setName("Name");
         recipeCreateDto.setDescription("Beschreibung");
-        recipeCreateDto.setServings((short) 42);
+        recipeCreateDto.setNumberOfServings((short) 42);
 
         recipeCreateDto.setIngredients(recipeIngredientDtos);
-        recipeCreateDto.setSteps(recipeStepDtoList);
+        recipeCreateDto.setRecipeSteps(recipeStepDtoList);
         recipeCreateDto.setCategories(recipeCategoryDtoList);
 
         DetailedRecipeDto ret = recipeService.createRecipe(recipeCreateDto);
@@ -138,7 +138,7 @@ class RecipeServiceTest implements TestData {
 
         Assertions.assertEquals(recipefDB.getName(), recipeCreateDto.getName());
         Assertions.assertEquals(recipefDB.getDescription(), recipeCreateDto.getDescription());
-        Assertions.assertEquals(recipefDB.getNumberOfServings(), recipeCreateDto.getServings());
+        Assertions.assertEquals(recipefDB.getNumberOfServings(), recipeCreateDto.getNumberOfServings());
 
         Assertions.assertTrue(
             IntStream.range(0, recipeIngredientDtos.size())
