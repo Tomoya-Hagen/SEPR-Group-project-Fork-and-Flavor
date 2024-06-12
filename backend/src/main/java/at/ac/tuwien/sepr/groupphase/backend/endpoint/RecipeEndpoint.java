@@ -106,7 +106,7 @@ public class RecipeEndpoint {
         LOGGER.info("POST /api/v1/recipe body: {}", recipeDto);
         try {
             return recipeService.createRecipe(recipeDto);
-        } catch (ValidationException | RecipeStepNotParsableException | RecipeStepSelfReferenceException e ) {
+        } catch (ValidationException | RecipeStepNotParsableException | RecipeStepSelfReferenceException e) {
             HttpStatus status = HttpStatus.BAD_REQUEST;
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
