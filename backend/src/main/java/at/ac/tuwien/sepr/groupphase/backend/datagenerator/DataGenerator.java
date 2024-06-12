@@ -105,6 +105,9 @@ public class DataGenerator implements CommandLineRunner {
         // Create and save roles
         List<Role> savedRoles = new ArrayList<>();
         for (String s : roles) {
+            if (roleRepository.existsByName(s)) {
+                continue;
+            }
             Role role = new Role.RoleBuilder().withroleId(s).build();
             savedRoles.add(roleRepository.save(role));
         }
