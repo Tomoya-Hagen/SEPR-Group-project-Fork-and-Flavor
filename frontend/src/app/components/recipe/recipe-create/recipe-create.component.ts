@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Recipe} from "../../../dtos/recipe";
 import {AbstractControl, NgForm, ValidationErrors, ValidatorFn} from "@angular/forms";
 import {IngredientComponent} from "./ingredient/ingredient.component";
@@ -64,7 +64,8 @@ export class RecipeCreateComponent implements OnInit{
     private authService: AuthService,
     private ingredientService: IngredientService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private changedetec: ChangeDetectorRef
   ){}
 
   ingredientChangeHandler(updatedIngredient: IngredientDetailDto, index: number) {
@@ -263,15 +264,23 @@ export class RecipeCreateComponent implements OnInit{
 
 
   public stepup(i: number){
-    let temp = this.recipe.recipeSteps[i];
-    this.recipe.recipeSteps[i] = this.recipe.recipeSteps[i-1];
-    this.recipe.recipeSteps[i-1] = temp;
+    let temp = this.recipe.recipeSteps[i].name;
+    this.recipe.recipeSteps[i].name = this.recipe.recipeSteps[i-1].name ;
+    this.recipe.recipeSteps[i-1].name  = temp ;
+
+    temp = this.recipe.recipeSteps[i].description;
+    this.recipe.recipeSteps[i].description = this.recipe.recipeSteps[i-1].description ;
+    this.recipe.recipeSteps[i-1].description  = temp ;
   }
 
   public stepdown(i: number){
-    let temp = this.recipe.recipeSteps[i];
-    this.recipe.recipeSteps[i] = this.recipe.recipeSteps[i+1];
-    this.recipe.recipeSteps[i+1] = temp;
+    let temp = this.recipe.recipeSteps[i].name;
+    this.recipe.recipeSteps[i].name = this.recipe.recipeSteps[i+1].name ;
+    this.recipe.recipeSteps[i+1].name  = temp ;
+
+    temp = this.recipe.recipeSteps[i].description;
+    this.recipe.recipeSteps[i].description = this.recipe.recipeSteps[i+1].description ;
+    this.recipe.recipeSteps[i+1].description  = temp ;
   }
 
   public stepdel(i: number){

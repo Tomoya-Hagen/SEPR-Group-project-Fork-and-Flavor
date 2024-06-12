@@ -7,6 +7,9 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -103,10 +106,11 @@ public class RecipeEndpoint {
         LOGGER.info("POST /api/v1/recipe body: {}", recipeDto);
         try {
             return recipeService.createRecipe(recipeDto);
-        } catch (Exception e) {
+        } catch (ValidationException | RecipeStepNotParsableException | RecipeStepSelfReferenceException e ) {
             HttpStatus status = HttpStatus.BAD_REQUEST;
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
+
     }
 
     @PermitAll

@@ -1,6 +1,7 @@
 <form class="create-height" #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
   <div class="container mt-5">
-    <h1 class="text-center mb-4">Recipe Creator</h1>
+    <h1 class="text-center mb-4" *ngIf="mode==='create'">Recipe Creator</h1>
+    <h1 class="text-center mb-4" *ngIf="mode==='edit'">Recipe Editor</h1>
     <div class="row rec-create">
       <div class="col-md-6 border inner-create-height">
         <div class="row">
@@ -86,19 +87,19 @@
         </div>
         <div class="row m-2 p-1 g-1" [ngClass]="this.recipe.recipeSteps[i].whichstep ? 'recipe-step' : 'sub-recipe'"
              *ngFor="let step of recipe.recipeSteps; let i = index">
-          <div class="col-lg-10 col-9 " id="fullrecipestep{{i}}">
+          <div  class="col-lg-10 col-9 " id="fullrecipestep{{i}}">
             <div class="form-group">
               <label for="stepname{{i}}">Step-Name</label>
               <input required type="text" class="form-control" id="stepname{{i}}" placeholder="Enter Name"
-                     [(ngModel)]="step.name" name="stepname{{i}}">
+                     [(ngModel)]="recipe.recipeSteps[i].name" name="stepname{{i}}">
             </div>
             <div class="row">
-              <div class="form-group mb-3"
+              <div class="form-group"
                    [ngClass]="recipe.recipeSteps[i].whichstep === null ? 'col-md-9' : 'col-md-12'"
                    *ngIf="recipe.recipeSteps[i].whichstep === null ? true : recipe.recipeSteps[i].whichstep">
                 <label for="instructions{{i}}">Instructions</label>
                 <textarea
-                  [(ngModel)]="step.description"
+                  [(ngModel)]="recipe.recipeSteps[i].description"
                   name="instructions{{i}}"
                   id="instructions{{i}}"
                   class="form-control"
@@ -122,7 +123,7 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-2 col-3  d-flex flex-column justify-content-center align-content-center">
+          <div class="col-lg-2 col-3 d-flex flex-column justify-content-center align-content-center">
             <button type="button" [disabled]="i === 0" (click)="stepup(i)" data-bs-toggle="button"
                     class="m-2 btn btn-light"><i class="bi bi-caret-up-fill"></i></button>
             <button type="button" (click)="stepdel(i)" class="m-2 btn btn-danger"><i class="bi bi-trash3-fill"></i>
@@ -134,7 +135,9 @@
       </div>
 
       <div class="my-3">
-        <button type="submit" class="btn btn-primary">Create Recipe</button>
+        <button type="submit" class="btn btn-primary" *ngIf="mode==='create'">Create Recipe</button>
+        <button type="submit" class="btn btn-primary" *ngIf="mode==='edit'">Edit Recipe</button>
+
       </div>
 
     </div>
