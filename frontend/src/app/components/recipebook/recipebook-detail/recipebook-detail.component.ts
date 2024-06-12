@@ -6,6 +6,7 @@ import {ToastrService} from "ngx-toastr";
 import {RecipeBookService} from "../../../services/recipebook.service";
 import {RecipeBookDetailDto} from "../../../dtos/recipe-book";
 import { Title } from '@angular/platform-browser';
+import {UserService} from "../../../services/user.service";
 
 @Component({
   selector: 'app-recipebook-detail',
@@ -29,12 +30,15 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
     recipes: [],
     users: []
   }
+  isOwner: boolean = false;
+
   constructor(
     private service: RecipeBookService,
     private router: Router,
     private route: ActivatedRoute,
     private notification: ToastrService,
     private titleService: Title,
+    private userService: UserService,
   ) {
 
   }
@@ -61,5 +65,17 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
 
   openUserPage() {
     this.router.navigate(['/userpage', this.recipeBook.ownerId]);
+  }
+
+  isCurrentUserOwner() {
+    this.userService.getCurrentUser().subscribe(currentUser => {
+      if (currentUser && this.recipeBook.ownerId === currentUser.id) {
+        this.isOwner = true;
+      }
+    });
+  }
+
+  editRecipeBook() {
+
   }
 }
