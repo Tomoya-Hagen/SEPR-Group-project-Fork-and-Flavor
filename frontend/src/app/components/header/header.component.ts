@@ -22,7 +22,9 @@ export class HeaderComponent implements OnInit {
         this.user = data;
       },
       error: (error: any) => {
+/*
         this.notification.error('You are not logged in as user', 'Authentication Error');
+*/
       }
     })
   }
