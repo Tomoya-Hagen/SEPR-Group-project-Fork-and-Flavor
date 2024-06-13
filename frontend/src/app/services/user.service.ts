@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, catchError } from "rxjs";
+import { Observable, catchError, map } from "rxjs";
 import {Globals} from '../global/globals';
 import {userDto, userListDto, userPasswordChangeDto} from "../dtos/user";
 import {RecipeBookListDto} from "../dtos/recipe-book";
@@ -19,12 +19,13 @@ export class UserService {
         private http: HttpClient, private globals: Globals
     ) { }
 
-    usersByName(name: string, limit: number): Observable<userListDto[]> {
+    usersByName(name: string, limit: number, currentUserId: number): Observable<userListDto[]> {
         let params = new HttpParams();
         params = params.append('name', name);
         params = params.append('limit', limit.toString());
         return this.http.get<userListDto[]>(this.baseUri, { params })
         .pipe(
+          map((users: userListDto[]) => users.filter(user => user.id !== currentUserId)),
             catchError((error) => {
                 console.error(error);
                 throw error;

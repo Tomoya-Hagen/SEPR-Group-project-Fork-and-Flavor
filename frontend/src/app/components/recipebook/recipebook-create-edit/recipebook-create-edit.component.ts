@@ -9,7 +9,7 @@ import { UserService } from 'src/app/services/user.service';
 import { RecipeListDto } from 'src/app/dtos/recipe';
 import {userListDto} from "../../../dtos/user";
 import {ToastrService} from "ngx-toastr";
-import {tap} from "rxjs/operators";
+import {switchMap, tap} from "rxjs/operators";
 import {AuthService} from "../../../services/auth.service";
 
 export enum RecipeBookCreateEditMode {
@@ -33,6 +33,7 @@ export class RecipebookCreateEditComponent implements OnInit {
   bannerError: string | null = null;
   users: (userListDto | null)[] = [];
   recipes: (RecipeListDto | null)[] = [];
+  currentUserId: number = 0;
   dummyUserSelectionModel: unknown;
   dummyRecipeSelectionModel: unknown;
 
@@ -47,16 +48,20 @@ export class RecipebookCreateEditComponent implements OnInit {
   ) { }
   ngOnInit(): void {
     this.authService.isLogged()
-      .pipe(
-        tap((isLoggedIn: boolean) => {
-          console.log('Is logged in:', isLoggedIn);
-        }),
-        catchError((error) => {
-          console.error('Error:', error);
-          this.notification.error('You have to login as user to create recipebook.' , 'Backend Error - Recipebook');
-          this.router.navigate(['/login']);
-          return of(false); // Handle the error and return a fallback value
-        })
+    this.userService.getCurrentUser().pipe(
+      tap((user: userListDto) => {
+        this.currentUserId = user.id;
+      }),
+      switchMap(() => this.authService.isLogged()),
+      tap((isLoggedIn: boolean) => {
+        console.log('Is logged in:', isLoggedIn);
+      }),
+      catchError((error) => {
+      console.error('Error:', error);
+      this.notification.error('You have to login as user to create recipebook.' , 'Backend Error - Recipebook');
+      this.router.navigate(['/login']);
+      return of(false); // Handle the error and return a fallback value
+    })
       )
       .subscribe();
     var id = this.route.snapshot.params['id'];
@@ -146,7 +151,7 @@ export class RecipebookCreateEditComponent implements OnInit {
 
   userSuggestions = (input: string) => (input === '')
   ? of([])
-  :  this.userService.usersByName(input, 5);
+  :  this.userService.usersByName(input, 5, this.currentUserId);
 
   public formatRecipeName(recipe: RecipeListDto | null): string {
     return recipe?.name ?? '';

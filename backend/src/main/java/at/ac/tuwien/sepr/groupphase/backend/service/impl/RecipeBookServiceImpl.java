@@ -117,6 +117,10 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         recipeBook.setOwner(owner);
         List<Long> userIds = recipeBookCreateDto.users().stream().map(UserListDto::id).toList();
         List<ApplicationUser> users = userRepository.findAllById(userIds);
+        if (users.contains(owner)) {
+            users.removeIf(user -> user.getId() == owner.getId());
+            throw new ForbiddenException("The owner cannot be selected as one of the editors");
+        }
 
         recipeBook.setEditors(users);
         recipeBook.setRecipes(recipeBookRecipeMapper.listOfRecipeListDtoToRecipeList(recipeBookCreateDto.recipes()));
