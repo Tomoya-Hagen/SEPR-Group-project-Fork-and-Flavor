@@ -58,8 +58,8 @@ export class RecipebookCreateEditComponent implements OnInit {
       }),
       catchError((error) => {
       console.error('Error:', error);
-      this.notification.error('You have to login as user to create recipebook.' , 'Backend Error - Recipebook');
-      this.router.navigate(['/login']);
+        this.notification.error('Sie müssen sich als Benutzer anmelden oder als Benutzer registrieren, um ein Rezeptbuch zu erstellen.' , 'Rezeptbuch kann nicht erstellt werden.');
+        this.router.navigate(['/login']);
       return of(false); // Handle the error and return a fallback value
     })
       )
@@ -112,11 +112,11 @@ export class RecipebookCreateEditComponent implements OnInit {
         error: error => {
           if(this.mode === RecipeBookCreateEditMode.create) {
             console.error('Error creating recipebook', error);
-            this.notification.error('Could not create recipebook.', 'Backend Error - Recipebook Create');
+            this.notification.error('Rezeptbuch kann nicht erstellt werden.', 'Backend Fehler - Rezeptbuch erstellen');
           }
           if(this.mode === RecipeBookCreateEditMode.edit) {
             console.error('Error editing recipebook', error);
-            this.notification.error('Could not edit recipebook.', 'Backend Error - Recipebook Edit');
+            this.notification.error('Rezeptbuch kann nicht bearbeitet werden.', 'Backend Fehler - Rezeptbuch bearbeiten');
           }
         }
       });

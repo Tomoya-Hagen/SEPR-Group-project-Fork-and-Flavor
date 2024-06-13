@@ -46,7 +46,7 @@ export class RegisterComponent implements OnInit {
       this.authService.registerUser(newUserRequest).subscribe({
         next: () => {
           console.log(`Successfully registered user: ${newUserRequest.email}`);
-          this.notification.success("Successfully registered user:" + newUserRequest.email, "Registration Success");
+          this.notification.success("Erfolgreich registriert als User:" + newUserRequest.email, "Registrierung erfolgreich!");
           this.router.navigate(['/']);  // Redirect after successful registration
         },
         error: (errorResponse) => {
@@ -56,15 +56,15 @@ export class RegisterComponent implements OnInit {
           const errorMessage = errorResponse.error;
           const validationErrors = this.parseValidationErrors(errorMessage);
           validationErrors.forEach(error => {
-            this.notification.error(error, "Registration Error");
+            this.notification.error(error, "Registrierung Fehler");
           });
         }
       });
     } else {
       console.error('Invalid input');
       this.error = true;
-      this.errorMessage = 'Please check your input and try again.';
-      this.notification.error(this.errorMessage, "Registration Error");
+      this.errorMessage = 'Bitte überprüfen Sie Ihre Eingabe und versuchen Sie es erneut!';
+      this.notification.error(this.errorMessage, "Registrierung Fehler");
     }
   }
 
@@ -78,13 +78,13 @@ export class RegisterComponent implements OnInit {
     } else {
       try {
         const errorObj = JSON.parse(errorMessage);
-        if (errorObj.detail && errorObj.detail.includes('Failed validations:')) {
-          validationErrors = errorObj.detail.replace('Validation of input fields failed. Failed validations: ', '').split(', ');
+        if (errorObj.detail && errorObj.detail.includes('Fehlgeschlagene Validierung:')) {
+          validationErrors = errorObj.detail.replace('Die Validierung der Eingabefelder ist fehlgeschlagen. Fehlgeschlagene Validierung: ', '').split(', ');
         } else {
-          validationErrors.push("An unexpected error occurred.");
+          validationErrors.push("Ein unerwarteter Fehler ist aufgetreten.");
         }
       } catch (e) {
-        validationErrors.push("An unexpected error occurred.");
+        validationErrors.push("Ein unerwarteter Fehler ist aufgetreten.");
       }
     }
 

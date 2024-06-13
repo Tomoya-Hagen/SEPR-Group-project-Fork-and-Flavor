@@ -34,7 +34,7 @@ export class ResetPasswordComponent implements OnInit {
       const email = this.resetPasswordForm.controls.email.value;
       this.authService.resetPassword(email).subscribe({
         next: () => {
-          this.notification.success('A password reset link has been sent to ' + email, 'Password Reset Success');
+          this.notification.success('Ein neues Passwort wurde an die Email-Adresse gesendet: ' + email, 'Passwort zurücksetzen erfolgreich!');
           this.router.navigate(['/login']);
         },
         error: error => {
@@ -42,7 +42,7 @@ export class ResetPasswordComponent implements OnInit {
           console.log(error);
           this.error = true;
           if (error.status === 404) {
-            this.notification.error(this.errorMessage,'Email not found');
+            this.notification.error(this.errorMessage,'Email wurde nicht gefunden!');
           }
         }
       });
