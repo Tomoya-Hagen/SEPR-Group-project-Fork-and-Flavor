@@ -12,6 +12,7 @@ import { Title } from '@angular/platform-browser';
 import { UserService } from 'src/app/services/user.service';
 import { RatingCreateDto, RatingListDto } from 'src/app/dtos/rating';
 import { RatingService } from 'src/app/services/rating.service';
+import { Form, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -35,7 +36,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     nutritions: []
   };
 
-  rating: RatingCreateDto = null;
+  ratingValues = [0,1,2,3,4,5];
+  isRatingDialogShown = false;
   ratings: RatingListDto[] = [];
   dummyRecipeBookSelectionModel: unknown;
   recipeSteps = [];
@@ -57,6 +59,13 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   screenWidth: number;
   isOwner: boolean = false;
   areRatingsLoaded: boolean = false;
+  rating: RatingCreateDto ={
+    review: "",
+    taste: -1,
+    easeOfPrep: -1,
+    recipeId: -1,
+    cost: -1
+  }
 
   constructor(
     private ratingService: RatingService,
@@ -77,6 +86,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
       observable.subscribe({
         next: data => {
           this.recipe = data;
+          this.rating.recipeId = this.recipe.id;
           this.recipeSteps = this.recipe.recipeSteps;
           this.changeIngredientsToGramm();
           this.changeNutritionsToGramm();
@@ -250,5 +260,13 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
       }
     }
   );
+  }
+
+  onSubmitRating(form:NgForm){
+    console.log(this.rating);
+  }
+
+  updateIsRatingDialogShown(){
+    this.isRatingDialogShown = true;
   }
 }

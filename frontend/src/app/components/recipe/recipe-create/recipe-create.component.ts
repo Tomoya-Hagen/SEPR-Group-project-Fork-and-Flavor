@@ -34,6 +34,7 @@ export class RecipeCreateComponent implements OnInit{
     steps: [],
     categories: []
   }
+  ratings=[0,1,2,3,4,5];
   ingbool = false;
   stepbool = false;
 

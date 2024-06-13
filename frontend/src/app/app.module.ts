@@ -32,6 +32,8 @@ import {CardComponent} from "./components/card/card.component";
 import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { StarRatingComponent } from './components/star-rating/star-rating.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,7 @@ import {MatIcon} from "@angular/material/icon";
     AutocompleteComponent,
     RegisterComponent,
     RecipebookCreateEditComponent,
+    StarRatingComponent
   ],
   imports: [
     BrowserModule,
@@ -75,6 +78,7 @@ import {MatIcon} from "@angular/material/icon";
     MatIconButton,
     MatTooltip,
     MatIcon,
+    FontAwesomeModule,
   ],
   providers: [httpInterceptorProviders],
   exports: [
