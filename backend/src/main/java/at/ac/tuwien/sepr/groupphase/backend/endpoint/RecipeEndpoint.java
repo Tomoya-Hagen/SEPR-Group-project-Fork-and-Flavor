@@ -71,6 +71,20 @@ public class RecipeEndpoint {
         }
     }
 
+    @PermitAll
+    @GetMapping(value = "/edit/{id}")
+    @Operation(summary = "Get recipe details by id")
+    public RecipeDetailDto editBy(@PathVariable(name = "id") Long id) {
+        LOGGER.info("GET /api/v1/recipe/details/{}", id);
+        try {
+            return recipeService.getRecipeDetailDtoById(id,false);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no recipe found by the given is", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+    }
+
     /**
      * This function updates the recipe with the values specified by the given parameter.
      *
@@ -97,6 +111,7 @@ public class RecipeEndpoint {
         LOGGER.info("POST /api/v1/recipe params: {} {}", name, limit);
         return recipeService.byname(name, limit);
     }
+
 
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)

@@ -103,16 +103,8 @@ export class RecipeCreateComponent implements OnInit{
     } else{
       this.mode = "edit";
     }
-    console.log(this.mode)
 
-    if(this.mode == 'edit'){
-      this.recipeService.getRecipeUpdateDtoById(id).subscribe(recipe => {
-        this.recipe = recipe;
-        console.log(this.recipe);
-      });
-    }
-
-     this.ingredientService.allingredients().subscribe({
+    this.ingredientService.allingredients().subscribe({
       next:(response) => {
         this.possible.ingredients = response
         this.show.ingredients = response
@@ -120,7 +112,7 @@ export class RecipeCreateComponent implements OnInit{
       error: error => {
         this.defaultServiceErrorHandling(error);
       }
-      });
+    });
 
     this.categoryService.allcategories().subscribe({
       next:(response) => {
@@ -142,6 +134,27 @@ export class RecipeCreateComponent implements OnInit{
       }
     });
 
+    if(this.mode == 'edit'){
+      this.recipeService.getRecipeEditDtoById(id).subscribe(recipe => {
+        this.recipe.name = recipe.name;
+        this.recipe.description = recipe.description;
+        this.recipe.numberOfServings = recipe.numberOfServings;
+        this.recipe.ingredients = recipe.ingredients;
+        this.recipe.categories = recipe.categories;
+        for (let step of recipe.recipeSteps){
+          let count = 0;
+          if(!step.whichstep){
+            this.recipe.recipeSteps.push({name: step.name, recipeId: step.recipeId,whichstep: step.whichstep})
+            this.input.recipestep[count] = this.possible.recipestep[step.recipeId-1].recipename;
+          } else {
+            this.recipe.recipeSteps.push({name: step.name, description: step.description,whichstep: step.whichstep})
+          }
+          count++;
+        }
+      });
+    }
+
+
     this.ingredientService.allunits().subscribe({
       next:(response) => {
         this.possible.units = response
@@ -157,6 +170,9 @@ export class RecipeCreateComponent implements OnInit{
     this.recipe.recipeSteps.forEach(step => {
       if(step.description){
         delete step.recipeId;
+      }
+      if(step.recipeId){
+        step.description = "";
       }
     })
 
