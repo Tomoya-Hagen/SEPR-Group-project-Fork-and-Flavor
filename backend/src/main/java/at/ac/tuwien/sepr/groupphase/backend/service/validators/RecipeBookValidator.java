@@ -8,7 +8,6 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
@@ -18,17 +17,28 @@ import java.util.List;
 @Component
 public class RecipeBookValidator {
 
-    @Autowired
-    private RecipeRepository recipeRepository;
+    private final RecipeRepository recipeRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public void validateCreate(RecipeBookCreateDto recipeBookCreateDto) throws ValidationException {
-        LOGGER.trace("validateCreate called");
+    public RecipeBookValidator(RecipeRepository recipeRepository, UserRepository userRepository) {
+        this.recipeRepository = recipeRepository;
+        this.userRepository = userRepository;
+    }
+
+    public void validateForCreateAndUpdate(RecipeBookCreateDto recipeBookCreateDto) throws ValidationException {
+        LOGGER.trace("validateForCreateAndUpdate({})", recipeBookCreateDto);
         List<String> validationErrors = new ArrayList<>();
+
+        if (recipeBookCreateDto.name().isEmpty()) {
+            validationErrors.add("Name cannot be Empty!");
+        }
+
+        if (recipeBookCreateDto.description().isEmpty()) {
+            validationErrors.add("Description cannot be empty");
+        }
 
         for (UserListDto user : recipeBookCreateDto.users()) {
             if (!userRepository.existsById(user.id())) {
@@ -42,8 +52,8 @@ public class RecipeBookValidator {
         }
 
         if (!validationErrors.isEmpty()) {
-            LOGGER.warn("Validation of RecipeBook to be created failed for {}", validationErrors);
-            throw new ValidationException("Validation of RecipeBook to be created failed", validationErrors);
+            LOGGER.warn("Validation of RecipeBook to be created or updated failed for {}", validationErrors);
+            throw new ValidationException("Validation of RecipeBook to be created or updated failed", validationErrors);
         }
     }
 }

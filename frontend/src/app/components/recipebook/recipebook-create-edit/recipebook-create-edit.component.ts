@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {NgForm, NgModel} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {catchError, Observable, of} from 'rxjs';
-import {RecipeBook, RecipeBookCreateDto} from '../../../dtos/recipe-book';
+import { RecipeBookCreateDto} from '../../../dtos/recipe-book';
 import { RecipeBookService } from '../../../services/recipebook.service';
 import { RecipeService } from 'src/app/services/recipe.service';
 import { UserService } from 'src/app/services/user.service';
@@ -59,10 +59,12 @@ export class RecipebookCreateEditComponent implements OnInit {
         })
       )
       .subscribe();
-    var id = this.route.snapshot.params['id'];
+    const id = this.route.snapshot.params['id'];
     if (id) {
       this.recipeBookService.getById(id).subscribe(recipeBook => {
         this.recipeBook = recipeBook;
+        this.recipes = recipeBook.recipes;
+        this.users = recipeBook.users;
         this.mode = RecipeBookCreateEditMode.edit;
       });
     } else {
@@ -85,7 +87,7 @@ export class RecipebookCreateEditComponent implements OnInit {
   public onSubmit(form: NgForm): void {
     console.log('is form valid?', form.valid, this.recipeBook);
     if (form.valid && this.isFormValid()) {
-      let observable: Observable<RecipeBook>;
+      let observable: Observable<any>;
       switch (this.mode) {
         case RecipeBookCreateEditMode.create:
           this.recipeBook.recipes = this.recipes;
@@ -93,7 +95,7 @@ export class RecipebookCreateEditComponent implements OnInit {
           observable = this.recipeBookService.createRecipeBook(this.recipeBook);
           break;
         case RecipeBookCreateEditMode.edit:
-          // observable = this.recipeBookservice.update(this.recipeBook);
+          observable = this.recipeBookService.update(this.recipeBook, this.route.snapshot.params['id']);
           break;
         default:
           console.error('Unknown RecipeBookCreateEditMode', this.mode);
@@ -101,7 +103,7 @@ export class RecipebookCreateEditComponent implements OnInit {
       }
       observable.subscribe({
         next: data => {
-          // this.notification.success(`Recipe book ${this.recipeBook.name} successfully ${this.modeActionFinished}.`);
+          this.notification.success(`Recipe book ${this.recipeBook.name} successfully ${this.modeActionFinished}.`);
           this.router.navigate(['/recipebook']);
         },
         error: error => {

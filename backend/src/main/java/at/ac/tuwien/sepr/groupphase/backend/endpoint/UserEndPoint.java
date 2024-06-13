@@ -84,6 +84,7 @@ public class UserEndPoint {
     @Secured("ROLE_USER")
     @PatchMapping("/changePassword/{id}")
     public void changePassword(@PathVariable(name = "id") Long id, @RequestBody UserPasswordChangeDto userPasswordChangeDto) {
+        LOGGER.info("PATCH /api/v1/users/changePassword/{}", id);
         try {
             userService.changePassword(id, userPasswordChangeDto);
         } catch (NotFoundException e) {

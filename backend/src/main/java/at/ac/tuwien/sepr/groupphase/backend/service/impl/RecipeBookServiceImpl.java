@@ -108,7 +108,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     @Override
     public RecipeBookDetailDto createRecipeBook(@Valid RecipeBookCreateDto recipeBookCreateDto) throws ValidationException {
         LOGGER.trace("createRecipeBook({})", recipeBookCreateDto);
-        recipeBookValidator.validateCreate(recipeBookCreateDto);
+        recipeBookValidator.validateForCreateAndUpdate(recipeBookCreateDto);
         RecipeBook recipeBook = new RecipeBook();
         recipeBook.setName(recipeBookCreateDto.name());
         recipeBook.setDescription(recipeBookCreateDto.description());
@@ -122,5 +122,25 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         recipeBook.setRecipes(recipeBookRecipeMapper.listOfRecipeListDtoToRecipeList(recipeBookCreateDto.recipes()));
         recipeBookRepository.save(recipeBook);
         return recipeBookMapper.recipeBookToRecipeBookDetailDto(recipeBook);
+    }
+
+    @Override
+    public void updateRecipeBook(Long id, RecipeBookCreateDto recipeBookCreateDto) throws ValidationException, NotFoundException {
+        LOGGER.trace("updateRecipeBook({})", recipeBookCreateDto);
+        recipeBookValidator.validateForCreateAndUpdate(recipeBookCreateDto);
+        recipeBookRepository.findById(id).orElseThrow(NotFoundException::new);
+        RecipeBook recipeBook = new RecipeBook();
+        recipeBook.setName(recipeBookCreateDto.name());
+        recipeBook.setDescription(recipeBookCreateDto.description());
+
+        ApplicationUser owner = userManager.getCurrentUser();
+        recipeBook.setOwner(owner);
+        List<Long> userIds = recipeBookCreateDto.users().stream().map(UserListDto::id).toList();
+        List<ApplicationUser> users = userRepository.findAllById(userIds);
+
+        recipeBook.setId(id);
+        recipeBook.setEditors(users);
+        recipeBook.setRecipes(recipeBookRecipeMapper.listOfRecipeListDtoToRecipeList(recipeBookCreateDto.recipes()));
+        recipeBookRepository.save(recipeBook);
     }
 }

@@ -50,6 +50,7 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
         next: data => {
           this.recipeBook = data;
           this.titleService.setTitle("Fork & Flavour | " + this.recipeBook.name);
+          this.isCurrentUserOwner();
         },
         error: error => {
           console.error('Error fetching recipebook.', error);
@@ -76,6 +77,6 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
   }
 
   editRecipeBook() {
-
+    this.router.navigate(['/recipebook/edit',this.recipeBook.id])
   }
 }
