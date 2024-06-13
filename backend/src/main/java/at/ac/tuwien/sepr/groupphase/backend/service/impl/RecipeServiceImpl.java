@@ -75,14 +75,20 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException {
+        return getRecipeDetailDtoById(id, true);
+    }
+
+    @Override
+    public RecipeDetailDto getRecipeDetailDtoById(long id, boolean recursive) throws NotFoundException {
         LOGGER.trace("getRecipeDetailDtoById({})", id);
         Recipe recipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
         HashMap<Ingredient, RecipeIngredient> ingredients = new HashMap<>();
         HashMap<Nutrition, BigDecimal> nutritions = new HashMap<>();
         ArrayList<Allergen> allergens = new ArrayList<>();
-        getRecipeDetails(recipe, ingredients, nutritions, allergens);
+        getRecipeDetails(recipe, ingredients, nutritions, allergens, recursive);
         long rating = calculateAverageTasteRating(recipe.getRatings());
-        return recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
+        var y = recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
+        return y;
     }
 
     @Override
@@ -186,7 +192,8 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe recipe,
         Map<Ingredient, RecipeIngredient> ingredients,
         Map<Nutrition, BigDecimal> nutritions,
-        List<Allergen> allergens) {
+        List<Allergen> allergens,
+        boolean recursive) {
         LOGGER.trace("getRecipeDetails({}, {}, {}, {})",
             recipe, ingredients, nutritions, allergens);
         for (RecipeIngredient recipeIngredient : recipe.getIngredients()) {
@@ -197,12 +204,15 @@ public class RecipeServiceImpl implements RecipeService {
         }
         List<RecipeStep> recipeSteps = recipe.getRecipeSteps();
         recipeSteps.sort(Comparator.comparing(RecipeStep::getStepNumber));
-        for (RecipeStep recipeStep : recipeSteps) {
-            if (recipeStep instanceof RecipeRecipeStep recipeRecipeStep) {
-                getRecipeDetails(recipeRecipeStep.getRecipeRecipe(), ingredients,
-                    nutritions, allergens);
+        if (recursive) {
+            for (RecipeStep recipeStep : recipeSteps) {
+                if (recipeStep instanceof RecipeRecipeStep recipeRecipeStep) {
+                    getRecipeDetails(recipeRecipeStep.getRecipeRecipe(), ingredients,
+                        nutritions, allergens, recursive);
+                }
             }
         }
+
     }
 
     private void updateMapOfIngredients(RecipeIngredient recipeIngredient, Ingredient ingredient, Map<Ingredient, RecipeIngredient> ingredients) {

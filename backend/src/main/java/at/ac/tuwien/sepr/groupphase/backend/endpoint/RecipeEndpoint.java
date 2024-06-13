@@ -77,7 +77,7 @@ public class RecipeEndpoint {
     public RecipeDetailDto editBy(@PathVariable(name = "id") Long id) {
         LOGGER.info("GET /api/v1/recipe/details/{}", id);
         try {
-            return recipeService.getRecipeDetailDtoById(id,false);
+            return recipeService.getRecipeDetailDtoById(id, false);
         } catch (NotFoundException e) {
             HttpStatus status = HttpStatus.NOT_FOUND;
             logClientError(status, "no recipe found by the given is", e);
