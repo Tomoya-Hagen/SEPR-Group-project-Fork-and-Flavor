@@ -49,7 +49,7 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
         },
         error: error => {
           console.error('Error fetching recipebook.', error);
-          this.notification.error('Could not fetch recipebook.', 'Backend Error - Recipebook');
+          this.notification.error('Rezeptbücher können nicht abgerufen werden.',"Backend Fehler - Rezeptbuch");
         }
       });
     });
