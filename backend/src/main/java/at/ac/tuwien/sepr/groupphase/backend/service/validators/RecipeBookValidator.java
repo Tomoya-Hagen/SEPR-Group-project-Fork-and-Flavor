@@ -40,15 +40,23 @@ public class RecipeBookValidator {
             validationErrors.add("Description cannot be empty");
         }
 
-        for (UserListDto user : recipeBookCreateDto.users()) {
-            if (!userRepository.existsById(user.id())) {
-                validationErrors.add("User with id: " + user.id() + " does not exist");
+        if (recipeBookCreateDto.users() != null) {
+            for (UserListDto user : recipeBookCreateDto.users()) {
+                if (!userRepository.existsById(user.id())) {
+                    validationErrors.add("User with id: " + user.id() + " does not exist");
+                }
             }
+        } else {
+            validationErrors.add("Users cannot be null");
         }
-        for (RecipeListDto recipeListDto : recipeBookCreateDto.recipes()) {
-            if (!recipeRepository.existsById(recipeListDto.id())) {
-                validationErrors.add("Recipe with id: " + recipeListDto.id() + " does not exist");
+        if (recipeBookCreateDto.recipes() != null) {
+            for (RecipeListDto recipeListDto : recipeBookCreateDto.recipes()) {
+                if (!recipeRepository.existsById(recipeListDto.id())) {
+                    validationErrors.add("Recipe with id: " + recipeListDto.id() + " does not exist");
+                }
             }
+        } else {
+            validationErrors.add("Recipes cannot be null");
         }
 
         if (!validationErrors.isEmpty()) {
