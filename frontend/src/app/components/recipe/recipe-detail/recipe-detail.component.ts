@@ -51,6 +51,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   showNutrition: boolean = false;
   screenWidth: number;
   isOwner: boolean = false;
+  selectedPortions: number = 1;
+  originalServings: number;
+  portionsChanged: boolean = false;
+  adjustedIngredients = [];
+  adjustedNutritions = [];
 
   constructor(
     private service: RecipeService,
@@ -71,6 +76,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         next: data => {
           this.recipe = data;
           this.recipeSteps = this.recipe.recipeSteps;
+          this.originalServings = this.recipe.numberOfServings;
+          this.selectedPortions = this.recipe.numberOfServings;
           this.changeIngredientsToGramm();
           this.changeNutritionsToGramm();
           this.getForkedFromRecipeName();
@@ -91,6 +98,28 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   ngOnDestroy(): void {
     this.titleService.setTitle("Fork & Flavour");
+  }
+
+  roundTo(value: number, decimals: number): number {
+    const factor = Math.pow(10, decimals);
+    return Math.round(value * factor) / factor;
+  }
+
+  onPortionsChange(): void {
+    this.portionsChanged = this.selectedPortions !== this.originalServings;
+    this.adjustIngredientsAndNutritions();
+  }
+
+  adjustIngredientsAndNutritions(): void {
+    const ratio = this.selectedPortions / this.originalServings;
+    this.adjustedIngredients = this.recipe.ingredients.map(ingredient => ({
+      ...ingredient,
+      amount: ingredient.amount * ratio
+    }));
+    this.adjustedNutritions = this.recipe.nutritions.map(nutrition => ({
+      ...nutrition,
+      value: this.roundTo(nutrition.value * ratio, 2)
+    }));
   }
 
   isRecipeDescriptionStep(recipeStep: any): boolean {
