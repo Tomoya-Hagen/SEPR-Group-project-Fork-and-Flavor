@@ -2,9 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeBookMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -25,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -188,5 +187,36 @@ class RecipeBookEndpointTest implements TestData {
             () -> Assertions.assertFalse(recipeBookListDtos.isEmpty()),
             () -> assertEquals(9, recipeBookListDtos.size())
         );
+    }
+
+    @Test
+    public void updateRecipeBookUpdatesExistingRecipeBook() throws Exception {
+        RecipeBookCreateDto recipeBookCreateDto = new RecipeBookCreateDto("New Recipe Book", "New Description",new ArrayList<>(),new ArrayList<>());
+        mockMvc.perform(patch("/api/v1/recipebook/1/update")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(recipeBookCreateDto)))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateRecipeBookReturnsNotFoundWhenRecipeBookDoesNotExist() throws Exception {
+        RecipeBookCreateDto recipeBookCreateDto = new RecipeBookCreateDto("New Recipe Book", "New Description",new ArrayList<>(),new ArrayList<>());
+        mockMvc.perform(patch("/api/v1/recipebook/999/update")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(recipeBookCreateDto)))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void updateRecipeBookReturnsBadRequestWhenUpdateIsInvalid() throws Exception {
+        RecipeBookCreateDto recipeBookCreateDto = new RecipeBookCreateDto("", "New Description",null,null);
+
+        mockMvc.perform(patch("/api/v1/recipebook/1/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+                .content(new ObjectMapper().writeValueAsString(recipeBookCreateDto)))
+            .andExpect(status().isBadRequest());
     }
 }

@@ -17,10 +17,10 @@ import {AuthService} from "../../../services/auth.service";
   templateUrl: './userpage-edit.component.html',
   styleUrl: './userpage-edit.component.scss'
 })
+
 export class UserpageEditComponent {
 
   loginForm: UntypedFormGroup;
-  bannerError: string | null = null;
   // After first submission attempt, form validation will start
   submitted = false;
 
@@ -56,11 +56,7 @@ export class UserpageEditComponent {
             },
             error: error => {
               console.error('Error changing password for user with id', error);
-              this.bannerError = error.message;
-              const errorMessage = error.status === 0
-                ? 'Is the backend up?'
-                : error.message.message;
-              this.notification.error(errorMessage, 'Error changing password for user with id');
+              this.notification.error('Passwort für Benutzer kann nicht geändert werden.',"Backend Fehler - Benutzerseite Passwort");
             }
           });
         });
@@ -69,9 +65,8 @@ export class UserpageEditComponent {
       }
     } else {
       console.log('new passwords doesnt match');
-      this.notification.error( 'new passwords doesnt match');
+      this.notification.error('Neues Passwort stimmt nicht überein.',"Backend Fehler - Benutzerseite Passwort");
     }
   }
-
 
 }

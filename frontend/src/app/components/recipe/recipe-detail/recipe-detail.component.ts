@@ -86,10 +86,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         },
         error: error => {
           console.error('Error fetching recipe', error);
-          const errorMessage = error.status === 0
-            ? 'Is the backend up?'
-            : error.message.message;
-          this.notification.error('Could not fetch recipe' +errorMessage,"Backend Error - Recipe");
+          this.notification.error('Rezepte können nicht abgerufen werden.', "Backend Fehler - Rezepte");
           this.router.navigate([''])
         }
       });
@@ -151,9 +148,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
       error: error => {
         console.error('Error forking recipe.', error);
         const errorMessage = error.message.message;
-        this.notification.error('Could not fork recipe.', "Backend Error - Recipe");
+        this.notification.error('Fork Rezepte ist nicht möglich.' + errorMessage, "Backend Fehler - Rezepte");
+        return;
       }
     })
+    console.log(this.recipeForkedFrom);
+    return this.recipeForkedFrom;
   }
 
   openSpoonModal(spoonModal: TemplateRef<any>) {
@@ -171,12 +171,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   private spoonRecipe(recipeId:number, recipeBookId:number) {
     this.recipeBookService.spoonRecipe(recipeId,recipeBookId).subscribe({
           next: () => {
-            this.notification.success(`Recipe added successfully.`);
+            this.notification.success(`Rezepte hinzufügen war erfolgreich.`, "Rezepte erstellen erfolgreich!");
             this.modalService.dismissAll();
             this.currentRecipeBook=null;
           },
           error: error => {
-            this.notification.error(error);
             this.defaultServiceErrorHandling(error);
           }
         }
@@ -188,10 +187,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;
-      this.notification.error('Could not spoon recipe:' + this.errorMessage, 'Backend Error - Recipe');
+      this.notification.error('Spoon Rezepte ist nicht möglich.' + this.errorMessage, 'Backend Fehler - Rezepte');
     } else {
       this.errorMessage = error.error;
-      this.notification.error( 'Could not spoon recipe:' + this.errorMessage, 'Backend Error - Recipe');
+      this.notification.error( 'Spoon Rezepte ist nicht möglich.' + this.errorMessage, 'Backend Fehler - Rezepte');
     }
   }
 

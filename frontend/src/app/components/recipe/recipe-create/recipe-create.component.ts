@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Recipe} from "../../../dtos/recipe";
 import {AbstractControl, NgForm, ValidationErrors, ValidatorFn} from "@angular/forms";
 import {IngredientComponent} from "./ingredient/ingredient.component";
@@ -22,7 +22,7 @@ import {ToastrService} from "ngx-toastr";
   templateUrl: './recipe-create.component.html',
   styleUrl: './recipe-create.component.scss'
 })
-export class RecipeCreateComponent implements OnInit{
+export class RecipeCreateComponent implements OnInit {
 
   error = false;
   errorMessage = '';
@@ -44,15 +44,16 @@ export class RecipeCreateComponent implements OnInit{
     private authService: AuthService,
     private router: Router,
     private notification: ToastrService
-  ){}
+  ) {
+  }
 
   ingredientChangeHandler(updatedIngredient: IngredientDetailDto, index: number) {
     console.log(this.recipe.ingredients)
     this.recipe.ingredients[index] = updatedIngredient;
-    if(this.recipe.ingredients[this.recipe.ingredients.length-1].id != -1){
-      this.recipe.ingredients.push({name: "", id: -1,amount: null, unit:null});
+    if (this.recipe.ingredients[this.recipe.ingredients.length - 1].id != -1) {
+      this.recipe.ingredients.push({name: "", id: -1, amount: null, unit: null});
     }
-    if(this.recipe.ingredients.length > 1 && this.recipe.ingredients.slice(0, -1).every(obj => obj != null && obj.id !== -1 && obj.id !== 0)){
+    if (this.recipe.ingredients.length > 1 && this.recipe.ingredients.slice(0, -1).every(obj => obj != null && obj.id !== -1 && obj.id !== 0)) {
       this.ingbool = true;
     } else {
       this.ingbool = false;
@@ -68,16 +69,16 @@ export class RecipeCreateComponent implements OnInit{
         }),
         catchError((error) => {
           console.error('Error:', error);
-          this.notification.error('You have to login as user to create recipe.' , 'Backend Error - Recipe');
+          this.notification.error('Sie müssen sich als Benutzer anmelden oder als Benutzer registrieren, um ein Rezept zu erstellen.', 'Rezept kann nicht erstellt werden.');
           this.router.navigate(['/login']);
           return of(false); // Handle the error and return a fallback value
         })
       )
       .subscribe();
 
-    this.recipe.ingredients.push({name: "", id: -1,amount: 0, unit:"g"});
+    this.recipe.ingredients.push({name: "", id: -1, amount: 0, unit: "g"});
     this.recipe.steps.push(new Step());
-    this.recipe.categories.push({id: 0,name: ""});
+    this.recipe.categories.push({id: 0, name: ""});
   }
 
   public onSubmit(form: NgForm): void {
@@ -86,7 +87,7 @@ export class RecipeCreateComponent implements OnInit{
     this.recipe.categories.pop();
     this.recipe.ingredients.pop();
     this.recipe.steps.forEach(step => {
-      if(step.description){
+      if (step.description) {
         delete step.recipeId;
       }
     })
@@ -94,6 +95,7 @@ export class RecipeCreateComponent implements OnInit{
 
     this.recipeService.createRecipe(this.recipe).subscribe({
         next: (detrecipe: DetailedRecipeDto) => {
+          this.notification.success("Das Rezept wurde erfolgreich erstellt.", "Rezepte erstellen erfolgreich!");
           this.router.navigate(['/recipe/details/' + detrecipe.id]);
         },
         error: error => {
@@ -109,10 +111,10 @@ export class RecipeCreateComponent implements OnInit{
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;
-      this.notification.error(this.errorMessage, 'Backend Error - Recipe');
+      this.notification.error(this.errorMessage.toString(), 'Backend Fehler - Rezepte erstellen');
     } else {
       this.errorMessage = error.error;
-      this.notification.error( this.errorMessage, 'Backend Error - Recipe');
+      this.notification.error(this.errorMessage.toString(), 'Backend Fehler - Rezepte erstellen');
     }
   }
 
@@ -121,13 +123,13 @@ export class RecipeCreateComponent implements OnInit{
   }
 
 
-  public textareachange(index : number) : void{
-    if(!this.recipe.steps[index].description){
+  public textareachange(index: number): void {
+    if (!this.recipe.steps[index].description) {
       this.recipe.steps[index].whichstep = null;
     } else {
       this.recipe.steps[index].whichstep = true;
     }
-    if(this.recipe.steps.length -1 == index){
+    if (this.recipe.steps.length - 1 == index) {
       this.recipe.steps.push(new Step());
     }
   }
@@ -136,15 +138,15 @@ export class RecipeCreateComponent implements OnInit{
     return simpleRecipe?.recipename ?? '';
   }
 
-  public stepchanged(index: number):void{
-    if(this.recipe.steps[index] == null){
+  public stepchanged(index: number): void {
+    if (this.recipe.steps[index] == null) {
       this.recipe.steps[index] = new Step();
     }
-    if(this.recipe.steps[index].recipeId != 0 && this.recipe.steps.length -1 == index){
+    if (this.recipe.steps[index].recipeId != 0 && this.recipe.steps.length - 1 == index) {
       this.recipe.steps.push(new Step());
     }
 
-    if(this.recipe.steps.length > 1 && this.recipe.steps.slice(0, -1).every(obj => obj != null && obj.whichstep != null)){
+    if (this.recipe.steps.length > 1 && this.recipe.steps.slice(0, -1).every(obj => obj != null && obj.whichstep != null)) {
       this.stepbool = true;
     } else {
       this.stepbool = false;
@@ -153,8 +155,7 @@ export class RecipeCreateComponent implements OnInit{
 
   recipeStepSuggestions = (input: string) => (input === '')
     ? of([])
-    :  this.recipeService.recipeByName(input, 5);
-
+    : this.recipeService.recipeByName(input, 5);
 
 
   public formatCategory(simpleCategory: SimpleCategory | null): string {
@@ -163,13 +164,13 @@ export class RecipeCreateComponent implements OnInit{
 
   categorySuggestions = (input: string) => (input === '')
     ? of([])
-    :  this.categoryService.categoryByName(input, 5);
+    : this.categoryService.categoryByName(input, 5);
 
-  public categorychanged(index: number):void{
-    if(this.recipe.categories[index] == null){
+  public categorychanged(index: number): void {
+    if (this.recipe.categories[index] == null) {
       this.recipe.categories[index] = {id: 0, name: ""}
     }
-    if(this.recipe.categories[index].id != 0 && this.recipe.categories.length -1 == index){
+    if (this.recipe.categories[index].id != 0 && this.recipe.categories.length - 1 == index) {
       this.recipe.categories.push({id: 0, name: ""});
     }
   }
@@ -217,7 +218,7 @@ export class RecipeCreateComponent implements OnInit{
         }
       ]
     }
-    this.recipe=rec;
+    this.recipe = rec;
   }
 
 

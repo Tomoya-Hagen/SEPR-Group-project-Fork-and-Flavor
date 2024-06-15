@@ -70,4 +70,6 @@ public interface RecipeBookService {
      * @return The created recipe book.
      */
     RecipeBookDetailDto createRecipeBook(RecipeBookCreateDto recipeBook) throws ValidationException;
+
+    void updateRecipeBook(Long id, RecipeBookCreateDto recipeBook) throws ValidationException, NotFoundException;
 }
