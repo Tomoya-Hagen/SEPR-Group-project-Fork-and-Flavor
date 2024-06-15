@@ -65,6 +65,12 @@
       <h4>Geforkt von:</h4>
       <span>{{recipeForkedFrom}}</span>
     </div>
+    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: #08688e;" *ngIf="hasForkedRecipes">
+      <h4>Hiervon geforkt:</h4>
+      <div *ngFor="let forkedRecipe of recipe.forkedRecipes; let isLast=last">
+        <span>{{forkedRecipe}}{{isLast ? '' : ', '}}</span>
+      </div>
+    </div>
     <div class="info-box info-box-5 clickable" *ngIf="screenWidth <= 767" style="box-shadow: 0 0 10px rgba(111, 66, 193, 0); background-color: rgba(111, 66, 193, 1);" (click)="toggleNutrition()">
       <h4>Nährwerte:</h4>
         <span *ngIf="!showNutrition">Zeigen</span>

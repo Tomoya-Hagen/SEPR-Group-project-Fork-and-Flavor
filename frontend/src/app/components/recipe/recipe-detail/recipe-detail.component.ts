@@ -30,7 +30,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     recipeSteps: [],
     ingredients: [],
     allergens: [],
-    nutritions: []
+    nutritions: [],
+    forkedRecipes: []
   };
   dummyRecipeBookSelectionModel: unknown;
   recipeSteps = [];
@@ -56,6 +57,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   portionsChanged: boolean = false;
   adjustedIngredients = [];
   adjustedNutritions = [];
+  hasForkedRecipes: boolean = false;
+  showForkedRecipes: boolean = true;
 
   constructor(
     private service: RecipeService,
@@ -82,6 +85,13 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           this.changeNutritionsToGramm();
           this.getForkedFromRecipeName();
           this.isCurrentUserOwner();
+          console.log("recipes forked from this: " + this.recipe.forkedRecipes);
+          if (this.recipe.forkedRecipes.length > 0) {
+            this.hasForkedRecipes = true;
+          }
+          if (this.recipe.forkedRecipes.length >= 6) {
+            this.showForkedRecipes = false;
+          }
           this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
         },
         error: error => {
