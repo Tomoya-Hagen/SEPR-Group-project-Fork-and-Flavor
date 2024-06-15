@@ -91,22 +91,22 @@ export class RecipeEditComponent implements OnInit {
                 },
                 error: (err) => {
                   console.error('Error loading recipe details:', err);
-                  this.navToDetails();
+                  this.navToDetails(recipeId);
                 }
               });
             } else {
-              this.navToDetails();
+              this.navToDetails(recipeId);
             }
           },
           error: (err) => {
             console.error('Error fetching current user:', err);
-            this.navToDetails();
+            this.navToDetails(recipeId);
           }
         });
       },
       error: (err) => {
         console.error('Error fetching recipe details:', err);
-        this.navToDetails();
+        this.navToDetails(recipeId);
       }
     });
   }
@@ -141,7 +141,7 @@ export class RecipeEditComponent implements OnInit {
     this.recipeService.updateRecipe(this.recipe).subscribe({
       next: (detrecipe: DetailedRecipeDto) => {
         // this.notification.info('Update successful!');
-        this.router.navigate(['/recipe']);
+        this.router.navigate(['recipe', 'details', this.recipe.id]);
       },
       error: error => {
         this.defaultServiceErrorHandling(error);
@@ -268,15 +268,8 @@ export class RecipeEditComponent implements OnInit {
     }
   }
 
-  public navToDetails() {
-    this.router.navigate(['recipe', 'details', this.recipe.id]);
+  public navToDetails(recipeId: number) {
+    this.router.navigate(['recipe', 'details', recipeId]);
   }
-
-  public clickSubmit(): void {
-    this.onSubmit({} as NgForm);
-    this.navToDetails();
-  }
-
-
 
 }
