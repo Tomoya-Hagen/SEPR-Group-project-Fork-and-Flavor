@@ -68,7 +68,7 @@ export class RecipeBookService {
   }
 
   getById(id: number): Observable<RecipeBook> {
-    return this.http.get<RecipeBook>(this.baseUri + '/' + id)
+    return this.http.get<RecipeBook>(this.baseUri + '/' + id + '/details')
       .pipe(
         catchError((error) => {
           console.error(error.error);
@@ -78,4 +78,7 @@ export class RecipeBookService {
   }
 
 
+  update(recipeBook: RecipeBookCreateDto, id: number) {
+     return this.http.patch(this.baseUri + '/' + id + '/update', recipeBook);
+  }
 }

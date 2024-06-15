@@ -26,10 +26,13 @@
       <ul>
         <li><a (click)="openUserPage()" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{{ recipeBook.owner.name }}</a></li>
       </ul>
-      <p class="fs-4">Contributors:</p>
+      <p class="fs-4" *ngIf="recipeBook.users.length !== 0">Contributors:</p>
       <ul class="list-style-none " *ngFor="let users of recipeBook.users">
         <li class="mb-2" [routerLink]="['/userpage', users.id]"><a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{{ users.name }}</a></li>
       </ul>
     </div>
+  </div>
+  <div style="text-align: right;position: relative; margin: 30px">
+    <button *ngIf="isOwner" type="button" class="btn btn-primary btn-sm" (click)="editRecipeBook()" style="margin-right: 10px;">edit recipe book</button>
   </div>
 </div>

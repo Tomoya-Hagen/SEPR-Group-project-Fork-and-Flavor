@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="col-12 col-md-8">
-      <h4 class="mt-4">Recipe books:</h4>
+      <h4 class="mt-4" *ngIf="recipeBook.length !== 0">Recipe books:</h4>
       <table class="table">
         <tbody>
         <tr *ngFor="let recipe of recipeBook">
@@ -33,7 +33,7 @@
         </tr>
         </tbody>
       </table>
-      <h4 class="mt-4">Recipes:</h4>
+      <h4 class="mt-4" *ngIf="recipes.length !== 0">Recipes:</h4>
       <table class="table">
         <tbody>
         <tr *ngFor="let recipe of recipes">
