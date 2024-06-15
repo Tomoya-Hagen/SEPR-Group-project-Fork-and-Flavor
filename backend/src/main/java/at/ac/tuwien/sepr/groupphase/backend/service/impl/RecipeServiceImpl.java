@@ -110,7 +110,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 
         Recipe simple = recipeMapper.recipeparsesimple(recipeDto);
-        ApplicationUser owner = userService.getCurrentUser();
+        ApplicationUser owner = userManager.getCurrentUser();
         simple.setOwner(owner);
         recipeRepository.save(simple);
 
