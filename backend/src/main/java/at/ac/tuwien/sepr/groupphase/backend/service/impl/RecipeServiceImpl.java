@@ -78,28 +78,15 @@ public class RecipeServiceImpl implements RecipeService {
         HashMap<Ingredient, RecipeIngredient> ingredients = new HashMap<>();
         HashMap<Nutrition, BigDecimal> nutritions = new HashMap<>();
         ArrayList<Allergen> allergens = new ArrayList<>();
+        getRecipeDetails(recipe, ingredients, nutritions, allergens);
+        long rating = calculateAverageTasteRating(recipe.getRatings());
+        RecipeDetailDto result = recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
 
         List<Recipe> forkedRecipes = recipeRepository.findAllForkedRecipesById(id);
         ArrayList<String> forkedRecipeNames = new ArrayList<>();
         for (Recipe forkedRecipe : forkedRecipes) {
             forkedRecipeNames.add(forkedRecipe.getName());
         }
-        forkedRecipeNames.add("Test1");
-        forkedRecipeNames.add("Test2");
-        forkedRecipeNames.add("Test3");
-        forkedRecipeNames.add("Test4");
-        forkedRecipeNames.add("Test5");
-        forkedRecipeNames.add("Test6");
-        forkedRecipeNames.add("Test7");
-        forkedRecipeNames.add("Test8");
-        forkedRecipeNames.add("Test9");
-        forkedRecipeNames.add("Test10");
-        forkedRecipeNames.add("Test11");
-        forkedRecipeNames.add("Test12");
-
-        getRecipeDetails(recipe, ingredients, nutritions, allergens);
-        long rating = calculateAverageTasteRating(recipe.getRatings());
-        RecipeDetailDto result = recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
         return new RecipeDetailDto(
             result.id(),
             result.name(),
