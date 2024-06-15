@@ -47,11 +47,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     "arrows" : true,
     "infinite" : false
   }
-  recipeForkedFrom = [];
+  recipeForkedFrom: string;
   showNutrition: boolean = false;
   screenWidth: number;
   isOwner: boolean = false;
-  selectedPortions: number = 1;
+  selectedPortions: number;
   originalServings: number;
   portionsChanged: boolean = false;
   adjustedIngredients = [];
@@ -100,8 +100,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     this.titleService.setTitle("Fork & Flavour");
   }
 
-  roundTo(value: number, decimals: number): number {
-    const factor = Math.pow(10, decimals);
+  roundTo(value: number): number {
+    const factor = Math.pow(10, 1);
     return Math.round(value * factor) / factor;
   }
 
@@ -114,11 +114,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     const ratio = this.selectedPortions / this.originalServings;
     this.adjustedIngredients = this.recipe.ingredients.map(ingredient => ({
       ...ingredient,
-      amount: ingredient.amount * ratio
+      amount: this.roundTo(ingredient.amount * ratio)
     }));
     this.adjustedNutritions = this.recipe.nutritions.map(nutrition => ({
       ...nutrition,
-      value: this.roundTo(nutrition.value * ratio, 2)
+      value: this.roundTo(nutrition.value * ratio)
     }));
   }
 
@@ -140,23 +140,20 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     return this.recipe.forkedFromId != 0 && this.recipe.forkedFromId != null;
   }
 
-  getForkedFromRecipeName(): string[]{
+  getForkedFromRecipeName(){
     if (this.recipe.forkedFromId == 0 || this.recipe.forkedFromId == null) {
-      return [];
+      return;
     }
     this.service.getRecipeDetailsBy(this.recipe.forkedFromId).subscribe({
       next: data => {
-        this.recipeForkedFrom.push(data.name);
+        this.recipeForkedFrom = data.name;
       },
       error: error => {
         console.error('Error forking recipe.', error);
         const errorMessage = error.message.message;
         this.notification.error('Could not fork recipe.', "Backend Error - Recipe");
-        return [];
       }
     })
-    console.log(this.recipeForkedFrom);
-    return this.recipeForkedFrom;
   }
 
   openSpoonModal(spoonModal: TemplateRef<any>) {
@@ -234,6 +231,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     for (let i = 0; i < this.recipe.ingredients.length; i++) {
       if (this.recipe.ingredients[i].amount >= 1000 && this.recipe.ingredients[i].unit === "mg") {
         this.recipe.ingredients[i].amount /= 1000;
+        this.roundTo(this.recipe.ingredients[i].amount);
         this.recipe.ingredients[i].unit = "g";
       }
     }
@@ -243,6 +241,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     for (let i = 0; i < this.recipe.nutritions.length; i++) {
       if (this.recipe.nutritions[i].value >= 1000 && this.recipe.nutritions[i].unit === "mg") {
         this.recipe.nutritions[i].value /= 1000;
+        this.roundTo(this.recipe.nutritions[i].value);
         this.recipe.nutritions[i].unit = "g";
       }
     }
@@ -250,7 +249,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   navigateToDetailsInNewTab(index: number) {
     const baseUrl = window.location.origin;
-  const url = `${baseUrl}/#/recipe/details/${index}`;
+    const url = `${baseUrl}/#/recipe/details/${index}`;
     window.open(url, '_blank');
   }
 
