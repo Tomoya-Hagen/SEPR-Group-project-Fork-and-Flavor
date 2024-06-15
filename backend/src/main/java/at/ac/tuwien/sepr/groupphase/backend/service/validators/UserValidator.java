@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validators;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordChangeDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import org.slf4j.Logger;
@@ -38,6 +39,24 @@ public class UserValidator {
         if (!validationErrors.isEmpty()) {
             LOG.warn("Validation of User failed {}", validationErrors);
             throw new ValidationException("Validation of input fields failed", validationErrors);
+        }
+    }
+
+    public void validateForPasswordChange(UserPasswordChangeDto userPasswordChangeDto) throws ValidationException {
+        LOG.trace("validateForPasswordChange({})", userPasswordChangeDto);
+        List<String> validationErrors = new ArrayList<>();
+
+        if (userPasswordChangeDto.newPassword().isEmpty()) {
+            validationErrors.add("Password cannot be empty");
+        }
+
+        if (userPasswordChangeDto.newPassword().length() < 8) {
+            validationErrors.add("Password needs to be longer then 8 characters");
+        }
+
+        if (!validationErrors.isEmpty()) {
+            LOG.warn("Validation of password change failed {}", validationErrors);
+            throw new ValidationException("Validation of password change failed", validationErrors);
         }
     }
 }

@@ -16,6 +16,7 @@ import {tap} from "rxjs/operators";
 import {ActivatedRoute, Router} from '@angular/router';
 import index from "eslint-plugin-jsdoc";
 import {CategoryDetailDto} from "../../../dtos/category";
+import {ToastrService} from "ngx-toastr";
 
 
 @Component({
@@ -65,7 +66,8 @@ export class RecipeCreateComponent implements OnInit{
     private ingredientService: IngredientService,
     private router: Router,
     private route: ActivatedRoute,
-    private changedetec: ChangeDetectorRef
+    private changedetec: ChangeDetectorRef,
+    private notification: ToastrService
   ){}
 
   ingredientChangeHandler(updatedIngredient: IngredientDetailDto, index: number) {
@@ -87,10 +89,10 @@ export class RecipeCreateComponent implements OnInit{
       .pipe(
         tap((isLoggedIn: boolean) => {
           console.log('Is logged in:', isLoggedIn);
-
         }),
         catchError((error) => {
           console.error('Error:', error);
+          this.notification.error('You have to login as user to create recipe.' , 'Backend Error - Recipe');
           this.router.navigate(['/login']);
           return of(false); // Handle the error and return a fallback value
         })
@@ -217,8 +219,10 @@ export class RecipeCreateComponent implements OnInit{
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;
+      this.notification.error(this.errorMessage, 'Backend Error - Recipe');
     } else {
       this.errorMessage = error.error;
+      this.notification.error( this.errorMessage, 'Backend Error - Recipe');
     }
   }
 

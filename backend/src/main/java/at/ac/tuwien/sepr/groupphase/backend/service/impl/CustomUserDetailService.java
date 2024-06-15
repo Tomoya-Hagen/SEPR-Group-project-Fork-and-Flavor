@@ -1,18 +1,27 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordChangeDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeBookMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserRegisterDtoMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
 import org.slf4j.Logger;
@@ -42,10 +51,16 @@ public class CustomUserDetailService implements UserService {
     private final UserRegisterDtoMapper userRegisterDtoMapper;
     private final RoleRepository rolesRepository;
     private final UserMapper userMapper;
+    private final RecipeBookMapper recipeBookMapper;
+    private final RecipeBookRepository recipeBookRepository;
+    private final RecipeRepository recipeRepository;
+    private final RecipeMapper recipeMapper;
+    private final EmailService emailService;
 
     @Autowired
     public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserMapper userMapper,
-                                   UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository) {
+                                   UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository, RecipeBookMapper recipeBookMapper,
+                                   RecipeBookRepository recipeBookRepository, RecipeMapper recipeMapper, RecipeRepository recipeRepository, EmailService emailService) {
         this.userRepository = userRepository;
         this.userValidator = new UserValidator(userRepository);
         this.passwordEncoder = passwordEncoder;
@@ -53,6 +68,11 @@ public class CustomUserDetailService implements UserService {
         this.userRegisterDtoMapper = userRegisterDtoMapper;
         this.rolesRepository = rolesRepository;
         this.userMapper = userMapper;
+        this.recipeBookMapper = recipeBookMapper;
+        this.recipeBookRepository = recipeBookRepository;
+        this.recipeMapper = recipeMapper;
+        this.recipeRepository = recipeRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -108,6 +128,19 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
+    public void resetPassword(UserPasswordResetDto userPasswordResetDto) throws NotFoundException {
+        LOGGER.debug("Reset password");
+        if (!userRepository.existsByEmail(userPasswordResetDto.email())) {
+            throw new NotFoundException("Could not find the user with the email address " + userPasswordResetDto.email());
+        }
+        ApplicationUser applicationUser = userRepository.findFirstUserByEmail(userPasswordResetDto.email());
+        String newPassword = passwordGenerator();
+        userRepository.updatePassword(applicationUser.getId(), passwordEncoder.encode(newPassword));
+        emailService.sendSimpleEmail(applicationUser.getEmail(), "Password Reset", "Ihr neues Passwort ist: "
+            + newPassword + " \nBitte ändern Sie es unverzüglich!");
+    }
+
+    @Override
     public String register(UserRegisterDto userRegisterDto) throws ValidationException {
         LOGGER.debug("Register a new user");
         userValidator.validateForCreate(userRegisterDto);
@@ -124,6 +157,8 @@ public class CustomUserDetailService implements UserService {
         // Ensure the user is persisted
         userRepository.flush();
 
+        emailService.sendSimpleEmail(applicationUser.getEmail(), "Welcome", "Danke für die Registrierung!");
+
         return login(userRegisterDtoMapper.toUserLoginDto(userRegisterDto));
     }
 
@@ -134,7 +169,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser getCurrentUser() {
+    public UserDto getCurrentUser() {
         LOGGER.trace("getCurrentUser()");
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             throw new ForbiddenException("no user is currently logged in");
@@ -143,6 +178,40 @@ public class CustomUserDetailService implements UserService {
         if (!userRepository.existsByEmail(email)) {
             throw new NotFoundException("the logged-in user was not found in the system");
         }
-        return userRepository.findFirstUserByEmail(email);
+        return userMapper.userToUserDto(userRepository.findFirstUserByEmail(email));
+    }
+
+    @Override
+    public List<RecipeBookListDto> findRecipeBooksByUserId(Long id) throws NotFoundException {
+        LOGGER.trace("findRecipeBooksByUserId(id)");
+        userRepository.findById(id).orElseThrow(NotFoundException::new);
+        return recipeBookMapper.recipeBookListToRecipeBookListDto(recipeBookRepository.findRecipeBooksByOwnerOrSharedUser(id));
+    }
+
+    @Override
+    public List<RecipeListDto> findRecipesByUserId(Long id) throws NotFoundException {
+        LOGGER.trace("findRecipesByUserId(id)");
+        userRepository.findById(id).orElseThrow(NotFoundException::new);
+        return recipeMapper.recipesToRecipeListDto(recipeRepository.findRecipesByOwnerId(id));
+    }
+
+    @Override
+    public void changePassword(Long id, UserPasswordChangeDto userPasswordChangeDto) throws NotFoundException, BadCredentialsException, ValidationException {
+        LOGGER.trace("changePassword(id, userPasswordChangeDto)");
+        userValidator.validateForPasswordChange(userPasswordChangeDto);
+        ApplicationUser applicationUser = userRepository.findById(id).orElseThrow(NotFoundException::new);
+        if (!passwordEncoder.matches(userPasswordChangeDto.oldPassword(), applicationUser.getPassword())) {
+            throw new BadCredentialsException("password is incorrect");
+        }
+
+        userRepository.updatePassword(id, passwordEncoder.encode(userPasswordChangeDto.newPassword()));
+    }
+
+    private String passwordGenerator() {
+        StringBuilder password = new StringBuilder();
+        for (int i = 0; i < 128; i++) {
+            password.append((char) ((int) (Math.random() * 26) + 97));
+        }
+        return password.toString();
     }
 }

@@ -9,6 +9,7 @@ import { RecipeStepDetailDto, RecipeStepRecipeDetailDto } from 'src/app/dtos/rec
 import { RecipeService } from 'src/app/services/recipe.service';
 import { RecipeBookService } from 'src/app/services/recipebook.service';
 import { Title } from '@angular/platform-browser';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -49,6 +50,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   recipeForkedFrom = [];
   showNutrition: boolean = false;
   screenWidth: number;
+  isOwner: boolean = false;
 
   constructor(
     private service: RecipeService,
@@ -58,6 +60,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     private modalService: NgbModal,
     private recipeBookService: RecipeBookService,
     private titleService: Title,
+    private userService: UserService,
   ) { }
 
   ngOnInit(): void {
@@ -71,15 +74,15 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           this.changeIngredientsToGramm();
           this.changeNutritionsToGramm();
           this.getForkedFromRecipeName();
+          this.isCurrentUserOwner();
           this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
         },
         error: error => {
-          console.error('Error fetching Recipe', error);
-          this.bannerError = 'Could not fetch recipe: ' + error.message;
+          console.error('Error fetching recipe', error);
           const errorMessage = error.status === 0
             ? 'Is the backend up?'
             : error.message.message;
-          this.notification.error(errorMessage, 'Could Not Fetch Recipe');
+          this.notification.error('Could not fetch recipe' +errorMessage,"Backend Error - Recipe");
           this.router.navigate([''])
         }
       });
@@ -117,7 +120,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         this.recipeForkedFrom.push(data.name);
       },
       error: error => {
-        console.error('Error fetching Recipe', error);
+        console.error('Error forking recipe.', error);
+        const errorMessage = error.message.message;
+        this.notification.error('Could not fork recipe.', "Backend Error - Recipe");
         return [];
       }
     })
@@ -157,8 +162,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;
+      this.notification.error('Could not spoon recipe:' + this.errorMessage, 'Backend Error - Recipe');
     } else {
       this.errorMessage = error.error;
+      this.notification.error( 'Could not spoon recipe:' + this.errorMessage, 'Backend Error - Recipe');
     }
   }
 
@@ -216,6 +223,14 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     const baseUrl = window.location.origin;
   const url = `${baseUrl}/#/recipe/details/${index}`;
     window.open(url, '_blank');
+  }
+
+  isCurrentUserOwner() {
+    this.userService.getCurrentUser().subscribe(currentUser => {
+      if (currentUser && this.recipe.ownerId === currentUser.id) {
+        this.isOwner = true;
+      }
+    });
   }
 
 }

@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {HomeComponent} from './components/home/home.component';
 import {LoginComponent} from './components/login/login.component';
+import {ResetPasswordComponent} from './components/login/reset-password/reset-password.component';
 import {RecipebookComponent} from "./components/recipebook/recipebook.component";
 import {WeekplanComponent} from "./components/weekplan/weekplan.component";
 import {RecipeComponent} from "./components/recipe/recipe.component";
@@ -11,10 +12,15 @@ import {RegisterComponent} from "./components/register/register.component";
 import { RecipeDetailComponent } from './components/recipe/recipe-detail/recipe-detail.component';
 import { RecipebookDetailComponent } from "./components/recipebook/recipebook-detail/recipebook-detail.component";
 import { RecipeEditComponent } from './components/recipe/recipe-edit/recipe-edit.component';
+import {UserpageComponent} from "./components/userpage/userpage.component";
+import {UserpageEditComponent} from "./components/userpage/userpage-edit/userpage-edit.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
-  {path: 'login', component: LoginComponent},
+  {path: 'login', children:[
+      {path: '', component: LoginComponent},
+      {path: 'reset', component: ResetPasswordComponent}
+    ]},
   {path: 'register', component: RegisterComponent},
   {path: 'recipe', children: [
       {path: '', component: RecipeComponent},
@@ -29,6 +35,10 @@ const routes: Routes = [
       {path: 'edit/:id', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.edit}}
   ]},
   {path: 'weekplan', component: WeekplanComponent},
+  {path: 'userpage', children:[
+      {path: ':id', component: UserpageComponent},
+      {path: ':id/edit', component: UserpageEditComponent},
+  ]}
 ];
 
 @NgModule({

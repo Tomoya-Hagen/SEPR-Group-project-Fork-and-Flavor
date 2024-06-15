@@ -1,0 +1,53 @@
+<div class="jumbotron mt-5">
+  <div class="row">
+    <div class="col-6 col-md-4">
+      <div>
+        <h1>{{ user.name }}</h1>
+        <button *ngIf="isMyPage" class="btn btn-light btn-sm " routerLink="/userpage/{{user.id}}/edit">Edit profile</button>
+        <p> <i class="bi bi-receipt"></i> {{recipeBook.length}} RecipeBooks · {{recipes.length}} Recipes</p>
+      </div>
+      <div class="border-top">
+        <h2 class="h4 mb-3 margin-top-5"><p>Badges</p></h2>
+        <ul>
+          <li>{{user.name}}</li>
+        </ul>
+      </div>
+      <div class="border-top">
+        <h2 class="h4 mb-3 margin-top-5">latest Reviews</h2>
+        <p></p>
+      </div>
+    </div>
+    <div class="col-12 col-md-8">
+      <h4 class="mt-4">Recipe books:</h4>
+      <table class="table">
+        <tbody>
+        <tr *ngFor="let recipe of recipeBook">
+          <td>{{ recipe.name }}</td>
+          <td>{{ recipe.description }}</td>
+          <td>
+            <button class="btn btn-primary btn-sm"
+                    [routerLink]="['/recipebook/details', recipe.id]">
+              Go to recipe book
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <h4 class="mt-4">Recipes:</h4>
+      <table class="table">
+        <tbody>
+        <tr *ngFor="let recipe of recipes">
+          <td>{{ recipe.name }}</td>
+          <td>{{ recipe.description }}</td>
+          <td>
+            <button class="btn btn-primary btn-sm"
+                    [routerLink]="['/recipe/details', recipe.id]">
+              Go to recipe
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

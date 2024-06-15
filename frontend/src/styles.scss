@@ -197,3 +197,30 @@ label[for="pageSize"] {
 }
 
 
+
+button.login {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+button.reset-password {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+button.register {
+  background-color: var(--tertiary-color);
+  color: white;
+}
+
+button:hover {
+  opacity: 90%;
+}
+
+button {
+  border: none;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}

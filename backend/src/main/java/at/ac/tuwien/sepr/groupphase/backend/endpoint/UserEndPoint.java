@@ -1,8 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordChangeDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.annotation.security.PermitAll;
 import org.slf4j.Logger;
@@ -10,8 +14,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,12 +48,52 @@ public class UserEndPoint {
 
     @GetMapping("{id}/details")
     public UserDto getUser(@PathVariable(name = "id") Long id) {
-        LOGGER.info("GET /api/v1/recipebook/{}/details", id);
+        LOGGER.info("GET /api/v1/users/{}/details", id);
         try {
             return userService.findUserById(id);
         } catch (NotFoundException e) {
             HttpStatus status = HttpStatus.NOT_FOUND;
             logClientError(status, "no user with id " + id + " found", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+    }
+
+    @GetMapping("{id}/recipebooks")
+    public List<RecipeBookListDto> getRecipeBooksByUserId(@PathVariable(name = "id") Long id) {
+        LOGGER.info("GET /api/v1/users/{}/recipebooks", id);
+        return userService.findRecipeBooksByUserId(id);
+    }
+
+    @GetMapping("{id}/recipes")
+    public List<RecipeListDto> getRecipesByUserId(@PathVariable(name = "id") Long id) {
+        LOGGER.info("GET /api/v1/users/{}/recipes", id);
+        return userService.findRecipesByUserId(id);
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<UserDto> getCurrentUser() {
+        try {
+            UserDto currentUser = userService.getCurrentUser();
+            return new ResponseEntity<>(currentUser, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no user with found", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+    }
+
+    @Secured("ROLE_USER")
+    @PatchMapping("/changePassword/{id}")
+    public void changePassword(@PathVariable(name = "id") Long id, @RequestBody UserPasswordChangeDto userPasswordChangeDto) {
+        try {
+            userService.changePassword(id, userPasswordChangeDto);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no user with specified id found", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        } catch (BadCredentialsException | ValidationException e) {
+            HttpStatus status = HttpStatus.BAD_REQUEST;
+            logClientError(status, "password is not valid", e);
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
     }
@@ -60,6 +108,4 @@ public class UserEndPoint {
     private void logClientError(HttpStatus status, String message, Exception e) {
         LOGGER.warn("{} {}: {}: {}", status.value(), message, e.getClass().getSimpleName(), e.getMessage());
     }
-
-
 }

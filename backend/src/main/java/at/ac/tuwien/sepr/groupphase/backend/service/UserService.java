@@ -1,11 +1,17 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordChangeDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -66,6 +72,14 @@ public interface UserService extends UserDetailsService {
      */
     String register(UserRegisterDto userRegisterDto) throws ValidationException;
 
+    /**
+     * Reset the password of a user.
+     *
+     * @param userPasswordResetDto the email address of the user
+     * @throws NotFoundException if the input is invalid
+     */
+    void resetPassword(UserPasswordResetDto userPasswordResetDto) throws NotFoundException;
+
 
     UserDto findUserById(Long id);
 
@@ -74,5 +88,11 @@ public interface UserService extends UserDetailsService {
      *
      * @return the currently logged-in user entity.
      */
-    ApplicationUser getCurrentUser();
+    UserDto getCurrentUser();
+
+    List<RecipeBookListDto> findRecipeBooksByUserId(Long id) throws NotFoundException;
+
+    List<RecipeListDto> findRecipesByUserId(Long id) throws NotFoundException;
+
+    void changePassword(Long id, UserPasswordChangeDto userPasswordChangeDto) throws NotFoundException, BadCredentialsException, ValidationException;
 }

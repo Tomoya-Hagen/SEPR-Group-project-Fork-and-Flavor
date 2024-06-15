@@ -26,7 +26,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
-import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,20 +58,21 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeMapper recipeMapper;
     private final CategoryRepository categoryRepository;
     private final RecipeValidator recipeValidator;
-    private final UserService userService;
+    private final UserManager userManager;
 
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
                              RecipeMapper recipeMapper,
-                             UserService userService,
                              CategoryRepository categoryRepository,
-                             RecipeValidator recipeValidator) {
+                             RecipeValidator recipeValidator, UserManager userManager) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
         this.categoryRepository = categoryRepository;
         this.recipeValidator = recipeValidator;
-        this.userService = userService;
+        this.userManager = userManager;
     }
+
+
 
     @Override
     public RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException {
@@ -87,8 +88,7 @@ public class RecipeServiceImpl implements RecipeService {
         ArrayList<Allergen> allergens = new ArrayList<>();
         getRecipeDetails(recipe, ingredients, nutritions, allergens, recursive);
         long rating = calculateAverageTasteRating(recipe.getRatings());
-        var y = recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
-        return y;
+        return recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
     }
 
     @Override
@@ -152,7 +152,7 @@ public class RecipeServiceImpl implements RecipeService {
         LOGGER.trace("updateRecipe({})", recipeUpdateDto);
         Recipe oldRecipe = recipeRepository.findById(recipeUpdateDto.id()).orElseThrow(NotFoundException::new);
         Recipe recipe = recipeMapper.recipeUpdateDtoToRecipe(recipeUpdateDto);
-        if (oldRecipe.getOwner().getId() != userService.getCurrentUser().getId()) {
+        if (oldRecipe.getOwner().getId() != userManager.getCurrentUser().getId()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         List<RecipeIngredient> updatedIngredients = new ArrayList<>();
@@ -212,7 +212,6 @@ public class RecipeServiceImpl implements RecipeService {
                 }
             }
         }
-
     }
 
     private void updateMapOfIngredients(RecipeIngredient recipeIngredient, Ingredient ingredient, Map<Ingredient, RecipeIngredient> ingredients) {
