@@ -55,8 +55,8 @@ export class RecipeEditComponent implements OnInit {
     for (let i = 0; i < this.recipe.ingredients.length; i++) {
       if(i !== index && this.recipe.ingredients[i].id === updatedIngredient.id) {
         this.error = true;
-        this.errorMessage = 'You cannot choose the same category twice!';
-        this.notification.error(this.errorMessage,"Recipe Error");
+        this.errorMessage = 'Du kannst ein Kategorie nicht doppelt auswählen!';
+        this.notification.error(this.errorMessage,"Fehler - Rezept bearbeiten");
         // this.recipe.ingredients.splice(index, 1, { name: "", id: -1, amount: null, unit: null });
         this.validateForm()
         console.log('Duplicate found:', updatedIngredient);
@@ -136,10 +136,10 @@ export class RecipeEditComponent implements OnInit {
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;
-      this.notification.error('Could not update recipe:' + this.errorMessage.toString(), 'Backend Error - Recipe');
+      this.notification.error('Rezept kann nicht aktualisiert werden:' + this.errorMessage.toString(), 'Backend Fehler - Rezepte bearbeiten');
     } else {
       this.errorMessage = error.error;
-      this.notification.error( 'Could not update recipe:' + this.errorMessage.toString(), 'Backend Error - Recipe');
+      this.notification.error( 'Rezept kann nicht aktualisiert werden:' + this.errorMessage.toString(), 'Backend Fehler - Rezepte bearbeiten');
     }
   }
 
@@ -174,9 +174,9 @@ export class RecipeEditComponent implements OnInit {
 
     if (this.recipe.recipeSteps[index].recipeId === this.recipe.id) {
       this.error = true;
-      this.errorMessage = 'A recipe cannot reference itself as a step.';
+      this.errorMessage = 'Ein Rezept kann sich selbst nicht als Rezeptschritt referenzieren.';
       this.recipe.recipeSteps[index] = new Step();
-      this.notification.error(this.errorMessage,"Recipe Error");
+      this.notification.error(this.errorMessage,"Rezept Bearbeiten - Fehler");
       return;
     }
 

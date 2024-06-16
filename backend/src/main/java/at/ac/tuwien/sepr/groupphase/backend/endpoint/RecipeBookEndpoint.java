@@ -6,10 +6,10 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.security.PermitAll;
-import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,6 @@ import java.util.List;
 public class RecipeBookEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final RecipeBookService recipeBookService;
-    private final UserService userService;
 
     /**
      * The constructor for the RecipeBookEndpoint class.
@@ -49,9 +48,8 @@ public class RecipeBookEndpoint {
      * @param recipeBookService The service that performs operations related to recipe books.
      */
     @Autowired
-    public RecipeBookEndpoint(RecipeBookService recipeBookService, UserService userService) {
+    public RecipeBookEndpoint(RecipeBookService recipeBookService) {
         this.recipeBookService = recipeBookService;
-        this.userService = userService;
     }
 
     /**
@@ -129,7 +127,6 @@ public class RecipeBookEndpoint {
     }
 
     @Secured("ROLE_USER")
-    @PermitAll
     @PostMapping
     public ResponseEntity<RecipeBookDetailDto> createRecipeBook(@RequestBody RecipeBookCreateDto recipeBook) {
         LOGGER.trace("Creating recipe book: {}", recipeBook);
@@ -141,6 +138,24 @@ public class RecipeBookEndpoint {
             LOGGER.warn("Error creating recipe book: {}", recipeBook, e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
+    }
+
+    @Secured("ROLE_USER")
+    @PatchMapping("{id}/update")
+    public void updateRecipeBook(@PathVariable(name = "id") Long id, @RequestBody RecipeBookCreateDto recipeBook) {
+        LOGGER.info("PATCH /api/v1/users/{}/update", id);
+        try {
+            recipeBookService.updateRecipeBook(id, recipeBook);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no recipe book with specified id found", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        } catch (ValidationException e) {
+            HttpStatus status = HttpStatus.BAD_REQUEST;
+            logClientError(status, "recipe book update is not valid", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+
     }
 
     /**

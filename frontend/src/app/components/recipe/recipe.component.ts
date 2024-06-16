@@ -50,7 +50,7 @@ export class RecipeComponent implements OnInit, OnDestroy {
         },
         error: error => {
           console.error('Error fetching recipes.', error);
-          this.notification.error('Could not fetch recipes.', 'Backend Error - Recipe');
+          this.notification.error('Rezepte können nicht abgerufen werden.', 'Backend Fehler - Rezepte');
         }
       });
   }

@@ -24,7 +24,7 @@ import {ToastrService} from "ngx-toastr";
   templateUrl: './recipe-create.component.html',
   styleUrl: './recipe-create.component.scss'
 })
-export class RecipeCreateComponent implements OnInit{
+export class RecipeCreateComponent implements OnInit {
 
   error = false;
   errorMessage = '';
@@ -68,15 +68,16 @@ export class RecipeCreateComponent implements OnInit{
     private route: ActivatedRoute,
     private changedetec: ChangeDetectorRef,
     private notification: ToastrService
-  ){}
+  ) {
+  }
 
   ingredientChangeHandler(updatedIngredient: IngredientDetailDto, index: number) {
     console.log(this.recipe.ingredients)
     this.recipe.ingredients[index] = updatedIngredient;
-    if(this.recipe.ingredients[this.recipe.ingredients.length-1].id != -1){
-      this.recipe.ingredients.push({name: "", id: -1,amount: null, unit:null});
+    if (this.recipe.ingredients[this.recipe.ingredients.length - 1].id != -1) {
+      this.recipe.ingredients.push({name: "", id: -1, amount: null, unit: null});
     }
-    if(this.recipe.ingredients.length > 1 && this.recipe.ingredients.slice(0, -1).every(obj => obj != null && obj.id !== -1 && obj.id !== 0)){
+    if (this.recipe.ingredients.length > 1 && this.recipe.ingredients.slice(0, -1).every(obj => obj != null && obj.id !== -1 && obj.id !== 0)) {
       this.ingbool = true;
     } else {
       this.ingbool = false;
@@ -92,7 +93,7 @@ export class RecipeCreateComponent implements OnInit{
         }),
         catchError((error) => {
           console.error('Error:', error);
-          this.notification.error('You have to login as user to create recipe.' , 'Backend Error - Recipe');
+          this.notification.error('Sie müssen sich als Benutzer anmelden oder als Benutzer registrieren, um ein Rezept zu erstellen.', 'Rezept kann nicht erstellt werden.');
           this.router.navigate(['/login']);
           return of(false); // Handle the error and return a fallback value
         })
@@ -181,6 +182,7 @@ export class RecipeCreateComponent implements OnInit{
     if(this.mode === "create"){
       this.recipeService.createRecipe(this.recipe).subscribe({
         next: (detrecipe: DetailedRecipeDto) => {
+          this.notification.success("Das Rezept wurde erfolgreich erstellt.", "Rezepte erstellen erfolgreich!");
           this.router.navigate(['/recipe/details/' + detrecipe.id]);
         },
         error: error => {
@@ -219,10 +221,10 @@ export class RecipeCreateComponent implements OnInit{
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;
-      this.notification.error(this.errorMessage, 'Backend Error - Recipe');
+      this.notification.error(this.errorMessage.toString(), 'Backend Fehler - Rezepte erstellen');
     } else {
       this.errorMessage = error.error;
-      this.notification.error( this.errorMessage, 'Backend Error - Recipe');
+      this.notification.error(this.errorMessage.toString(), 'Backend Fehler - Rezepte erstellen');
     }
   }
 

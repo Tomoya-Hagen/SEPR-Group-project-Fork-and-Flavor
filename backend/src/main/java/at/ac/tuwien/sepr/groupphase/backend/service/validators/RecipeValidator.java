@@ -10,7 +10,6 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.IngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
@@ -20,14 +19,17 @@ import java.util.List;
 @Component
 public class RecipeValidator {
 
-    @Autowired
-    CategoryRepository categoryRepository;
-    @Autowired
-    IngredientRepository ingredientRepository;
-    @Autowired
-    RecipeRepository recipeRepository;
+    final CategoryRepository categoryRepository;
+    final IngredientRepository ingredientRepository;
+    final RecipeRepository recipeRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    public RecipeValidator(CategoryRepository categoryRepository, IngredientRepository ingredientRepository, RecipeRepository recipeRepository) {
+        this.categoryRepository = categoryRepository;
+        this.ingredientRepository = ingredientRepository;
+        this.recipeRepository = recipeRepository;
+    }
 
     public void validateCreate(RecipeCreateDto recipe) throws ValidationException {
         List<String> validationErrors = new ArrayList<>();

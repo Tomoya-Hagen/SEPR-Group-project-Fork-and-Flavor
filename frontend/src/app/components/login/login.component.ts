@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
     this.authService.loginUser(authRequest).subscribe({
       next: () => {
         console.log('Successfully logged in user: ' + authRequest.email.toString());
-        this.notification.success('Successfully logged in as ' + authRequest.email.toString(), "Authentication Success")
+        this.notification.success('Erfolgreich eingeloggt als Benutzer: ' + authRequest.email.toString(), "Authentifizierung erfolgreich!")
         this.router.navigate(['/']);
       },
       error: error => {
@@ -60,11 +60,9 @@ export class LoginComponent implements OnInit {
         console.log(error);
         this.error = true;
         if (typeof error.error === 'object') {
-          this.errorMessage = error.error.error;
-          this.notification.error(this.errorMessage, "Authentication Error");
+          this.notification.error("Passwort passt nicht mit Username überein.", "Authentifizierung Fehler");
         } else {
-          this.errorMessage = error.error;
-          this.notification.error(this.errorMessage, "Authentication Error");
+          this.notification.error("Konnte den Benutzer mit der Email Adresse: " + authRequest.email.toString() + " nicht finden.", "Authentifizierung Fehler");
         }
       }
     });
@@ -80,11 +78,11 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  goToRegister(){
+  goToRegister() {
     this.router.navigate(['/register']);
   }
 
-  goToForgotPassword(){
+  goToForgotPassword() {
     this.router.navigate(['/login/reset']);
   }
 
