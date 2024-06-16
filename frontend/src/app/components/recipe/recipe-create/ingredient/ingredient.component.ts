@@ -14,6 +14,14 @@ export class IngredientComponent {
   @Input()
   ingredient: IngredientDetailDto;
 
+  @Input()
+  units: string[];
+
+  @Output() deleteingredientCall = new EventEmitter();
+
+  showunit: string[]
+
+
   @Output()
   ingredientChange: EventEmitter<IngredientDetailDto> = new EventEmitter<IngredientDetailDto>();
 
@@ -22,28 +30,18 @@ export class IngredientComponent {
   ){}
 
   get Ingredient(): IngredientDetailDto {
+    this.showunit = this.units;
     return this.ingredient;
   }
 
-  set Ingredient(value: IngredientDetailDto) {
-    this.ingredient = value;
-    this.ingredientChange.emit(this.ingredient)
+  selectunit(unit: string) : void{
+    this.Ingredient.unit = unit
   }
 
-
-  public formatIngredient(ingredient: IngredientDetailDto | null): string {
-    return ingredient?.name ?? '';
+  unitchanged() : void{
+    this.showunit = this.units.filter(obj => obj.toLowerCase().includes(this.Ingredient.unit.toLowerCase()));
   }
-
-  ingredientSuggestions = (input: string) => (input === '')
-    ? of([])
-    :  this.ingredientService.ingredientssByName(input, 5);
-
-
-  public ingredientchanged():void{
-    if(this.Ingredient == null){
-      this.Ingredient = {id: 0, unit: "", name: "", amount: null};
-    }
+  deleteingredient(): void{
+    this.deleteingredientCall.emit(this.Ingredient.id);
   }
-
 }

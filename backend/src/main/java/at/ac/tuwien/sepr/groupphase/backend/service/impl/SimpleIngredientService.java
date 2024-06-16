@@ -25,4 +25,12 @@ public class SimpleIngredientService implements IngredientService {
         var x = ingredientRepository.findByNameContainingWithLimit(name, PageRequest.of(0, limit));
         return x.stream().map(ingredientMapper::ingredientToIngredientResultDto);
     }
+
+    @Override
+    public Stream<IngredientResultDto> all() {
+        var x = ingredientRepository.findAll();
+        return x.stream().map(ingredientMapper::ingredientToIngredientResultDto);
+    }
+
+
 }

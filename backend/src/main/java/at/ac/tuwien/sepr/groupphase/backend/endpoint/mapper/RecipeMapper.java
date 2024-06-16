@@ -152,13 +152,10 @@ public interface RecipeMapper {
     default Recipe recipeCreateDtoToRecipe(RecipeCreateDto recipeCreateDto, long id) throws RecipeStepNotParsableException, RecipeStepSelfReferenceException {
         Recipe current = new Recipe();
         current.setId(id);
-        ApplicationUser owner = new ApplicationUser();
-        owner.setId(recipeCreateDto.getOwnerId());
-
 
         List<RecipeStep> recipeStepList = new ArrayList<>();
         int i = 1;
-        for (RecipeStepDto recipeStepDto : recipeCreateDto.getSteps()) {
+        for (RecipeStepDto recipeStepDto : recipeCreateDto.getRecipeSteps()) {
             RecipeStep recipeStep;
             if (!recipeStepDto.isCorrect()) {
                 throw new RecipeStepNotParsableException("The steps in the Recipe are not formated correct!");
@@ -195,15 +192,19 @@ public interface RecipeMapper {
         }
 
         Recipe ret = new Recipe();
-        ret.setId(id);
-        ret.setName(recipeCreateDto.getName());
-        ret.setDescription(recipeCreateDto.getDescription());
-        ret.setNumberOfServings(recipeCreateDto.getServings());
-        ret.setOwner(owner);
         ret.setIngredients(recipeIngredientList);
         ret.setRecipeSteps(recipeStepList);
         ret.setCategories(categoryList);
+        return ret;
+    }
 
+    default Recipe recipeparsesimple(RecipeCreateDto recipeCreateDto) {
+        Recipe ret = new Recipe();
+        ret.setName(recipeCreateDto.getName());
+        ret.setDescription(recipeCreateDto.getDescription());
+        ret.setNumberOfServings(recipeCreateDto.getNumberOfServings());
+        ApplicationUser owner = new ApplicationUser();
+        ret.setOwner(owner);
         return ret;
     }
 

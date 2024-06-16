@@ -27,7 +27,7 @@ public class RecipeStepDto {
     }
 
     public boolean isCorrect() {
-        if ((whichstep && description != null && recipeId == 0) || (!whichstep && description == null && recipeId != 0)) {
+        if ((whichstep && !description.isEmpty() && recipeId == 0) || (!whichstep && description.isEmpty() && recipeId != 0)) {
             return true;
         }
         return false;

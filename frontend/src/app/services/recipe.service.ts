@@ -76,6 +76,11 @@ export class RecipeService {
     );
   }
 
+  public getEditRecipeDetailsBy(recipeId: number): Observable<RecipeDetailDto> {
+    return this.http.get<RecipeDetailDto>(
+      this.baseUri + "/edit/" + recipeId
+    );
+  }
   public getRecipeNameBy(recipeId: number): Observable<string> {
     return this.http.get<RecipeDetailDto>(
       this.baseUri+"/details/"+recipeId
@@ -111,6 +116,16 @@ export class RecipeService {
     );
   }
 
+  public getRecipeEditDtoById(recipeId: number): Observable<any> {
+    return this.getEditRecipeDetailsBy(recipeId).pipe(
+      rxjsMap(existingRecipe => this.mapToUpdateDto(existingRecipe)),
+      catchError(error => {
+        console.error('Error fetching recipe details:', error);
+        return throwError(() => new Error('Failed to fetch recipe details: ' + error.message));
+      })
+    );
+  }
+
   private mapToUpdateDto(existingRecipe: RecipeDetailDto): RecipeUpdateDto {
     return {
       id: existingRecipe.id,
@@ -127,7 +142,7 @@ export class RecipeService {
       if (step.hasOwnProperty('recipe')) {
         return {
           id: step.id,
-          name: (step as RecipeStepRecipeDetailDto).recipe.name,
+          name: step.name,
           recipeId: (step as RecipeStepRecipeDetailDto).recipe.id,
           whichstep: false
         };

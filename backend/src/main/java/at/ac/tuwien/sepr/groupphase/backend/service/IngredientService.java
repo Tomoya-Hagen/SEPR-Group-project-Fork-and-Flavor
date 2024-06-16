@@ -12,4 +12,11 @@ public interface IngredientService {
      * @return limit amount of ingredients found
      */
     Stream<IngredientResultDto> byname(String name, int limit);
+
+    /**
+     * Find all ingredients.
+     *
+     * @return all ingredients found
+     */
+    Stream<IngredientResultDto> all();
 }

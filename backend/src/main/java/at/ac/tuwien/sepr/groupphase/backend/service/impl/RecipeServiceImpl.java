@@ -24,6 +24,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableExcep
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import jakarta.validation.Valid;
@@ -71,14 +72,21 @@ public class RecipeServiceImpl implements RecipeService {
         this.userManager = userManager;
     }
 
+
+
     @Override
     public RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException {
+        return getRecipeDetailDtoById(id, true);
+    }
+
+    @Override
+    public RecipeDetailDto getRecipeDetailDtoById(long id, boolean recursive) throws NotFoundException {
         LOGGER.trace("getRecipeDetailDtoById({})", id);
         Recipe recipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
         HashMap<Ingredient, RecipeIngredient> ingredients = new HashMap<>();
         HashMap<Nutrition, BigDecimal> nutritions = new HashMap<>();
         ArrayList<Allergen> allergens = new ArrayList<>();
-        getRecipeDetails(recipe, ingredients, nutritions, allergens);
+        getRecipeDetails(recipe, ingredients, nutritions, allergens, recursive);
         long rating = calculateAverageTasteRating(recipe.getRatings());
         return recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
     }
@@ -101,19 +109,25 @@ public class RecipeServiceImpl implements RecipeService {
         recipeValidator.validateCreate(recipeDto);
 
 
-        Recipe recipe = recipeMapper.recipeCreateDtoToRecipe(recipeDto, recipeRepository.findMaxId() + 1);
+        Recipe simple = recipeMapper.recipeparsesimple(recipeDto);
+        ApplicationUser owner = userManager.getCurrentUser();
+        simple.setOwner(owner);
+        recipeRepository.save(simple);
+
+        Recipe recipe = recipeMapper.recipeCreateDtoToRecipe(recipeDto, simple.getId());
 
         List<Category> categories = new ArrayList<>();
         for (Category category : recipe.getCategories()) {
             categories.add(categoryRepository.getById(category.getId()));
         }
-        recipe.setCategories(categories);
+        simple.setIngredients(recipe.getIngredients());
+        simple.setCategories(categories);
+        simple.setRecipeSteps(recipe.getRecipeSteps());
 
-        ApplicationUser owner = userManager.getCurrentUser();
-        recipe.setOwner(owner);
-        recipeRepository.save(recipe);
 
-        return recipeMapper.recipeToDetailedRecipeDto(recipe);
+        recipeRepository.save(simple);
+        var x = recipeMapper.recipeToDetailedRecipeDto(simple);
+        return x;
     }
 
     @Override
@@ -178,7 +192,8 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe recipe,
         Map<Ingredient, RecipeIngredient> ingredients,
         Map<Nutrition, BigDecimal> nutritions,
-        List<Allergen> allergens) {
+        List<Allergen> allergens,
+        boolean recursive) {
         LOGGER.trace("getRecipeDetails({}, {}, {}, {})",
             recipe, ingredients, nutritions, allergens);
         for (RecipeIngredient recipeIngredient : recipe.getIngredients()) {
@@ -189,10 +204,12 @@ public class RecipeServiceImpl implements RecipeService {
         }
         List<RecipeStep> recipeSteps = recipe.getRecipeSteps();
         recipeSteps.sort(Comparator.comparing(RecipeStep::getStepNumber));
-        for (RecipeStep recipeStep : recipeSteps) {
-            if (recipeStep instanceof RecipeRecipeStep recipeRecipeStep) {
-                getRecipeDetails(recipeRecipeStep.getRecipeRecipe(), ingredients,
-                    nutritions, allergens);
+        if (recursive) {
+            for (RecipeStep recipeStep : recipeSteps) {
+                if (recipeStep instanceof RecipeRecipeStep recipeRecipeStep) {
+                    getRecipeDetails(recipeRecipeStep.getRecipeRecipe(), ingredients,
+                        nutritions, allergens, recursive);
+                }
             }
         }
     }

@@ -7,6 +7,9 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -68,6 +71,20 @@ public class RecipeEndpoint {
         }
     }
 
+    @PermitAll
+    @GetMapping(value = "/edit/{id}")
+    @Operation(summary = "Get recipe details by id")
+    public RecipeDetailDto editBy(@PathVariable(name = "id") Long id) {
+        LOGGER.info("GET /api/v1/recipe/details/{}", id);
+        try {
+            return recipeService.getRecipeDetailDtoById(id, false);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no recipe found by the given is", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+    }
+
     /**
      * This function updates the recipe with the values specified by the given parameter.
      *
@@ -95,6 +112,7 @@ public class RecipeEndpoint {
         return recipeService.byname(name, limit);
     }
 
+
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -103,10 +121,11 @@ public class RecipeEndpoint {
         LOGGER.info("POST /api/v1/recipe body: {}", recipeDto);
         try {
             return recipeService.createRecipe(recipeDto);
-        } catch (Exception e) {
+        } catch (ValidationException | RecipeStepNotParsableException | RecipeStepSelfReferenceException e) {
             HttpStatus status = HttpStatus.BAD_REQUEST;
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
+
     }
 
     @PermitAll
