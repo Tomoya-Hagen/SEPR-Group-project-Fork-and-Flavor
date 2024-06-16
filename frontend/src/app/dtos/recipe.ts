@@ -17,12 +17,22 @@ export interface RecipeListDto {
 export interface Recipe {
     name: string;
     description: string;
-    servings: number;
-    ownerId: number;
+    numberOfServings: number;
     ingredients: IngredientDetailDto[];
-    steps: Step[]
+    recipeSteps: Step[]
     categories: Category[]
 }
+
+export interface RecipeUpdateDto {
+  id: number;
+  name: string;
+  description: string;
+  numberOfServings: number;
+  categories: Category[];
+  recipeSteps: Step[];
+  ingredients: IngredientDetailDto[];
+}
+
 
 export interface RecipeDetailDto {
     id: number,
@@ -41,16 +51,6 @@ export interface RecipeDetailDto {
     forkedRecipes: string[];
 }
 
-export interface RecipeUpdateDto {
-    id: number;
-    name: string;
-    description: string;
-    numberOfServings: number;
-    categories: Category[];
-    recipeSteps: Step[];
-    ingredients: IngredientDetailDto[];
-}
-
 export interface RecipeList{
   id: number,
   name: string,
@@ -59,4 +59,5 @@ export interface RecipeList{
 export interface RecipeSearch {
   name?: string;
 }
+
 

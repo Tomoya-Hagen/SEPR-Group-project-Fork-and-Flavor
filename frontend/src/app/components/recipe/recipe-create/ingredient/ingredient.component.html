@@ -1,32 +1,27 @@
-<div class="container p-0">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="form-group">
-          <label for="ingredient">Ingredient</label>
-          <app-autocomplete
-            id="ingredient"
-            name="ingredient"
-            class="col-md-10 col-lg-8"
-            textInputClass="form-control"
-            valueNeedsToMatchSuggestion="true"
-            [(ngModel)]="Ingredient"
-            [formatModel]="formatIngredient"
-            [suggestions]="ingredientSuggestions"
-            (ngModelChange)="ingredientchanged()"
-          ></app-autocomplete>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-          <label for="amount">Amount</label>
-          <input [(ngModel)]="Ingredient.amount" name="amount" type="number" class="form-control" id="amount" placeholder="0" min="0">
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-          <label for="unit">Unit</label>
-          <input [(ngModel)]="Ingredient.unit" name="unit" type="text" class="form-control" id="unit" placeholder="g">
-        </div>
+<div class="container col-md-12 col-12 align-self-center justify-content-center gx-2 gy-1 row my-2">
+  <div class="col-lg-4 col-12 col-sm-12 align-self-center">
+    <div class="form-group">
+      <input required [(ngModel)]="Ingredient.name" name="ingredient" type="text" class="form-control" id="ingredient"
+             disabled>
+    </div>
+  </div>
+  <div class="col-lg-3 col-6 col-sm-3 align-self-center">
+    <div class="form-group">
+      <input required [(ngModel)]="Ingredient.amount" name="amount" type="number" class="form-control" id="amount"
+             placeholder="0" min="0">
+    </div>
+  </div>
+  <div class="col-lg-3 col-6 col-sm-3 align-self-center">
+    <div ngbDropdown>
+      <input name="unit" id="unit" type="text" [(ngModel)]="Ingredient.unit" (ngModelChange)="unitchanged()"
+             class="form-control col-md-12" ngbDropdownToggle>
+      <div ngbDropdownMenu aria-labelledby="inputrecipestep" class="col-md-12 overflow-auto dropdown-menu-right"
+           style="height: 25vh">
+        <a ngbDropdownItem (click)="selectunit(unit)" *ngFor="let unit of units">{{ unit }}</a>
       </div>
     </div>
   </div>
+  <div class="col-lg-2 col-3 col-sm-3 align-self-center d-flex justify-content-center">
+      <button type="button" (click)="deleteingredient()" class="btn btn-danger"><i class="bi bi-trash3-fill"></i></button>
+  </div>
+</div>

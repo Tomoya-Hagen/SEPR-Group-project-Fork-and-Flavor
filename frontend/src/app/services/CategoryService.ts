@@ -23,4 +23,8 @@ export class CategoryService {
     return this.httpClient.get<SimpleCategory[]>(this.recipeBaseUri, { params });
   }
 
+  public allcategories(): Observable<SimpleCategory[]> {
+    return this.httpClient.get<SimpleCategory[]>(this.recipeBaseUri + "/all");
+  }
+
 }

@@ -52,6 +52,16 @@ public interface RecipeService {
     RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException;
 
     /**
+     * finds a recipeDetailDto based on the given recipe id.
+     *
+     * @param id represents the id of a recipe.
+     * @param recursive get ingredients rekursive.
+     * @return a RecipeDetailDto if a recipe with the given id exists.
+     * @throws NotFoundException if no recipe with the given id was found.
+     */
+    RecipeDetailDto getRecipeDetailDtoById(long id, boolean recursive) throws NotFoundException;
+
+    /**
      * Updates recipe with the given recipeDetailDto.
      *
      * @param recipeUpdateDto contains the values to update recipe with

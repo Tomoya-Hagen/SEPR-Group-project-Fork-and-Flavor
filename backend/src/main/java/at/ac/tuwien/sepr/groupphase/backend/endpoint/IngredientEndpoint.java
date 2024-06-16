@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientResultDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.service.IngredientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -38,5 +39,23 @@ public class IngredientEndpoint {
     public Stream<IngredientResultDto> get(@RequestParam("name") String name, @RequestParam("limit") int limit) {
         LOGGER.debug("POST /api/v1/ingredients params: {} {}", name, limit);
         return ingredientService.byname(name, limit);
+    }
+
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/all")
+    @Operation(summary = "Getting ingredients", security = @SecurityRequirement(name = "apiKey"))
+    public Stream<IngredientResultDto> getAll() {
+        LOGGER.debug("POST /api/v1/ingredients all}");
+        return ingredientService.all();
+    }
+
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/units")
+    @Operation(summary = "Getting units for ingredients", security = @SecurityRequirement(name = "apiKey"))
+    public RecipeIngredient.Unit[] getUnits() {
+        LOGGER.debug("POST /api/v1/ingredients all}");
+        return RecipeIngredient.Unit.values();
     }
 }
