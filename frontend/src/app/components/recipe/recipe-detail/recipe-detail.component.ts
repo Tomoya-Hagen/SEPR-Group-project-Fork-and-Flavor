@@ -58,7 +58,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   adjustedIngredients = [];
   adjustedNutritions = [];
   hasForkedRecipes: boolean = false;
-  showForkedRecipes: boolean = true;
 
   constructor(
     private service: RecipeService,
@@ -88,9 +87,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           console.log("recipes forked from this: " + this.recipe.forkedRecipes);
           if (this.recipe.forkedRecipes.length > 0) {
             this.hasForkedRecipes = true;
-          }
-          if (this.recipe.forkedRecipes.length >= 6) {
-            this.showForkedRecipes = false;
           }
           this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
         },
