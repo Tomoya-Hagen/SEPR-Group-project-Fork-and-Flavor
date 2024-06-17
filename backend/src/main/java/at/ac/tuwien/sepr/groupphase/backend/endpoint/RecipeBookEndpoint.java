@@ -41,7 +41,6 @@ import java.util.List;
 public class RecipeBookEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final RecipeBookService recipeBookService;
-    private final UserService userService;
 
     /**
      * The constructor for the RecipeBookEndpoint class.
@@ -49,9 +48,8 @@ public class RecipeBookEndpoint {
      * @param recipeBookService The service that performs operations related to recipe books.
      */
     @Autowired
-    public RecipeBookEndpoint(RecipeBookService recipeBookService, UserService userService) {
+    public RecipeBookEndpoint(RecipeBookService recipeBookService) {
         this.recipeBookService = recipeBookService;
-        this.userService = userService;
     }
 
     /**

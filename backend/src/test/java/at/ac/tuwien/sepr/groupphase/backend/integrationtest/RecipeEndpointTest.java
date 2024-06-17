@@ -20,6 +20,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,6 +60,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({"test"})
 @AutoConfigureMockMvc
+@Transactional
 class RecipeEndpointTest implements TestData {
     @Autowired
     private MockMvc mockMvc;
@@ -378,7 +380,7 @@ class RecipeEndpointTest implements TestData {
     }
 
     @Test
-    public void searchRecipeReturnsEmptyListNotFound() throws Exception {
+    void searchRecipeReturnsEmptyListNotFound() throws Exception {
         mockMvc
             .perform(get("/api/v1/recipes") // Corrected endpoint
                 .param("name", "Gurke")

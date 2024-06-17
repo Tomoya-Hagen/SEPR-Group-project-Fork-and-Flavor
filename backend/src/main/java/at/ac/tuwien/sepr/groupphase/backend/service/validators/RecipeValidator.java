@@ -20,14 +20,18 @@ import java.util.List;
 @Component
 public class RecipeValidator {
 
-    @Autowired
-    CategoryRepository categoryRepository;
-    @Autowired
-    IngredientRepository ingredientRepository;
-    @Autowired
-    RecipeRepository recipeRepository;
-
+    private final CategoryRepository categoryRepository;
+    private final IngredientRepository ingredientRepository;
+    private final RecipeRepository recipeRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    public RecipeValidator(CategoryRepository categoryRepository,
+                           IngredientRepository ingredientRepository,
+                           RecipeRepository recipeRepository) {
+        this.categoryRepository = categoryRepository;
+        this.ingredientRepository = ingredientRepository;
+        this.recipeRepository = recipeRepository;
+    }
 
     public void validateCreate(RecipeCreateDto recipe) throws ValidationException {
         List<String> validationErrors = new ArrayList<>();
