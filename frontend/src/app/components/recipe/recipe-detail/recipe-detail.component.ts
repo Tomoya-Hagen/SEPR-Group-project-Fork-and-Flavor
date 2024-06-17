@@ -10,6 +10,7 @@ import { RecipeService } from 'src/app/services/recipe.service';
 import { RecipeBookService } from 'src/app/services/recipebook.service';
 import { Title } from '@angular/platform-browser';
 import { UserService } from 'src/app/services/user.service';
+import {RecipeModalComponent} from "./recipe-modal/recipe-modal.component";
 
 @Component({
   selector: 'app-recipe-detail',
@@ -235,7 +236,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   }
 
   async getRecipesGoingWellTogether(): Promise<void> {
-    const data = this.service.getGoesWellWidth(this.recipe.id, this.page - 1, this.size)
+    const data = this.service.getGoesWellWith(this.recipe.id, this.page - 1, this.size)
       .subscribe( {
         next: (data: any) : void => {
           this.recipes = data.content;
@@ -255,6 +256,24 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   detail(id: number): void {
     this.router.navigate(['/recipe/details', id]);
+  }
+
+  openRecipeGoesWellWithModal() {
+    const modalRef = this.modalService.open(RecipeModalComponent);
+    modalRef.componentInstance.recipeId = this.recipe.id;
+
+    modalRef.componentInstance.updateRecipes.subscribe((updatedRecipes: Recipe[]) => {
+      this.recipes = updatedRecipes;
+      this.service.updateGoWellWithRecipes(this.recipe.id, this.recipes).subscribe(
+        () => {
+          this.getRecipesGoingWellTogether();
+        },
+        error => {
+          console.error('Error updating recipes.', error);
+          this.notification.error('Rezepte können nicht aktualisiert werden.', 'Backend Fehler - Rezepte');
+        }
+      );
+    });
   }
 
 }

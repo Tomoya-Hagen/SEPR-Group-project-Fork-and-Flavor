@@ -60,12 +60,16 @@ export class RecipeService {
       );
   }
 
-  getGoesWellWidth(id: number, page: number, size: number): Observable<Page<Recipe>> {
+  getGoesWellWith(id: number, page: number, size: number): Observable<Page<Recipe>> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
 
     return this.http.get<Page<Recipe>>(this.baseUri + '/' + id + '/goesWellWith', { params });
+  }
+
+  updateGoWellWithRecipes(id: number, recipes: Recipe[]): Observable<Recipe[]> {
+    return this.http.put<Recipe[]>(this.baseUri + '/' + id + '/goesWellWith', recipes);
   }
 
   getRecipes(name: string, page: number, size: number): Observable<Page<Recipe>> {
@@ -87,13 +91,6 @@ export class RecipeService {
   public getEditRecipeDetailsBy(recipeId: number): Observable<RecipeDetailDto> {
     return this.http.get<RecipeDetailDto>(
       this.baseUri + "/edit/" + recipeId
-    );
-  }
-  public getRecipeNameBy(recipeId: number): Observable<string> {
-    return this.http.get<RecipeDetailDto>(
-      this.baseUri+"/details/"+recipeId
-    ).pipe(
-      rxjsMap(recipe => recipe.name)
     );
   }
 

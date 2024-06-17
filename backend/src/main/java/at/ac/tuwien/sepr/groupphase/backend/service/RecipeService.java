@@ -72,6 +72,16 @@ public interface RecipeService {
     Page<RecipeListDto> getRecipesThatGoWellWith(long id, Pageable pageable) throws NotFoundException;
 
     /**
+     * Adds recipes that go well with the given recipe id.
+     *
+     * @param id represents the id of a recipe.
+     * @param goWellWith the recipes that go well with the given recipe.
+     * @return a RecipeDetailDto if a recipe with the given id exists.
+     * @throws NotFoundException if no recipe with the given id was found.
+     */
+    RecipeDetailDto addGoesWellWith(long id, List<RecipeListDto> goWellWith) throws NotFoundException;
+
+    /**
      * Updates recipe with the given recipeDetailDto.
      *
      * @param recipeUpdateDto contains the values to update recipe with

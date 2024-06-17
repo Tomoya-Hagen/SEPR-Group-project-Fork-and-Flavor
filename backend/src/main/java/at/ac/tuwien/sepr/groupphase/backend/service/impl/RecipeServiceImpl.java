@@ -102,6 +102,7 @@ public class RecipeServiceImpl implements RecipeService {
         });
     }
 
+    @Override
     public Page<RecipeListDto> getRecipesThatGoWellWith(long id, Pageable pageable) throws NotFoundException {
         Recipe origRecipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
         List<Recipe> goWellWith = origRecipe.getGoesWellWithRecipes();
@@ -118,6 +119,29 @@ public class RecipeServiceImpl implements RecipeService {
         List<RecipeListDto> subList = recipeListDtos.subList(start, end);
 
         return new PageImpl<>(subList, pageable, recipeListDtos.size());
+    }
+
+    @Override
+    public RecipeDetailDto addGoesWellWith(long id, List<RecipeListDto> goWellWith) throws ResponseStatusException {
+        Recipe origRecipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
+        if (origRecipe.getOwner().getId() != userManager.getCurrentUser().getId()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+        List<Recipe> goWellWithRecipes = goWellWith.stream()
+            .map(recipeListDto -> recipeRepository.getRecipeById(recipeListDto.id()).orElseThrow(NotFoundException::new))
+            .collect(Collectors.toList());
+
+        List<Recipe> uniqueRecipes = new ArrayList<>();
+        for (Recipe recipe : goWellWithRecipes) {
+            if (!origRecipe.getGoesWellWithRecipes().contains(recipe)) {
+                uniqueRecipes.add(recipe);
+            }
+        }
+
+        origRecipe.setGoesWellWithRecipes(uniqueRecipes);
+        recipeRepository.save(origRecipe);
+
+        return getRecipeDetailDtoById(id);
     }
 
 
