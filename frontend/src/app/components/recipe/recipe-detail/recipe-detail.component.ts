@@ -41,9 +41,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   isRatingDialogShown = false;
   ratings: RatingListDto[] = [];
   dummyRecipeBookSelectionModel: unknown;
-  dummyTasteSelectionModel: unknown;
-  dummyCostSelectionModel: unknown;
-  dummyEaseOfPrepSelectionModel: unknown;
   recipeSteps = [];
   returnClass = true;
   error = false;
@@ -63,7 +60,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   screenWidth: number;
   isOwner: boolean = false;
   areRatingsLoaded: boolean = false;
-  rating: RatingCreateDto ={
+  rating: RatingCreateDto = {
     review: "",
     taste: 0,
     easeOfPrep: 0,
@@ -275,9 +272,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   }
 
   isFormValid():boolean{
-    return this.rating.cost != 0 && 
-    this.rating.easeOfPrep != 0 && 
-    this.rating.taste != 0 && 
+    return this.rating.cost != 0 &&
+    this.rating.easeOfPrep != 0 &&
+    this.rating.taste != 0 &&
     this.rating.review.length > 0
   }
 
