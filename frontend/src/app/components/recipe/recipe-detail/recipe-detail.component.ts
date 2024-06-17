@@ -54,10 +54,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   isOwner: boolean = false;
   selectedPortions: number;
   originalServings: number;
-  portionsChanged: boolean = false;
-  adjustedIngredients = [];
-  adjustedNutritions = [];
   hasForkedRecipes: boolean = false;
+  originalNutritions = [];
+  originalIngredients = [];
 
   constructor(
     private service: RecipeService,
@@ -78,6 +77,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         next: data => {
           this.recipe = data;
           this.recipeSteps = this.recipe.recipeSteps;
+          this.originalNutritions = this.recipe.nutritions;
+          this.originalIngredients = this.recipe.ingredients;
           this.originalServings = this.recipe.numberOfServings;
           this.selectedPortions = this.recipe.numberOfServings;
           this.changeIngredientsToGramm();
@@ -85,7 +86,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           this.getForkedFromRecipeName();
           this.isCurrentUserOwner();
           this.orderNutritions();
-          console.log("recipes forked from this: " + this.recipe.forkedRecipes);
           if (this.recipe.forkedRecipes.length > 0) {
             this.hasForkedRecipes = true;
           }
@@ -110,17 +110,18 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   }
 
   onPortionsChange(): void {
-    this.portionsChanged = this.selectedPortions !== this.originalServings;
     this.adjustIngredientsAndNutritions();
+    this.changeIngredientsToGramm();
+    this.changeNutritionsToGramm();
   }
 
   adjustIngredientsAndNutritions(): void {
     const ratio = this.selectedPortions / this.originalServings;
-    this.adjustedIngredients = this.recipe.ingredients.map(ingredient => ({
+    this.recipe.ingredients = this.originalIngredients.map(ingredient => ({
       ...ingredient,
       amount: this.roundTo(ingredient.amount * ratio)
     }));
-    this.adjustedNutritions = this.recipe.nutritions.map(nutrition => ({
+    this.recipe.nutritions = this.originalNutritions.map(nutrition => ({
       ...nutrition,
       value: this.roundTo(nutrition.value * ratio)
     }));
@@ -128,7 +129,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   orderNutritions(): void {
     this.recipe.nutritions.sort((a, b) => a.id - b.id);
-    this.adjustedNutritions.sort((a, b) => a.id - b.id);
   }
 
   isRecipeDescriptionStep(recipeStep: any): boolean {
@@ -164,7 +164,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         return;
       }
     })
-    console.log(this.recipeForkedFrom);
     return this.recipeForkedFrom;
   }
 
@@ -246,7 +245,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     for (let i = 0; i < this.recipe.ingredients.length; i++) {
       if (this.recipe.ingredients[i].amount >= 1000 && this.recipe.ingredients[i].unit === "mg") {
         this.recipe.ingredients[i].amount /= 1000;
-        this.roundTo(this.recipe.ingredients[i].amount);
+        this.recipe.ingredients[i].amount = this.roundTo(this.recipe.ingredients[i].amount);
         this.recipe.ingredients[i].unit = "g";
       }
     }
@@ -256,7 +255,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     for (let i = 0; i < this.recipe.nutritions.length; i++) {
       if (this.recipe.nutritions[i].value >= 1000 && this.recipe.nutritions[i].unit === "mg") {
         this.recipe.nutritions[i].value /= 1000;
-        this.roundTo(this.recipe.nutritions[i].value);
+        this.recipe.nutritions[i].value = this.roundTo(this.recipe.nutritions[i].value);
         this.recipe.nutritions[i].unit = "g";
       }
     }
