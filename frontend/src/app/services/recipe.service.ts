@@ -60,6 +60,18 @@ export class RecipeService {
       );
   }
 
+  getGoesWellWith(id: number, page: number, size: number): Observable<Page<Recipe>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<Page<Recipe>>(this.baseUri + '/' + id + '/goesWellWith', { params });
+  }
+
+  updateGoWellWithRecipes(id: number, recipes: Recipe[]): Observable<Recipe[]> {
+    return this.http.put<Recipe[]>(this.baseUri + '/' + id + '/goesWellWith', recipes);
+  }
+
   getRecipes(name: string, page: number, size: number): Observable<Page<Recipe>> {
     let params = new HttpParams()
       .set('name', name)
@@ -76,11 +88,9 @@ export class RecipeService {
     );
   }
 
-  public getRecipeNameBy(recipeId: number): Observable<string> {
+  public getEditRecipeDetailsBy(recipeId: number): Observable<RecipeDetailDto> {
     return this.http.get<RecipeDetailDto>(
-      this.baseUri+"/details/"+recipeId
-    ).pipe(
-      rxjsMap(recipe => recipe.name)
+      this.baseUri + "/edit/" + recipeId
     );
   }
 
@@ -101,8 +111,22 @@ export class RecipeService {
       return this.http.put<DetailedRecipeDto>(this.baseUri + '/' + recipe.id, recipe);
   }
 
+  public forkRecipe(recipe: RecipeUpdateDto): Observable<DetailedRecipeDto> {
+    return this.http.post<DetailedRecipeDto>(this.baseUri + '/fork/' + recipe.id, recipe);
+  }
+
   public getRecipeUpdateDtoById(recipeId: number): Observable<RecipeUpdateDto> {
     return this.getRecipeDetailsBy(recipeId).pipe(
+      rxjsMap(existingRecipe => this.mapToUpdateDto(existingRecipe)),
+      catchError(error => {
+        console.error('Error fetching recipe details:', error);
+        return throwError(() => new Error('Failed to fetch recipe details: ' + error.message));
+      })
+    );
+  }
+
+  public getRecipeEditDtoById(recipeId: number): Observable<any> {
+    return this.getEditRecipeDetailsBy(recipeId).pipe(
       rxjsMap(existingRecipe => this.mapToUpdateDto(existingRecipe)),
       catchError(error => {
         console.error('Error fetching recipe details:', error);
@@ -127,7 +151,7 @@ export class RecipeService {
       if (step.hasOwnProperty('recipe')) {
         return {
           id: step.id,
-          name: (step as RecipeStepRecipeDetailDto).recipe.name,
+          name: step.name,
           recipeId: (step as RecipeStepRecipeDetailDto).recipe.id,
           whichstep: false
         };

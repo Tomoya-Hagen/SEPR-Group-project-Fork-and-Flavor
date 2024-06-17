@@ -28,10 +28,12 @@ import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
 import jakarta.transaction.Transactional;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -45,6 +47,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Transactional
@@ -74,12 +77,17 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException {
+        return getRecipeDetailDtoById(id, true);
+    }
+
+    @Override
+    public RecipeDetailDto getRecipeDetailDtoById(long id, boolean recursive) throws NotFoundException {
         LOGGER.trace("getRecipeDetailDtoById({})", id);
         Recipe recipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
         HashMap<Ingredient, RecipeIngredient> ingredients = new HashMap<>();
         HashMap<Nutrition, BigDecimal> nutritions = new HashMap<>();
         ArrayList<Allergen> allergens = new ArrayList<>();
-        getRecipeDetails(recipe, ingredients, nutritions, allergens);
+        getRecipeDetails(recipe, ingredients, nutritions, allergens, recursive);
         long rating = calculateAverageTasteRating(recipe.getRatings());
         return recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
     }
@@ -95,25 +103,101 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public Page<RecipeListDto> getRecipesThatGoWellWith(long id, Pageable pageable) throws NotFoundException {
+        Recipe origRecipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
+        List<Recipe> goWellWith = origRecipe.getGoesWellWithRecipes();
+
+        List<RecipeListDto> recipeListDtos = goWellWith.stream()
+            .map(recipe -> {
+                Long rating = calculateAverageTasteRating(recipe.getRatings());
+                return recipeMapper.recipeToRecipeListDto(recipe, rating);
+            })
+            .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), recipeListDtos.size());
+        List<RecipeListDto> subList = recipeListDtos.subList(start, end);
+
+        return new PageImpl<>(subList, pageable, recipeListDtos.size());
+    }
+
+    @Override
+    public RecipeDetailDto addGoesWellWith(long id, List<RecipeListDto> goWellWith) throws ResponseStatusException {
+        Recipe origRecipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
+        if (origRecipe.getOwner().getId() != userManager.getCurrentUser().getId()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+        List<Recipe> goWellWithRecipes = goWellWith.stream()
+            .map(recipeListDto -> recipeRepository.getRecipeById(recipeListDto.id()).orElseThrow(NotFoundException::new))
+            .collect(Collectors.toList());
+
+        List<Recipe> uniqueRecipes = new ArrayList<>();
+        for (Recipe recipe : goWellWithRecipes) {
+            if (!origRecipe.getGoesWellWithRecipes().contains(recipe)) {
+                uniqueRecipes.add(recipe);
+            }
+        }
+
+        origRecipe.setGoesWellWithRecipes(uniqueRecipes);
+        recipeRepository.save(origRecipe);
+
+        return getRecipeDetailDtoById(id);
+    }
+
+    @Override
     public DetailedRecipeDto createRecipe(RecipeCreateDto recipeDto) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException {
         LOGGER.debug("Publish new message {}", recipeDto);
 
         recipeValidator.validateCreate(recipeDto);
 
+        Recipe simple = recipeMapper.recipeparsesimple(recipeDto);
+        ApplicationUser owner = userManager.getCurrentUser();
+        simple.setOwner(owner);
+        recipeRepository.save(simple);
 
-        Recipe recipe = recipeMapper.recipeCreateDtoToRecipe(recipeDto, recipeRepository.findMaxId() + 1);
+        Recipe recipe = recipeMapper.recipeCreateDtoToRecipe(recipeDto, simple.getId());
+
+        List<Category> categories = new ArrayList<>();
+        for (Category category : recipe.getCategories()) {
+            categories.add(categoryRepository.getById(category.getId()));
+        }
+        simple.setIngredients(recipe.getIngredients());
+        simple.setCategories(categories);
+        simple.setRecipeSteps(recipe.getRecipeSteps());
+
+
+        recipeRepository.save(simple);
+        var x = recipeMapper.recipeToDetailedRecipeDto(simple);
+        return x;
+    }
+
+    @Override
+    public DetailedRecipeDto forkRecipe(RecipeCreateDto recipeDto, int forkid) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException {
+        LOGGER.debug("Publish new message {}", recipeDto);
+
+        recipeValidator.validateCreate(recipeDto);
+
+        Recipe simple = recipeMapper.recipeparsesimple(recipeDto);
+        Recipe forked = recipeRepository.getRecipeById(forkid).orElseThrow(NotFoundException::new);
+        simple.setForkedFrom(forked);
+        ApplicationUser owner = userManager.getCurrentUser();
+        simple.setOwner(owner);
+        recipeRepository.save(simple);
+
+        Recipe recipe = recipeMapper.recipeCreateDtoToRecipe(recipeDto, simple.getId());
 
         List<Category> categories = new ArrayList<>();
         for (Category category : recipe.getCategories()) {
             categories.add(categoryRepository.findById(category.getId()).orElseThrow(NotFoundException::new));
         }
-        recipe.setCategories(categories);
+        simple.setIngredients(recipe.getIngredients());
+        simple.setCategories(categories);
+        simple.setRecipeSteps(recipe.getRecipeSteps());
 
-        ApplicationUser owner = userManager.getCurrentUser();
-        recipe.setOwner(owner);
-        recipeRepository.save(recipe);
 
-        return recipeMapper.recipeToDetailedRecipeDto(recipe);
+        recipeRepository.save(simple);
+        var x = recipeMapper.recipeToDetailedRecipeDto(simple);
+        return x;
     }
 
     @Override
@@ -179,7 +263,8 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe recipe,
         Map<Ingredient, RecipeIngredient> ingredients,
         Map<Nutrition, BigDecimal> nutritions,
-        List<Allergen> allergens) {
+        List<Allergen> allergens,
+        boolean recursive) {
         LOGGER.trace("getRecipeDetails({}, {}, {}, {})",
             recipe, ingredients, nutritions, allergens);
         for (RecipeIngredient recipeIngredient : recipe.getIngredients()) {
@@ -190,10 +275,12 @@ public class RecipeServiceImpl implements RecipeService {
         }
         List<RecipeStep> recipeSteps = recipe.getRecipeSteps();
         recipeSteps.sort(Comparator.comparing(RecipeStep::getStepNumber));
-        for (RecipeStep recipeStep : recipeSteps) {
-            if (recipeStep instanceof RecipeRecipeStep recipeRecipeStep) {
-                getRecipeDetails(recipeRecipeStep.getRecipeRecipe(), ingredients,
-                    nutritions, allergens);
+        if (recursive) {
+            for (RecipeStep recipeStep : recipeSteps) {
+                if (recipeStep instanceof RecipeRecipeStep recipeRecipeStep) {
+                    getRecipeDetails(recipeRecipeStep.getRecipeRecipe(), ingredients,
+                        nutritions, allergens, recursive);
+                }
             }
         }
     }

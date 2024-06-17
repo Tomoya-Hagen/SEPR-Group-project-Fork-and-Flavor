@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,6 +50,17 @@ public class LoginEndpoint {
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
         return ResponseEntity.created(URI.create("")).body(jwt);
+    }
+
+    @PermitAll
+    @PostMapping("/pwreset")
+    public void resetPassword(@Valid @RequestBody UserPasswordResetDto userPasswordResetDto) {
+        try {
+            userService.resetPassword(userPasswordResetDto);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
     }
 
     @Secured("ROLE_USER")

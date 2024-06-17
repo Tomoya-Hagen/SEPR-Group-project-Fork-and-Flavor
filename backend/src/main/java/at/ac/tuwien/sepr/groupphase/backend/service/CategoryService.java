@@ -11,4 +11,11 @@ public interface CategoryService {
      * @return limit amount of categories found
      */
     Stream<CategoryResultDto> byname(String name, int limit);
+
+    /**
+     * Find all categories.
+     *
+     * @return all categories found
+     */
+    Stream<CategoryResultDto> all();
 }

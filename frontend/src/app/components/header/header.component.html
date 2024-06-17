@@ -15,7 +15,7 @@
               </button>
               <div ngbDropdownMenu >
                 <a ngbDropdownItem class="nav-link" routerLink="/recipe" >Alle Rezepte anzeigen</a>
-                <a ngbDropdownItem class="nav-link" routerLink="/recipecreate" >Neue Rezepte erstellen</a>
+                <a ngbDropdownItem class="nav-link" routerLink="/recipe/create" >Neue Rezepte erstellen</a>
               </div>
             </div>
           </div>
@@ -44,12 +44,20 @@
             </div>
           </div>
       </ul>
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item d-flex align-items-center">
           <a class="nav-link" *ngIf="!authService.isLoggedIn()" class="btn btn-primary btn-lg" routerLink="/login" routerLinkActive="active" role="button">Login</a>
         </li>
         <li class="nav-item d-flex align-items-center">
-          <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>
+          <div ngbDropdown class="d-inline-block" *ngIf="authService.isLoggedIn()">
+            <button type="button" class="btn" id="dropdownBasic4" ngbDropdownToggle>
+              {{ user.name }}
+            </button>
+            <div ngbDropdownMenu >
+              <a ngbDropdownItem class="nav-link btn btn-primary btn-lg" routerLink="userpage/{{user.id}}">{{user.name}}</a>
+              <a ngbDropdownItem class="nav-link" routerLink="/" (click)="authService.logoutUser()">Logout</a>
+            </div>
+          </div>
         </li>
       </ul>
     </div>

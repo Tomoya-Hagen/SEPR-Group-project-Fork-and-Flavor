@@ -60,5 +60,4 @@ public interface RecipeBookRepository extends JpaRepository<RecipeBook, Long> {
      * @return true if a recipe book with the given name exists, false otherwise.
      */
     Boolean existsByName(String name);
-
 }

@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, catchError } from "rxjs";
+import { Observable, catchError, map } from "rxjs";
 import {Globals} from '../global/globals';
-import {userDto, userListDto} from "../dtos/user";
+import {userDto, userListDto, userPasswordChangeDto} from "../dtos/user";
 import {RecipeBookListDto} from "../dtos/recipe-book";
 import {RecipeListDto} from "../dtos/recipe";
 
@@ -19,12 +19,13 @@ export class UserService {
         private http: HttpClient, private globals: Globals
     ) { }
 
-    usersByName(name: string, limit: number): Observable<userListDto[]> {
+    usersByName(name: string, limit: number, currentUserId: number): Observable<userListDto[]> {
         let params = new HttpParams();
         params = params.append('name', name);
         params = params.append('limit', limit.toString());
         return this.http.get<userListDto[]>(this.baseUri, { params })
         .pipe(
+          map((users: userListDto[]) => users.filter(user => user.id !== currentUserId)),
             catchError((error) => {
                 console.error(error);
                 throw error;
@@ -44,14 +45,17 @@ export class UserService {
     return this.http.get<RecipeListDto[]>(this.baseUri+"/"+id+"/recipes");
   }
 
-    public getCurrentUser(): Observable<userDto> {
-        return this.http.get<userDto>(`${this.baseUri}/current`)
-          .pipe(
-            catchError((error) => {
-              console.error(error);
-              throw error;
-            })
-          );
-      }
+  public getCurrentUser(): Observable<userDto> {
+    return this.http.get<userDto>(`${this.baseUri}/current`)
+      .pipe(
+        catchError((error) => {
+          console.error(error);
+          throw error;
+        })
+      );
+  }
 
+  public updatePassword(id: number, passwordChange: userPasswordChangeDto) {
+    return this.http.patch(this.baseUri+"/changePassword/"+id,passwordChange);
+  }
 }

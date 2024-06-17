@@ -6,7 +6,7 @@ import {Router, RouterLink} from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { CardComponent } from "../card/card.component";
 import { RecipeBookListDto, RecipeBookSearch } from "../../dtos/recipe-book";
-import {Subscription} from "rxjs";
+import {catchError, of, Subscription} from "rxjs";
 import {NgbPagination} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
@@ -60,9 +60,9 @@ export class RecipebookComponent implements OnInit,OnDestroy {
           this.pagedData = data.content;
           this.totalElements = data.totalElements;
         },
-        error: (error: any) => {
-          console.error('Error fetching recipes', error);
-          this.notification.error('Could not fetch recipes', 'Error');
+        error: error => {
+          console.error('Error fetching recipebook.', error);
+          this.notification.error('Rezeptbücher können nicht abgerufen werden.', 'Backend Fehler - Rezeptbuch');
         }
       });
   }

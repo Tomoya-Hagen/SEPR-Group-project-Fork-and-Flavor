@@ -6,6 +6,7 @@ import {ToastrService} from "ngx-toastr";
 import {RecipeBookService} from "../../../services/recipebook.service";
 import {RecipeBookDetailDto} from "../../../dtos/recipe-book";
 import { Title } from '@angular/platform-browser';
+import {UserService} from "../../../services/user.service";
 
 @Component({
   selector: 'app-recipebook-detail',
@@ -20,7 +21,6 @@ import { Title } from '@angular/platform-browser';
   styleUrl: './recipebook-detail.component.scss'
 })
 export class RecipebookDetailComponent implements OnInit, OnDestroy{
-  bannerError: string | null = null;
   recipeBook: RecipeBookDetailDto = {
     name: "",
     description: "",
@@ -30,12 +30,15 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
     recipes: [],
     users: []
   }
+  isOwner: boolean = false;
+
   constructor(
     private service: RecipeBookService,
     private router: Router,
     private route: ActivatedRoute,
     private notification: ToastrService,
     private titleService: Title,
+    private userService: UserService,
   ) {
 
   }
@@ -47,14 +50,11 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
         next: data => {
           this.recipeBook = data;
           this.titleService.setTitle("Fork & Flavour | " + this.recipeBook.name);
+          this.isCurrentUserOwner();
         },
         error: error => {
-          console.error('Error fetching recipe books', error);
-          this.bannerError = 'Could not fetch recipe books: ' + error.message;
-          const errorMessage = error.status === 0
-            ? 'Is the backend up?'
-            : error.message.message;
-          this.notification.error(errorMessage, 'Could not fetch recipe book');
+          console.error('Error fetching recipebook.', error);
+          this.notification.error('Rezeptbücher können nicht abgerufen werden.',"Backend Fehler - Rezeptbuch");
         }
       });
     });
@@ -66,5 +66,17 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
 
   openUserPage() {
     this.router.navigate(['/userpage', this.recipeBook.ownerId]);
+  }
+
+  isCurrentUserOwner() {
+    this.userService.getCurrentUser().subscribe(currentUser => {
+      if (currentUser && this.recipeBook.ownerId === currentUser.id) {
+        this.isOwner = true;
+      }
+    });
+  }
+
+  editRecipeBook() {
+    this.router.navigate(['/recipebook/edit',this.recipeBook.id])
   }
 }

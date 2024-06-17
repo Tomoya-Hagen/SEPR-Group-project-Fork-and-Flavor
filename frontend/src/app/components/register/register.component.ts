@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {Router} from "@angular/router";
-import {NewUserRequest} from "../../dtos/new-user-request";
 import {AuthService} from "../../services/auth.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-register',
@@ -13,9 +13,11 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   error = false;
   errorMessage = '';
-  submitted = false;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private formBuilder: FormBuilder,
+              private authService: AuthService,
+              private notification: ToastrService,
+              private router: Router) {
     this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -44,30 +46,53 @@ export class RegisterComponent implements OnInit {
       this.authService.registerUser(newUserRequest).subscribe({
         next: () => {
           console.log(`Successfully registered user: ${newUserRequest.email}`);
+          this.notification.success("Erfolgreich registriert als User:" + newUserRequest.email, "Registrierung erfolgreich!");
           this.router.navigate(['/']);  // Redirect after successful registration
         },
         error: (errorResponse) => {
           console.error('Registration error:', errorResponse);
           this.error = true;
 
-          this.errorMessage = errorResponse.error;
-          //TODO: Toastr
+          const errorMessage = errorResponse.error;
+          const validationErrors = this.parseValidationErrors(errorMessage);
+          validationErrors.forEach(error => {
+            this.notification.error(error, "Registrierung Fehler");
+          });
         }
       });
     } else {
       console.error('Invalid input');
       this.error = true;
-      this.errorMessage = 'Please check your input and try again.';
+      this.errorMessage = 'Bitte überprüfen Sie Ihre Eingabe und versuchen Sie es erneut!';
+      this.notification.error(this.errorMessage, "Registrierung Fehler");
     }
+  }
+
+  parseValidationErrors(errorMessage) {
+    let validationErrors = [];
+
+    const type1Pattern = /Validation errors=\[(.*?)\]/;
+    const type1Match = type1Pattern.exec(errorMessage);
+    if (type1Match && type1Match[1]) {
+      validationErrors = type1Match[1].split(', ').map(error => error.split(' ').slice(1).join(' '));
+    } else {
+      try {
+        const errorObj = JSON.parse(errorMessage);
+        if (errorObj.detail && errorObj.detail.includes('Fehlgeschlagene Validierung:')) {
+          validationErrors = errorObj.detail.replace('Die Validierung der Eingabefelder ist fehlgeschlagen. Fehlgeschlagene Validierung: ', '').split(', ');
+        } else {
+          validationErrors.push("Ein unerwarteter Fehler ist aufgetreten.");
+        }
+      } catch (e) {
+        validationErrors.push("Ein unerwarteter Fehler ist aufgetreten.");
+      }
+    }
+
+    return validationErrors;
   }
 
   goToLogin(): void {
     this.router.navigate(['/login']);
-  }
-
-  vanishError() {
-    this.error = false;
-    this.errorMessage = '';
   }
 
 }

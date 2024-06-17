@@ -2,7 +2,8 @@
   <div class="row">
     <div class="col-6 col-md-4">
       <div>
-        <p class="fs-4">{{ user.name }}</p>
+        <h1>{{ user.name }}</h1>
+        <button *ngIf="isMyPage" class="btn btn-light btn-sm " routerLink="/userpage/{{user.id}}/edit">Edit profile</button>
         <p> <i class="bi bi-receipt"></i> {{recipeBook.length}} RecipeBooks · {{recipes.length}} Recipes</p>
       </div>
       <div class="border-top">
@@ -17,7 +18,7 @@
       </div>
     </div>
     <div class="col-12 col-md-8">
-      <h4 class="mt-4">Recipe books:</h4>
+      <h4 class="mt-4" *ngIf="recipeBook.length !== 0">Recipe books:</h4>
       <table class="table">
         <tbody>
         <tr *ngFor="let recipe of recipeBook">
@@ -32,7 +33,7 @@
         </tr>
         </tbody>
       </table>
-      <h4 class="mt-4">Recipes:</h4>
+      <h4 class="mt-4" *ngIf="recipes.length !== 0">Recipes:</h4>
       <table class="table">
         <tbody>
         <tr *ngFor="let recipe of recipes">

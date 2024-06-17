@@ -6,7 +6,11 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -58,6 +63,49 @@ public class RecipeEndpoint {
         LOGGER.info("GET /api/v1/recipe/details/{}", id);
         try {
             return recipeService.getRecipeDetailDtoById(id);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no recipe found by the given is", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+    }
+
+    @PermitAll
+    @GetMapping(value = "/edit/{id}")
+    @Operation(summary = "Get recipe details by id")
+    public RecipeDetailDto editBy(@PathVariable(name = "id") Long id) {
+        LOGGER.info("GET /api/v1/recipe/details/{}", id);
+        try {
+            return recipeService.getRecipeDetailDtoById(id, false);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no recipe found by the given is", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+    }
+
+    @PermitAll
+    @GetMapping(value = "/{id}/goesWellWith")
+    @Operation(summary = "Get recipes that go well with the recipe with the given id")
+    public Page<RecipeListDto> goesWellWith(@PathVariable(name = "id") Long id,
+                                            @RequestParam(name = "page", defaultValue = "0") int page,
+                                            @RequestParam(name = "size", defaultValue = "3") int size) {
+        LOGGER.info("GET /api/v1/recipe/goesWellWith/{}", id);
+        try {
+            return recipeService.getRecipesThatGoWellWith(id, PageRequest.of(page, size));
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no recipe found by the given is", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+    }
+
+    @PutMapping("/{id}/goesWellWith")
+    @Operation(summary = "Add a recipes that go well with the recipe with the given id")
+    public RecipeDetailDto addGoesWellWith(@PathVariable(name = "id") Long id, @RequestBody List<RecipeListDto> goWellWith) {
+        LOGGER.info("PUT /api/v1/recipe/goesWellWith/{}", id);
+        try {
+            return recipeService.addGoesWellWith(id, goWellWith);
         } catch (NotFoundException e) {
             HttpStatus status = HttpStatus.NOT_FOUND;
             logClientError(status, "no recipe found by the given is", e);
@@ -92,6 +140,7 @@ public class RecipeEndpoint {
         return recipeService.byname(name, limit);
     }
 
+
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -100,7 +149,21 @@ public class RecipeEndpoint {
         LOGGER.info("POST /api/v1/recipe body: {}", recipeDto);
         try {
             return recipeService.createRecipe(recipeDto);
-        } catch (Exception e) {
+        } catch (ValidationException | RecipeStepNotParsableException | RecipeStepSelfReferenceException e) {
+            HttpStatus status = HttpStatus.BAD_REQUEST;
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+    }
+
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/fork/{id}")
+    @Operation(summary = "Fork a new Recipe", security = @SecurityRequirement(name = "apiKey"))
+    public DetailedRecipeDto fork(@Valid @RequestBody RecipeCreateDto recipeDto, @PathVariable("id") int id) {
+        LOGGER.info("POST /api/v1/recipe body: {}", recipeDto);
+        try {
+            return recipeService.forkRecipe(recipeDto, id);
+        } catch (ValidationException | RecipeStepNotParsableException | RecipeStepSelfReferenceException e) {
             HttpStatus status = HttpStatus.BAD_REQUEST;
             throw new ResponseStatusException(status, e.getMessage(), e);
         }

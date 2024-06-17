@@ -33,6 +33,15 @@ public interface RecipeService {
     DetailedRecipeDto createRecipe(RecipeCreateDto recipe) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException;
 
     /**
+     * Forks an existing recipe.
+     *
+     * @param recipe to create
+     * @param forkid id to parent recipe
+     * @return created recipe entry
+     */
+    DetailedRecipeDto forkRecipe(RecipeCreateDto recipe, int forkid) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException;
+
+    /**
      * Find all recipes having a name like name.
      *
      * @param name name of recipes to find
@@ -49,6 +58,36 @@ public interface RecipeService {
      * @throws NotFoundException if no recipe with the given id was found.
      */
     RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException;
+
+    /**
+     * finds a recipeDetailDto based on the given recipe id.
+     *
+     * @param id represents the id of a recipe.
+     * @param recursive get ingredients rekursive.
+     * @return a RecipeDetailDto if a recipe with the given id exists.
+     * @throws NotFoundException if no recipe with the given id was found.
+     */
+    RecipeDetailDto getRecipeDetailDtoById(long id, boolean recursive) throws NotFoundException;
+
+    /**
+     * finds recipes that go well with the given recipe id.
+     *
+     * @param id represents the id of a recipe.
+     * @param pageable the page information.
+     * @return a RecipeDetailDto if a recipe with the given id exists.
+     * @throws NotFoundException if no recipe with the given id was found.
+     */
+    Page<RecipeListDto> getRecipesThatGoWellWith(long id, Pageable pageable) throws NotFoundException;
+
+    /**
+     * Adds recipes that go well with the given recipe id.
+     *
+     * @param id represents the id of a recipe.
+     * @param goWellWith the recipes that go well with the given recipe.
+     * @return a RecipeDetailDto if a recipe with the given id exists.
+     * @throws NotFoundException if no recipe with the given id was found.
+     */
+    RecipeDetailDto addGoesWellWith(long id, List<RecipeListDto> goWellWith) throws NotFoundException;
 
     /**
      * Updates recipe with the given recipeDetailDto.

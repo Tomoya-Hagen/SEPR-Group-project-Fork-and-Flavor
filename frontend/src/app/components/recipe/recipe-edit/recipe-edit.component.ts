@@ -14,6 +14,7 @@ import { Step } from "../../../dtos/Step";
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryService } from 'src/app/services/CategoryService';
 import { ToastrService } from 'ngx-toastr';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -37,13 +38,16 @@ export class RecipeEditComponent implements OnInit {
   ingbool = false;
   stepbool = false;
   isSubmitDisabled = true;
+  isOwner = false;
+  ownerId: number = 0;
 
   constructor(
     private recipeService: RecipeService,
     private categoryService: CategoryService,
     private router: Router,
     private route: ActivatedRoute,
-    private notification: ToastrService
+    private notification: ToastrService,
+    private userService: UserService
   ){}
 
   ingredientChangeHandler(updatedIngredient: IngredientDetailDto, index: number) {
@@ -51,7 +55,8 @@ export class RecipeEditComponent implements OnInit {
     for (let i = 0; i < this.recipe.ingredients.length; i++) {
       if(i !== index && this.recipe.ingredients[i].id === updatedIngredient.id) {
         this.error = true;
-        this.errorMessage = 'You cannot choose the same category twice!';
+        this.errorMessage = 'Du kannst ein Kategorie nicht doppelt auswählen!';
+        this.notification.error(this.errorMessage,"Fehler - Rezept bearbeiten");
         // this.recipe.ingredients.splice(index, 1, { name: "", id: -1, amount: null, unit: null });
         this.validateForm()
         console.log('Duplicate found:', updatedIngredient);
@@ -72,11 +77,18 @@ export class RecipeEditComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.recipeService.getRecipeDetailsBy(this.route.snapshot.params['id']).subscribe(recipe => {
+      this.ownerId = recipe.ownerId;
+    })
+    this.checkOwnerShip();
     const id = this.route.snapshot.params['id'];
     this.recipeService.getRecipeUpdateDtoById(id).subscribe(recipe => {
       this.recipe = recipe;
       console.log(this.recipe);
     });
+    if (this.isOwner === false) {
+      this.router.navigate([`/recipe/details/${id}`]);
+    }
   }
   public onSubmit(form: NgForm): void {
     console.log(this.recipe);
@@ -124,8 +136,10 @@ export class RecipeEditComponent implements OnInit {
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;
+      this.notification.error('Rezept kann nicht aktualisiert werden:' + this.errorMessage.toString(), 'Backend Fehler - Rezepte bearbeiten');
     } else {
       this.errorMessage = error.error;
+      this.notification.error( 'Rezept kann nicht aktualisiert werden:' + this.errorMessage.toString(), 'Backend Fehler - Rezepte bearbeiten');
     }
   }
 
@@ -160,9 +174,9 @@ export class RecipeEditComponent implements OnInit {
 
     if (this.recipe.recipeSteps[index].recipeId === this.recipe.id) {
       this.error = true;
-      this.errorMessage = 'A recipe cannot reference itself as a step.';
+      this.errorMessage = 'Ein Rezept kann sich selbst nicht als Rezeptschritt referenzieren.';
       this.recipe.recipeSteps[index] = new Step();
-      // this.notification.error(this.errorMessage);
+      this.notification.error(this.errorMessage,"Rezept Bearbeiten - Fehler");
       return;
     }
 
@@ -241,6 +255,14 @@ export class RecipeEditComponent implements OnInit {
   public clickSubmit(): void {
     this.onSubmit({} as NgForm);
     this.navToDetails();
+  }
+
+  private checkOwnerShip(): void {
+    this.userService.getCurrentUser().subscribe(currentUser => {
+      if (currentUser && this.ownerId === currentUser.id) {
+        this.isOwner = true;
+      }
+    });
   }
 
 

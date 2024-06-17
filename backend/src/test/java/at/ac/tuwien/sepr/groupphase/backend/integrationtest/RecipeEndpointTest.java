@@ -5,12 +5,14 @@ import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeIngredientDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDescriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
@@ -51,7 +53,10 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -134,20 +139,20 @@ class RecipeEndpointTest implements TestData {
         recipeCategoryDtoList.add(new RecipeCategoryDto(1));
 
         List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
-        recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));
-        recipeIngredientDtos.add(new RecipeIngredientDto(132,new BigDecimal("12.5"),"g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(1, new BigDecimal(6), "g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132, new BigDecimal("12.5"), "g"));
 
         List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
-        recipeStepDtoList.add(new RecipeStepDto("Step eins","Beschreibung von Step 1",0,true ));
-        recipeStepDtoList.add(new RecipeStepDto("Step zwei","Beschreibung von Step 2",0,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step eins", "Beschreibung von Step 1", 0, true));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei", "Beschreibung von Step 2", 0, true));
 
         RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
         recipeCreateDto.setName("Name");
         recipeCreateDto.setDescription("Beschreibung");
-        recipeCreateDto.setServings((short)42);
+        recipeCreateDto.setNumberOfServings((short) 42);
 
         recipeCreateDto.setIngredients(recipeIngredientDtos);
-        recipeCreateDto.setSteps(recipeStepDtoList);
+        recipeCreateDto.setRecipeSteps(recipeStepDtoList);
         recipeCreateDto.setCategories(recipeCategoryDtoList);
 
 
@@ -177,20 +182,20 @@ class RecipeEndpointTest implements TestData {
         recipeCategoryDtoList.add(new RecipeCategoryDto(1));
 
         List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
-        recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));
-        recipeIngredientDtos.add(new RecipeIngredientDto(132,new BigDecimal(12.5),"g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(1, new BigDecimal(6), "g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132, new BigDecimal(12.5), "g"));
 
         List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
-        recipeStepDtoList.add(new RecipeStepDto("Step eins","Beschreibung von Step 1",0,true ));
-        recipeStepDtoList.add(new RecipeStepDto("Step zwei","Beschreibung von Step 2",0,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step eins", "Beschreibung von Step 1", 0, true));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei", "Beschreibung von Step 2", 0, true));
 
         RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
         recipeCreateDto.setName("Name");
         recipeCreateDto.setDescription("Beschreibung");
-        recipeCreateDto.setServings((short)42);
+        recipeCreateDto.setNumberOfServings((short) 42);
 
         recipeCreateDto.setIngredients(recipeIngredientDtos);
-        recipeCreateDto.setSteps(recipeStepDtoList);
+        recipeCreateDto.setRecipeSteps(recipeStepDtoList);
         recipeCreateDto.setCategories(recipeCategoryDtoList);
 
         String requestBody = objectMapper.writeValueAsString(recipeCreateDto);
@@ -213,20 +218,20 @@ class RecipeEndpointTest implements TestData {
         recipeCategoryDtoList.add(new RecipeCategoryDto(1000));
 
         List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
-        recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));
-        recipeIngredientDtos.add(new RecipeIngredientDto(132,new BigDecimal(12.5),"g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(1, new BigDecimal(6), "g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132, new BigDecimal(12.5), "g"));
 
         List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
-        recipeStepDtoList.add(new RecipeStepDto("Step eins","Beschreibung von Step 1",0,true ));
-        recipeStepDtoList.add(new RecipeStepDto("Step zwei","Beschreibung von Step 2",0,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step eins", "Beschreibung von Step 1", 0, true));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei", "Beschreibung von Step 2", 0, true));
 
         RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
         recipeCreateDto.setName("Name");
         recipeCreateDto.setDescription("Beschreibung");
-        recipeCreateDto.setServings((short)42);
+        recipeCreateDto.setNumberOfServings((short) 42);
 
         recipeCreateDto.setIngredients(recipeIngredientDtos);
-        recipeCreateDto.setSteps(recipeStepDtoList);
+        recipeCreateDto.setRecipeSteps(recipeStepDtoList);
         recipeCreateDto.setCategories(recipeCategoryDtoList);
 
 
@@ -250,21 +255,21 @@ class RecipeEndpointTest implements TestData {
         recipeCategoryDtoList.add(new RecipeCategoryDto(1000));
 
         List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
-        recipeIngredientDtos.add(new RecipeIngredientDto(10000,new BigDecimal(6),"g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(10000, new BigDecimal(6), "g"));
 
         List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
-        recipeStepDtoList.add(new RecipeStepDto("Step eins",null,10000,true ));
-        recipeStepDtoList.add(new RecipeStepDto("Step zwei",null,10000,false ));
-        recipeStepDtoList.add(new RecipeStepDto("Step drei",null,-1,true ));
-        recipeStepDtoList.add(new RecipeStepDto("Step vier",null,-1,false ));
+        recipeStepDtoList.add(new RecipeStepDto("Step eins", "", 10000, true));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei", "", 10000, false));
+        recipeStepDtoList.add(new RecipeStepDto("Step drei", "", -1, true));
+        recipeStepDtoList.add(new RecipeStepDto("Step vier", "", -1, false));
 
         RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
         recipeCreateDto.setName("Name");
         recipeCreateDto.setDescription("Beschreibung");
-        recipeCreateDto.setServings((short)42);
+        recipeCreateDto.setNumberOfServings((short) 42);
 
         recipeCreateDto.setIngredients(recipeIngredientDtos);
-        recipeCreateDto.setSteps(recipeStepDtoList);
+        recipeCreateDto.setRecipeSteps(recipeStepDtoList);
         recipeCreateDto.setCategories(recipeCategoryDtoList);
 
 
@@ -304,20 +309,20 @@ class RecipeEndpointTest implements TestData {
         recipeCategoryDtoList.add(new RecipeCategoryDto(1));
 
         List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
-        recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));
-        recipeIngredientDtos.add(new RecipeIngredientDto(132,new BigDecimal(12.5),"g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(1, new BigDecimal(6), "g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132, new BigDecimal(12.5), "g"));
 
         List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
-        recipeStepDtoList.add(new RecipeStepDto("Step eins","Beschreibung von Step 1",0,true ));
-        recipeStepDtoList.add(new RecipeStepDto("Step zwei","Beschreibung von Step 2",0,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step eins", "Beschreibung von Step 1", 0, true));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei", "Beschreibung von Step 2", 0, true));
 
         RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
         recipeCreateDto.setName("Name");
         recipeCreateDto.setDescription("Beschreibung");
-        recipeCreateDto.setServings((short)42);
+        recipeCreateDto.setNumberOfServings((short) 42);
 
         recipeCreateDto.setIngredients(recipeIngredientDtos);
-        recipeCreateDto.setSteps(recipeStepDtoList);
+        recipeCreateDto.setRecipeSteps(recipeStepDtoList);
         recipeCreateDto.setCategories(recipeCategoryDtoList);
 
         RecipeCreateDto noname = new RecipeCreateDto(recipeCreateDto);
@@ -325,30 +330,30 @@ class RecipeEndpointTest implements TestData {
         RecipeCreateDto nodesc = new RecipeCreateDto(recipeCreateDto);
         nodesc.setDescription(null);
         RecipeCreateDto noservings = new RecipeCreateDto(recipeCreateDto);
-        noservings.setServings(null);
+        noservings.setNumberOfServings(null);
         RecipeCreateDto noingredient = new RecipeCreateDto(recipeCreateDto);
         noingredient.setIngredients(null);
         RecipeCreateDto nocategory = new RecipeCreateDto(recipeCreateDto);
         nocategory.setCategories(null);
         RecipeCreateDto nosteps = new RecipeCreateDto(recipeCreateDto);
-        nosteps.setSteps(null);
+        nosteps.setRecipeSteps(null);
 
-        MockHttpServletResponse nonameresponse = SimpleSend(jwttoken,noname,status().isBadRequest());
+        MockHttpServletResponse nonameresponse = SimpleSend(jwttoken, noname, status().isBadRequest());
         assertEquals(HttpStatus.BAD_REQUEST.value(), nonameresponse.getStatus());
 
-        MockHttpServletResponse nodescresponse = SimpleSend(jwttoken,nodesc,status().isBadRequest());
+        MockHttpServletResponse nodescresponse = SimpleSend(jwttoken, nodesc, status().isBadRequest());
         assertEquals(HttpStatus.BAD_REQUEST.value(), nodescresponse.getStatus());
 
-        MockHttpServletResponse noservingsresponse = SimpleSend(jwttoken,noservings,status().isBadRequest());
+        MockHttpServletResponse noservingsresponse = SimpleSend(jwttoken, noservings, status().isBadRequest());
         assertEquals(HttpStatus.BAD_REQUEST.value(), noservingsresponse.getStatus());
 
-        MockHttpServletResponse noingredientresponse = SimpleSend(jwttoken,noingredient,status().isBadRequest());
+        MockHttpServletResponse noingredientresponse = SimpleSend(jwttoken, noingredient, status().isBadRequest());
         assertEquals(HttpStatus.BAD_REQUEST.value(), noingredientresponse.getStatus());
 
-        MockHttpServletResponse nocategoryresponse = SimpleSend(jwttoken,nocategory,status().isBadRequest());
+        MockHttpServletResponse nocategoryresponse = SimpleSend(jwttoken, nocategory, status().isBadRequest());
         assertEquals(HttpStatus.BAD_REQUEST.value(), nocategoryresponse.getStatus());
 
-        MockHttpServletResponse nostepsresponse = SimpleSend(jwttoken,nosteps,status().isBadRequest());
+        MockHttpServletResponse nostepsresponse = SimpleSend(jwttoken, nosteps, status().isBadRequest());
         assertEquals(HttpStatus.BAD_REQUEST.value(), nostepsresponse.getStatus());
     }
 
@@ -397,5 +402,85 @@ class RecipeEndpointTest implements TestData {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.content", hasSize(1))) // Update to reflect the structure of the returned Page<RecipeListDto>
             .andExpect(jsonPath("$.content[0].name", is("Apfelkuchen nach Ing"))); // Update to reflect the structure of the returned RecipeListDto
+    }
+
+    @Test
+    void getGoesWellWith() throws Exception {
+        mockMvc.perform(get("/api/v1/recipes/56/goesWellWith")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.content", hasSize(3)))
+            .andExpect(jsonPath("$.content[0].name", is("Zucchini-Kartoffel")))
+            .andExpect(jsonPath("$.content[1].name", is("Bratkartoffel")))
+            .andExpect(jsonPath("$.content[2].name", is("Gratin")));
+    }
+
+    @Test
+    void getGoesWellWithEmpty() throws Exception {
+        mockMvc.perform(get("/api/v1/recipes/1/goesWellWith")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.numberOfElements", is(0)));
+    }
+
+    @Test
+    void addGoesWellWith() throws Exception {
+        String jwttoken = LoginHelper();
+
+        List<RecipeListDto> recipeListDtos = new ArrayList<>();
+        recipeListDtos.add(new RecipeListDto(1, "Kartoffeln plain", "Unterrezept für Kartoffelgerichte", 0));
+
+        String requestBody = objectMapper.writeValueAsString(recipeListDtos);
+
+        mockMvc.perform(put("/api/v1/recipes/2/goesWellWith")
+                .header(securityProperties.getAuthHeader(), jwttoken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name", is("Kartoffeln plain")));
+    }
+
+    @Test
+    void addGoesWellWithWithoutJWT() throws Exception {
+        List<RecipeListDto> recipeListDtos = new ArrayList<>();
+        recipeListDtos.add(new RecipeListDto(2, "Kartoffeln plain", "Unterrezept für Kartoffelgerichte", 0));
+
+        String requestBody = objectMapper.writeValueAsString(recipeListDtos);
+
+        mockMvc.perform(put("/api/v1/recipes/1/goesWellWith")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+            .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void forkRecipeReturnsShortRecipeandCreated() throws Exception {
+        String jwttoken = LoginHelper();
+
+        List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
+        recipeCategoryDtoList.add(new RecipeCategoryDto(1));
+
+        List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
+        recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132,new BigDecimal(12.5),"g"));
+
+        List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
+        recipeStepDtoList.add(new RecipeStepDto("Step eins","Beschreibung von Step 1",0,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei","Beschreibung von Step 2",0,true ));
+
+        RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
+        recipeCreateDto.setName("Name");
+        recipeCreateDto.setDescription("Beschreibung");
+        recipeCreateDto.setNumberOfServings((short)42);
+
+        recipeCreateDto.setIngredients(recipeIngredientDtos);
+        recipeCreateDto.setRecipeSteps(recipeStepDtoList);
+        recipeCreateDto.setCategories(recipeCategoryDtoList);
+
+        mockMvc.perform(post("/api/v1/recipes/fork/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwttoken)
+                .content(new ObjectMapper().writeValueAsString(recipeCreateDto)))
+            .andExpect(status().isCreated());
     }
 }

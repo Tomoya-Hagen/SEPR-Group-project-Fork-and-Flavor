@@ -57,7 +57,7 @@
       <h4>Allergene: </h4>
       <div>
         <span *ngFor="let allergen of recipe.allergens; let isLast=last">
-           {{ allergen.name }}{{ isLast ? '' : ', ' }}
+           {{allergen.type}}{{isLast ? '' : ', '}}
         </span>
       </div>
       <div *ngIf="recipe.allergens.length === 0">
@@ -155,19 +155,25 @@
         </button>
       </div>
     </ng-container>
-    <div style="text-align: right;position: relative; margin: 30px">
-      <button *ngIf="isOwner" type="button" class="btn btn-primary btn-sm" (click)="editRecipe()"
-              style="margin-right: 10px;">Rezept bearbeiten
-      </button>
-      <button type="button" class="btn btn-secondary btn-sm mr-4" (click)="openSpoonModal(spoonRecipeModal)"
-              style="margin-right: 10px;">Rezept spoonen
-      </button>
-      <button *ngIf="!areRatingsLoaded" type="button" class="btn btn-secondary btn-sm" (click)="loadRatings()"
-              style="margin-right: 10px;">Load Ratings
-      </button>
-      <button *ngIf="!isRatingDialogShown" type="button" class="btn btn-secondary btn-sm"
-              (click)="updateIsRatingDialogShown()">Rate Recipe
-      </button>
+
+  </div>
+
+
+  <div *ngIf="recipes && recipes.length > 0">
+    <hr class="my-4">
+    <h2>Passt gut dazu:</h2>
+    <div class="row">
+      <div class="col-lg-4 p-2" *ngFor="let item of recipes">
+        <app-card [item]="item" [detailUrlPrefix]="'/recipe/details'"></app-card>
+      </div>
+    </div>
+    <div class="navigation-bar" *ngIf="recipes && totalElements > 3">
+      <ngb-pagination
+        [collectionSize]="totalElements"
+        [(page)]="page"
+        [pageSize]="size"
+        (pageChange)="onPageChange($event)">
+      </ngb-pagination>
     </div>
   </div>
   <div>
@@ -227,3 +233,4 @@
     </div>
   </div>
 </div>
+<app-floating-menu [options]="menuOptions"></app-floating-menu>

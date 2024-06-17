@@ -24,6 +24,23 @@ spring:
     # is disabled since it breaks the principle of least astonishment and leads to bad performance. To learn more,
     # follow this link: https://bit.ly/2LaX9ku
     open-in-view: false
+  mail:
+    host: "smtp.easyname.com"
+    port: 465
+    username: "127549mail4"
+    password: "0.ln1xej23m9"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: false
+          ssl:
+            enable: true
+
+mail:
+  from-address: "no-reply.ForkAndFlavour@mpp.one"
+  frontend-url: "http://localhost:4200"
 
 security:
   auth:
