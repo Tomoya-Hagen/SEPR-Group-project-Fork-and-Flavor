@@ -246,7 +246,7 @@ public class Recipe {
         private List<WeeklyPlanner> weeklyPlanner;
         private List<RecipeIngredient> ingredients;
         private List<Recipe> recipesForkedFromThis;
-        private List <Recipe> goesWellWithRecipes = new ArrayList<>();
+        private List<Recipe> goesWellWithRecipes = new ArrayList<>();
 
         private RecipeBuilder() {
         }
