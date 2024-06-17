@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit, TemplateRef} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -18,6 +18,8 @@ import {RecipeModalComponent} from "./recipe-modal/recipe-modal.component";
   styleUrl: './recipe-detail.component.scss',
 })
 export class RecipeDetailComponent implements OnInit, OnDestroy{
+  @ViewChild('spoonRecipeModal', { static: true }) spoonRecipeModal: TemplateRef<any>;
+
   recipe: RecipeDetailDto = {
     id: 0,
     rating: 0,
@@ -56,6 +58,27 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   totalElements: number;
   page: number = 1;
   size: number = 3;
+  menuOptions = [
+    {
+      label: 'Neues Rezept erstellen',
+      action: () => this.addRecipe()
+    },
+    {
+      label: 'Rezept bearbeiten',
+      action: () => this.editRecipe(),
+      disabled: !this.isOwner
+    },
+    {
+      label: 'Rezept spoonen', buttonClass: 'info-box-3',
+      iconClass: 'info-box-3', // Use an appropriate icon class
+      action: () => this.openSpoonModal(this.spoonRecipeModal)
+    },
+    {
+      label: 'Rezepte die gut dazupassen bearbeiten',
+      action: () => this.openRecipeGoesWellWithModal(),
+      disabled: !this.isOwner
+    }
+  ];
 
   constructor(
     private service: RecipeService,
@@ -274,6 +297,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         }
       );
     });
+  }
+
+  addRecipe() {
+    this.router.navigate(['recipe/create']);
   }
 
 }
