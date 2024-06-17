@@ -264,7 +264,18 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   }
 
   onSubmitRating(form:NgForm){
-    console.log(this.rating);
+    this.ratingService.createRating(this.rating).subscribe({
+      next: () => {
+        this.notification.success(`Rating added successfully.`);
+        this.modalService.dismissAll();
+        this.currentRecipeBook=null;
+      },
+      error: error => {
+        this.notification.error(error);
+        this.defaultServiceErrorHandling(error);
+      }
+    }
+  );
   }
 
   updateIsRatingDialogShown(){

@@ -197,7 +197,7 @@
           </div>
         </div>
         <div class="cbutton">
-          <button type="submit" class="btn btn-primary">Rate Recipe</button>
+          <button [disabled]="!isFormValid()" type="submit" class="btn btn-primary">Rate Recipe</button>
         </div>
 
       </div>
