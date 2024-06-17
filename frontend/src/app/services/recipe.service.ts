@@ -111,6 +111,10 @@ export class RecipeService {
       return this.http.put<DetailedRecipeDto>(this.baseUri + '/' + recipe.id, recipe);
   }
 
+  public forkRecipe(recipe: RecipeUpdateDto): Observable<DetailedRecipeDto> {
+    return this.http.post<DetailedRecipeDto>(this.baseUri + '/fork/' + recipe.id, recipe);
+  }
+
   public getRecipeUpdateDtoById(recipeId: number): Observable<RecipeUpdateDto> {
     return this.getRecipeDetailsBy(recipeId).pipe(
       rxjsMap(existingRecipe => this.mapToUpdateDto(existingRecipe)),
