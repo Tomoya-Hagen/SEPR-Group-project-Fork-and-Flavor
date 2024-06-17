@@ -21,14 +21,14 @@ public class RatingValidator {
         LOGGER.trace("validateForCreate({})", ratingCreateDto);
         List<String> validationErrors = new ArrayList<>();
 
-        if (ratingCreateDto.cost() > 5 || ratingCreateDto.cost() < 0) {
+        if (ratingCreateDto.cost() > 5 || ratingCreateDto.cost() < 1) {
             validationErrors.add("The rating of cost can only be a value from 0 to 5");
         }
 
-        if (ratingCreateDto.easeOfPrep() > 5 || ratingCreateDto.easeOfPrep() < 0) {
+        if (ratingCreateDto.easeOfPrep() > 5 || ratingCreateDto.easeOfPrep() < 1) {
             validationErrors.add("The rating of ease of preparation can only be a value from 0 to 5");
         }
-        if (ratingCreateDto.taste() > 5 || ratingCreateDto.taste() < 0) {
+        if (ratingCreateDto.taste() > 5 || ratingCreateDto.taste() < 1) {
             validationErrors.add("The rating of taste can only be a value from 0 to 5");
         }
 
