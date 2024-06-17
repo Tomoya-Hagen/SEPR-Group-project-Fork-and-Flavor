@@ -92,3 +92,17 @@ h4.rec-step span {
   height: 10px;
   margin-right: 8px;
 }
+
+.ratingsSummary {
+  font-size: 18px;
+  text-align: center;
+  border: 3px solid var(--acent-color);
+  margin: 20px auto;
+  padding: 15px;
+  width: 300px;
+  cursor: pointer;
+}
+
+.ratingsSummary span {
+  font-size: 20px;
+}

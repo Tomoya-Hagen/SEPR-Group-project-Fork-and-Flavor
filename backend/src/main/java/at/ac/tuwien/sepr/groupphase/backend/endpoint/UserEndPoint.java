@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordChangeDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;

@@ -41,7 +41,6 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     private final RecipeBookValidator recipeBookValidator;
     private final UserManager userManager;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final UserManager userManager;
 
     public RecipeBookServiceImpl(RecipeBookRepository recipeBookRepository,
                                  RecipeMapper recipeMapper,

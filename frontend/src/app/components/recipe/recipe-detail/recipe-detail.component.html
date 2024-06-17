@@ -233,4 +233,20 @@
     </div>
   </div>
 </div>
+
+<br><br>
+<div *ngIf="!areRatingsLoaded" (click)="loadRatings()" class="ratingsSummary">
+  Kosten: <app-star-rating [disabled]="true" [value]="recipe.rating"></app-star-rating><br>
+  Geschmack: <app-star-rating [disabled]="true" [value]="recipe.rating"></app-star-rating><br>
+  Zubereitung: <app-star-rating [disabled]="true" [value]="recipe.rating"></app-star-rating><br><br>
+  <span>Alle Bewertungen anzeigen</span>
+</div>
+<button *ngIf="!areRatingsLoaded" type="button" class="btn btn-secondary btn-sm" (click)="loadRatings()"
+        style="margin-right: 10px;">Bewertungen anzeigen
+</button>
+<button *ngIf="!isRatingDialogShown" type="button" class="btn btn-secondary btn-sm"
+        (click)="updateIsRatingDialogShown()">Rate Recipe
+</button>
+
+
 <app-floating-menu [options]="menuOptions"></app-floating-menu>
