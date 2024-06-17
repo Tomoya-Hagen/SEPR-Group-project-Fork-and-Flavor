@@ -124,7 +124,20 @@ public class RecipeEndpoint {
             HttpStatus status = HttpStatus.BAD_REQUEST;
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
+    }
 
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/fork/{id}")
+    @Operation(summary = "Fork a new Recipe", security = @SecurityRequirement(name = "apiKey"))
+    public DetailedRecipeDto fork(@Valid @RequestBody RecipeCreateDto recipeDto, @PathVariable("id") int id) {
+        LOGGER.info("POST /api/v1/recipe body: {}", recipeDto);
+        try {
+            return recipeService.forkRecipe(recipeDto, id);
+        } catch (ValidationException | RecipeStepNotParsableException | RecipeStepSelfReferenceException e) {
+            HttpStatus status = HttpStatus.BAD_REQUEST;
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
     }
 
     @PermitAll

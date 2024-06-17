@@ -34,6 +34,15 @@ public interface RecipeService {
     DetailedRecipeDto createRecipe(RecipeCreateDto recipe) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException;
 
     /**
+     * Forks an existing recipe.
+     *
+     * @param recipe to create
+     * @param forkid id to parent recipe
+     * @return created recipe entry
+     */
+    DetailedRecipeDto forkRecipe(RecipeCreateDto recipe, int forkid) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException;
+
+    /**
      * Find all recipes having a name like name.
      *
      * @param name name of recipes to find
