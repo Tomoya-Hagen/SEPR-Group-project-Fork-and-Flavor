@@ -97,13 +97,4 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     @Query("SELECT r FROM Recipe r WHERE r.owner.id = :ownerId ")
     List<Recipe> findRecipesByOwnerId(@Param("ownerId") long ownerId);
-
-    /**
-     * This method finds all recipes that go well with the given recipe id.
-     *
-     * @param recipeId represents the id of a recipe.
-     * @return a page of recipes that go well with the given recipe id.
-     */
-    @Query("SELECT r FROM Recipe r JOIN r.goesWellWithRecipes gwwr WHERE gwwr.id = :recipeId")
-    Page<Recipe> findRecipesThatGoWellWith(@Param("recipeId") Long recipeId, Pageable pageable);
 }

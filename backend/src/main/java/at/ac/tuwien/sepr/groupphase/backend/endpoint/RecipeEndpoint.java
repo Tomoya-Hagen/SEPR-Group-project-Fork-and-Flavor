@@ -86,7 +86,7 @@ public class RecipeEndpoint {
     }
 
     @PermitAll
-    @GetMapping(value = "/goesWellWith/{id}")
+    @GetMapping(value = "/{id}/goesWellWith")
     @Operation(summary = "Get recipes that go well with the recipe with the given id")
     public Page<RecipeListDto> goesWellWith(@PathVariable(name = "id") Long id,
                                             @RequestParam(name = "page", defaultValue = "0") int page,

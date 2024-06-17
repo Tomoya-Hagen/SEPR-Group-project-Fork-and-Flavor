@@ -13,9 +13,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import lombok.Getter;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,11 +98,6 @@ public class Recipe {
     private List<Recipe> recipesForkedFromThis = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "recipe_goes_well_with_recipe",
-        joinColumns = @JoinColumn(name = "recipe_id"),
-        inverseJoinColumns = @JoinColumn(name = "goes_well_with_recipe_id")
-    )
     private List<Recipe> goesWellWithRecipes = new ArrayList<>();
 
     public void setGoesWellWithRecipes(List<Recipe> goesWellWithRecipes) {

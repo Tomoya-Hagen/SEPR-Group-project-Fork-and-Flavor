@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs/internal/Observable';
-import { RecipeDetailDto } from 'src/app/dtos/recipe';
+import {Recipe, RecipeDetailDto, RecipeListDto} from 'src/app/dtos/recipe';
 import { RecipeBookListDto } from 'src/app/dtos/recipe-book';
 import { RecipeStepDetailDto, RecipeStepRecipeDetailDto } from 'src/app/dtos/recipe-step';
 import { RecipeService } from 'src/app/services/recipe.service';
@@ -51,6 +51,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   showNutrition: boolean = false;
   screenWidth: number;
   isOwner: boolean = false;
+  recipes: Recipe[] = [];
+  totalElements: number;
+  page: number = 1;
+  size: number = 3;
 
   constructor(
     private service: RecipeService,
@@ -76,6 +80,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           this.getForkedFromRecipeName();
           this.isCurrentUserOwner();
           this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
+          this.onPageChange(1);
         },
         error: error => {
           console.error('Error fetching recipe', error);
@@ -227,6 +232,29 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         this.isOwner = true;
       }
     });
+  }
+
+  async getRecipesGoingWellTogether(): Promise<void> {
+    const data = this.service.getGoesWellWidth(this.recipe.id, this.page - 1, this.size)
+      .subscribe( {
+        next: (data: any) : void => {
+          this.recipes = data.content;
+          this.totalElements = data.totalElements;
+        },
+        error: error => {
+          console.error('Error fetching recipes.', error);
+          this.notification.error('Rezepte können nicht abgerufen werden.', 'Backend Fehler - Rezepte');
+        }
+    })
+  }
+
+  onPageChange(pageNumber: number): void {
+    this.page = pageNumber;
+    this.getRecipesGoingWellTogether().then(r => {});
+  }
+
+  detail(id: number): void {
+    this.router.navigate(['/recipe/details', id]);
   }
 
 }

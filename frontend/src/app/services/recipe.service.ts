@@ -60,6 +60,14 @@ export class RecipeService {
       );
   }
 
+  getGoesWellWidth(id: number, page: number, size: number): Observable<Page<Recipe>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<Page<Recipe>>(this.baseUri + '/' + id + '/goesWellWith', { params });
+  }
+
   getRecipes(name: string, page: number, size: number): Observable<Page<Recipe>> {
     let params = new HttpParams()
       .set('name', name)

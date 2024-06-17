@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Transactional
@@ -101,13 +103,21 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     public Page<RecipeListDto> getRecipesThatGoWellWith(long id, Pageable pageable) throws NotFoundException {
-        recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
-        Page<Recipe> recipePage =  recipeRepository.findRecipesThatGoWellWith(id, pageable);
+        Recipe origRecipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
+        List<Recipe> goWellWith = origRecipe.getGoesWellWithRecipes();
 
-        return recipePage.map(recipe -> {
-            Long rating = calculateAverageTasteRating(recipe.getRatings());
-            return recipeMapper.recipeToRecipeListDto(recipe, rating);
-        });
+        List<RecipeListDto> recipeListDtos = goWellWith.stream()
+            .map(recipe -> {
+                Long rating = calculateAverageTasteRating(recipe.getRatings());
+                return recipeMapper.recipeToRecipeListDto(recipe, rating);
+            })
+            .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), recipeListDtos.size());
+        List<RecipeListDto> subList = recipeListDtos.subList(start, end);
+
+        return new PageImpl<>(subList, pageable, recipeListDtos.size());
     }
 
 
