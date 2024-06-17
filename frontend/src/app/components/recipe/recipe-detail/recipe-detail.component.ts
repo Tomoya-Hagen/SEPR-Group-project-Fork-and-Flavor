@@ -84,6 +84,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           this.changeNutritionsToGramm();
           this.getForkedFromRecipeName();
           this.isCurrentUserOwner();
+          this.orderNutritions();
           console.log("recipes forked from this: " + this.recipe.forkedRecipes);
           if (this.recipe.forkedRecipes.length > 0) {
             this.hasForkedRecipes = true;
@@ -123,6 +124,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
       ...nutrition,
       value: this.roundTo(nutrition.value * ratio)
     }));
+  }
+
+  orderNutritions(): void {
+    this.recipe.nutritions.sort((a, b) => a.id - b.id);
+    this.adjustedNutritions.sort((a, b) => a.id - b.id);
   }
 
   isRecipeDescriptionStep(recipeStep: any): boolean {

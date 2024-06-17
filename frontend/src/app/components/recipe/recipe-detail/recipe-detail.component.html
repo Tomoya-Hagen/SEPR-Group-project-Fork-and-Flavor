@@ -67,8 +67,11 @@
     </div>
     <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: #08688e;" *ngIf="hasForkedRecipes">
       <h4>Hiervon geforkt:</h4>
-      <div *ngFor="let forkedRecipe of recipe.forkedRecipes; let isLast=last">
-        <span>{{forkedRecipe}}{{isLast ? '' : ', '}}</span>
+      <div>
+        <span *ngFor="let forkedRecipe of recipe.forkedRecipes.slice(0, 5); let last = last">
+          {{forkedRecipe}}{{last && recipe.forkedRecipes.length <= 5 ? '' : ', '}}
+        </span>
+        <span *ngIf="recipe.forkedRecipes.length > 5">...</span>
       </div>
     </div>
     <div class="info-box info-box-5 clickable" *ngIf="screenWidth <= 767" style="box-shadow: 0 0 10px rgba(111, 66, 193, 0); background-color: rgba(111, 66, 193, 1);" (click)="toggleNutrition()">
