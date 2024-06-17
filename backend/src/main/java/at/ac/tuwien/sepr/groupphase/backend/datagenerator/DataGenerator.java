@@ -477,9 +477,12 @@ public class DataGenerator implements CommandLineRunner {
                 if (fields.size() == 2) {
                     Long recipe1Id = Long.parseLong(fields.get(0));
                     Long recipe2Id = Long.parseLong(fields.get(1));
+                    if (skippedRecipes.contains(recipe1Id) || skippedRecipes.contains(recipe2Id)) {
+                        continue;
+                    }
                     Recipe recipe1 = recipeRepository.findById(idMap.get(recipe1Id)).orElse(null);
                     Recipe recipe2 = recipeRepository.findById(idMap.get(recipe2Id)).orElse(null);
-                    if (recipe1 != null && recipe2 != null && !skippedRecipes.contains(recipe1Id) && !skippedRecipes.contains(recipe2Id)) {
+                    if (recipe1 != null && recipe2 != null) {
                         recipe1.getGoesWellWithRecipes().add(recipe2);
                         recipeRepository.save(recipe1);
                         recipeRepository.flush();
