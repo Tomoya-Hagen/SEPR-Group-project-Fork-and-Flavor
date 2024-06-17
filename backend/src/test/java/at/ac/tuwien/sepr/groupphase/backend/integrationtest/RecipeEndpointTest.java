@@ -409,7 +409,7 @@ class RecipeEndpointTest implements TestData {
         mockMvc.perform(get("/api/v1/recipes/1/goesWellWith")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content", hasSize(0)));
+            .andExpect(jsonPath("$.numberOfElements", is(0)));
     }
 
     @Test
@@ -417,16 +417,16 @@ class RecipeEndpointTest implements TestData {
         String jwttoken = LoginHelper();
 
         List<RecipeListDto> recipeListDtos = new ArrayList<>();
-        recipeListDtos.add(new RecipeListDto(2, "Kartoffeln plain", "Unterrezept für Kartoffelgerichte", 0));
+        recipeListDtos.add(new RecipeListDto(1, "Kartoffeln plain", "Unterrezept für Kartoffelgerichte", 0));
 
         String requestBody = objectMapper.writeValueAsString(recipeListDtos);
 
-        mockMvc.perform(put("/api/v1/recipes/1/goesWellWith")
+        mockMvc.perform(put("/api/v1/recipes/2/goesWellWith")
                 .header(securityProperties.getAuthHeader(), jwttoken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name", is("Spagehtti plain")));
+            .andExpect(jsonPath("$.name", is("Kartoffeln plain")));
     }
 
     @Test
