@@ -23,6 +23,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeStepRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -82,6 +83,7 @@ public class DataGenerator implements CommandLineRunner {
         this.idMap = new HashMap<>();
     }
 
+    @Transactional
     @Override
     public void run(String... args) throws Exception {
         generateUserData();
@@ -94,6 +96,7 @@ public class DataGenerator implements CommandLineRunner {
         generateRecipeCategories();
         generateRecipeSteps();
         generateRecipeBooks();
+        generateGoesWellWidth();
     }
 
     private void generateUserData() {
@@ -461,6 +464,32 @@ public class DataGenerator implements CommandLineRunner {
             throw new RuntimeException(e);
         }
         recipeBookRepository.flush();
+    }
+
+    @Transactional
+    protected void generateGoesWellWidth() {
+        recipeRepository.flush();
+        Resource resource = resourceLoader.getResource("classpath:recipeGoesWellWith.csv");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                List<String> fields = parseCsvLine(line, ',');
+                if (fields.size() == 2) {
+                    Long recipe1Id = Long.parseLong(fields.get(0));
+                    Long recipe2Id = Long.parseLong(fields.get(1));
+                    Recipe recipe1 = recipeRepository.findById(idMap.get(recipe1Id)).orElse(null);
+                    Recipe recipe2 = recipeRepository.findById(idMap.get(recipe2Id)).orElse(null);
+                    if (recipe1 != null && recipe2 != null && !skippedRecipes.contains(recipe1Id) && !skippedRecipes.contains(recipe2Id)) {
+                        recipe1.getGoesWellWithRecipes().add(recipe2);
+                        recipeRepository.save(recipe1);
+                        recipeRepository.flush();
+                    }
+                }
+
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private List<String> parseCsvLine(String line, char separator) {
