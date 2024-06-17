@@ -88,7 +88,28 @@ public class RecipeServiceImpl implements RecipeService {
         ArrayList<Allergen> allergens = new ArrayList<>();
         getRecipeDetails(recipe, ingredients, nutritions, allergens, recursive);
         long rating = calculateAverageTasteRating(recipe.getRatings());
-        return recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
+        RecipeDetailDto result = recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
+
+        List<Recipe> forkedRecipes = recipeRepository.findAllForkedRecipesById(id);
+        ArrayList<String> forkedRecipeNames = new ArrayList<>();
+        for (Recipe forkedRecipe : forkedRecipes) {
+            forkedRecipeNames.add(forkedRecipe.getName());
+        }
+        return new RecipeDetailDto(
+            result.id(),
+            result.name(),
+            result.description(),
+            result.numberOfServings(),
+            result.forkedFromId(),
+            result.ownerId(),
+            result.categories(),
+            result.isDraft(),
+            result.recipeSteps(),
+            result.ingredients(),
+            result.allergens(),
+            result.nutritions(),
+            forkedRecipeNames
+        );
     }
 
     @Override

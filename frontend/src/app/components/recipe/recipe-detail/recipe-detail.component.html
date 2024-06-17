@@ -42,7 +42,7 @@
     </div>
     <div class="info-box info-box-2">
       <h4>Portionen:</h4>
-      {{recipe.numberOfServings}}
+      <input type="number" [(ngModel)]="selectedPortions" (ngModelChange)="onPortionsChange()" class="input-width" min="1" max="10">
     </div>
     <div class="info-box info-box-3" *ngIf="isCategoriesNotEmpty()">
       <h4>Kategorien:</h4>
@@ -61,17 +61,23 @@
         none
       </div>
     </div>
-    <div class="info-box info-box-5 clickable" *ngIf="screenWidth <= 767" style="box-shadow: 0 0 10px rgba(111, 66, 193, 0); background-color: rgba(111, 66, 193, 1);" (click)="toggleNutrition()">
-      <h4>Nährwerte:</h4>
-      Click to Show
-    </div>
     <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--acent-color);" *ngIf="isForkedFromRecipe()">
       <h4>Geforkt von:</h4>
+      <span>{{recipeForkedFrom}}</span>
+    </div>
+    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: #08688e;" *ngIf="hasForkedRecipes">
+      <h4>Hiervon geforkt:</h4>
       <div>
-        <span *ngFor="let forkedFrom of recipeForkedFrom; let isLast=last">
-           {{recipeForkedFrom}}{{isLast ? '' : ', '}}
+        <span *ngFor="let forkedRecipe of recipe.forkedRecipes.slice(0, 5); let last = last">
+          {{forkedRecipe}}{{last && recipe.forkedRecipes.length <= 5 ? '' : ', '}}
         </span>
+        <span *ngIf="recipe.forkedRecipes.length > 5">...</span>
       </div>
+    </div>
+    <div class="info-box info-box-5 clickable" *ngIf="screenWidth <= 767" style="box-shadow: 0 0 10px rgba(111, 66, 193, 0); background-color: rgba(111, 66, 193, 1);" (click)="toggleNutrition()">
+      <h4>Nährwerte:</h4>
+        <span *ngIf="!showNutrition">Zeigen</span>
+        <span *ngIf="showNutrition">Verstecken</span>
     </div>
   </div>
 
@@ -147,7 +153,7 @@
         <button *ngIf="step.recipe && step.expanded" type="button" class="btn btn-primary btn-sm" (click)="navigateToDetailsInNewTab(step.recipe.id)">zum Unterrezept</button>
       </div>
     </ng-container>
-      <div style="text-align: right;position: relative; margin: 30px">
+      <div style="text-align: left;position: relative;">
         <button *ngIf="isOwner" type="button" class="btn btn-primary btn-sm" (click)="editRecipe()" style="margin-right: 10px;">Rezept bearbeiten</button>
         <button type="button" class="btn btn-secondary btn-sm m-4" (click)="openSpoonModal(spoonRecipeModal)">Rezept spoonen</button>
         <button type="button" class="btn btn-secondary btn-sm" (click)="fork()">Rezept forken</button>

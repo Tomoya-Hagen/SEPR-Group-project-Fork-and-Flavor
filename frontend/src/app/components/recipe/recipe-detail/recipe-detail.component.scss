@@ -47,3 +47,9 @@ h4.rec-step span {
   display: flex;
   align-items: center;
 }
+
+.input-width {
+  width: 50%;
+  max-width: 50px;
+  box-sizing: border-box;
+}
