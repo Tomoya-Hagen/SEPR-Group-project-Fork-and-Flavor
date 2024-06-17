@@ -1,0 +1,10 @@
+.star {
+    color: lightgrey;
+    cursor: pointer;
+
+    &.rated {
+        color: yellow;
+    }
+
+    transition: color 0.2s ease-in-out;
+}
