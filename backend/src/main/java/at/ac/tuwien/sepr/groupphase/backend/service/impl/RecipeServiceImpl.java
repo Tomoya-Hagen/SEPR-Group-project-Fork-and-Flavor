@@ -108,8 +108,36 @@ public class RecipeServiceImpl implements RecipeService {
 
         recipeValidator.validateCreate(recipeDto);
 
+        Recipe simple = recipeMapper.recipeparsesimple(recipeDto);
+        ApplicationUser owner = userManager.getCurrentUser();
+        simple.setOwner(owner);
+        recipeRepository.save(simple);
+
+        Recipe recipe = recipeMapper.recipeCreateDtoToRecipe(recipeDto, simple.getId());
+
+        List<Category> categories = new ArrayList<>();
+        for (Category category : recipe.getCategories()) {
+            categories.add(categoryRepository.getById(category.getId()));
+        }
+        simple.setIngredients(recipe.getIngredients());
+        simple.setCategories(categories);
+        simple.setRecipeSteps(recipe.getRecipeSteps());
+
+
+        recipeRepository.save(simple);
+        var x = recipeMapper.recipeToDetailedRecipeDto(simple);
+        return x;
+    }
+
+    @Override
+    public DetailedRecipeDto forkRecipe(RecipeCreateDto recipeDto, int forkid) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException {
+        LOGGER.debug("Publish new message {}", recipeDto);
+
+        recipeValidator.validateCreate(recipeDto);
 
         Recipe simple = recipeMapper.recipeparsesimple(recipeDto);
+        Recipe forked = recipeRepository.getRecipeById(forkid).orElseThrow(NotFoundException::new);
+        simple.setForkedFrom(forked);
         ApplicationUser owner = userManager.getCurrentUser();
         simple.setOwner(owner);
         recipeRepository.save(simple);

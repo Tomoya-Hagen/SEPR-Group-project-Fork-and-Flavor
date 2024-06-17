@@ -57,7 +57,7 @@ export class RecipeCreateComponent implements OnInit {
     category : '',
     recipestep: []
   }
-  mode: 'create' | 'edit' = 'create';
+  mode: 'create' | 'edit' | "fork" = 'create';
 
   constructor(
     private recipeService: RecipeService,
@@ -100,11 +100,16 @@ export class RecipeCreateComponent implements OnInit {
       )
       .subscribe();
 
+    console.log(this.route.snapshot.url[0].path === "fork")
     const id = this.route.snapshot.params['id'];
     if(!id){
       this.mode = "create";
-    } else{
+    } else if (this.route.snapshot.url[0].path === "edit"){
       this.mode = "edit";
+    } else if(this.route.snapshot.url[0].path === "fork"){
+      this.mode = "fork";
+    } else{
+     this.router.navigate(["/home"]);
     }
 
     this.ingredientService.allingredients().subscribe({
@@ -137,7 +142,7 @@ export class RecipeCreateComponent implements OnInit {
       }
     });
 
-    if(this.mode == 'edit'){
+    if(this.mode == 'edit' || this.mode == "fork"){
       this.recipeService.getRecipeEditDtoById(id).subscribe(recipe => {
         this.recipe.name = recipe.name;
         this.recipe.description = recipe.description;
@@ -193,8 +198,17 @@ export class RecipeCreateComponent implements OnInit {
     } else if(this.mode === "edit"){
       this.recipeService.updateRecipe(this.convertToRecipeUpdateDto(this.recipe,this.route.snapshot.params['id']) ).subscribe({
           next: (detrecipe: DetailedRecipeDto) => {
-            // this.notification.info('Update successful!');
             this.router.navigate(['/recipe/details/' + this.route.snapshot.params['id']]);
+          },
+          error: error => {
+            this.defaultServiceErrorHandling(error);
+          }
+        }
+      );
+    } else if(this.mode === "fork"){
+      this.recipeService.forkRecipe(this.convertToRecipeUpdateDto(this.recipe,this.route.snapshot.params['id']) ).subscribe({
+          next: (detrecipe: DetailedRecipeDto) => {
+            this.router.navigate(['/recipe/details/' + detrecipe.id]);
           },
           error: error => {
             this.defaultServiceErrorHandling(error);
