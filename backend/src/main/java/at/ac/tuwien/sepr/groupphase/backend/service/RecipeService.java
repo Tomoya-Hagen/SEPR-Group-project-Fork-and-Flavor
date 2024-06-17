@@ -62,6 +62,16 @@ public interface RecipeService {
     RecipeDetailDto getRecipeDetailDtoById(long id, boolean recursive) throws NotFoundException;
 
     /**
+     * finds recipes that go well with the given recipe id.
+     *
+     * @param id represents the id of a recipe.
+     * @param pageable the page information.
+     * @return a RecipeDetailDto if a recipe with the given id exists.
+     * @throws NotFoundException if no recipe with the given id was found.
+     */
+    Page<RecipeListDto> getRecipesThatGoWellWith(long id, Pageable pageable) throws NotFoundException;
+
+    /**
      * Updates recipe with the given recipeDetailDto.
      *
      * @param recipeUpdateDto contains the values to update recipe with

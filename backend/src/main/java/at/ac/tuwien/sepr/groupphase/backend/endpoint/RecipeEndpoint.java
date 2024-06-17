@@ -85,6 +85,22 @@ public class RecipeEndpoint {
         }
     }
 
+    @PermitAll
+    @GetMapping(value = "/goesWellWith/{id}")
+    @Operation(summary = "Get recipes that go well with the recipe with the given id")
+    public Page<RecipeListDto> goesWellWith(@PathVariable(name = "id") Long id,
+                                            @RequestParam(name = "page", defaultValue = "0") int page,
+                                            @RequestParam(name = "size", defaultValue = "3") int size) {
+        LOGGER.info("GET /api/v1/recipe/goesWellWith/{}", id);
+        try {
+            return recipeService.getRecipesThatGoWellWith(id, PageRequest.of(page, size));
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no recipe found by the given is", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+    }
+
     /**
      * This function updates the recipe with the values specified by the given parameter.
      *

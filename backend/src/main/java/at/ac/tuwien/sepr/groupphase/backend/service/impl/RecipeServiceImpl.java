@@ -24,7 +24,6 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableExcep
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import jakarta.validation.Valid;
@@ -94,6 +93,16 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Page<RecipeListDto> getRecipesByName(String name, Pageable pageable) {
         Page<Recipe> recipePage = recipeRepository.findByNameContainingIgnoreCase(name, pageable);
+
+        return recipePage.map(recipe -> {
+            Long rating = calculateAverageTasteRating(recipe.getRatings());
+            return recipeMapper.recipeToRecipeListDto(recipe, rating);
+        });
+    }
+
+    public Page<RecipeListDto> getRecipesThatGoWellWith(long id, Pageable pageable) throws NotFoundException {
+        recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
+        Page<Recipe> recipePage =  recipeRepository.findRecipesThatGoWellWith(id, pageable);
 
         return recipePage.map(recipe -> {
             Long rating = calculateAverageTasteRating(recipe.getRatings());
