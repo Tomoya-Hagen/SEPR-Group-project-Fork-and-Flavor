@@ -69,8 +69,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
       disabled: !this.isOwner
     },
     {
+      label: 'Rezept forken',
+      action: () => this.fork()
+    },
+    {
       label: 'Rezept spoonen', buttonClass: 'info-box-3',
-      iconClass: 'info-box-3', // Use an appropriate icon class
+      iconClass: 'info-box-3',
       action: () => this.openSpoonModal(this.spoonRecipeModal)
     },
     {
