@@ -1,7 +1,8 @@
 <form class="create-height" #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
   <div class="container mt-5">
-    <h1 class="text-center mb-4" *ngIf="mode==='create'">Recipe Creator</h1>
-    <h1 class="text-center mb-4" *ngIf="mode==='edit'">Recipe Editor</h1>
+    <h1 class="text-center mb-4" *ngIf="mode==='create'">Rezept Erstellung</h1>
+    <h1 class="text-center mb-4" *ngIf="mode==='edit'">Rezept Bearbeitung</h1>
+    <h1 class="text-center mb-4" *ngIf="mode==='fork'">Rezept Forken</h1>
     <div class="row rec-create">
       <div class="col-md-6 border inner-create-height">
         <div class="row">
@@ -14,7 +15,7 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="servings">Servings</label>
+              <label for="servings">Portionen</label>
               <input [(ngModel)]="recipe.numberOfServings" name="servings" type="number" class="form-control" id="servings"
                      placeholder="6" required>
             </div>
@@ -22,7 +23,7 @@
         </div>
         <div class="col-md-12">
           <div class="form-group">
-            <label for="description">Description</label>
+            <label for="description">Beschreibung</label>
             <input [(ngModel)]="recipe.description" name="description" type="text" class="form-control" id="description"
                    placeholder="Dies sind die besten Wraps meiner Oma. Wir aßen sie immer im jardín!" required>
           </div>
@@ -31,7 +32,7 @@
           <div class="row">
             <div class="col-lg-8 col-md-6 col-sm-12">
               <div ngbDropdown>
-                <label for="inputingredient">Ingredients</label>
+                <label for="inputingredient">Zutaten</label>
                 <input name="inputingredient" id="inputingredient" type="text" [(ngModel)]="input.ingredient"
                        (ngModelChange)="ingredientChanged()" class="form-control col-md-12 " ngbDropdownToggle>
                 <div ngbDropdownMenu aria-labelledby="inputingredient" class="col-md-12 overflow-auto">
@@ -51,7 +52,7 @@
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12">
               <div ngbDropdown>
-                <label for="inputcategory">Category</label>
+                <label for="inputcategory">Kategorien</label>
                 <input name="inputcategory" id="inputcategory" type="text" [(ngModel)]="input.category"
                        (ngModelChange)="categoryChanged()" class="form-control col-md-12" ngbDropdownToggle>
                 <div ngbDropdownMenu aria-labelledby="inputcategory" class="col-md-12 overflow-auto">
@@ -81,15 +82,15 @@
       <div class="col-md-6 border overflow-auto inner-create-height">
 
         <div class="col-md-12 d-flex justify-content-around mt-3">
-          <button (click)="addRecipeStep()" type='button' class="btn btn-outline-primary p-2">Add Recipe-Step</button>
-          <button (click)="addDescriptioneStep()" type='button' class="btn btn-outline-primary p-2">Add Description-Step
+          <button (click)="addRecipeStep()" type='button' class="btn btn-outline-primary p-2">Füge Rezept-Schritt hinzu</button>
+          <button (click)="addDescriptioneStep()" type='button' class="btn btn-outline-primary p-2">Füge Beschreibungs-Schritt hinzu
           </button>
         </div>
         <div class="row m-2 p-1 g-1" [ngClass]="this.recipe.recipeSteps[i].whichstep ? 'recipe-step' : 'sub-recipe'"
              *ngFor="let step of recipe.recipeSteps; let i = index">
           <div  class="col-lg-10 col-9 " id="fullrecipestep{{i}}">
             <div class="form-group">
-              <label for="stepname{{i}}">Step-Name</label>
+              <label for="stepname{{i}}">Schritt-Name</label>
               <input required type="text" class="form-control" id="stepname{{i}}" placeholder="Enter Name"
                      [(ngModel)]="recipe.recipeSteps[i].name" name="stepname{{i}}">
             </div>
@@ -97,7 +98,7 @@
               <div class="form-group"
                    [ngClass]="recipe.recipeSteps[i].whichstep === null ? 'col-md-9' : 'col-md-12'"
                    *ngIf="recipe.recipeSteps[i].whichstep === null ? true : recipe.recipeSteps[i].whichstep">
-                <label for="instructions{{i}}">Instructions</label>
+                <label for="instructions{{i}}">Anweisungen</label>
                 <textarea
                   [(ngModel)]="recipe.recipeSteps[i].description"
                   name="instructions{{i}}"
@@ -111,7 +112,7 @@
                    [ngClass]="recipe.recipeSteps[i].whichstep === null ? 'col-md-3' : 'col-md-12'"
                    *ngIf="recipe.recipeSteps[i].whichstep === null ? true : !recipe.recipeSteps[i].whichstep">
                 <div ngbDropdown class="col-md-12">
-                  <label for="inputrecipestep{{i}}" required>Recipe</label>
+                  <label for="inputrecipestep{{i}}" required>Rezept</label>
                   <input name="inputrecipestep{{i}}" id="inputrecipestep{{i}}" type="text"
                          [(ngModel)]="this.input.recipestep[i]" (ngModelChange)="recipestepChanged(i)"
                          class="form-control col-md-12" ngbDropdownToggle>
@@ -135,9 +136,9 @@
       </div>
 
       <div class="my-3">
-        <button type="submit" class="btn btn-primary" *ngIf="mode==='create'">Create Recipe</button>
-        <button type="submit" class="btn btn-primary" *ngIf="mode==='edit'">Edit Recipe</button>
-
+        <button type="submit" class="btn btn-primary" *ngIf="mode==='create'">Erstellen</button>
+        <button type="submit" class="btn btn-primary" *ngIf="mode==='edit'">Bearbeiten</button>
+        <button type="submit" class="btn btn-primary" *ngIf="mode==='fork'">Forken</button>
       </div>
 
     </div>

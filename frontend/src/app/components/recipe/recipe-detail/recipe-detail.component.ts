@@ -132,6 +132,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     this.modalService.open(spoonModal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
+  fork() {
+    this.router.navigate(["/recipe/fork/" + this.recipe.id])
+  }
+
   spoon(form) {
     this.submitted = true;
 

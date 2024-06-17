@@ -5,6 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
@@ -43,6 +44,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -388,5 +390,36 @@ class RecipeEndpointTest implements TestData {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.content", hasSize(1))) // Update to reflect the structure of the returned Page<RecipeListDto>
             .andExpect(jsonPath("$.content[0].name", is("Apfelkuchen nach Ing"))); // Update to reflect the structure of the returned RecipeListDto
+    }
+
+    @Test
+    public void forkRecipeReturnsShortRecipeandCreated() throws Exception {
+        String jwttoken = LoginHelper();
+
+        List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
+        recipeCategoryDtoList.add(new RecipeCategoryDto(1));
+
+        List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
+        recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132,new BigDecimal(12.5),"g"));
+
+        List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
+        recipeStepDtoList.add(new RecipeStepDto("Step eins","Beschreibung von Step 1",0,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei","Beschreibung von Step 2",0,true ));
+
+        RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
+        recipeCreateDto.setName("Name");
+        recipeCreateDto.setDescription("Beschreibung");
+        recipeCreateDto.setNumberOfServings((short)42);
+
+        recipeCreateDto.setIngredients(recipeIngredientDtos);
+        recipeCreateDto.setRecipeSteps(recipeStepDtoList);
+        recipeCreateDto.setCategories(recipeCategoryDtoList);
+
+        mockMvc.perform(post("/api/v1/recipes/fork/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwttoken)
+                .content(new ObjectMapper().writeValueAsString(recipeCreateDto)))
+            .andExpect(status().isCreated());
     }
 }
