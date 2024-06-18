@@ -24,6 +24,8 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceExc
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
@@ -73,6 +75,8 @@ public class RecipeServiceImpl implements RecipeService {
         this.recipeValidator = recipeValidator;
         this.userManager = userManager;
     }
+
+
 
     @Override
     public RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException {
@@ -186,8 +190,13 @@ public class RecipeServiceImpl implements RecipeService {
         simple.setCategories(categories);
         simple.setRecipeSteps(recipe.getRecipeSteps());
 
-
         recipeRepository.save(simple);
+
+        if (!owner.getCook()) {
+            owner.addRole(roleRepository.getById(4L));
+            emailService.sendSimpleEmail(owner.getEmail(), "Neuer Badge", "Gratulation, du bist jetzt Cook!");
+        }
+
         var x = recipeMapper.recipeToDetailedRecipeDto(simple);
         return x;
     }
