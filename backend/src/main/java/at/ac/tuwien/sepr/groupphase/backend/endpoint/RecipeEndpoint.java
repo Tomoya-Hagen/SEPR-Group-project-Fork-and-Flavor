@@ -1,18 +1,17 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
-import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.PermitAll;
@@ -26,11 +25,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -136,11 +135,15 @@ public class RecipeEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/simple")
     @Operation(summary = "Getting simple recipes", security = @SecurityRequirement(name = "apiKey"))
-    public Stream<SimpleRecipeResultDto> get(@RequestParam("name") String name, @RequestParam("limit") int limit) {
-        LOGGER.info("POST /api/v1/recipe params: {} {}", name, limit);
-        return recipeService.byname(name, limit);
+    public Stream<SimpleRecipeResultDto> get(@RequestParam("name") String name, @RequestParam("categoryId") long categoryId, @RequestParam("limit") int limit) {
+        LOGGER.info("POST /api/v1/recipe params: {} {} {}", name, categoryId, limit);
+        RecipeSearchDto searchDto = new RecipeSearchDto(name, categoryId);
+        if (categoryId !=0) {
+            return recipeService.bynamecategories(searchDto, limit);
+        } else {
+            return recipeService.byname(name, limit);
+        }
     }
-
 
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
@@ -174,12 +177,18 @@ public class RecipeEndpoint {
     @GetMapping
     @Operation(summary = "Get a list of recipes")
     public Page<RecipeListDto> getRecipesByName(@RequestParam(name = "name", required = false, defaultValue = "") String name,
+                                                @RequestParam(name = "categoryId", required = false, defaultValue = "1") long categoryId,
                                                 @RequestParam(name = "page", defaultValue = "0") int page,
                                                 @RequestParam(name = "size", defaultValue = "9") int size) {
-        LOGGER.info("GET /api/v1/recipes?page={}&size={}&name={}", page, size, name);
+        LOGGER.info("GET /api/v1/recipes?page={}&size={}&name={}&categoryId={}", page, size, name, categoryId);
         Pageable pageable = PageRequest.of(page, size);
 
-        return recipeService.getRecipesByName(name, pageable);
+        RecipeSearchDto searchDto = new RecipeSearchDto(name, categoryId);
+        if (categoryId !=0) {
+            return recipeService.getRecipesByNameCategories(searchDto, pageable);
+        } else {
+            return recipeService.getRecipesByName(name, pageable);
+        }
     }
 
     private void logClientError(HttpStatus status, String message, Exception e) {

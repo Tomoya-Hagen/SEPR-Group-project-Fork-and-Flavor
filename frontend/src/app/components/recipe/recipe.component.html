@@ -7,29 +7,62 @@
           <input class="form-control" type="text" name="search" autocomplete="off"
                  [(ngModel)]="recipeSearch.name"
                  (ngModelChange)="searchChanged()"
-                 placeholder="Suche">
+                 placeholder="Suche nach Rezepte">
         </div>
         <div class="ml-2">
           <label for="pageSize" class="mr-2"></label>
-          <select id="pageSize" class="form-control d-inline w-auto" [(ngModel)]="size" (change)="onPageSizeChange($event)">
-            <option *ngFor="let s of pageSizes" [value]="s">{{s}}</option>
+          <select id="pageSize" class="form-control d-inline w-auto" [(ngModel)]="size"
+                  (change)="onPageSizeChange($event)">
+            <option *ngFor="let s of pageSizes" [value]="s">{{ s }}</option>
           </select>
+        </div>
+        <div class="ml-2">
+          <div ngbDropdown>
+            <input name="inputcategory" id="inputcategory" type="text" [(ngModel)]="input.category"
+                   (ngModelChange)="categoryChanged()" class="form-control col-md-12" ngbDropdownToggle
+                   placeholder="Filter nach Kategorie">
+            <div ngbDropdownMenu aria-labelledby="inputcategory" class="col-md-12 overflow-auto">
+              <a ngbDropdownItem (click)="selectcategory(category)"
+                 *ngFor="let category of show.category"
+              >{{ category.name }}</a>
+            </div>
+            <div class="sub-inner-height overflow-auto">
+              <div *ngFor="let incategory of recipe.categories; let i = index">
+                <div
+                  class="container col-md-12 col-12 align-self-center justify-content-center gx-0 gx-lg-2 gy-1 row my-2">
+                  <div class="col-lg-8 col-sm-12 col-8 align-self-center">
+                    <input class="form-control"
+                           type="text"
+                           name="search"
+                           id="categorie"
+                           [(ngModel)]="incategory.name"
+                           disabled>
+                  </div>
+                  <div class="col-lg-4 col-sm-12 col-4 align-self-center d-flex justify-content-center">
+                    <button type="button" (click)="deletecategory(i)" class="close" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <hr class="my-4">
-    <div class="row">
-      <div class="col-lg-4 p-2" *ngFor="let item of pagedData" (click)="detail(item.id)">
-        <app-card [item]="item" [detailUrlPrefix]="'/recipe/details'"></app-card>
-      </div>
+  </div>
+  <hr class="my-4">
+  <div class="row">
+    <div class="col-lg-4 p-2" *ngFor="let item of pagedData" (click)="detail(item.id)">
+      <app-card [item]="item" [detailUrlPrefix]="'/recipe/details'"></app-card>
     </div>
-    <div class="navigation-bar">
-      <ngb-pagination
-        [collectionSize]="totalElements"
-        [(page)]="page"
-        [pageSize]="size"
-        (pageChange)="onPageChange($event)">
-      </ngb-pagination>
-    </div>
+  </div>
+  <div class="navigation-bar">
+    <ngb-pagination
+      [collectionSize]="totalElements"
+      [(page)]="page"
+      [pageSize]="size"
+      (pageChange)="onPageChange($event)">
+    </ngb-pagination>
   </div>
 </div>

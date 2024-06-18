@@ -379,6 +379,7 @@ public class DataGenerator implements CommandLineRunner {
                 Recipe recipe = recipeRepository.findById(idMap.get(Long.parseLong(fields.get(0)))).orElse(null);
                 List<Category> category = categoryRepository.findByName(fields.get(1));
                 recipe.setCategories(category);
+                recipe.setCategory(category.get(0));
                 recipeRepository.save(recipe);
             }
             recipeRepository.flush();

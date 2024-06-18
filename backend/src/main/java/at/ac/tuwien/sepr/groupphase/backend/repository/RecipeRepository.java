@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -47,6 +49,9 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     Page<Recipe> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
+
+    Page<Recipe> findByCategoryIdContainingIgnoreCase(long ids, Pageable pageable);
+
     /**
      * Search for recipes in the persistent data store matching  provided field.
      * The name is considered a match, if the search string is a substring of the field in recipes.
@@ -62,6 +67,12 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     @Query("SELECT i FROM Recipe i WHERE i.name LIKE %:name%")
     List<Recipe> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
+
+    @Query("SELECT distinct i FROM Recipe i join FETCH i.categories rc WHERE i.name LIKE %:name% AND rc.id = :id")
+    List<Recipe> findByNameContainingWithLimit(@Param("name") String name, @Param("id") long ids, Pageable pageable);
+
+    @Query("SELECT r FROM Recipe r WHERE r.category.id = :categoryId ")
+    List<Recipe> findRecipeByCategoryId( @Param("categoryId") long ids, Pageable pageable);
 
     /**
      * Gets a recipe by id.
