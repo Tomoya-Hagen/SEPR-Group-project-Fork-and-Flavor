@@ -6,6 +6,8 @@ import {userDto} from "../../dtos/user";
 import {RecipeListDto} from "../../dtos/recipe";
 import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
+import {RatingListDto} from "../../dtos/rating";
+import {RatingService} from "../../services/rating.service";
 
 @Component({
   selector: 'app-userpage',
@@ -21,15 +23,20 @@ import {ToastrService} from "ngx-toastr";
 export class UserpageComponent implements OnInit {
 
 
-  recipeBook: RecipeBookListDto[];
+  recipeBook: RecipeBookListDto[] = [];
   recipes: RecipeListDto[] = [];
-  user: userDto;
+  user: userDto = {
+    id: 0,
+    name: ""
+  };
   isMyPage: boolean = false;
+  ratings: RatingListDto[] = [];
 
   constructor(
     private service: UserService,
     private route: ActivatedRoute,
     private notification: ToastrService,
+    private ratingService: RatingService,
   ) {
   }
 
@@ -42,7 +49,7 @@ export class UserpageComponent implements OnInit {
         },
         error: error => {
           console.error('Error fetching recipe books by user id', error);
-          this.notification.error('Rezeptbücher für die Benutzerseite können nicht abgerufen werden.',"Backend Fehler - Benutzerseite Rezeptbücher");
+          this.notification.error('Rezeptbücher für die Benutzerseite können nicht abgerufen werden.',"Fehler - Benutzerseite Rezeptbücher");
         }
       });
       let observable2 = this.service.getUser(params['id']);
@@ -52,7 +59,7 @@ export class UserpageComponent implements OnInit {
         },
         error: error => {
           console.error('Error fetching user by id', error);
-          this.notification.error('Gesuchte Benutzerseite kann nicht geladen werden.',"Backend Fehler - Benutzerseite");
+          this.notification.error('Gesuchte Benutzerseite kann nicht geladen werden.',"Fehler - Benutzerseite");
         }
       });
       let observable3 = this.service.getAllRecipesForUserId(params['id']);
@@ -62,7 +69,7 @@ export class UserpageComponent implements OnInit {
         },
         error: error => {
           console.error('Error fetching recipes by user id', error);
-          this.notification.error('Rezepte für die Benutzerseite können nicht abgerufen werden.',"Backend Fehler - Benutzerseite Rezepte");
+          this.notification.error('Rezepte für die Benutzerseite können nicht abgerufen werden.',"Fehler - Benutzerseite Rezepte");
         }
       });
       this.service.getCurrentUser().subscribe({
@@ -71,9 +78,19 @@ export class UserpageComponent implements OnInit {
         },
         error: (error: any) => {
           console.error('Error fetching current User', error);
-          this.notification.error('Eigene Benutzerseite kann nicht geladen werden.',"Backend Fehler - Benutzerseite");
+          this.notification.error('Eigene Benutzerseite kann nicht geladen werden.',"Fehler - Benutzerseite");
         }
       })
+
+      this.ratingService.getRatingsByUserId(params['id']).subscribe({
+        next: data => {
+          this.ratings = data;
+        },
+        error: error => {
+          console.error('Error fetching ratings by user id', error);
+          this.notification.error('Bewertungen für die Benutzerseite können nicht abgerufen werden.',"Fehler - Benutzerseite Bewertungen");
+        }
+      });
 
     });
 

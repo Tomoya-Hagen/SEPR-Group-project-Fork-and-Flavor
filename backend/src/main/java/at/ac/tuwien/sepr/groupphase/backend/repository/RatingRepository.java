@@ -46,8 +46,17 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
      *
      * @param recipeId id of the recipe.
      * @param userId   id of the user.
-     * @return return a Optional of a recipe.
+     * @return return an Optional of a recipe.
      */
     @Query("select r from Rating r where r.recipe.id = :recipeId and r.user.id = :userId")
     Optional<Rating> getRatingsByRecipeIdAndUserId(@Param("recipeId") long recipeId, @Param("userId") long userId);
+
+    /**
+     * Retrieves an Optional containing a Rating object associated with a specific user.
+     *
+     * @param userId The ID of the user.
+     * @return Optional containing a Rating object if it exists, empty Optional otherwise.
+     */
+    @Query("select r from Rating r where r.user.id = :userId ORDER BY r.id LIMIT 10")
+    Collection<Rating> getRatingsByUserId( @Param("userId") long userId);
 }
