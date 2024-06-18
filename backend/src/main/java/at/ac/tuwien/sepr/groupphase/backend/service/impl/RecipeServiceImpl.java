@@ -192,7 +192,7 @@ public class RecipeServiceImpl implements RecipeService {
 
         recipeRepository.save(simple);
 
-        if (!owner.getCook()){
+        if (!owner.getCook()) {
             owner.addRole(roleRepository.getById(4L));
             emailService.sendSimpleEmail(owner.getEmail(), "Neuer Badge", "Gratulation, du bist jetzt Cook!");
         }
