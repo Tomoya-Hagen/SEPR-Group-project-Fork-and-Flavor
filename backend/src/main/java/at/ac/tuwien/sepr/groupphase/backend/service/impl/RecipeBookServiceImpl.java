@@ -1,11 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeBookMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
@@ -44,6 +42,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserManager userManager;
     private final EmailService emailService;
+    private final UserMapper userMapper;
 
     public RecipeBookServiceImpl(RecipeBookRepository recipeBookRepository,
                                  RecipeMapper recipeMapper,
@@ -51,7 +50,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
                                  RecipeRepository recipeRepository,
                                  UserRepository userRepository,
                                  RecipeBookValidator recipeBookValidator,
-                                 UserManager userManager, EmailService emailService) {
+                                 UserManager userManager, EmailService emailService, UserMapper userMapper) {
         this.recipeBookRepository = recipeBookRepository;
         this.recipeBookMapper = recipeBookMapper;
         this.recipeRepository = recipeRepository;
@@ -60,6 +59,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         this.recipeBookValidator = recipeBookValidator;
         this.userManager = userManager;
         this.emailService = emailService;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     @Override
     public RecipeBookDetailDto createRecipeBook(@Valid RecipeBookCreateDto recipeBookCreateDto) throws ValidationException {
         LOGGER.trace("createRecipeBook({})", recipeBookCreateDto);
-        recipeBookValidator.validateForCreateAndUpdate(recipeBookCreateDto);
+        recipeBookValidator.validateForCreate(recipeBookCreateDto);
         RecipeBook recipeBook = new RecipeBook();
         recipeBook.setName(recipeBookCreateDto.name());
         recipeBook.setDescription(recipeBookCreateDto.description());
@@ -133,39 +133,46 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     }
 
     @Override
-    public void updateRecipeBook(Long id, RecipeBookCreateDto recipeBookCreateDto) throws ValidationException, NotFoundException {
-        LOGGER.trace("updateRecipeBook({})", recipeBookCreateDto);
-        recipeBookValidator.validateForCreateAndUpdate(recipeBookCreateDto);
+    public void updateRecipeBook(Long id, RecipeBookUpdateDto recipeBookUpdateDto) throws ValidationException, NotFoundException {
+        LOGGER.trace("updateRecipeBook({})", recipeBookUpdateDto);
+        recipeBookValidator.validateForUpdate(recipeBookUpdateDto);
         var oldRecipeBook = recipeBookRepository.findById(id).orElseThrow(NotFoundException::new);
         List<ApplicationUser> newUsers = new ArrayList<>();
-        for (var editors : oldRecipeBook.getEditors()) {
-            boolean alreadyExists = false;
-            for (var newEditors : recipeBookCreateDto.users()) {
-                if (editors.getId() == newEditors.id()) {
-                    alreadyExists = true;
-                    break;
+        if (!oldRecipeBook.getEditors().isEmpty()) {
+            boolean alreadyExists = recipeBookUpdateDto.users().isEmpty();
+            if (!alreadyExists) {
+                for (var newEditors : recipeBookUpdateDto.users()) {
+                    for (var editors : oldRecipeBook.getEditors()) {
+                        if (editors.getId() == newEditors.id()) {
+                            alreadyExists = true;
+                            break;
+                        }
+                    }
+
+                    if (!alreadyExists) {
+                        newUsers.add(userMapper.userListDtoToUser(newEditors));
+                    }
                 }
             }
-
-            if (!alreadyExists) {
-                newUsers.add(editors);
-            }
+        } else {
+            newUsers.addAll(userMapper.userListDtoListToUserList(recipeBookUpdateDto.users()));
         }
         RecipeBook recipeBook = new RecipeBook();
-        recipeBook.setName(recipeBookCreateDto.name());
-        recipeBook.setDescription(recipeBookCreateDto.description());
+        recipeBook.setName(recipeBookUpdateDto.name());
+        recipeBook.setDescription(recipeBookUpdateDto.description());
 
-        ApplicationUser owner = userManager.getCurrentUser();
+        ApplicationUser owner = userRepository.findFirstById(recipeBookUpdateDto.ownerId());
         recipeBook.setOwner(owner);
-        List<Long> userIds = recipeBookCreateDto.users().stream().map(UserListDto::id).toList();
+        List<Long> userIds = recipeBookUpdateDto.users().stream().map(UserListDto::id).toList();
         List<ApplicationUser> users = userRepository.findAllById(userIds);
 
         recipeBook.setId(id);
         recipeBook.setEditors(users);
-        recipeBook.setRecipes(recipeBookRecipeMapper.listOfRecipeListDtoToRecipeList(recipeBookCreateDto.recipes()));
+        recipeBook.setRecipes(recipeBookRecipeMapper.listOfRecipeListDtoToRecipeList(recipeBookUpdateDto.recipes()));
         recipeBookRepository.save(recipeBook);
 
         for (var editors : newUsers) {
+            LOGGER.debug(editors.getUsername());
             emailService.sendSimpleEmail(editors.getEmail(), "Zum neuen Rezeptbuch hinzugefügt: " + recipeBook.getName(), "Sie wurden zu einem neuen Rezeptbuch hinzugefügt.");
         }
     }

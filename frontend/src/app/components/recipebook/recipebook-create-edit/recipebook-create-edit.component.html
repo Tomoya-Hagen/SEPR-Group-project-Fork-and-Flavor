@@ -111,6 +111,9 @@
       <div class="submit">
         <button [disabled]="!form.valid || !isFormValid()" type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
       </div>
+      <div>
+        <button *ngIf="!isOwner" (click)="removeContributor()" type="button" class="btn btn-warning">Rezeptbuch verlassen</button>
+      </div>
   </div>
 </form>
 

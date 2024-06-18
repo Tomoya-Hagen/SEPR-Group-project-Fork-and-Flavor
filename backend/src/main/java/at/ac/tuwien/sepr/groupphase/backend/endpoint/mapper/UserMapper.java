@@ -22,4 +22,8 @@ public interface UserMapper {
 
     @Mapping(source = "username", target = "name")
     UserDto userToUserDto(ApplicationUser user);
+
+    List<ApplicationUser> userListDtoListToUserList(List<UserListDto> users);
+
+    ApplicationUser userListDtoToUser(UserListDto users);
 }

@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validators;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -28,8 +29,8 @@ public class RecipeBookValidator {
         this.userRepository = userRepository;
     }
 
-    public void validateForCreateAndUpdate(RecipeBookCreateDto recipeBookCreateDto) throws ValidationException {
-        LOGGER.trace("validateForCreateAndUpdate({})", recipeBookCreateDto);
+    public void validateForCreate(RecipeBookCreateDto recipeBookCreateDto) throws ValidationException {
+        LOGGER.trace("validateForCreate({})", recipeBookCreateDto);
         List<String> validationErrors = new ArrayList<>();
 
         if (recipeBookCreateDto.name().isEmpty()) {
@@ -60,8 +61,45 @@ public class RecipeBookValidator {
         }
 
         if (!validationErrors.isEmpty()) {
-            LOGGER.warn("Validation of RecipeBook to be created or updated failed for {}", validationErrors);
-            throw new ValidationException("Validation of RecipeBook to be created or updated failed", validationErrors);
+            LOGGER.warn("Validation of RecipeBook to be created failed for {}", validationErrors);
+            throw new ValidationException("Validation of RecipeBook to be or updated failed", validationErrors);
+        }
+    }
+
+    public void validateForUpdate(RecipeBookUpdateDto recipeBookUpdateDto) throws ValidationException {
+        LOGGER.trace("validateForUpdate({})", recipeBookUpdateDto);
+        List<String> validationErrors = new ArrayList<>();
+
+        if (recipeBookUpdateDto.name().isEmpty()) {
+            validationErrors.add("Name cannot be Empty!");
+        }
+
+        if (recipeBookUpdateDto.description().isEmpty()) {
+            validationErrors.add("Description cannot be empty");
+        }
+
+        if (recipeBookUpdateDto.users() != null) {
+            for (UserListDto user : recipeBookUpdateDto.users()) {
+                if (!userRepository.existsById(user.id())) {
+                    validationErrors.add("User with id: " + user.id() + " does not exist");
+                }
+            }
+        } else {
+            validationErrors.add("Users cannot be null");
+        }
+        if (recipeBookUpdateDto.recipes() != null) {
+            for (RecipeListDto recipeListDto : recipeBookUpdateDto.recipes()) {
+                if (!recipeRepository.existsById(recipeListDto.id())) {
+                    validationErrors.add("Recipe with id: " + recipeListDto.id() + " does not exist");
+                }
+            }
+        } else {
+            validationErrors.add("Recipes cannot be null");
+        }
+
+        if (!validationErrors.isEmpty()) {
+            LOGGER.warn("Validation of RecipeBook to be updated failed for {}", validationErrors);
+            throw new ValidationException("Validation of RecipeBook to be updated failed", validationErrors);
         }
     }
 }
