@@ -1,12 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
@@ -25,11 +25,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -138,7 +138,7 @@ public class RecipeEndpoint {
     public Stream<SimpleRecipeResultDto> get(@RequestParam("name") String name, @RequestParam("categoryId") long categoryId, @RequestParam("limit") int limit) {
         LOGGER.info("POST /api/v1/recipe params: {} {} {}", name, categoryId, limit);
         RecipeSearchDto searchDto = new RecipeSearchDto(name, categoryId);
-        if (categoryId !=0) {
+        if (categoryId != 0) {
             return recipeService.bynamecategories(searchDto, limit);
         } else {
             return recipeService.byname(name, limit);
@@ -184,7 +184,7 @@ public class RecipeEndpoint {
         Pageable pageable = PageRequest.of(page, size);
 
         RecipeSearchDto searchDto = new RecipeSearchDto(name, categoryId);
-        if (categoryId !=0) {
+        if (categoryId != 0) {
             return recipeService.getRecipesByNameCategories(searchDto, pageable);
         } else {
             return recipeService.getRecipesByName(name, pageable);

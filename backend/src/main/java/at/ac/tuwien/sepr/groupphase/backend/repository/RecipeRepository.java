@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -17,7 +15,6 @@ import java.util.Optional;
 
 /**
  * This is the interface for the persistence layer of Recipes.
- *
  */
 @DynamicInsert
 @DynamicUpdate
@@ -39,7 +36,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      * gets a list recipe entities by the given range from to.
      *
      * @param from represents the start value of ids which will be returned.
-     * @param to represents the end value of ids which will be returned.
+     * @param to   represents the end value of ids which will be returned.
      * @return a list of recipes which hava an id in the range @from to @to.
      */
     List<Recipe> findByIdBetweenOrderById(Long from, Long to);
@@ -72,7 +69,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe> findByNameContainingWithLimit(@Param("name") String name, @Param("id") long ids, Pageable pageable);
 
     @Query("SELECT r FROM Recipe r WHERE r.category.id = :categoryId ")
-    List<Recipe> findRecipeByCategoryId( @Param("categoryId") long ids, Pageable pageable);
+    List<Recipe> findRecipeByCategoryId(@Param("categoryId") long ids, Pageable pageable);
 
     /**
      * Gets a recipe by id.

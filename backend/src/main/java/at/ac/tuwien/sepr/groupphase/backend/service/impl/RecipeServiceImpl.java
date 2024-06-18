@@ -1,6 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -242,10 +248,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Stream<SimpleRecipeResultDto> bynamecategories(RecipeSearchDto searchDto, int limit) {
-        Category category = categoryRepository.findById(searchDto.categorieId()).orElseThrow(NotFoundException::new);
         return recipeRepository.findByNameContainingWithLimit(searchDto.name(), searchDto.categorieId(), PageRequest.of(0, limit)).stream().map(recipeMapper::recipeToRecipeResultDto);
-        //return recipeRepository.findRecipeByCategoryId( searchDto.categorieId(), PageRequest.of(0, limit)).stream().map(recipeMapper::recipeToRecipeResultDto);
-
     }
 
     private long calculateAverageTasteRating(List<Rating> ratings) {
