@@ -58,5 +58,5 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
      * @return Optional containing a Rating object if it exists, empty Optional otherwise.
      */
     @Query("select r from Rating r where r.user.id = :userId ORDER BY r.id LIMIT 10")
-    Collection<Rating> getRatingsByUserId( @Param("userId") long userId);
+    Collection<Rating> getRatingsByUserId(@Param("userId") long userId);
 }
