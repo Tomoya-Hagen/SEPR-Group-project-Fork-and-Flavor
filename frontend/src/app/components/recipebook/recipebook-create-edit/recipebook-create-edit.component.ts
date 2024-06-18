@@ -258,18 +258,12 @@ export class RecipebookCreateEditComponent implements OnInit {
     }
     this.recipeBookService.update(this.recipeBook, this.route.snapshot.params['id']).subscribe({
       next: data => {
-        this.notification.success(`Rezeptbuch ${this.recipeBook.name} erfolgreich ${this.modeActionFinished}.`);
+        this.notification.success(`Rezeptbuch ${this.recipeBook.name} erfolgreich verlassen.`);
         this.router.navigate(['/recipebook']);
       },
       error: error => {
-        if(this.mode === RecipeBookCreateEditMode.create) {
-          console.error('Error creating recipe book', error);
-          this.notification.error('Rezeptbuch kann nicht erstellt werden.', 'Fehler - Rezeptbuch erstellen');
-        }
-        if(this.mode === RecipeBookCreateEditMode.edit) {
-          console.error('Error editing recipe book', error);
-          this.notification.error('Rezeptbuch kann nicht bearbeitet werden.', 'Fehler - Rezeptbuch bearbeiten');
-        }
+        console.error('Error leaving recipe book', error);
+        this.notification.error('Rezeptbuch kann nicht verlassen werden.', 'Fehler - Rezeptbuch verlassen');
       }
     });
 
