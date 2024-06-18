@@ -24,7 +24,6 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableExcep
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import jakarta.validation.Valid;
@@ -33,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -46,6 +46,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Transactional
@@ -120,6 +121,48 @@ public class RecipeServiceImpl implements RecipeService {
             Long rating = calculateAverageTasteRating(recipe.getRatings());
             return recipeMapper.recipeToRecipeListDto(recipe, rating);
         });
+    }
+
+    @Override
+    public Page<RecipeListDto> getRecipesThatGoWellWith(long id, Pageable pageable) throws NotFoundException {
+        Recipe origRecipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
+        List<Recipe> goWellWith = origRecipe.getGoesWellWithRecipes();
+
+        List<RecipeListDto> recipeListDtos = goWellWith.stream()
+            .map(recipe -> {
+                Long rating = calculateAverageTasteRating(recipe.getRatings());
+                return recipeMapper.recipeToRecipeListDto(recipe, rating);
+            })
+            .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), recipeListDtos.size());
+        List<RecipeListDto> subList = recipeListDtos.subList(start, end);
+
+        return new PageImpl<>(subList, pageable, recipeListDtos.size());
+    }
+
+    @Override
+    public RecipeDetailDto addGoesWellWith(long id, List<RecipeListDto> goWellWith) throws ResponseStatusException {
+        Recipe origRecipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
+        if (origRecipe.getOwner().getId() != userManager.getCurrentUser().getId()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+        List<Recipe> goWellWithRecipes = goWellWith.stream()
+            .map(recipeListDto -> recipeRepository.getRecipeById(recipeListDto.id()).orElseThrow(NotFoundException::new))
+            .collect(Collectors.toList());
+
+        List<Recipe> uniqueRecipes = new ArrayList<>();
+        for (Recipe recipe : goWellWithRecipes) {
+            if (!origRecipe.getGoesWellWithRecipes().contains(recipe)) {
+                uniqueRecipes.add(recipe);
+            }
+        }
+
+        origRecipe.setGoesWellWithRecipes(uniqueRecipes);
+        recipeRepository.save(origRecipe);
+
+        return getRecipeDetailDtoById(id);
     }
 
 

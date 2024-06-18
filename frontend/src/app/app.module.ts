@@ -32,6 +32,9 @@ import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
 import {ResetPasswordComponent} from "./components/login/reset-password/reset-password.component";
+import {RecipeModalComponent} from "./components/recipe/recipe-detail/recipe-modal/recipe-modal.component";
+import {FloatingMenuComponent} from "./components/floating-menu/floating-menu.component";
+import {CommonModule} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -53,6 +56,8 @@ import {ResetPasswordComponent} from "./components/login/reset-password/reset-pa
     RegisterComponent,
     RecipebookCreateEditComponent,
     ResetPasswordComponent,
+    RecipeModalComponent,
+    FloatingMenuComponent,
   ],
   imports: [
     BrowserModule,
@@ -67,6 +72,7 @@ import {ResetPasswordComponent} from "./components/login/reset-password/reset-pa
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
+    CommonModule,
     ToastrModule.forRoot({
       timeOut: 10000,
       positionClass: 'toast-top-left',

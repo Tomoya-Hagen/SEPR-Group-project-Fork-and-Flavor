@@ -153,12 +153,27 @@
         <button *ngIf="step.recipe && step.expanded" type="button" class="btn btn-primary btn-sm" (click)="navigateToDetailsInNewTab(step.recipe.id)">zum Unterrezept</button>
       </div>
     </ng-container>
-      <div style="text-align: left;position: relative;">
-        <button *ngIf="isOwner" type="button" class="btn btn-primary btn-sm" (click)="editRecipe()" style="margin-right: 10px;">Rezept bearbeiten</button>
-        <button type="button" class="btn btn-secondary btn-sm m-4" (click)="openSpoonModal(spoonRecipeModal)">Rezept spoonen</button>
-        <button type="button" class="btn btn-secondary btn-sm" (click)="fork()">Rezept forken</button>
 
-      </div>
   </div>
 
+
+  <div *ngIf="recipes && recipes.length > 0">
+    <hr class="my-4">
+    <h2>Passt gut dazu:</h2>
+    <div class="row">
+      <div class="col-lg-4 p-2" *ngFor="let item of recipes">
+        <app-card [item]="item" [detailUrlPrefix]="'/recipe/details'"></app-card>
+      </div>
+    </div>
+    <div class="navigation-bar" *ngIf="recipes && totalElements > 3">
+      <ngb-pagination
+        [collectionSize]="totalElements"
+        [(page)]="page"
+        [pageSize]="size"
+        (pageChange)="onPageChange($event)">
+      </ngb-pagination>
+    </div>
+  </div>
 </div>
+
+<app-floating-menu [options]="menuOptions"></app-floating-menu>

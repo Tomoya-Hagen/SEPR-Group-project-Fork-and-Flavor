@@ -14,7 +14,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +96,17 @@ public class Recipe {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "forked_from", referencedColumnName = "id")
     private List<Recipe> recipesForkedFromThis = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Recipe> goesWellWithRecipes = new ArrayList<>();
+
+    public void setGoesWellWithRecipes(List<Recipe> goesWellWithRecipes) {
+        this.goesWellWithRecipes = goesWellWithRecipes;
+    }
+
+    public List<Recipe> getGoesWellWithRecipes() {
+        return goesWellWithRecipes;
+    }
 
     public void setRecipeSteps(List<RecipeStep> recipeSteps) {
         this.recipeSteps = recipeSteps;
@@ -229,6 +239,7 @@ public class Recipe {
         private List<WeeklyPlanner> weeklyPlanner;
         private List<RecipeIngredient> ingredients;
         private List<Recipe> recipesForkedFromThis;
+        private List<Recipe> goesWellWithRecipes = new ArrayList<>();
 
         private RecipeBuilder() {
         }
@@ -320,6 +331,11 @@ public class Recipe {
             return this;
         }
 
+        public RecipeBuilder withGoesWellWithRecipes(List<Recipe> goesWellWithRecipes) {
+            this.goesWellWithRecipes = goesWellWithRecipes;
+            return this;
+        }
+
         public Recipe build() {
             Recipe recipe = new Recipe();
             recipe.setId(id);
@@ -338,6 +354,7 @@ public class Recipe {
             recipe.recipeBooks = this.recipeBooks;
             recipe.weeklyPlanner = this.weeklyPlanner;
             recipe.recipesVerified = this.recipesVerified;
+            recipe.goesWellWithRecipes = this.goesWellWithRecipes;
             return recipe;
         }
     }
