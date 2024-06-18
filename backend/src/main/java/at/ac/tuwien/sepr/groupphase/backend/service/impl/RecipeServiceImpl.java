@@ -28,7 +28,6 @@ import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
 import jakarta.transaction.Transactional;
-import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
