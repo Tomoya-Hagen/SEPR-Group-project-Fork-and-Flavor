@@ -1,17 +1,14 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDescriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepRecipeDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeDescriptionStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +27,11 @@ public interface RecipeStepMapper {
     default ArrayList<RecipeStepDetailDto> recipeStepListToRecipeStepDetailDtoList(
         List<RecipeStep> recipeSteps) {
         ArrayList<RecipeStepDetailDto> result = new ArrayList<>();
-        for (int i = 0; i < recipeSteps.size(); i++) {
-            if (recipeSteps.get(i) instanceof RecipeRecipeStep recipeRecipeStep) {
+        for (RecipeStep recipeStep : recipeSteps) {
+            if (recipeStep instanceof RecipeRecipeStep recipeRecipeStep) {
                 result.add(recipeStepToRecipeStepDetailDto(recipeRecipeStep));
             } else {
-                result.add(recipeStepToRecipeStepDetailDto((RecipeDescriptionStep) recipeSteps.get(i)));
+                result.add(recipeStepToRecipeStepDetailDto((RecipeDescriptionStep) recipeStep));
             }
         }
         return result;
