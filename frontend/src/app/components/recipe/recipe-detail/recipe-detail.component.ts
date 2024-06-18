@@ -142,6 +142,39 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     return Math.round(value * factor) / factor;
   }
 
+  onPortionsInput(portionInput: HTMLInputElement): void {
+    let value = portionInput.value;
+    if (value === '') {
+      // Allow empty value temporarily
+      this.selectedPortions = null;
+    } else {
+      let numericValue = parseInt(value, 10);
+      if (!isNaN(numericValue)) {
+        if (numericValue <= 0) {
+          numericValue = 1;
+        } else if (numericValue >= 11) {
+          numericValue = 10;
+        }
+        portionInput.value = numericValue.toString();
+        this.selectedPortions = numericValue;
+        if(this.selectedPortions >= 1 && this.selectedPortions <= 10) {
+          this.onPortionsChange();
+        }
+      }
+    }
+  }
+
+  onPortionsBlur(portionInput: HTMLInputElement): void {
+    let value = parseInt(portionInput.value, 10);
+    if (isNaN(value) || value <= 0) {
+      value = 1;
+    } else if (value >= 11) {
+      value = 10;
+    }
+    portionInput.value = value.toString();
+    this.selectedPortions = value;
+    this.onPortionsChange();
+  }
   onPortionsChange(): void {
     this.adjustIngredientsAndNutritions();
     this.changeIngredientsToGramm();
