@@ -11,6 +11,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RatingService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RatingValidator;
@@ -32,17 +33,19 @@ public class RatingServiceImpl implements RatingService {
     private final RatingMapper ratingMapper;
     private final RatingValidator ratingValidator;
     private final UserManager userManager;
+    private final EmailService emailService;
 
     public RatingServiceImpl(RecipeRepository recipeRepository,
                              RatingRepository ratingRepository,
                              RatingMapper ratingMapper,
                              RatingValidator ratingValidator,
-                             UserManager userManager) {
+                             UserManager userManager, EmailService emailService) {
         this.recipeRepository = recipeRepository;
         this.ratingRepository = ratingRepository;
         this.ratingMapper = ratingMapper;
         this.ratingValidator = ratingValidator;
         this.userManager = userManager;
+        this.emailService = emailService;
     }
 
     @Override
@@ -69,6 +72,10 @@ public class RatingServiceImpl implements RatingService {
         rating.setRecipe(recipe);
         rating.setUser(user);
         ratingRepository.save(rating);
+
+        emailService.sendSimpleEmail(recipe.getOwner().getEmail(), "Neue Bewertung!", "Neue Bewertung für das Rezept " + recipe.getName() + " erhalten.\n\n"
+            + rating.toEmailString() + "\n");
+
         return ratingMapper.mapRatingToRatingListDto(rating);
     }
 }
