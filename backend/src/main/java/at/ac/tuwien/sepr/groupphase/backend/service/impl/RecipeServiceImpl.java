@@ -129,9 +129,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Page<RecipeListDto> getRecipesByNameCategories(RecipeSearchDto searchDto, Pageable pageable) {
-        Category category = categoryRepository.findById(searchDto.categorieId()).orElseThrow(NotFoundException::new);
-        Page<Recipe> recipePage = recipeRepository.findByCategoryIdContainingIgnoreCase(searchDto.categorieId(), pageable);
-        // Page<Recipe> recipePage = recipeRepository.findByNameContainingIgnoreCase(searchDto.categorieId(), pageable);
+        Page<Recipe> recipePage = recipeRepository.findByCategoryIdContainingIgnoreCase(searchDto.name(), searchDto.categorieId(), pageable);
 
         return recipePage.map(recipe -> {
             Long rating = calculateAverageTasteRating(recipe.getRatings());
