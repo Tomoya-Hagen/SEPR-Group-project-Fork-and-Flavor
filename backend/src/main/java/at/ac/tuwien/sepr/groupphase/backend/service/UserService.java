@@ -80,7 +80,13 @@ public interface UserService extends UserDetailsService {
      */
     void resetPassword(UserPasswordResetDto userPasswordResetDto) throws NotFoundException;
 
-
+    /**
+     * Retrieves a user based on the provided ID.
+     *
+     * @param id The ID of the user to be retrieved.
+     * @return UserDto object containing the user's details.
+     * @throws NotFoundException If no user is found with the provided ID.
+     */
     UserDto findUserById(Long id);
 
     /**
@@ -90,9 +96,32 @@ public interface UserService extends UserDetailsService {
      */
     UserDto getCurrentUser();
 
+    /**
+     * Retrieves a list of RecipeBookListDto objects associated with a specific user.
+     *
+     * @param id The ID of the user.
+     * @return List of RecipeBookListDto objects.
+     * @throws NotFoundException If no user is found with the provided ID.
+     */
     List<RecipeBookListDto> findRecipeBooksByUserId(Long id) throws NotFoundException;
 
+    /**
+     * Retrieves a list of RecipeListDto objects associated with a specific user.
+     *
+     * @param id The ID of the user.
+     * @return List of RecipeListDto objects.
+     * @throws NotFoundException If no user is found with the provided ID.
+     */
     List<RecipeListDto> findRecipesByUserId(Long id) throws NotFoundException;
 
+    /**
+     * Changes the password of a user.
+     *
+     * @param id The ID of the user.
+     * @param userPasswordChangeDto Object containing the old and new password.
+     * @throws NotFoundException If no user is found with the provided ID.
+     * @throws BadCredentialsException If the old password is incorrect.
+     * @throws ValidationException If the new password is not valid.
+     */
     void changePassword(Long id, UserPasswordChangeDto userPasswordChangeDto) throws NotFoundException, BadCredentialsException, ValidationException;
 }

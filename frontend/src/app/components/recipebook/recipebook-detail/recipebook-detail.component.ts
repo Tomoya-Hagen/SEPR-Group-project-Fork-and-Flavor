@@ -30,7 +30,7 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
     recipes: [],
     users: []
   }
-  isOwner: boolean = false;
+  canEdit: boolean = false;
 
   constructor(
     private service: RecipeBookService,
@@ -71,7 +71,15 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
   isCurrentUserOwner() {
     this.userService.getCurrentUser().subscribe(currentUser => {
       if (currentUser && this.recipeBook.ownerId === currentUser.id) {
-        this.isOwner = true;
+        this.canEdit = true;
+        return;
+      }
+
+      for (let i = 0; i < this.recipeBook.users.length; i++) {
+        if (currentUser && this.recipeBook.users[i].id === currentUser.id) {
+          this.canEdit = true;
+          return;
+        }
       }
     });
   }

@@ -147,4 +147,9 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         recipeBook.setRecipes(recipeBookRecipeMapper.listOfRecipeListDtoToRecipeList(recipeBookCreateDto.recipes()));
         recipeBookRepository.save(recipeBook);
     }
+
+    @Override
+    public long getUserIdByRecipeBookId(Long id) throws NotFoundException {
+        return recipeBookRepository.findById(id).orElseThrow(NotFoundException::new).getOwnerId();
+    }
 }

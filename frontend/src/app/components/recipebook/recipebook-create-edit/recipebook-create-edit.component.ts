@@ -30,12 +30,12 @@ export class RecipebookCreateEditComponent implements OnInit {
     users: null,
     recipes: null
   };
-  bannerError: string | null = null;
   users: (userListDto | null)[] = [];
   recipes: (RecipeListDto | null)[] = [];
   currentUserId: number = 0;
   dummyUserSelectionModel: unknown;
   dummyRecipeSelectionModel: unknown;
+  isOwner: boolean = false;
 
   constructor(
     private recipeBookService: RecipeBookService,
@@ -51,6 +51,8 @@ export class RecipebookCreateEditComponent implements OnInit {
     this.userService.getCurrentUser().pipe(
       tap((user: userListDto) => {
         this.currentUserId = user.id;
+        this.isOwnerOfRecipeBook();
+        console.log(this.isOwner)
       }),
       switchMap(() => this.authService.isLogged()),
       tap((isLoggedIn: boolean) => {
@@ -75,6 +77,18 @@ export class RecipebookCreateEditComponent implements OnInit {
     } else {
       this.mode = RecipeBookCreateEditMode.create;
     }
+  }
+
+  isOwnerOfRecipeBook() {
+    this.recipeBookService.getUserIdByRecipeBookId(this.route.snapshot.params['id']).subscribe({
+      next: data => {
+        this.isOwner = (data == this.currentUserId);
+        return;
+      }, error: error => {
+        console.error('Error Fehler beim Laden der User id vom Rezeptbuch', error);
+        this.notification.error('Fehler beim Laden der User id vom Rezeptbuch.',"User Id");
+      }
+    });
   }
 
 
@@ -128,9 +142,9 @@ export class RecipebookCreateEditComponent implements OnInit {
   private get modeActionFinished(): string {
     switch (this.mode) {
       case RecipeBookCreateEditMode.create:
-        return 'created';
+        return 'erstellt';
       case RecipeBookCreateEditMode.edit:
-        return 'updated';
+        return 'bearbeitet';
       default:
         return '?';
     }
@@ -139,9 +153,9 @@ export class RecipebookCreateEditComponent implements OnInit {
   public get submitButtonText(): string {
     switch (this.mode) {
       case RecipeBookCreateEditMode.create:
-        return 'Create';
+        return 'Erstellen';
       case RecipeBookCreateEditMode.edit:
-        return 'Update';
+        return 'Bearbeiten';
       default:
         return '?';
     }

@@ -155,7 +155,18 @@ public class RecipeBookEndpoint {
             logClientError(status, "recipe book update is not valid", e);
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
+    }
 
+    @GetMapping("{id}/getUserId")
+    public long getUserIdForRecipeBookId(@PathVariable(name = "id") Long id) {
+        LOGGER.info("PATCH /api/v1/users/{}/getUserId", id);
+        try {
+            return recipeBookService.getUserIdByRecipeBookId(id);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no recipe book with specified id found", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
     }
 
     /**

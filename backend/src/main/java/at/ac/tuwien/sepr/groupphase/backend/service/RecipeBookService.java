@@ -71,5 +71,22 @@ public interface RecipeBookService {
      */
     RecipeBookDetailDto createRecipeBook(RecipeBookCreateDto recipeBook) throws ValidationException;
 
+    /**
+     * Updates an existing recipe book with the provided details.
+     *
+     * @param id The ID of the recipe book to be updated.
+     * @param recipeBook The new details for the recipe book.
+     * @throws ValidationException If the provided details are not valid.
+     * @throws NotFoundException If no recipe book is found with the provided ID.
+     */
     void updateRecipeBook(Long id, RecipeBookCreateDto recipeBook) throws ValidationException, NotFoundException;
+
+    /**
+     * Retrieves the ID of the user associated with a given recipe book.
+     *
+     * @param id The ID of the recipe book.
+     * @return The ID of the user associated with the recipe book.
+     * @throws NotFoundException If no recipe book is found with the provided ID.
+     */
+    long getUserIdByRecipeBookId(Long id) throws NotFoundException;
 }

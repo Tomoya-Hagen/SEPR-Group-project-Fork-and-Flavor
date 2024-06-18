@@ -12,7 +12,7 @@ import {ToastrService} from "ngx-toastr";
 
 export class HeaderComponent implements OnInit {
 
-  protected user: userDto;
+  user: userDto;
 
   constructor(public authService: AuthService, private userService: UserService, private notification: ToastrService) { }
 

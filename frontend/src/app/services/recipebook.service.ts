@@ -25,12 +25,6 @@ export class RecipeBookService {
     private http: HttpClient, private globals: Globals) {
   }
 
-  public getAllRecipeBooksBySteps(page: number, step: number): Observable<RecipeBookListDto[]> {
-    return this.http.get<RecipeBookListDto[]>(
-      this.baseUri+"/?page="+page+"&step="+step
-    );
-  }
-
 
   public getRecipeBookDetailsBy(recipeId: number): Observable<RecipeBookDetailDto> {
     return this.http.get<RecipeBookDetailDto>(
@@ -80,5 +74,9 @@ export class RecipeBookService {
 
   update(recipeBook: RecipeBookCreateDto, id: number) {
      return this.http.patch(this.baseUri + '/' + id + '/update', recipeBook);
+  }
+
+  getUserIdByRecipeBookId(id: number) {
+    return this.http.get<number>(this.baseUri + "/" + id + "/getUserId");
   }
 }
