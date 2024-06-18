@@ -177,7 +177,7 @@ public class RecipeEndpoint {
     @GetMapping
     @Operation(summary = "Get a list of recipes")
     public Page<RecipeListDto> getRecipesByName(@RequestParam(name = "name", required = false, defaultValue = "") String name,
-                                                @RequestParam(name = "categoryId", required = false, defaultValue = "1") long categoryId,
+                                                @RequestParam(name = "categoryId", required = false, defaultValue = "0") long categoryId,
                                                 @RequestParam(name = "page", defaultValue = "0") int page,
                                                 @RequestParam(name = "size", defaultValue = "9") int size) {
         LOGGER.info("GET /api/v1/recipes?page={}&size={}&name={}&categoryId={}", page, size, name, categoryId);
