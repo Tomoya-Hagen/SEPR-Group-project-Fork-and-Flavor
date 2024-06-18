@@ -51,7 +51,6 @@ public class RecipeEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final RecipeService recipeService;
 
-
     @Autowired
     public RecipeEndpoint(RecipeService recipeService) {
         this.recipeService = recipeService;

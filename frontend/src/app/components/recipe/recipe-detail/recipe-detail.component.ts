@@ -62,11 +62,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   showNutrition: boolean = false;
   screenWidth: number;
   isOwner: boolean = false;
-  selectedPortions: number;
-  originalServings: number;
-  hasForkedRecipes: boolean = false;
-  originalNutritions = [];
-  originalIngredients = [];
   areRatingsLoaded: boolean = false;
   rating: RatingCreateDto = {
     review: "",
@@ -75,6 +70,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     recipeId: 0,
     cost: 0
   }
+  selectedPortions: number;
+  originalServings: number;
+  hasForkedRecipes: boolean = false;
+  originalNutritions = [];
+  originalIngredients = [];
   recipes: Recipe[] = [];
   totalElements: number;
   page: number = 1;

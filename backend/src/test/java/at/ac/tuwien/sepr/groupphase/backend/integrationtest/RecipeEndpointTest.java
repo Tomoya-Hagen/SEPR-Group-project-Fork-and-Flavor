@@ -295,9 +295,11 @@ class RecipeEndpointTest implements TestData {
         };
 
         // Check each required line
-        String content = response.getContentAsString();
+
+        System.out.println(response);
         for (String requiredLine : requiredLines) {
-            assertTrue(content.contains(requiredLine));
+            System.out.println(requiredLine);
+            assertTrue(response.getContentAsString().contains(requiredLine));
         }
     }
 
