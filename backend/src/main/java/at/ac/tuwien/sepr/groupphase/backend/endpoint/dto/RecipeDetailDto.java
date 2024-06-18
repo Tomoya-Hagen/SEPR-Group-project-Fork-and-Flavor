@@ -58,6 +58,10 @@ public record RecipeDetailDto(
 
     @NotNull
     ArrayList<NutritionDetailDto> nutritions,
+
+    @NotNull
+    ArrayList<String> forkedRecipes,
+
     long rating
 ) {
 }

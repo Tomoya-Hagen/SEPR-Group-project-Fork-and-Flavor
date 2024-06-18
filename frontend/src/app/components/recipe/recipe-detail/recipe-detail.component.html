@@ -45,7 +45,7 @@
     </div>
     <div class="info-box info-box-2">
       <h4>Portionen:</h4>
-      {{ recipe.numberOfServings }}
+      <input type="number" [(ngModel)]="selectedPortions" (ngModelChange)="onPortionsChange()" class="input-width" min="1" max="10">
     </div>
     <div class="info-box info-box-3" *ngIf="isCategoriesNotEmpty()">
       <h4>Kategorien:</h4>
@@ -73,11 +73,23 @@
     <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--acent-color);"
          *ngIf="isForkedFromRecipe()">
       <h4>Geforkt von:</h4>
+      <span>{{recipeForkedFrom}}</span>
+    </div>
+    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: #08688e;" *ngIf="hasForkedRecipes">
+      <h4>Hiervon geforkt:</h4>
       <div>
         <span *ngFor="let forkedFrom of recipeForkedFrom; let isLast=last">
            {{ recipeForkedFrom }}{{ isLast ? '' : ', ' }}
+        <span *ngFor="let forkedRecipe of recipe.forkedRecipes.slice(0, 5); let last = last">
+          {{forkedRecipe}}{{last && recipe.forkedRecipes.length <= 5 ? '' : ', '}}
         </span>
+        <span *ngIf="recipe.forkedRecipes.length > 5">...</span>
       </div>
+    </div>
+    <div class="info-box info-box-5 clickable" *ngIf="screenWidth <= 767" style="box-shadow: 0 0 10px rgba(111, 66, 193, 0); background-color: rgba(111, 66, 193, 1);" (click)="toggleNutrition()">
+      <h4>Nährwerte:</h4>
+        <span *ngIf="!showNutrition">Zeigen</span>
+        <span *ngIf="showNutrition">Verstecken</span>
     </div>
   </div>
 
@@ -176,80 +188,79 @@
       </ngb-pagination>
     </div>
   </div>
+</div>
 
-
-  <!-- Ratings -->
-  <hr class="my-4">
-  <div class="ratings">
-    <ng-container *ngIf="ratings.length > 0 && areRatingsLoaded" class="ratings-container">
-      <h2>Bewertungen:</h2>
-      <div class="ratings-wrapper">
-        <div *ngFor="let rating of ratings" class="rating-box">
-          <div class="rating-header">
-            <p class="user-name">{{ rating.user.name }}</p>
-          </div>
-          <div class="rating-details">
-            <p>Geschmack:
-              <app-star-rating [disabled]="true" [value]="rating.taste"></app-star-rating>
-            </p>
-            <p>Skill:
-              <app-star-rating [disabled]="true" [value]="rating.easeOfPrep"></app-star-rating>
-            </p>
-            <p>Kosten:
-              <app-star-rating [disabled]="true" [value]="rating.cost"></app-star-rating>
-            </p>
-            <p class="review">{{ rating.review }}</p>
-          </div>
+<!-- Ratings -->
+<hr class="my-4">
+<div class="ratings">
+  <ng-container *ngIf="ratings.length > 0 && areRatingsLoaded" class="ratings-container">
+    <h2>Bewertungen:</h2>
+    <div class="ratings-wrapper">
+      <div *ngFor="let rating of ratings" class="rating-box">
+        <div class="rating-header">
+          <p class="user-name">{{ rating.user.name }}</p>
         </div>
-        <!-- Add Rating Box -->
-        <div class="rating-box add-rating-box" (click)="openRatingModal(ratingModal)">
-          <div class="add-rating-text">+ Bewertung hinzufügen</div>
+        <div class="rating-details">
+          <p>Geschmack:
+            <app-star-rating [disabled]="true" [value]="rating.taste"></app-star-rating>
+          </p>
+          <p>Skill:
+            <app-star-rating [disabled]="true" [value]="rating.easeOfPrep"></app-star-rating>
+          </p>
+          <p>Kosten:
+            <app-star-rating [disabled]="true" [value]="rating.cost"></app-star-rating>
+          </p>
+          <p class="review">{{ rating.review }}</p>
         </div>
       </div>
-      <div *ngIf="ratings.length === 0 && areRatingsLoaded">
-        <p>Schreibe die erste Bewertung!</p>
+      <!-- Add Rating Box -->
+      <div class="rating-box add-rating-box" (click)="openRatingModal(ratingModal)">
+        <div class="add-rating-text">+ Bewertung hinzufügen</div>
       </div>
-    </ng-container>
+    </div>
+    <div *ngIf="ratings.length === 0 && areRatingsLoaded">
+      <p>Schreibe die erste Bewertung!</p>
+    </div>
+  </ng-container>
 
-    <!-- Rating Modal -->
-    <ng-template #ratingModal>
-      <div class="modal fade show d-block" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="ratingModalLabel">Rezept bewerten</h5>
-              <button type="button" class="close" (click)="closeRatingModal()" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body rating">
-              <form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmitRating(form)">
-                <div class="form-group">
-                  <label>Geschmack*:</label>
-                  <app-star-rating name="tasteSelection" (valueEvent)="selectTaste($event)"></app-star-rating>
-                </div>
-                <div class="form-group">
-                  <label>Skill-Level*:</label>
-                  <app-star-rating name="easeOfPrepSelection" (valueEvent)="selectEaseOfPrep($event)"></app-star-rating>
-                </div>
-                <div class="form-group">
-                  <label>Kosten*:</label>
-                  <app-star-rating name="costSelection" (valueEvent)="selectCost($event)"></app-star-rating>
-                </div>
-                <div class="form-group">
-                  <label>Bewertung*:</label>
-                  <input [(ngModel)]="rating.review" name="review" type="text" class="form-control" id="description" placeholder="Einfach Köstlich" required>
-                </div>
-                <div class="form-group text-center">
-                  <button [disabled]="!isFormValid()" type="submit" class="btn btn-primary">Bewertung abgeben</button>
-                </div>
-              </form>
-            </div>
+  <!-- Rating Modal -->
+  <ng-template #ratingModal>
+    <div class="modal fade show d-block" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ratingModalLabel">Rezept bewerten</h5>
+            <button type="button" class="close" (click)="closeRatingModal()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body rating">
+            <form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmitRating(form)">
+              <div class="form-group">
+                <label>Geschmack*:</label>
+                <app-star-rating name="tasteSelection" (valueEvent)="selectTaste($event)"></app-star-rating>
+              </div>
+              <div class="form-group">
+                <label>Skill-Level*:</label>
+                <app-star-rating name="easeOfPrepSelection" (valueEvent)="selectEaseOfPrep($event)"></app-star-rating>
+              </div>
+              <div class="form-group">
+                <label>Kosten*:</label>
+                <app-star-rating name="costSelection" (valueEvent)="selectCost($event)"></app-star-rating>
+              </div>
+              <div class="form-group">
+                <label>Bewertung*:</label>
+                <input [(ngModel)]="rating.review" name="review" type="text" class="form-control" id="description" placeholder="Einfach Köstlich" required>
+              </div>
+              <div class="form-group text-center">
+                <button [disabled]="!isFormValid()" type="submit" class="btn btn-primary">Bewertung abgeben</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-    </ng-template>
-  </div>
+    </div>
+  </ng-template>
 </div>
 
 <div *ngIf="!areRatingsLoaded" (click)="loadRatings()" class="ratingsSummary">

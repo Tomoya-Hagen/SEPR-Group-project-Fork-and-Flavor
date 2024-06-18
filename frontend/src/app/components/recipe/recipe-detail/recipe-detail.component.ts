@@ -36,7 +36,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     recipeSteps: [],
     ingredients: [],
     allergens: [],
-    nutritions: []
+    nutritions: [],
+    forkedRecipes: []
   };
 
   cost = 0;
@@ -57,7 +58,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     "arrows" : true,
     "infinite" : false
   }
-  recipeForkedFrom = [];
+  recipeForkedFrom: string;
   showNutrition: boolean = false;
   screenWidth: number;
   isOwner: boolean = false;
@@ -69,6 +70,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     recipeId: 0,
     cost: 0
   }
+  selectedPortions: number;
+  originalServings: number;
+  hasForkedRecipes: boolean = false;
+  originalNutritions = [];
+  originalIngredients = [];
   recipes: Recipe[] = [];
   totalElements: number;
   page: number = 1;
@@ -120,10 +126,18 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           this.recipe = data;
           this.rating.recipeId = this.recipe.id;
           this.recipeSteps = this.recipe.recipeSteps;
+          this.originalNutritions = this.recipe.nutritions;
+          this.originalIngredients = this.recipe.ingredients;
+          this.originalServings = this.recipe.numberOfServings;
+          this.selectedPortions = this.recipe.numberOfServings;
           this.changeIngredientsToGramm();
           this.changeNutritionsToGramm();
           this.getForkedFromRecipeName();
           this.isCurrentUserOwner();
+          this.orderNutritions();
+          if (this.recipe.forkedRecipes.length > 0) {
+            this.hasForkedRecipes = true;
+          }
           this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
           this.onPageChange(1);
         },
@@ -138,6 +152,33 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   ngOnDestroy(): void {
     this.titleService.setTitle("Fork & Flavour");
+  }
+
+  roundTo(value: number): number {
+    const factor = Math.pow(10, 1);
+    return Math.round(value * factor) / factor;
+  }
+
+  onPortionsChange(): void {
+    this.adjustIngredientsAndNutritions();
+    this.changeIngredientsToGramm();
+    this.changeNutritionsToGramm();
+  }
+
+  adjustIngredientsAndNutritions(): void {
+    const ratio = this.selectedPortions / this.originalServings;
+    this.recipe.ingredients = this.originalIngredients.map(ingredient => ({
+      ...ingredient,
+      amount: this.roundTo(ingredient.amount * ratio)
+    }));
+    this.recipe.nutritions = this.originalNutritions.map(nutrition => ({
+      ...nutrition,
+      value: this.roundTo(nutrition.value * ratio)
+    }));
+  }
+
+  orderNutritions(): void {
+    this.recipe.nutritions.sort((a, b) => a.id - b.id);
   }
 
   isRecipeDescriptionStep(recipeStep: any): boolean {
@@ -158,22 +199,21 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     return this.recipe.forkedFromId != 0 && this.recipe.forkedFromId != null;
   }
 
-  getForkedFromRecipeName(): string[]{
+  getForkedFromRecipeName(){
     if (this.recipe.forkedFromId == 0 || this.recipe.forkedFromId == null) {
-      return [];
+      return;
     }
     this.service.getRecipeDetailsBy(this.recipe.forkedFromId).subscribe({
       next: data => {
-        this.recipeForkedFrom.push(data.name);
+        this.recipeForkedFrom = data.name;
       },
       error: error => {
         console.error('Error forking recipe.', error);
         const errorMessage = error.message.message;
         this.notification.error('Fork Rezepte ist nicht möglich.' + errorMessage, "Backend Fehler - Rezepte");
-        return [];
+        return;
       }
     })
-    console.log(this.recipeForkedFrom);
     return this.recipeForkedFrom;
   }
 
@@ -256,6 +296,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     for (let i = 0; i < this.recipe.ingredients.length; i++) {
       if (this.recipe.ingredients[i].amount >= 1000 && this.recipe.ingredients[i].unit === "mg") {
         this.recipe.ingredients[i].amount /= 1000;
+        this.recipe.ingredients[i].amount = this.roundTo(this.recipe.ingredients[i].amount);
         this.recipe.ingredients[i].unit = "g";
       }
     }
@@ -265,6 +306,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     for (let i = 0; i < this.recipe.nutritions.length; i++) {
       if (this.recipe.nutritions[i].value >= 1000 && this.recipe.nutritions[i].unit === "mg") {
         this.recipe.nutritions[i].value /= 1000;
+        this.recipe.nutritions[i].value = this.roundTo(this.recipe.nutritions[i].value);
         this.recipe.nutritions[i].unit = "g";
       }
     }
@@ -272,7 +314,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   navigateToDetailsInNewTab(index: number) {
     const baseUrl = window.location.origin;
-  const url = `${baseUrl}/#/recipe/details/${index}`;
+    const url = `${baseUrl}/#/recipe/details/${index}`;
     window.open(url, '_blank');
   }
 
