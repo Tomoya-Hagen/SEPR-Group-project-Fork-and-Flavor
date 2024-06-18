@@ -109,6 +109,7 @@ public class RecipeServiceImpl implements RecipeService {
             result.ingredients(),
             result.allergens(),
             result.nutritions(),
+            result.rating(),
             forkedRecipeNames
         );
     }
