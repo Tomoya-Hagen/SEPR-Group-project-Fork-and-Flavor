@@ -289,14 +289,16 @@ class RecipeEndpointTest implements TestData {
             "Category 1000 not found",
             "Ingredient 10000 not found",
             "Step Step eins is not valid",
-            "Step Step zwei not found",
+            "Step Step zwei is not valid",
             "Step Step drei is not valid",
-            "Step Step vier not found"
+            "Step Step vier is not valid"
         };
 
         // Check each required line
 
+        System.out.println(response);
         for (String requiredLine : requiredLines) {
+            System.out.println(requiredLine);
             assertTrue(response.getContentAsString().contains(requiredLine));
         }
     }
