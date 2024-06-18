@@ -12,6 +12,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -126,7 +127,7 @@ public class ApplicationUser {
         return false;
     }
 
-    public List<Role> getRoles(){
+    public List<Role> getRoles() {
         return this.roles;
     }
 

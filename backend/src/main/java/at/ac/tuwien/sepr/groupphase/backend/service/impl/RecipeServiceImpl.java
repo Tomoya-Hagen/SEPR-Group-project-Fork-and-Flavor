@@ -25,8 +25,10 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
+import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
 import jakarta.transaction.Transactional;
@@ -62,18 +64,21 @@ public class RecipeServiceImpl implements RecipeService {
     private final CategoryRepository categoryRepository;
     private final RecipeValidator recipeValidator;
     private final UserManager userManager;
+    private final BadgeService badgeService;
 
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
                              RecipeMapper recipeMapper,
                              CategoryRepository categoryRepository,
                              RecipeValidator recipeValidator,
-                             UserManager userManager) {
+                             UserManager userManager,
+                             BadgeService badgeService) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
         this.categoryRepository = categoryRepository;
         this.recipeValidator = recipeValidator;
         this.userManager = userManager;
+        this.badgeService = badgeService;
     }
 
 
@@ -191,12 +196,7 @@ public class RecipeServiceImpl implements RecipeService {
         simple.setRecipeSteps(recipe.getRecipeSteps());
 
         recipeRepository.save(simple);
-
-        if (!owner.getCook()) {
-            owner.addRole(roleRepository.getById(4L));
-            emailService.sendSimpleEmail(owner.getEmail(), "Neuer Badge", "Gratulation, du bist jetzt Cook!");
-        }
-
+        badgeService.addRoleToUser(owner, Roles.Cook);
         var x = recipeMapper.recipeToDetailedRecipeDto(simple);
         return x;
     }
