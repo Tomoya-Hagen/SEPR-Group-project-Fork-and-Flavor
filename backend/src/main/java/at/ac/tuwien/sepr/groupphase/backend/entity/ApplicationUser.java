@@ -129,6 +129,24 @@ public class ApplicationUser {
         return false;
     }
 
+    public boolean getCook() {
+        if (roles != null && !roles.isEmpty()) {
+            for (Role role : roles) {
+                if (role.getId() == 4) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void addRole(Role role) {
+        if (roles == null) {
+            roles = new ArrayList<>();
+        }
+        roles.add(role);
+    }
+
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
