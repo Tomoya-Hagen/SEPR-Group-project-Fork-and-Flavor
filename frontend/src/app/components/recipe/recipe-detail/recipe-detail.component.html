@@ -84,6 +84,7 @@
           {{forkedRecipe}}{{last && recipe.forkedRecipes.length <= 5 ? '' : ', '}}
         </span>
         <span *ngIf="recipe.forkedRecipes.length > 5">...</span>
+        </span>
       </div>
     </div>
     <div class="info-box info-box-5 clickable" *ngIf="screenWidth <= 767" style="box-shadow: 0 0 10px rgba(111, 66, 193, 0); background-color: rgba(111, 66, 193, 1);" (click)="toggleNutrition()">
