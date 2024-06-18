@@ -35,6 +35,8 @@ import {ResetPasswordComponent} from "./components/login/reset-password/reset-pa
 import {RecipeModalComponent} from "./components/recipe/recipe-detail/recipe-modal/recipe-modal.component";
 import {FloatingMenuComponent} from "./components/floating-menu/floating-menu.component";
 import {CommonModule} from "@angular/common";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { StarRatingComponent } from './components/star-rating/star-rating.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +60,7 @@ import {CommonModule} from "@angular/common";
     ResetPasswordComponent,
     RecipeModalComponent,
     FloatingMenuComponent,
+    StarRatingComponent
   ],
   imports: [
     BrowserModule,
@@ -86,6 +89,7 @@ import {CommonModule} from "@angular/common";
     MatIconButton,
     MatTooltip,
     MatIcon,
+    FontAwesomeModule,
   ],
   providers: [httpInterceptorProviders],
   exports: [

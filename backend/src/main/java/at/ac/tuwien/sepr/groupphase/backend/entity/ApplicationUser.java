@@ -4,7 +4,6 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,11 +12,10 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "ApplicationUser")
@@ -129,22 +127,8 @@ public class ApplicationUser {
         return false;
     }
 
-    public boolean getCook() {
-        if (roles != null && !roles.isEmpty()) {
-            for (Role role : roles) {
-                if (role.getId() == 4) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public void addRole(Role role) {
-        if (roles == null) {
-            roles = new ArrayList<>();
-        }
-        roles.add(role);
+    public List<Role> getRoles() {
+        return this.roles;
     }
 
     public void setRoles(List<Role> roles) {

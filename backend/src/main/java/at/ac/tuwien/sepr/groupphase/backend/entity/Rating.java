@@ -98,6 +98,14 @@ public class Rating {
         this.review = review;
     }
 
+    public String toEmailString() {
+        return "Benutzer: " + user.getUsername() + "\n"
+            + "Geschmack: " + taste + "\n"
+            + "Einfachheit: " + easeOfPrep + "\n"
+            + "Kosten: " + cost + "\n"
+            + "Review: " + review + "\n";
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

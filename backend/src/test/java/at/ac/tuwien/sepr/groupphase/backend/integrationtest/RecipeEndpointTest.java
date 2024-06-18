@@ -6,6 +6,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
@@ -14,8 +16,13 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDescriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +38,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -57,6 +65,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({"test"})
 @AutoConfigureMockMvc
+@Transactional
 class RecipeEndpointTest implements TestData {
     @Autowired
     private MockMvc mockMvc;
@@ -280,14 +289,16 @@ class RecipeEndpointTest implements TestData {
             "Category 1000 not found",
             "Ingredient 10000 not found",
             "Step Step eins is not valid",
-            "Step Step zwei not found",
+            "Step Step zwei is not valid",
             "Step Step drei is not valid",
-            "Step Step vier not found"
+            "Step Step vier is not valid"
         };
 
         // Check each required line
 
+        System.out.println(response);
         for (String requiredLine : requiredLines) {
+            System.out.println(requiredLine);
             assertTrue(response.getContentAsString().contains(requiredLine));
         }
     }
@@ -376,7 +387,7 @@ class RecipeEndpointTest implements TestData {
     }
 
     @Test
-    public void searchRecipeReturnsEmptyListNotFound() throws Exception {
+    void searchRecipeReturnsEmptyListNotFound() throws Exception {
         mockMvc
             .perform(get("/api/v1/recipes") // Corrected endpoint
                 .param("name", "Gurke")

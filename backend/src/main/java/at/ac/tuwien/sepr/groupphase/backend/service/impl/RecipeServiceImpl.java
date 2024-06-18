@@ -8,8 +8,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.IngredientNutrition;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Nutrition;
@@ -19,20 +19,22 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
+import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
+import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -62,21 +64,24 @@ public class RecipeServiceImpl implements RecipeService {
     private final CategoryRepository categoryRepository;
     private final RecipeValidator recipeValidator;
     private final UserManager userManager;
-    private final RoleRepository roleRepository;
-    private final EmailService emailService;
+    private final BadgeService badgeService;
+
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
                              RecipeMapper recipeMapper,
                              CategoryRepository categoryRepository,
-                             RecipeValidator recipeValidator, UserManager userManager, RoleRepository roleRepository, EmailService emailService) {
+                             RecipeValidator recipeValidator,
+                             UserManager userManager,
+                             BadgeService badgeService) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
         this.categoryRepository = categoryRepository;
         this.recipeValidator = recipeValidator;
         this.userManager = userManager;
-        this.roleRepository = roleRepository;
-        this.emailService = emailService;
+        this.badgeService = badgeService;
     }
+
+
 
     @Override
     public RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException {
@@ -112,7 +117,8 @@ public class RecipeServiceImpl implements RecipeService {
             result.ingredients(),
             result.allergens(),
             result.nutritions(),
-            forkedRecipeNames
+            forkedRecipeNames,
+            result.rating()
         );
     }
 
@@ -168,7 +174,6 @@ public class RecipeServiceImpl implements RecipeService {
         return getRecipeDetailDtoById(id);
     }
 
-
     @Override
     public DetailedRecipeDto createRecipe(RecipeCreateDto recipeDto) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException {
         LOGGER.debug("Publish new message {}", recipeDto);
@@ -191,12 +196,7 @@ public class RecipeServiceImpl implements RecipeService {
         simple.setRecipeSteps(recipe.getRecipeSteps());
 
         recipeRepository.save(simple);
-
-        if (!owner.getCook()) {
-            owner.addRole(roleRepository.getById(4L));
-            emailService.sendSimpleEmail(owner.getEmail(), "Neuer Badge", "Gratulation, du bist jetzt Cook!");
-        }
-
+        badgeService.addRoleToUser(owner, Roles.Cook);
         var x = recipeMapper.recipeToDetailedRecipeDto(simple);
         return x;
     }
@@ -218,7 +218,7 @@ public class RecipeServiceImpl implements RecipeService {
 
         List<Category> categories = new ArrayList<>();
         for (Category category : recipe.getCategories()) {
-            categories.add(categoryRepository.getById(category.getId()));
+            categories.add(categoryRepository.findById(category.getId()).orElseThrow(NotFoundException::new));
         }
         simple.setIngredients(recipe.getIngredients());
         simple.setCategories(categories);
@@ -240,7 +240,8 @@ public class RecipeServiceImpl implements RecipeService {
         long rating = 0;
         if (!ratings.isEmpty()) {
             for (Rating value : ratings) {
-                rating += value.getTaste().longValue();
+                rating += (value.getTaste().longValue()
+                    + value.getCost().longValue() + value.getEaseOfPrep().longValue()) / 3;
             }
             rating /= ratings.size();
         }

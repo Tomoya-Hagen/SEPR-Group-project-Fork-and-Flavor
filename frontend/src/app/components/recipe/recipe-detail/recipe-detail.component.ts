@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -11,6 +11,9 @@ import { RecipeBookService } from 'src/app/services/recipebook.service';
 import { Title } from '@angular/platform-browser';
 import { UserService } from 'src/app/services/user.service';
 import {RecipeModalComponent} from "./recipe-modal/recipe-modal.component";
+import { RatingCreateDto, RatingListDto } from 'src/app/dtos/rating';
+import { RatingService } from 'src/app/services/rating.service';
+import { Form, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -36,6 +39,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     nutritions: [],
     forkedRecipes: []
   };
+
+  cost = 0;
+  ratingValues = [0,1,2,3,4,5];
+  ratings: RatingListDto[] = [];
   dummyRecipeBookSelectionModel: unknown;
   recipeSteps = [];
   returnClass = true;
@@ -55,6 +62,14 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   showNutrition: boolean = false;
   screenWidth: number;
   isOwner: boolean = false;
+  areRatingsLoaded: boolean = false;
+  rating: RatingCreateDto = {
+    review: "",
+    taste: 0,
+    easeOfPrep: 0,
+    recipeId: 0,
+    cost: 0
+  }
   selectedPortions: number;
   originalServings: number;
   hasForkedRecipes: boolean = false;
@@ -91,6 +106,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   ];
 
   constructor(
+    private ratingService: RatingService,
     private service: RecipeService,
     private router: Router,
     private route: ActivatedRoute,
@@ -108,6 +124,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
       observable.subscribe({
         next: data => {
           this.recipe = data;
+          this.rating.recipeId = this.recipe.id;
           this.recipeSteps = this.recipe.recipeSteps;
           this.originalNutritions = this.recipe.nutritions;
           this.originalIngredients = this.recipe.ingredients;
@@ -257,6 +274,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
             this.currentRecipeBook=null;
           },
           error: error => {
+            this.notification.error(error);
             this.defaultServiceErrorHandling(error);
           }
         }
@@ -341,6 +359,63 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     });
   }
 
+  loadRatings(){
+    this.ratingService.getRatingsByRecipeId(this.recipe.id).subscribe({
+      next: data => {
+        this.notification.success(`Ratings loaded successfully.`);
+        this.ratings = data;
+        this.areRatingsLoaded = true;
+      },
+      error: error => {
+        this.notification.error(error);
+        this.defaultServiceErrorHandling(error);
+      }
+    }
+  );
+  }
+
+  onSubmitRating(form:NgForm){
+    this.ratingService.createRating(this.rating).subscribe({
+      next: () => {
+        this.notification.success(`Rating added successfully.`);
+        this.modalService.dismissAll();
+        this.currentRecipeBook=null;
+        this.loadRatings();
+      },
+      error: error => {
+        this.notification.error(error);
+        this.defaultServiceErrorHandling(error);
+      }
+    }
+  );
+  }
+
+  openRatingModal(modal: TemplateRef<any>) {
+    this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
+  closeRatingModal() {
+    this.modalService.dismissAll();
+  }
+
+  isFormValid():boolean{
+    return this.rating.cost != 0 &&
+    this.rating.easeOfPrep != 0 &&
+    this.rating.taste != 0 &&
+    this.rating.review.length > 0
+  }
+
+  public selectEaseOfPrep(value: number | null) {
+    this.rating.easeOfPrep = value;
+  }
+
+  public selectCost(value: number | null) {
+    this.rating.cost = value;
+  }
+
+  public selectTaste(value: number | null) {
+    this.rating.taste = value;
+  }
   async getRecipesGoingWellTogether(): Promise<void> {
     const data = this.service.getGoesWellWith(this.recipe.id, this.page - 1, this.size)
       .subscribe( {

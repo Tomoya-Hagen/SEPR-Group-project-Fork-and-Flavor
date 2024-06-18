@@ -2,6 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeIngredientDto;
@@ -12,11 +14,15 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
+import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeIngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +63,8 @@ class RecipeServiceTest implements TestData {
     void EditRecipeSuccessfullyChangingTheStepsIngredientsAndTheNumberOfServings() {
         userAuthenticationByEmail("admin@email.com");
         List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
-        recipeStepDtoList.add(new RecipeStepDto("Dawai dawai","Schneller",0,true));
-        recipeStepDtoList.add(new RecipeStepDto("Tamam hamam","Mit Sorgfalt rühren",0,true));
+        recipeStepDtoList.add(new RecipeStepDto("Dawai dawai", "Schneller", 0, true));
+        recipeStepDtoList.add(new RecipeStepDto("Tamam hamam", "Mit Sorgfalt rühren", 0, true));
 
         Recipe recipe = recipeRepository.getById(1L);
         ArrayList<RecipeStepDto> recipeSteps = new ArrayList<>();
@@ -77,7 +83,7 @@ class RecipeServiceTest implements TestData {
         for (RecipeIngredient recipeIngredient : newIngredients) {
             RecipeIngredient.Unit unit = recipeIngredient.getUnit();
             String unitString = "";
-            switch(unit) {
+            switch (unit) {
                 case g -> unitString = "g";
                 case mg -> unitString = "mg";
                 case L -> unitString = "L";
@@ -94,7 +100,7 @@ class RecipeServiceTest implements TestData {
 
         RecipeUpdateDto updateDto = new RecipeUpdateDto(1L, recipe.getName(), recipe.getDescription(), (short) 3,
             categorieDtos, recipeSteps, newDtoList
-            );
+        );
 
         DetailedRecipeDto d = recipeService.updateRecipe(updateDto);
         Recipe updatedRecipe = recipeRepository.getById(d.getId());

@@ -21,6 +21,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
@@ -56,11 +57,13 @@ public class CustomUserDetailService implements UserService {
     private final RecipeRepository recipeRepository;
     private final RecipeMapper recipeMapper;
     private final EmailService emailService;
+    private final UserManager userManager;
 
     @Autowired
     public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserMapper userMapper,
                                    UserRegisterDtoMapper userRegisterDtoMapper, RoleRepository rolesRepository, RecipeBookMapper recipeBookMapper,
-                                   RecipeBookRepository recipeBookRepository, RecipeMapper recipeMapper, RecipeRepository recipeRepository, EmailService emailService) {
+                                   RecipeBookRepository recipeBookRepository, RecipeMapper recipeMapper, RecipeRepository recipeRepository, EmailService emailService,
+                                   UserManager userManager) {
         this.userRepository = userRepository;
         this.userValidator = new UserValidator(userRepository);
         this.passwordEncoder = passwordEncoder;
@@ -73,6 +76,7 @@ public class CustomUserDetailService implements UserService {
         this.recipeMapper = recipeMapper;
         this.recipeRepository = recipeRepository;
         this.emailService = emailService;
+        this.userManager = userManager;
     }
 
     @Override

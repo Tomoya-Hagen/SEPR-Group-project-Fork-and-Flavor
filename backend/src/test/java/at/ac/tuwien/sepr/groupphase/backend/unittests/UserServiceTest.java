@@ -7,6 +7,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Role;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Disabled;
@@ -37,10 +38,10 @@ class UserServiceTest {
 
     @Test
     void findUsersByNameFindsTwoUsersWithTheLetterU() {
-        String[] roles = {"Admin", "User", "Contributor", "Cook", "StarCook"};
+        Roles[] roles = Roles.values();
         List<Role> rolesList = new ArrayList<>();
-        for (String s : roles) {
-            Role role = new Role.RoleBuilder().withroleId(s).build();
+        for (Roles r : roles) {
+            Role role = new Role.RoleBuilder().withroleId(r.name()).build();
             rolesList.add(roleRepository.save(role));
         }
         ApplicationUser user1 = new ApplicationUser.ApplicationUserBuilder()
