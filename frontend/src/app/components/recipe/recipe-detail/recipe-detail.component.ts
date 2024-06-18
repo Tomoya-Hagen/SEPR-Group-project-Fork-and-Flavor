@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
@@ -41,7 +41,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   cost = 0;
   ratingValues = [0,1,2,3,4,5];
-  isRatingDialogShown = false;
   ratings: RatingListDto[] = [];
   dummyRecipeBookSelectionModel: unknown;
   recipeSteps = [];
@@ -306,6 +305,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         this.notification.success(`Rating added successfully.`);
         this.modalService.dismissAll();
         this.currentRecipeBook=null;
+        this.loadRatings();
       },
       error: error => {
         this.notification.error(error);
@@ -315,8 +315,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   );
   }
 
-  updateIsRatingDialogShown(){
-    this.isRatingDialogShown = true;
+  openRatingModal(modal: TemplateRef<any>) {
+    this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
+  closeRatingModal() {
+    this.modalService.dismissAll();
   }
 
   isFormValid():boolean{
