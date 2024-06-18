@@ -24,6 +24,8 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableExcep
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import jakarta.validation.Valid;
@@ -60,20 +62,21 @@ public class RecipeServiceImpl implements RecipeService {
     private final CategoryRepository categoryRepository;
     private final RecipeValidator recipeValidator;
     private final UserManager userManager;
-
+    private final RoleRepository roleRepository;
+    private final EmailService emailService;
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
                              RecipeMapper recipeMapper,
                              CategoryRepository categoryRepository,
-                             RecipeValidator recipeValidator, UserManager userManager) {
+                             RecipeValidator recipeValidator, UserManager userManager, RoleRepository roleRepository, EmailService emailService) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
         this.categoryRepository = categoryRepository;
         this.recipeValidator = recipeValidator;
         this.userManager = userManager;
+        this.roleRepository = roleRepository;
+        this.emailService = emailService;
     }
-
-
 
     @Override
     public RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException {
@@ -187,8 +190,13 @@ public class RecipeServiceImpl implements RecipeService {
         simple.setCategories(categories);
         simple.setRecipeSteps(recipe.getRecipeSteps());
 
-
         recipeRepository.save(simple);
+
+        if (!owner.getCook()){
+            owner.addRole(roleRepository.getById(4L));
+            emailService.sendSimpleEmail(owner.getEmail(), "Neuer Badge", "Gratulation, du bist jetzt Cook!");
+        }
+
         var x = recipeMapper.recipeToDetailedRecipeDto(simple);
         return x;
     }
