@@ -26,6 +26,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeStepRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.Resource;
@@ -109,17 +110,17 @@ public class DataGenerator implements CommandLineRunner {
 
     private void generateUserData() {
 
-        String[] roles = {"Admin", "User", "Contributor", "Cook", "StarCook"};
+        Roles[] roles = Roles.values();
         String[] usernames = {"admin", "user", "contributor", "cook", "starcook"};
         String[] emails = {"admin@email.com", "user@email.com", "contributor@email.com", "cook@email.com", "starcook@email.com"};
 
         // Create and save roles
         List<Role> savedRoles = new ArrayList<>();
-        for (String s : roles) {
-            if (roleRepository.existsByName(s)) {
+        for (Roles r : roles) {
+            if (roleRepository.existsByName(r.name())) {
                 continue;
             }
-            Role role = new Role.RoleBuilder().withroleId(s).build();
+            Role role = new Role.RoleBuilder().withroleId(r.name()).build();
             savedRoles.add(roleRepository.save(role));
         }
 

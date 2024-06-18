@@ -126,6 +126,10 @@ public class ApplicationUser {
         return false;
     }
 
+    public List<Role> getRoles(){
+        return this.roles;
+    }
+
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
