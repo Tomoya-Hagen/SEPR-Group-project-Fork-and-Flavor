@@ -16,6 +16,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeBookValidator;
@@ -28,6 +29,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -41,6 +43,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     private final RecipeBookValidator recipeBookValidator;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserManager userManager;
+    private final EmailService emailService;
 
     public RecipeBookServiceImpl(RecipeBookRepository recipeBookRepository,
                                  RecipeMapper recipeMapper,
@@ -48,7 +51,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
                                  RecipeRepository recipeRepository,
                                  UserRepository userRepository,
                                  RecipeBookValidator recipeBookValidator,
-                                 UserManager userManager) {
+                                 UserManager userManager, EmailService emailService) {
         this.recipeBookRepository = recipeBookRepository;
         this.recipeBookMapper = recipeBookMapper;
         this.recipeRepository = recipeRepository;
@@ -56,6 +59,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         this.userRepository = userRepository;
         this.recipeBookValidator = recipeBookValidator;
         this.userManager = userManager;
+        this.emailService = emailService;
     }
 
     @Override
@@ -132,7 +136,21 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     public void updateRecipeBook(Long id, RecipeBookCreateDto recipeBookCreateDto) throws ValidationException, NotFoundException {
         LOGGER.trace("updateRecipeBook({})", recipeBookCreateDto);
         recipeBookValidator.validateForCreateAndUpdate(recipeBookCreateDto);
-        recipeBookRepository.findById(id).orElseThrow(NotFoundException::new);
+        var oldRecipeBook = recipeBookRepository.findById(id).orElseThrow(NotFoundException::new);
+        List<ApplicationUser> newUsers = new ArrayList<>();
+        for (var editors : oldRecipeBook.getEditors()) {
+            boolean alreadyExists = false;
+            for (var newEditors : recipeBookCreateDto.users()) {
+                if (editors.getId() == newEditors.id()) {
+                    alreadyExists = true;
+                    break;
+                }
+            }
+
+            if (!alreadyExists) {
+                newUsers.add(editors);
+            }
+        }
         RecipeBook recipeBook = new RecipeBook();
         recipeBook.setName(recipeBookCreateDto.name());
         recipeBook.setDescription(recipeBookCreateDto.description());
@@ -146,6 +164,10 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         recipeBook.setEditors(users);
         recipeBook.setRecipes(recipeBookRecipeMapper.listOfRecipeListDtoToRecipeList(recipeBookCreateDto.recipes()));
         recipeBookRepository.save(recipeBook);
+
+        for (var editors : newUsers) {
+            emailService.sendSimpleEmail(editors.getEmail(), "Zum neuen Rezeptbuch hinzugefügt: " + recipeBook.getName(), "Sie wurden zu einem neuen Rezeptbuch hinzugefügt.");
+        }
     }
 
     @Override
