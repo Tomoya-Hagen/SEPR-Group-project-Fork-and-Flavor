@@ -48,6 +48,12 @@ h4.rec-step span {
   align-items: center;
 }
 
+.input-width {
+  width: 50%;
+  max-width: 50px;
+  box-sizing: border-box;
+}
+
 .fab-container {
   position: fixed;
   bottom: 30px;

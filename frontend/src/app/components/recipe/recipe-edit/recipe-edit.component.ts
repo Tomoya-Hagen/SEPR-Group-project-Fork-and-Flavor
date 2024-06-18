@@ -77,18 +77,38 @@ export class RecipeEditComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.recipeService.getRecipeDetailsBy(this.route.snapshot.params['id']).subscribe(recipe => {
-      this.ownerId = recipe.ownerId;
-    })
-    this.checkOwnerShip();
-    const id = this.route.snapshot.params['id'];
-    this.recipeService.getRecipeUpdateDtoById(id).subscribe(recipe => {
-      this.recipe = recipe;
-      console.log(this.recipe);
+    const recipeId = this.route.snapshot.params['id']
+    this.recipeService.getRecipeDetailsBy(recipeId).subscribe({
+      next: (recipe) => {
+        this.ownerId = recipe.ownerId;
+        this.userService.getCurrentUser().subscribe({
+          next: (currentUser) => {
+            if (this.ownerId === currentUser.id) {
+              this.isOwner = true;
+              this.recipeService.getRecipeUpdateDtoById(recipeId).subscribe({
+                next: (recipe) => {
+                  this.recipe = recipe;
+                },
+                error: (err) => {
+                  console.error('Error loading recipe details:', err);
+                  this.navToDetails(recipeId);
+                }
+              });
+            } else {
+              this.navToDetails(recipeId);
+            }
+          },
+          error: (err) => {
+            console.error('Error fetching current user:', err);
+            this.navToDetails(recipeId);
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Error fetching recipe details:', err);
+        this.navToDetails(recipeId);
+      }
     });
-    if (this.isOwner === false) {
-      this.router.navigate([`/recipe/details/${id}`]);
-    }
   }
   public onSubmit(form: NgForm): void {
     console.log(this.recipe);
@@ -121,7 +141,7 @@ export class RecipeEditComponent implements OnInit {
     this.recipeService.updateRecipe(this.recipe).subscribe({
       next: (detrecipe: DetailedRecipeDto) => {
         // this.notification.info('Update successful!');
-        this.router.navigate(['/recipe']);
+        this.router.navigate(['recipe', 'details', this.recipe.id]);
       },
       error: error => {
         this.defaultServiceErrorHandling(error);
@@ -248,22 +268,8 @@ export class RecipeEditComponent implements OnInit {
     }
   }
 
-  public navToDetails() {
-    this.router.navigate(['recipe', 'details', this.recipe.id]);
+  public navToDetails(recipeId: number) {
+    this.router.navigate(['recipe', 'details', recipeId]);
   }
-
-  public clickSubmit(): void {
-    this.onSubmit({} as NgForm);
-    this.navToDetails();
-  }
-
-  private checkOwnerShip(): void {
-    this.userService.getCurrentUser().subscribe(currentUser => {
-      if (currentUser && this.ownerId === currentUser.id) {
-        this.isOwner = true;
-      }
-    });
-  }
-
 
 }

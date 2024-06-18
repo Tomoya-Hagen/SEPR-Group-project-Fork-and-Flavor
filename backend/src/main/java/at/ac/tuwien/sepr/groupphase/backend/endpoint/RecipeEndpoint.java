@@ -51,6 +51,7 @@ public class RecipeEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final RecipeService recipeService;
 
+
     @Autowired
     public RecipeEndpoint(RecipeService recipeService) {
         this.recipeService = recipeService;
@@ -59,13 +60,14 @@ public class RecipeEndpoint {
     @PermitAll
     @GetMapping(value = "/details/{id}")
     @Operation(summary = "Get recipe details by id")
-    public RecipeDetailDto findBy(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<RecipeDetailDto> findBy(@PathVariable(name = "id") Long id) {
         LOGGER.info("GET /api/v1/recipe/details/{}", id);
         try {
-            return recipeService.getRecipeDetailDtoById(id);
+            RecipeDetailDto recipeDetailDto = recipeService.getRecipeDetailDtoById(id);
+            return ResponseEntity.ok(recipeDetailDto);
         } catch (NotFoundException e) {
             HttpStatus status = HttpStatus.NOT_FOUND;
-            logClientError(status, "no recipe found by the given is", e);
+            logClientError(status, "no recipe found by the given id", e);
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
     }
