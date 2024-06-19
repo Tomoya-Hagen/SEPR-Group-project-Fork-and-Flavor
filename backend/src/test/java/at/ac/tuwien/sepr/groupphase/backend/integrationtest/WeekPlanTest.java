@@ -56,11 +56,6 @@ public class WeekPlanTest implements TestData {
 
     @Autowired
     private ObjectMapper objectMapper;
-    @Qualifier("h2Console")
-    @Autowired
-    private ServletRegistrationBean h2Console;
-    @Autowired
-    private AsyncConfigurationSelector asyncConfigurationSelector;
 
 
     @Test
