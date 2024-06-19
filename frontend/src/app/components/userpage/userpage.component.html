@@ -12,9 +12,21 @@
           <li>{{user.name}}</li>
         </ul>
       </div>
-      <div class="border-top">
-        <h2 class="h4 mb-3 margin-top-5">latest Reviews</h2>
-        <p></p>
+      <div class="border-top" >
+        <h2 class="h4 mb-3 margin-top-5" *ngIf="ratings.length !== 0">latest Reviews</h2>
+        <table class="table">
+          <tbody>
+          <tr *ngFor="let rating of ratings">
+            <td>{{ rating.review }}</td>
+            <td>
+              <button class="btn btn-primary btn-sm"
+                      [routerLink]="['/recipe/details', rating.recipeId]">
+                Go to recipe
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     <div class="col-12 col-md-8">
