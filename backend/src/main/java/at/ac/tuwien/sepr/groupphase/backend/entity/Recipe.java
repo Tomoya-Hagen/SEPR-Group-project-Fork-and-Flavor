@@ -185,6 +185,13 @@ public class Recipe {
         this.categories = categories;
     }
 
+    public void addCategory(Category category) {
+        if (this.categories == null) {
+            this.categories = new ArrayList<>();
+        }
+        this.categories.add(category);
+    }
+
     public Boolean getIsDraft() {
         return isDraft;
     }
