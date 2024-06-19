@@ -152,6 +152,34 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     this.titleService.setTitle("Fork & Flavour");
   }
 
+  updateMenuOptions() {
+    this.menuOptions = [
+      {
+        label: 'Neues Rezept erstellen',
+        action: () => this.addRecipe()
+      },
+      {
+        label: 'Rezept bearbeiten',
+        action: () => this.editRecipe(),
+        disabled: !this.isOwner
+      },
+      {
+        label: 'Rezept forken',
+        action: () => this.fork()
+      },
+      {
+        label: 'Rezept spoonen', buttonClass: 'info-box-3',
+        iconClass: 'info-box-3',
+        action: () => this.openSpoonModal(this.spoonRecipeModal)
+      },
+      {
+        label: 'Rezepte die gut dazupassen bearbeiten',
+        action: () => this.openRecipeGoesWellWithModal(),
+        disabled: !this.isOwner
+      }
+    ];
+  }
+
   roundTo(value: number): number {
     const factor = Math.pow(10, 1);
     return Math.round(value * factor) / factor;
@@ -354,6 +382,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
       if (currentUser && this.recipe.ownerId === currentUser.id) {
         this.isOwner = true;
       }
+      this.updateMenuOptions();
     });
   }
 
