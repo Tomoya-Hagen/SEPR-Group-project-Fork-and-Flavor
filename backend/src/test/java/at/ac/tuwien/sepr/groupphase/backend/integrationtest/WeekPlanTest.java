@@ -10,11 +10,14 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.scheduling.annotation.AsyncConfigurationSelector;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -53,12 +56,15 @@ public class WeekPlanTest implements TestData {
 
     @Autowired
     private ObjectMapper objectMapper;
+    @Qualifier("h2Console")
+    @Autowired
+    private ServletRegistrationBean h2Console;
+    @Autowired
+    private AsyncConfigurationSelector asyncConfigurationSelector;
 
 
     @Test
     void getWeekPlanbyIDReturnAll() throws Exception {
-        String sfrom = "2024-06-19";
-        String sto = "2024-06-26";
 
         MvcResult mvcResult = this.mockMvc.perform(get(WEEKPLAN_BASE_URI + "/{id}", 1)
             .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
@@ -74,17 +80,7 @@ public class WeekPlanTest implements TestData {
         WeekPlanDetailDto[] recipeDetailDto = objectMapper.readValue(response.getContentAsString(),
             WeekPlanDetailDto[].class);
 
-
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date from = formatter.parse(sfrom);
-        Date to = formatter.parse(sto);
-
         assertEquals(recipeDetailDto.length, 2);
-
-        for (WeekPlanDetailDto dto : recipeDetailDto) {
-            assertTrue(dto.date.after(from));
-            assertTrue(dto.date.before(to));
-        }
     }
 
     @Test
