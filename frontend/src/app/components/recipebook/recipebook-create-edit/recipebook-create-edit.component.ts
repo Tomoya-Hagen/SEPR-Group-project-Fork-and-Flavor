@@ -149,7 +149,7 @@ export class RecipebookCreateEditComponent implements OnInit {
 
   recipeSuggestions = (input: string) => (input === '')
   ? of([])
-  :  this.recipeService.recipesByName(input, 5);
+  :  this.recipeService.recipesByName(input, 0,5);
 
   userSuggestions = (input: string) => (input === '')
   ? of([])

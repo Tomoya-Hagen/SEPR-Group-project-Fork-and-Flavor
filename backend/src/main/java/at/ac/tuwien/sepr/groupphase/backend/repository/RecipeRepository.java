@@ -15,7 +15,6 @@ import java.util.Optional;
 
 /**
  * This is the interface for the persistence layer of Recipes.
- *
  */
 @DynamicInsert
 @DynamicUpdate
@@ -37,7 +36,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      * gets a list recipe entities by the given range from to.
      *
      * @param from represents the start value of ids which will be returned.
-     * @param to represents the end value of ids which will be returned.
+     * @param to   represents the end value of ids which will be returned.
      * @return a list of recipes which hava an id in the range @from to @to.
      */
     List<Recipe> findByIdBetweenOrderById(Long from, Long to);
@@ -46,6 +45,9 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     Long findMaxId();
 
     Page<Recipe> findByNameContainingIgnoreCase(String name, Pageable pageable);
+
+    @Query("SELECT distinct i FROM Recipe i join FETCH i.categories rc WHERE LOWER(i.name) LIKE LOWER(CONCAT('%', :name, '%')) AND rc.id = :id")
+    Page<Recipe> findByCategoryIdContainingIgnoreCase(@Param("name") String name, @Param("id") long ids, Pageable pageable);
 
     /**
      * Search for recipes in the persistent data store matching  provided field.
@@ -62,6 +64,12 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     @Query("SELECT i FROM Recipe i WHERE i.name LIKE %:name%")
     List<Recipe> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
+
+    @Query("SELECT distinct i FROM Recipe i join FETCH i.categories rc WHERE i.name LIKE %:name% AND rc.id = :id")
+    List<Recipe> findByNameContainingWithLimit(@Param("name") String name, @Param("id") long ids, Pageable pageable);
+
+    @Query("SELECT r FROM Recipe r WHERE r.category.id = :categoryId ")
+    List<Recipe> findRecipeByCategoryId(@Param("categoryId") long ids, Pageable pageable);
 
     /**
      * Gets a recipe by id.

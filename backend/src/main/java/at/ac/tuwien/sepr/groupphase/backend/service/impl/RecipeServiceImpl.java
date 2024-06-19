@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
@@ -133,6 +134,16 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public Page<RecipeListDto> getRecipesByNameCategories(RecipeSearchDto searchDto, Pageable pageable) {
+        Page<Recipe> recipePage = recipeRepository.findByCategoryIdContainingIgnoreCase(searchDto.name(), searchDto.categorieId(), pageable);
+
+        return recipePage.map(recipe -> {
+            Long rating = calculateAverageTasteRating(recipe.getRatings());
+            return recipeMapper.recipeToRecipeListDto(recipe, rating);
+        });
+    }
+
+    @Override
     public Page<RecipeListDto> getRecipesThatGoWellWith(long id, Pageable pageable) throws NotFoundException {
         Recipe origRecipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
         List<Recipe> goWellWith = origRecipe.getGoesWellWithRecipes();
@@ -233,6 +244,11 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Stream<SimpleRecipeResultDto> byname(String name, int limit) {
         return recipeRepository.findByNameContainingWithLimit(name, PageRequest.of(0, limit)).stream().map(recipeMapper::recipeToRecipeResultDto);
+    }
+
+    @Override
+    public Stream<SimpleRecipeResultDto> bynamecategories(RecipeSearchDto searchDto, int limit) {
+        return recipeRepository.findByNameContainingWithLimit(searchDto.name(), searchDto.categorieId(), PageRequest.of(0, limit)).stream().map(recipeMapper::recipeToRecipeResultDto);
     }
 
     private long calculateAverageTasteRating(List<Rating> ratings) {
