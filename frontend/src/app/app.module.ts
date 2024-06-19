@@ -38,6 +38,7 @@ import {CommonModule} from "@angular/common";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { StarRatingComponent } from './components/star-rating/star-rating.component';
 import {UserpageComponent} from "./components/userpage/userpage.component";
+import {RecipebookDetailComponent} from "./components/recipebook/recipebook-detail/recipebook-detail.component";
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import {UserpageComponent} from "./components/userpage/userpage.component";
     ResetPasswordComponent,
     RecipeModalComponent,
     FloatingMenuComponent,
-    StarRatingComponent
+    StarRatingComponent,
+    RecipebookDetailComponent
   ],
   imports: [
     BrowserModule,
