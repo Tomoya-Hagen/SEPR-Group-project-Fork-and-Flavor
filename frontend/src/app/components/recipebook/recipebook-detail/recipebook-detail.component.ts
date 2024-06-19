@@ -79,4 +79,7 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
   editRecipeBook() {
     this.router.navigate(['/recipebook/edit',this.recipeBook.id])
   }
+  gotoWeekPlan(){
+    this.router.navigate(['/weekplan/'+ this.recipeBook.id])
+  }
 }

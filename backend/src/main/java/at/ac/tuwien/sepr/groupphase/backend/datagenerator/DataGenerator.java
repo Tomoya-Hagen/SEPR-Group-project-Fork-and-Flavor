@@ -13,6 +13,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Role;
+import at.ac.tuwien.sepr.groupphase.backend.entity.WeeklyPlanner;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergenRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.IngredientRepository;
@@ -23,6 +24,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeStepRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.WeeklyPlannerRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -33,7 +35,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -57,6 +63,7 @@ public class DataGenerator implements CommandLineRunner {
     private final RecipeStepRepository recipeStepRepository;
 
     private final ResourceLoader resourceLoader;
+    private final WeeklyPlannerRepository weeklyPlannerRepository;
 
     private HashMap<Long, Long> idMap;
     private List<Long> skippedRecipes = new ArrayList<>();
@@ -66,7 +73,7 @@ public class DataGenerator implements CommandLineRunner {
                          AllergenRepository allergenRepository, NutritionRepository nutritionRepository,
                          RecipeBookRepository recipeBookRepository, RecipeRepository recipeRepository,
                          RecipeIngredientRepository recipeIngredientRepository,
-                         RecipeStepRepository recipeStepRepository, ResourceLoader resourceLoader) {
+                         RecipeStepRepository recipeStepRepository, ResourceLoader resourceLoader, WeeklyPlannerRepository weeklyPlannerRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -80,6 +87,7 @@ public class DataGenerator implements CommandLineRunner {
         this.recipeStepRepository = recipeStepRepository;
         this.resourceLoader = resourceLoader;
         this.idMap = new HashMap<>();
+        this.weeklyPlannerRepository = weeklyPlannerRepository;
     }
 
     @Override
@@ -94,6 +102,7 @@ public class DataGenerator implements CommandLineRunner {
         generateRecipeCategories();
         generateRecipeSteps();
         generateRecipeBooks();
+        generateWeekPlan();
     }
 
     private void generateUserData() {
@@ -461,6 +470,33 @@ public class DataGenerator implements CommandLineRunner {
             throw new RuntimeException(e);
         }
         recipeBookRepository.flush();
+    }
+
+
+    protected void generateWeekPlan() {
+        Resource resource = resourceLoader.getResource("classpath:weekplan.csv");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                List<String> fields = parseCsvLine(line, ',');
+                if (fields.size() == 5) {
+                    WeeklyPlanner weeklyPlanner = new WeeklyPlanner();
+                    weeklyPlanner.setId(Long.parseLong(fields.get(0)));
+                    weeklyPlanner.setDate(Date.valueOf(fields.get(1)));
+                    weeklyPlanner.setDaytime(WeeklyPlanner.EatingTime.valueOf(fields.get(2)));
+                    Recipe r = recipeRepository.getRecipeById(Long.parseLong(fields.get(3))).get();
+                    RecipeBook rb = recipeBookRepository.getReferenceById(Long.parseLong(fields.get(4)));
+
+                    weeklyPlanner.setRecipe(r);
+                    weeklyPlanner.setRecipeBook(rb);
+                    weeklyPlannerRepository.save(weeklyPlanner);
+                }
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        weeklyPlannerRepository.flush();
     }
 
     private List<String> parseCsvLine(String line, char separator) {

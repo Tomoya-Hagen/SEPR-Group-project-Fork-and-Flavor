@@ -19,6 +19,13 @@ import java.sql.Date;
     uniqueConstraints = {@UniqueConstraint(columnNames = {"cook_date", "daytime", "recipe_book_id"})}
 )
 public class WeeklyPlanner {
+
+    public enum EatingTime {
+        Frühstück,
+        Mittagessen,
+        Abendessen
+    }
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
@@ -28,7 +35,7 @@ public class WeeklyPlanner {
     private Date date;
     @Basic
     @Column(name = "daytime")
-    private Date daytime;
+    private EatingTime daytime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id", nullable = false)
@@ -47,11 +54,11 @@ public class WeeklyPlanner {
         this.date = date;
     }
 
-    public Date getDaytime() {
+    public EatingTime getDaytime() {
         return daytime;
     }
 
-    public void setDaytime(Date daytime) {
+    public void setDaytime(EatingTime daytime) {
         this.daytime = daytime;
     }
 
@@ -63,5 +70,19 @@ public class WeeklyPlanner {
         this.recipe = recipe;
     }
 
+    public RecipeBook getRecipeBook() {
+        return recipeBook;
+    }
 
+    public void setRecipeBook(RecipeBook recipeBook) {
+        this.recipeBook = recipeBook;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }
