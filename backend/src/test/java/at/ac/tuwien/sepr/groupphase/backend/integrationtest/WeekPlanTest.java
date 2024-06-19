@@ -79,12 +79,12 @@ public class WeekPlanTest implements TestData {
         Date from = formatter.parse(sfrom);
         Date to = formatter.parse(sto);
 
-        assertEquals(recipeDetailDto.length, 3);
+        assertEquals(recipeDetailDto.length, 2);
 
-//        for (WeekPlanDetailDto dto : recipeDetailDto) {
-//            assertTrue(dto.date.after(from));
-//            assertTrue(dto.date.before(to));
-//        }
+        for (WeekPlanDetailDto dto : recipeDetailDto) {
+            assertTrue(dto.date.after(from));
+            assertTrue(dto.date.before(to));
+        }
     }
 
     @Test
