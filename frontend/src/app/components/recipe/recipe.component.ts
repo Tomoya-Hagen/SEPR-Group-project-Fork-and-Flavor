@@ -1,11 +1,11 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {RecipeService} from '../../services/recipe.service';
-import {Recipe, RecipeListDto, RecipeSearch} from '../../dtos/recipe';
-import {ToastrService} from 'ngx-toastr';
-import {Router} from '@angular/router';
-import {Subscription} from 'rxjs';
-import {CategoryService} from "../../services/CategoryService";
-import {CategoryDetailDto} from "../../dtos/category";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { RecipeService } from '../../services/recipe.service';
+import { Recipe, RecipeListDto, RecipeSearch } from '../../dtos/recipe';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { CategoryService } from "../../services/CategoryService";
+import { CategoryDetailDto } from "../../dtos/category";
 
 @Component({
   selector: 'app-recipe',
@@ -60,15 +60,14 @@ export class RecipeComponent implements OnInit, OnDestroy {
     private notification: ToastrService,
     private categoryService: CategoryService,
     private router: Router
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.searchChanged();
     this.categoryService.allcategories().subscribe({
       next: (response) => {
-        this.possible.category = response
-        this.show.category = response
+        this.possible.category = response;
+        this.show.category = response;
       }
     });
   }
@@ -98,6 +97,7 @@ export class RecipeComponent implements OnInit, OnDestroy {
 
   public categoryChanged(): void {
     this.show.category = this.possible.category.filter(obj => obj.name.toLowerCase().includes(this.input.category.toLowerCase()));
+    this.searchChanged();
   }
 
   selectcategory(category: CategoryDetailDto): void {
@@ -107,7 +107,7 @@ export class RecipeComponent implements OnInit, OnDestroy {
       this.recipeSearch.categoryId = category.id;
       this.searchChanged();
     } else {
-      this.notification.error('Bitte löschen Sie bereits ausgewählte Kategorie, um neue Kategorie zu wählen.', "Eroor bei Filter von Kategorien");
+      this.notification.error('Bitte löschen Sie bereits ausgewählte Kategorie, um neue Kategorie zu wählen.', 'Error bei Filter von Kategorien');
     }
   }
 
@@ -133,15 +133,18 @@ export class RecipeComponent implements OnInit, OnDestroy {
   }
 
   back(): void {
-    this.recipeSearch.name="";
+    this.recipeSearch.name = '';
     this.recipeSearch.categoryId = 0;
     this.searchSubscription = this.service.search(this.recipeSearch, this.page - 1, this.size)
-    .subscribe({
-      next: (data: any) => {
-        this.pagedData = data.content;
-        this.totalElements = data.totalElements;
-      }
-    });
+      .subscribe({
+        next: (data: any) => {
+          this.pagedData = data.content;
+          this.totalElements = data.totalElements;
+        }
+      });
   }
 
+  showAllCategories(): void {
+    this.show.category = this.possible.category;
+  }
 }
