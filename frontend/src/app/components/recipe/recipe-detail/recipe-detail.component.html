@@ -117,14 +117,15 @@
         <tbody>
         <tr *ngFor="let ingredient of recipe.ingredients">
           <td>{{ ingredient.name }}</td>
-          <td>{{ ingredient.amount }} {{ ingredient.unit }}</td>
+          <td>
+            <span *ngIf="ingredient.amount > 0">{{ ingredient.amount }}</span>
+            <span *ngIf="ingredient.unit !== 'EMPTY'">{{ ingredient.unit }}</span>
+          </td>
         </tr>
         </tbody>
       </table>
       <h4>Beschreibung:</h4>
       <p>{{ recipe.description }}</p>
-    </div>
-    <div class="edit-spoon">
     </div>
 
     <!-- Nutrition Section -->
