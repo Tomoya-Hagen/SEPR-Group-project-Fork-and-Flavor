@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Globals } from '../global/globals';
 import { RatingCreateDto, RatingListDto } from '../dtos/rating';
 import { Observable } from 'rxjs/internal/Observable';
+import {userDto} from "../dtos/user";
 
 @Injectable({
   providedIn: 'root'

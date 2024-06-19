@@ -3,17 +3,20 @@
     <div class="col-6 col-md-4">
       <div>
         <h1>{{ user.name }}</h1>
-        <button *ngIf="isMyPage" class="btn btn-light btn-sm " routerLink="/userpage/{{user.id}}/edit">Edit profile</button>
-        <p> <i class="bi bi-receipt"></i> {{recipeBook.length}} RecipeBooks · {{recipes.length}} Recipes</p>
+        <button *ngIf="isMyPage" class="btn btn-light btn-lg " routerLink="/userpage/{{user.id}}/edit">
+          <i class="bi bi-pencil-fill"></i>  Edit profile
+        </button>
+        <h5 class="h5 mb-3 margin-top-5"><i class="bi bi-book"></i> {{ recipeBook.length }} RecipeBooks</h5>
+        <h5 class="h5 mb-3 margin-top-5"><i class="bi bi-receipt"></i> {{ recipes.length }} Recipes</h5>
       </div>
       <div class="border-top">
-        <h2 class="h4 mb-3 margin-top-5"><p>Badges</p></h2>
+        <h2 class="h2 mb-3 margin-top-5"><p>Badges</p></h2>
         <ul>
-          <li>{{user.name}}</li>
+          <h5 *ngFor="let r of role"><i class="bi bi-gem"></i> {{ r }}</h5>
         </ul>
       </div>
       <div class="border-top">
-        <h2 class="h4 mb-3 margin-top-5">latest Reviews</h2>
+        <h2 class="h2 mb-3 margin-top-5">latest Reviews</h2>
         <p></p>
       </div>
     </div>

@@ -92,6 +92,13 @@
         <span *ngIf="!showNutrition">Zeigen</span>
         <span *ngIf="showNutrition">Verstecken</span>
     </div>
+    <div class="info-box info-box-6" >
+      <h4>Verifikation: <button type="button" (click)="addVerfication()" class=" btn btn-info"><i
+        class="bi bi-check-lg"></i></button></h4>
+      <div>
+        Anzahl: {{ verification }}
+      </div>
+    </div>
   </div>
 
 

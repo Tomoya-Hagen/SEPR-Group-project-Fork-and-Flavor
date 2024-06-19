@@ -92,7 +92,6 @@ public class Recipe {
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeIngredient> ingredients;
 
-
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "forked_from", referencedColumnName = "id")
     private List<Recipe> recipesForkedFromThis = new ArrayList<>();

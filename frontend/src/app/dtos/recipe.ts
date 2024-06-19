@@ -49,6 +49,7 @@ export interface RecipeDetailDto {
     allergens: AllergenDetailDto[],
     nutritions: NutritionDetailDto[],
     forkedRecipes: string[];
+    verification: number,
 }
 
 export interface RecipeList{

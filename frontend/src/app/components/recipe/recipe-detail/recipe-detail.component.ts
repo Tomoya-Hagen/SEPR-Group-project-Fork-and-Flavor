@@ -1,27 +1,27 @@
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs/internal/Observable';
+import {ActivatedRoute, Router} from '@angular/router';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ToastrService} from 'ngx-toastr';
+import {Observable} from 'rxjs/internal/Observable';
 import {Recipe, RecipeDetailDto, RecipeListDto} from 'src/app/dtos/recipe';
-import { RecipeBookListDto } from 'src/app/dtos/recipe-book';
-import { RecipeStepDetailDto, RecipeStepRecipeDetailDto } from 'src/app/dtos/recipe-step';
-import { RecipeService } from 'src/app/services/recipe.service';
-import { RecipeBookService } from 'src/app/services/recipebook.service';
-import { Title } from '@angular/platform-browser';
-import { UserService } from 'src/app/services/user.service';
+import {RecipeBookListDto} from 'src/app/dtos/recipe-book';
+import {RecipeStepDetailDto, RecipeStepRecipeDetailDto} from 'src/app/dtos/recipe-step';
+import {RecipeService} from 'src/app/services/recipe.service';
+import {RecipeBookService} from 'src/app/services/recipebook.service';
+import {Title} from '@angular/platform-browser';
+import {UserService} from 'src/app/services/user.service';
 import {RecipeModalComponent} from "./recipe-modal/recipe-modal.component";
-import { RatingCreateDto, RatingListDto } from 'src/app/dtos/rating';
-import { RatingService } from 'src/app/services/rating.service';
-import { Form, NgForm } from '@angular/forms';
+import {RatingCreateDto, RatingListDto} from 'src/app/dtos/rating';
+import {RatingService} from 'src/app/services/rating.service';
+import {Form, NgForm} from '@angular/forms';
 
 @Component({
   selector: 'app-recipe-detail',
   templateUrl: './recipe-detail.component.html',
   styleUrl: './recipe-detail.component.scss',
 })
-export class RecipeDetailComponent implements OnInit, OnDestroy{
-  @ViewChild('spoonRecipeModal', { static: true }) spoonRecipeModal: TemplateRef<any>;
+export class RecipeDetailComponent implements OnInit, OnDestroy {
+  @ViewChild('spoonRecipeModal', {static: true}) spoonRecipeModal: TemplateRef<any>;
 
   recipe: RecipeDetailDto = {
     id: 0,
@@ -37,11 +37,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     ingredients: [],
     allergens: [],
     nutritions: [],
-    forkedRecipes: []
+    forkedRecipes: [],
+    verification: 0
   };
 
   cost = 0;
-  ratingValues = [0,1,2,3,4,5];
+  ratingValues = [0, 1, 2, 3, 4, 5];
   ratings: RatingListDto[] = [];
   dummyRecipeBookSelectionModel: unknown;
   recipeSteps = [];
@@ -55,8 +56,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     "slidesToShow": 1,
     "slidesToScroll": 1,
     "dots": true,
-    "arrows" : true,
-    "infinite" : false
+    "arrows": true,
+    "infinite": false
   }
   recipeForkedFrom: string;
   showNutrition: boolean = false;
@@ -75,6 +76,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   hasForkedRecipes: boolean = false;
   originalNutritions = [];
   originalIngredients = [];
+  verification: number = 0;
+  verified: boolean = false;
   recipes: Recipe[] = [];
   totalElements: number;
   page: number = 1;
@@ -115,7 +118,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     private recipeBookService: RecipeBookService,
     private titleService: Title,
     private userService: UserService,
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
@@ -135,6 +139,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           this.getForkedFromRecipeName();
           this.isCurrentUserOwner();
           this.orderNutritions();
+          this.recipe.verification = this.verification;
           if (this.recipe.forkedRecipes.length > 0) {
             this.hasForkedRecipes = true;
           }
@@ -174,7 +179,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         }
         portionInput.value = numericValue.toString();
         this.selectedPortions = numericValue;
-        if(this.selectedPortions >= 1 && this.selectedPortions <= 10) {
+        if (this.selectedPortions >= 1 && this.selectedPortions <= 10) {
           this.onPortionsChange();
         }
       }
@@ -192,6 +197,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     this.selectedPortions = value;
     this.onPortionsChange();
   }
+
   onPortionsChange(): void {
     this.adjustIngredientsAndNutritions();
     this.changeIngredientsToGramm();
@@ -218,21 +224,22 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     return recipeStep.hasOwnProperty('description') && !('recipe' in recipeStep);
   }
 
-  isCategoriesNotEmpty(): boolean{
+  isCategoriesNotEmpty(): boolean {
     return this.recipe.categories.length != 0;
   }
-  isAllergensNotEmpty(): boolean{
+
+  isAllergensNotEmpty(): boolean {
     return this.recipe.allergens.length != 0;
   }
 
-  isForkedFromRecipe(): boolean{
+  isForkedFromRecipe(): boolean {
     if (this.recipe.id == this.recipe.forkedFromId) {
       return false;
     }
     return this.recipe.forkedFromId != 0 && this.recipe.forkedFromId != null;
   }
 
-  getForkedFromRecipeName(){
+  getForkedFromRecipeName() {
     if (this.recipe.forkedFromId == 0 || this.recipe.forkedFromId == null) {
       return;
     }
@@ -261,25 +268,23 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   spoon(form) {
     this.submitted = true;
-
-
-    this.spoonRecipe(this.recipe.id,this.currentRecipeBook.id);
+    this.spoonRecipe(this.recipe.id, this.currentRecipeBook.id);
   }
 
-  private spoonRecipe(recipeId:number, recipeBookId:number) {
-    this.recipeBookService.spoonRecipe(recipeId,recipeBookId).subscribe({
-          next: () => {
-            this.notification.success(`Rezepte hinzufügen war erfolgreich.`, "Rezepte erstellen erfolgreich!");
-            this.modalService.dismissAll();
-            this.currentRecipeBook=null;
-          },
-          error: error => {
-            this.notification.error(error);
-            this.defaultServiceErrorHandling(error);
-          }
+  private spoonRecipe(recipeId: number, recipeBookId: number) {
+    this.recipeBookService.spoonRecipe(recipeId, recipeBookId).subscribe({
+        next: () => {
+          this.notification.success(`Rezepte hinzufügen war erfolgreich.`, "Rezepte erstellen erfolgreich!");
+          this.modalService.dismissAll();
+          this.currentRecipeBook = null;
+        },
+        error: error => {
+          this.notification.error(error);
+          this.defaultServiceErrorHandling(error);
         }
-      );
-    }
+      }
+    );
+  }
 
   private defaultServiceErrorHandling(error: any) {
     console.log(error);
@@ -289,18 +294,18 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
       this.notification.error('Spoon Rezepte ist nicht möglich.' + this.errorMessage, 'Backend Fehler - Rezepte');
     } else {
       this.errorMessage = error.error;
-      this.notification.error( 'Spoon Rezepte ist nicht möglich.' + this.errorMessage, 'Backend Fehler - Rezepte');
+      this.notification.error('Spoon Rezepte ist nicht möglich.' + this.errorMessage, 'Backend Fehler - Rezepte');
     }
   }
 
   recipeBookSuggestions = (input: string): Observable<RecipeBookListDto[]> =>
     this.recipeBookService.getRecipeBooksTheUserHasWriteAccessTo()
 
-    public formatRecipeBook(recipeBook: RecipeBookListDto | null): string {
-      return !recipeBook
-        ? ""
-        : `${recipeBook.name}`
-    }
+  public formatRecipeBook(recipeBook: RecipeBookListDto | null): string {
+    return !recipeBook
+      ? ""
+      : `${recipeBook.name}`
+  }
 
   public selectRecipeBook(recipeBook: RecipeBookListDto | null) {
     this.currentRecipeBook = recipeBook;
@@ -359,50 +364,50 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     });
   }
 
-  loadRatings(){
+  loadRatings() {
     this.ratingService.getRatingsByRecipeId(this.recipe.id).subscribe({
-      next: data => {
-        this.notification.success(`Ratings loaded successfully.`);
-        this.ratings = data;
-        this.areRatingsLoaded = true;
-      },
-      error: error => {
-        this.notification.error(error);
-        this.defaultServiceErrorHandling(error);
+        next: data => {
+          this.notification.success(`Ratings loaded successfully.`);
+          this.ratings = data;
+          this.areRatingsLoaded = true;
+        },
+        error: error => {
+          this.notification.error(error);
+          this.defaultServiceErrorHandling(error);
+        }
       }
-    }
-  );
+    );
   }
 
-  onSubmitRating(form:NgForm){
+  onSubmitRating(form: NgForm) {
     this.ratingService.createRating(this.rating).subscribe({
-      next: () => {
-        this.notification.success(`Rating added successfully.`);
-        this.modalService.dismissAll();
-        this.currentRecipeBook=null;
-        this.loadRatings();
-      },
-      error: error => {
-        this.notification.error(error);
-        this.defaultServiceErrorHandling(error);
+        next: () => {
+          this.notification.success(`Rating added successfully.`);
+          this.modalService.dismissAll();
+          this.currentRecipeBook = null;
+          this.loadRatings();
+        },
+        error: error => {
+          this.notification.error(error);
+          this.defaultServiceErrorHandling(error);
+        }
       }
-    }
-  );
+    );
   }
 
   openRatingModal(modal: TemplateRef<any>) {
-    this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' });
+    this.modalService.open(modal, {ariaLabelledBy: 'modal-basic-title'});
   }
 
   closeRatingModal() {
     this.modalService.dismissAll();
   }
 
-  isFormValid():boolean{
+  isFormValid(): boolean {
     return this.rating.cost != 0 &&
-    this.rating.easeOfPrep != 0 &&
-    this.rating.taste != 0 &&
-    this.rating.review.length > 0
+      this.rating.easeOfPrep != 0 &&
+      this.rating.taste != 0 &&
+      this.rating.review.length > 0
   }
 
   public selectEaseOfPrep(value: number | null) {
@@ -416,10 +421,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   public selectTaste(value: number | null) {
     this.rating.taste = value;
   }
+
   async getRecipesGoingWellTogether(): Promise<void> {
     const data = this.service.getGoesWellWith(this.recipe.id, this.page - 1, this.size)
-      .subscribe( {
-        next: (data: any) : void => {
+      .subscribe({
+        next: (data: any): void => {
           this.recipes = data.content;
           this.totalElements = data.totalElements;
         },
@@ -427,12 +433,13 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           console.error('Error fetching recipes.', error);
           this.notification.error('Rezepte können nicht abgerufen werden.', 'Backend Fehler - Rezepte');
         }
-    })
+      })
   }
 
   onPageChange(pageNumber: number): void {
     this.page = pageNumber;
-    this.getRecipesGoingWellTogether().then(r => {});
+    this.getRecipesGoingWellTogether().then(r => {
+    });
   }
 
   detail(id: number): void {
@@ -459,6 +466,19 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   addRecipe() {
     this.router.navigate(['recipe/create']);
+  }
+
+  addVerfication() {
+    if (this.verified == false && this.isOwner == false) {
+      this.verification = this.verification + 1;
+      this.recipe.verification = this.verification;
+      this.verified = true;
+      this.notification.success("Verifikation als Starcook ist erfolgreich. Anzahl der Verifikation erhöht.", "Verifikation von Rezept")
+    } else if (this.verified == true) {
+      this.notification.error("Verifikation nicht möglich, da die Verifikation bereits durchgeführt wurde.", "Verifikation von Rezept")
+    } else if (this.isOwner == true){
+      this.notification.error("Verifikation nicht möglich, da das Rezept nicht von Rezept-Ersteller verifiziert werden kann.", "Verifikation von Rezept")
+    }
   }
 
 }
