@@ -32,7 +32,7 @@ public class WeekPlanServiceImpl implements WeekPlanService {
     public WeekPlanDetailDto[] getWeekplanDetail(Long id, Date from, Date to) {
         var dfrom = new java.sql.Date(from.getTime());
         var dto = new java.sql.Date(to.getTime());
-        var result = weeklyPlannerRepository.findWeeklyPlannerByDate(id,dfrom, dto);
+        var result = weeklyPlannerRepository.findWeeklyPlannerByDate(id, dfrom, dto);
 
         return weeklyPlannerMapper.weeklyPlannerArrtoWeekPlanDetailDtoArr(result);
     }

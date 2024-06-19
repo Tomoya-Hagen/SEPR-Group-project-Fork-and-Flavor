@@ -18,7 +18,7 @@ public class WeeklyPlannerMapper {
 
 
 
-    public WeekPlanDetailDto[] weeklyPlannerArrtoWeekPlanDetailDtoArr (WeeklyPlanner[] planner) {
+    public WeekPlanDetailDto[] weeklyPlannerArrtoWeekPlanDetailDtoArr(WeeklyPlanner[] planner) {
         List<WeekPlanDetailDto> result = new ArrayList<>();
         WeekPlanDetailDto dto = new WeekPlanDetailDto();
         for (WeeklyPlanner plan : planner) {
@@ -42,7 +42,7 @@ public class WeeklyPlannerMapper {
                 default -> throw new IllegalStateException("Unexpected value: " + plan.getDaytime());
             }
         }
-        if(dto.date != null) {
+        if (dto.date != null) {
             result.add(dto);
         }
         WeekPlanDetailDto[] dtoArr = new WeekPlanDetailDto[result.size()];
