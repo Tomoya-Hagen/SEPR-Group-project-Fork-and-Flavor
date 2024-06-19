@@ -11,7 +11,7 @@
           <span (click)="openUserPage()">{{ recipeBook.owner.name }}</span>
         </div>
     </div>
-    <div class="info-box info-box-3">
+    <div class="info-box info-box-3" *ngIf="recipeBook.users.length !== 0">
       <h4 class="fs-4" *ngIf="recipeBook.users.length !== 0">Bearbeiter:</h4>
       <div class="list-style-none" *ngIf="recipeBook.users.length !== 0">
     <span *ngFor="let user of recipeBook.users; let i = index">
