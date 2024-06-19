@@ -3,8 +3,8 @@
     <div class="col-6 col-md-4">
       <div>
         <h1>{{ user.name }}</h1>
-        <button *ngIf="isMyPage" class="btn btn-light btn-sm " routerLink="/userpage/{{user.id}}/edit">Edit profile</button>
-        <p> <i class="bi bi-receipt"></i> {{recipeBook.length}} RecipeBooks · {{recipes.length}} Recipes</p>
+        <button *ngIf="isMyPage" class="btn btn-light btn-sm " routerLink="/userpage/{{user.id}}/edit">Profil bearbeiten</button>
+        <p> <i class="bi bi-receipt"></i> {{recipeBook.length}} Rezeptbücher · {{recipes.length}} Rezept</p>
       </div>
       <div class="border-top">
         <h2 class="h4 mb-3 margin-top-5"><p>Badges</p></h2>
@@ -12,8 +12,9 @@
           <li>{{user.name}}</li>
         </ul>
       </div>
-      <div class="border-top" >
-        <h2 class="h4 mb-3 margin-top-5" *ngIf="ratings.length !== 0">latest Reviews</h2>
+      <div class="border-top">
+        <h2 class="h4 mb-3 margin-top-5">letzte Bewertungen</h2>
+        <p></p>
         <table class="table">
           <tbody>
           <tr *ngFor="let rating of ratings">
@@ -30,7 +31,7 @@
       </div>
     </div>
     <div class="col-12 col-md-8">
-      <h4 class="mt-4" *ngIf="recipeBook.length !== 0">Recipe books:</h4>
+      <h4 class="mt-4" *ngIf="recipeBook.length !== 0">Rezeptbücher:</h4>
       <table class="table">
         <tbody>
         <tr *ngFor="let recipe of recipeBook">
@@ -39,13 +40,13 @@
           <td>
             <button class="btn btn-primary btn-sm"
                     [routerLink]="['/recipebook/details', recipe.id]">
-              Go to recipe book
+              Zum Rezeptbuch
             </button>
           </td>
         </tr>
         </tbody>
       </table>
-      <h4 class="mt-4" *ngIf="recipes.length !== 0">Recipes:</h4>
+      <h4 class="mt-4" *ngIf="recipes.length !== 0">Rezept:</h4>
       <table class="table">
         <tbody>
         <tr *ngFor="let recipe of recipes">
@@ -54,7 +55,7 @@
           <td>
             <button class="btn btn-primary btn-sm"
                     [routerLink]="['/recipe/details', recipe.id]">
-              Go to recipe
+              Zum Rezept
             </button>
           </td>
         </tr>

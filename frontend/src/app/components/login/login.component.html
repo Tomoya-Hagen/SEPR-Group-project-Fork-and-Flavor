@@ -12,27 +12,23 @@
           <form class="form" [formGroup]="loginForm" (ngSubmit)="loginUser()">
 
             <div class="form-group">
-              <label for="inputUsername">Username</label>
+              <label for="inputUsername">E-Mail</label>
               <input type="text" name="username" formControlName="username" class="form-control" id="inputUsername"
-                     aria-describedby="usernameHelp" placeholder="Enter username">
+                     aria-describedby="usernameHelp" placeholder="E-mail">
               <div *ngIf="submitted && loginForm.controls.username.errors" class="error">
-                <small class="form-text text-warning" *ngIf="loginForm.controls.username.errors.required">Your username is
-                  required!
+                <small class="form-text text-warning" *ngIf="loginForm.controls.username.errors.required">Dein
+                  E-Mail ist erforderlich!
                 </small>
               </div>
             </div>
 
             <div class="form-group">
-              <label for="password">Password</label>
+              <label for="password">Passwort</label>
               <input type="password" name="password" formControlName="password" class="form-control" id="password"
-                     placeholder="Password">
+                     placeholder="Passwort">
               <div *ngIf="submitted && loginForm.controls.password.errors" class="error">
-                <small class="form-text text-warning" *ngIf="loginForm.controls.password.errors.required">Your password
-                  is
-                  required!
-                </small>
-                <small class="form-text text-warning" *ngIf="loginForm.controls.password.errors.minlength">Your password
-                  must be at least 8 characters long!
+                <small class="form-text text-warning" *ngIf="loginForm.controls.password.errors.required">Dein
+                  Passwort ist erforderlich!
                 </small>
               </div>
             </div>
@@ -43,21 +39,20 @@
         </div>
       </div>
       <br>
-
       <div class="card rounded-0">
         <div class="card-header">
-          <h3 class="mb-0">Forgot Password?</h3>
+          <h3 class="mb-0">Passwort vergessen?</h3>
         </div>
-        <button type="button" (click)="goToForgotPassword()" class="m-3 w-25 reset-password">Reset Password</button>
+        <button type="button" (click)="goToForgotPassword()" class="m-3 w-25 reset-password">Passwort zurücksetzten</button>
       </div>
 
       <br>
 
       <div class="card rounded-0">
         <div class="card-header">
-          <h3 class="mb-0">Don´t have a user?</h3>
+          <h3 class="mb-0">Noch kein User?</h3>
         </div>
-          <button type="button" (click)="goToRegister()" class="m-3 w-25 register">Register</button>
+          <button type="button" (click)="goToRegister()" class="m-3 w-25 register">Jetzt registrieren</button>
       </div>
     </div>
   </div>

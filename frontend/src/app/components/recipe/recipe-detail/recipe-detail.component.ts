@@ -1,9 +1,9 @@
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs/internal/Observable';
-import {Recipe, RecipeDetailDto, RecipeListDto} from 'src/app/dtos/recipe';
+import {Recipe, RecipeDetailDto} from 'src/app/dtos/recipe';
 import { RecipeBookListDto } from 'src/app/dtos/recipe-book';
 import { RecipeStepDetailDto, RecipeStepRecipeDetailDto } from 'src/app/dtos/recipe-step';
 import { RecipeService } from 'src/app/services/recipe.service';
@@ -13,7 +13,7 @@ import { UserService } from 'src/app/services/user.service';
 import {RecipeModalComponent} from "./recipe-modal/recipe-modal.component";
 import { RatingCreateDto, RatingListDto } from 'src/app/dtos/rating';
 import { RatingService } from 'src/app/services/rating.service';
-import { Form, NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -40,8 +40,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     forkedRecipes: []
   };
 
-  cost = 0;
-  ratingValues = [0,1,2,3,4,5];
   ratings: RatingListDto[] = [];
   dummyRecipeBookSelectionModel: unknown;
   recipeSteps = [];

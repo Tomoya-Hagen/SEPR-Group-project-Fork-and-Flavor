@@ -21,9 +21,7 @@ import {RatingService} from "../../services/rating.service";
   styleUrl: './userpage.component.scss'
 })
 export class UserpageComponent implements OnInit {
-
-
-  recipeBook: RecipeBookListDto[] = [];
+  recipeBook: RecipeBookListDto[];
   recipes: RecipeListDto[] = [];
   user: userDto = {
     id: 0,
@@ -46,12 +44,54 @@ export class UserpageComponent implements OnInit {
       observable.subscribe({
         next: data => {
           this.recipeBook = data;
+          this.loadRecipes(params['id']);
+          this.loadUser(params['id']);
+          this.loadCurrentUser(params['id']);
+
         },
         error: error => {
           console.error('Error fetching recipe books by user id', error);
           this.notification.error('Rezeptbücher für die Benutzerseite können nicht abgerufen werden.',"Fehler - Benutzerseite Rezeptbücher");
         }
       });
+
+    });
+  }
+
+  loadRecipes(params: any) {
+    this.service.getAllRecipesForUserId(params).subscribe({
+      next: data => {
+        this.recipes = data;
+      },
+      error: error => {
+        console.error('Error fetching recipes by user id', error);
+        this.notification.error('Rezepte für die Benutzerseite können nicht abgerufen werden.',"Backend Fehler - Benutzerseite Rezepte");
+      }
+    });
+  }
+
+  loadUser(params: any) {
+    this.service.getUser(params).subscribe({
+      next: data => {
+        this.user = data;
+      },
+      error: error => {
+        console.error('Error fetching user by id', error);
+        this.notification.error('Gesuchte Benutzerseite kann nicht geladen werden.',"Backend Fehler - Benutzerseite");
+      }
+    });
+  }
+
+  loadCurrentUser(params: any) {
+    this.service.getCurrentUser().subscribe({
+      next: (data: userDto) => {
+        this.isMyPage = (data.id == params);
+      },
+      error: (error: any) => {
+        console.error('Error fetching current User', error);
+        this.notification.error('Eigene Benutzerseite kann nicht geladen werden.',"Backend Fehler - Benutzerseite");
+      }
+    })
       let observable2 = this.service.getUser(params['id']);
       observable2.subscribe({
         next: data => {
@@ -91,8 +131,6 @@ export class UserpageComponent implements OnInit {
           this.notification.error('Bewertungen für die Benutzerseite können nicht abgerufen werden.',"Fehler - Benutzerseite Bewertungen");
         }
       });
-
-    });
 
   }
 }
