@@ -95,15 +95,18 @@ export class RecipebookCreateEditComponent implements OnInit {
   }
 
   isOwnerOfRecipeBook() {
-    this.recipeBookService.getUserIdByRecipeBookId(this.route.snapshot.params['id']).subscribe({
-      next: data => {
-        this.isOwner = (data == this.currentUserId);
-        this.canEdit = (data == this.currentUserId);
-      }, error: error => {
-        console.error('Error Fehler beim Laden der User id vom Rezeptbuch', error);
-        this.notification.error('Fehler beim Laden der User id vom Rezeptbuch.',"Fehler - User Id");
-      }
-    });
+    const id = this.route.snapshot.params['id'];
+    if (id) {
+      this.recipeBookService.getUserIdByRecipeBookId(id).subscribe({
+        next: data => {
+          this.isOwner = (data == this.currentUserId);
+          this.canEdit = (data == this.currentUserId);
+        }, error: error => {
+          console.error('Error Fehler beim Laden der User id vom Rezeptbuch', error);
+          this.notification.error('Fehler beim Laden der User id vom Rezeptbuch.',"Fehler - User Id");
+        }
+      });
+    }
   }
 
   public get heading(): string {
