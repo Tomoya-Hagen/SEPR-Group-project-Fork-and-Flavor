@@ -90,7 +90,7 @@ public class WeekPlanTest implements TestData {
         String sfrom = "2024-06-19";
         String sto = "2024-06-26";
 
-        MvcResult mvcResult = this.mockMvc.perform(get(WEEKPLAN_BASE_URI + "/{id}", 1)
+        MvcResult mvcResult = this.mockMvc.perform(get(WEEKPLAN_BASE_URI + "/{id}", -1)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
                 .param("from", "2024-06-19")
                 .param("to", "2024-06-26"))
