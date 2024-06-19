@@ -46,7 +46,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     Page<Recipe> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
-    @Query("SELECT distinct i FROM Recipe i join FETCH i.categories rc WHERE i.name LIKE %:name% AND rc.id = :id")
+    @Query("SELECT distinct i FROM Recipe i join FETCH i.categories rc WHERE LOWER(i.name) LIKE LOWER(CONCAT('%', :name, '%')) AND rc.id = :id")
     Page<Recipe> findByCategoryIdContainingIgnoreCase(@Param("name") String name, @Param("id") long ids, Pageable pageable);
 
     /**
