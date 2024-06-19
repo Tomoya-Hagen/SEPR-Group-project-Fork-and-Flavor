@@ -52,7 +52,8 @@ public class RecipeBookServiceImpl implements RecipeBookService {
                                  RecipeRepository recipeRepository,
                                  UserRepository userRepository,
                                  RecipeBookValidator recipeBookValidator,
-                                 UserManager userManager, EmailService emailService) {
+                                 UserManager userManager,
+                                 EmailService emailService) {
         this.recipeBookRepository = recipeBookRepository;
         this.recipeBookMapper = recipeBookMapper;
         this.recipeRepository = recipeRepository;

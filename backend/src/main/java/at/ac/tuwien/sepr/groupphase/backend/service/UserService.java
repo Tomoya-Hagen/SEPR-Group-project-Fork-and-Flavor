@@ -92,7 +92,7 @@ public interface UserService extends UserDetailsService {
     /**
      * This method gets the currently logged-in user.
      *
-     * @return the currently logged-in user entity.
+     * @return the currently logged-in user.
      */
     UserDto getCurrentUser();
 

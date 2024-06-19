@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ActiveProfiles({"test"})
 @Transactional
-public class RecipeBookRepositoryTest implements TestData {
+class RecipeBookRepositoryTest implements TestData {
 
     @Autowired
     private RecipeBookRepository recipeBookRepository;
@@ -38,7 +38,7 @@ public class RecipeBookRepositoryTest implements TestData {
     private RecipeMapper recipeMapper;
 
     @Test
-    public void findRecipeBooksByOwnerOrSharedUserReturnsRecipeBooksWhenUserIsOwner() {
+    void findRecipeBooksByOwnerOrSharedUserReturnsRecipeBooksWhenUserIsOwner() {
         List<RecipeBook> result = recipeBookRepository.findRecipeBooksByOwnerOrSharedUser(1L);
         assertEquals(9, result.size());
         assertEquals(1L, result.get(0).getId());
@@ -47,7 +47,7 @@ public class RecipeBookRepositoryTest implements TestData {
 
     @Test
     @Disabled
-    public void findRecipeBooksByOwnerOrSharedUserReturnsRecipeBooksWhenUserIsSharedUser() {
+    void findRecipeBooksByOwnerOrSharedUserReturnsRecipeBooksWhenUserIsSharedUser() {
         List<RecipeBook> result = recipeBookRepository.findRecipeBooksByOwnerOrSharedUser(2L);
         assertEquals(2, result.size());
         assertEquals(1L, result.get(0).getId());
@@ -55,13 +55,13 @@ public class RecipeBookRepositoryTest implements TestData {
     }
 
     @Test
-    public void findRecipeBooksByOwnerOrSharedUserReturnsEmptyListWhenUserHasNoRecipeBooks() {
+    void findRecipeBooksByOwnerOrSharedUserReturnsEmptyListWhenUserHasNoRecipeBooks() {
         List<RecipeBook> result = recipeBookRepository.findRecipeBooksByOwnerOrSharedUser(2L);
         assertTrue(result.isEmpty());
     }
 
     @Test
-    public void findRecipeBooksByOwnerOrSharedUserReturnsEmptyListWhenUserDoesNotExist() {
+    void findRecipeBooksByOwnerOrSharedUserReturnsEmptyListWhenUserDoesNotExist() {
         List<RecipeBook> result = recipeBookRepository.findRecipeBooksByOwnerOrSharedUser(999L);
         assertTrue(result.isEmpty());
     }

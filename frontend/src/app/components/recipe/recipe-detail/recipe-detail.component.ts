@@ -1,15 +1,19 @@
-import {Component, HostListener, OnDestroy, OnInit, TemplateRef} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs/internal/Observable';
-import { RecipeDetailDto } from 'src/app/dtos/recipe';
+import {Recipe, RecipeDetailDto} from 'src/app/dtos/recipe';
 import { RecipeBookListDto } from 'src/app/dtos/recipe-book';
 import { RecipeStepDetailDto, RecipeStepRecipeDetailDto } from 'src/app/dtos/recipe-step';
 import { RecipeService } from 'src/app/services/recipe.service';
 import { RecipeBookService } from 'src/app/services/recipebook.service';
 import { Title } from '@angular/platform-browser';
 import { UserService } from 'src/app/services/user.service';
+import {RecipeModalComponent} from "./recipe-modal/recipe-modal.component";
+import { RatingCreateDto, RatingListDto } from 'src/app/dtos/rating';
+import { RatingService } from 'src/app/services/rating.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -17,6 +21,8 @@ import { UserService } from 'src/app/services/user.service';
   styleUrl: './recipe-detail.component.scss',
 })
 export class RecipeDetailComponent implements OnInit, OnDestroy{
+  @ViewChild('spoonRecipeModal', { static: true }) spoonRecipeModal: TemplateRef<any>;
+
   recipe: RecipeDetailDto = {
     id: 0,
     rating: 0,
@@ -33,6 +39,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     nutritions: [],
     forkedRecipes: []
   };
+
+  ratings: RatingListDto[] = [];
   dummyRecipeBookSelectionModel: unknown;
   recipeSteps = [];
   returnClass = true;
@@ -52,13 +60,51 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   showNutrition: boolean = false;
   screenWidth: number;
   isOwner: boolean = false;
+  areRatingsLoaded: boolean = false;
+  rating: RatingCreateDto = {
+    review: "",
+    taste: 0,
+    easeOfPrep: 0,
+    recipeId: 0,
+    cost: 0
+  }
   selectedPortions: number;
   originalServings: number;
   hasForkedRecipes: boolean = false;
   originalNutritions = [];
   originalIngredients = [];
+  recipes: Recipe[] = [];
+  totalElements: number;
+  page: number = 1;
+  size: number = 3;
+  menuOptions = [
+    {
+      label: 'Neues Rezept erstellen',
+      action: () => this.addRecipe()
+    },
+    {
+      label: 'Rezept bearbeiten',
+      action: () => this.editRecipe(),
+      disabled: !this.isOwner
+    },
+    {
+      label: 'Rezept forken',
+      action: () => this.fork()
+    },
+    {
+      label: 'Rezept spoonen', buttonClass: 'info-box-3',
+      iconClass: 'info-box-3',
+      action: () => this.openSpoonModal(this.spoonRecipeModal)
+    },
+    {
+      label: 'Rezepte die gut dazupassen bearbeiten',
+      action: () => this.openRecipeGoesWellWithModal(),
+      disabled: !this.isOwner
+    }
+  ];
 
   constructor(
+    private ratingService: RatingService,
     private service: RecipeService,
     private router: Router,
     private route: ActivatedRoute,
@@ -76,6 +122,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
       observable.subscribe({
         next: data => {
           this.recipe = data;
+          this.rating.recipeId = this.recipe.id;
           this.recipeSteps = this.recipe.recipeSteps;
           this.originalNutritions = this.recipe.nutritions;
           this.originalIngredients = this.recipe.ingredients;
@@ -90,6 +137,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
             this.hasForkedRecipes = true;
           }
           this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
+          this.onPageChange(1);
         },
         error: error => {
           console.error('Error fetching recipe', error);
@@ -109,6 +157,39 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     return Math.round(value * factor) / factor;
   }
 
+  onPortionsInput(portionInput: HTMLInputElement): void {
+    let value = portionInput.value;
+    if (value === '') {
+      // Allow empty value temporarily
+      this.selectedPortions = null;
+    } else {
+      let numericValue = parseInt(value, 10);
+      if (!isNaN(numericValue)) {
+        if (numericValue <= 0) {
+          numericValue = 1;
+        } else if (numericValue >= 11) {
+          numericValue = 10;
+        }
+        portionInput.value = numericValue.toString();
+        this.selectedPortions = numericValue;
+        if(this.selectedPortions >= 1 && this.selectedPortions <= 10) {
+          this.onPortionsChange();
+        }
+      }
+    }
+  }
+
+  onPortionsBlur(portionInput: HTMLInputElement): void {
+    let value = parseInt(portionInput.value, 10);
+    if (isNaN(value) || value <= 0) {
+      value = 1;
+    } else if (value >= 11) {
+      value = 10;
+    }
+    portionInput.value = value.toString();
+    this.selectedPortions = value;
+    this.onPortionsChange();
+  }
   onPortionsChange(): void {
     this.adjustIngredientsAndNutritions();
     this.changeIngredientsToGramm();
@@ -191,6 +272,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
             this.currentRecipeBook=null;
           },
           error: error => {
+            this.notification.error(error);
             this.defaultServiceErrorHandling(error);
           }
         }
@@ -273,6 +355,108 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         this.isOwner = true;
       }
     });
+  }
+
+  loadRatings(){
+    this.ratingService.getRatingsByRecipeId(this.recipe.id).subscribe({
+      next: data => {
+        this.notification.success(`Ratings loaded successfully.`);
+        this.ratings = data;
+        this.areRatingsLoaded = true;
+      },
+      error: error => {
+        this.notification.error(error);
+        this.defaultServiceErrorHandling(error);
+      }
+    }
+  );
+  }
+
+  onSubmitRating(form:NgForm){
+    this.ratingService.createRating(this.rating).subscribe({
+      next: () => {
+        this.notification.success(`Rating added successfully.`);
+        this.modalService.dismissAll();
+        this.currentRecipeBook=null;
+        this.loadRatings();
+      },
+      error: error => {
+        this.notification.error(error);
+        this.defaultServiceErrorHandling(error);
+      }
+    }
+  );
+  }
+
+  openRatingModal(modal: TemplateRef<any>) {
+    this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' });
+  }
+
+  closeRatingModal() {
+    this.modalService.dismissAll();
+  }
+
+  isFormValid():boolean{
+    return this.rating.cost != 0 &&
+    this.rating.easeOfPrep != 0 &&
+    this.rating.taste != 0 &&
+    this.rating.review.length > 0
+  }
+
+  public selectEaseOfPrep(value: number | null) {
+    this.rating.easeOfPrep = value;
+  }
+
+  public selectCost(value: number | null) {
+    this.rating.cost = value;
+  }
+
+  public selectTaste(value: number | null) {
+    this.rating.taste = value;
+  }
+  async getRecipesGoingWellTogether(): Promise<void> {
+    const data = this.service.getGoesWellWith(this.recipe.id, this.page - 1, this.size)
+      .subscribe( {
+        next: (data: any) : void => {
+          this.recipes = data.content;
+          this.totalElements = data.totalElements;
+        },
+        error: error => {
+          console.error('Error fetching recipes.', error);
+          this.notification.error('Rezepte können nicht abgerufen werden.', 'Backend Fehler - Rezepte');
+        }
+    })
+  }
+
+  onPageChange(pageNumber: number): void {
+    this.page = pageNumber;
+    this.getRecipesGoingWellTogether().then(r => {});
+  }
+
+  detail(id: number): void {
+    this.router.navigate(['/recipe/details', id]);
+  }
+
+  openRecipeGoesWellWithModal() {
+    const modalRef = this.modalService.open(RecipeModalComponent);
+    modalRef.componentInstance.recipeId = this.recipe.id;
+
+    modalRef.componentInstance.updateRecipes.subscribe((updatedRecipes: Recipe[]) => {
+      this.recipes = updatedRecipes;
+      this.service.updateGoWellWithRecipes(this.recipe.id, this.recipes).subscribe(
+        () => {
+          this.getRecipesGoingWellTogether();
+        },
+        error => {
+          console.error('Error updating recipes.', error);
+          this.notification.error('Rezepte können nicht aktualisiert werden.', 'Backend Fehler - Rezepte');
+        }
+      );
+    });
+  }
+
+  addRecipe() {
+    this.router.navigate(['recipe/create']);
   }
 
 }

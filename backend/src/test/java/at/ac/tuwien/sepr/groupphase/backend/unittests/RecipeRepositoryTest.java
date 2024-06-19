@@ -170,7 +170,7 @@ class RecipeRepositoryTest {
     }
 
     @Test
-    public void findRecipesByOwnerIdReturnsRecipesWhenUserExists() {
+    void findRecipesByOwnerIdReturnsRecipesWhenUserExists() {
         ApplicationUser user = new ApplicationUser();
         user.setId(1L);
 
@@ -181,13 +181,13 @@ class RecipeRepositoryTest {
     }
 
     @Test
-    public void findRecipesByOwnerIdReturnsEmptyListWhenUserHasNoRecipes() {
+    void findRecipesByOwnerIdReturnsEmptyListWhenUserHasNoRecipes() {
         List<Recipe> result = recipeRepository.findRecipesByOwnerId(2L);
         assertTrue(result.isEmpty());
     }
 
     @Test
-    public void findRecipesByOwnerIdReturnsEmptyListWhenUserDoesNotExist() {
+    void findRecipesByOwnerIdReturnsEmptyListWhenUserDoesNotExist() {
         List<Recipe> result = recipeRepository.findRecipesByOwnerId(999L);
         assertTrue(result.isEmpty());
     }

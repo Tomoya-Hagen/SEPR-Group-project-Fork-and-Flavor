@@ -15,6 +15,19 @@
       <div class="border-top">
         <h2 class="h4 mb-3 margin-top-5">letzte Bewertungen</h2>
         <p></p>
+        <table class="table">
+          <tbody>
+          <tr *ngFor="let rating of ratings">
+            <td>{{ rating.review }}</td>
+            <td>
+              <button class="btn btn-primary btn-sm"
+                      [routerLink]="['/recipe/details', rating.recipeId]">
+                Go to recipe
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     <div class="col-12 col-md-8">
