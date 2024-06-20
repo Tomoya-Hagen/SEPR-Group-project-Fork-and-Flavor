@@ -16,10 +16,16 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDescriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Role;
 import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
@@ -78,6 +84,13 @@ class RecipeEndpointTest implements TestData {
 
     @Autowired
     private SecurityProperties securityProperties;
+
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private RecipeRepository recipeRepository;
 
     @Test
     void ReturnARecipeDetailDtoIfARecipeExistsByRecipeId() throws Exception {
@@ -484,5 +497,30 @@ class RecipeEndpointTest implements TestData {
                 .header(securityProperties.getAuthHeader(), jwttoken)
                 .content(new ObjectMapper().writeValueAsString(recipeCreateDto)))
             .andExpect(status().isCreated());
+    }
+
+    @Test
+    void verifyRecipeAsANonStarCook() throws Exception {
+        String jwttoken = LoginHelper();
+        mockMvc.perform(post(RECIPE_BASE_URI+"/verify/1")
+                .header(securityProperties.getAuthHeader(), jwttoken)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden())
+            .andReturn();
+    }
+    @Test
+    void verifyRecipeAsStarCook() throws Exception {
+        ApplicationUser user = userRepository.findById(1L).get();
+        List<Role> roles = user.getRoles();
+        roles.add(roleRepository.findByName(Roles.StarCook.name()));
+        user.setRoles(roles);
+        userRepository.save(user);
+        String jwttoken = LoginHelper();
+        mockMvc.perform(post(RECIPE_BASE_URI+"/verify/1")
+                .header(securityProperties.getAuthHeader(), jwttoken)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andReturn();
+
     }
 }

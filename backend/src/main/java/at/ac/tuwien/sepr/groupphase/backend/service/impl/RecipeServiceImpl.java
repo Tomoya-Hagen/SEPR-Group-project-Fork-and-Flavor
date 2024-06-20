@@ -18,15 +18,14 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
-import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
@@ -82,7 +81,6 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
 
-
     @Override
     public RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException {
         return getRecipeDetailDtoById(id, true);
@@ -131,6 +129,18 @@ public class RecipeServiceImpl implements RecipeService {
             Long rating = calculateAverageTasteRating(recipe.getRatings());
             return recipeMapper.recipeToRecipeListDto(recipe, rating);
         });
+    }
+
+    @Override
+    public void verifyRecipe(long recipeId) {
+        LOGGER.trace("verifyRecipe({})", recipeId);
+        if (!userManager.hasRole(Roles.StarCook)) {
+            throw new ForbiddenException();
+        }
+        Recipe recipe = recipeRepository.getRecipeById(recipeId).orElseThrow(NotFoundException::new);
+        List<ApplicationUser> verifiers = recipe.getVerifiedBy();
+        verifiers.add(userManager.getCurrentUser());
+        recipe.setVerifiedBy(verifiers);
     }
 
     @Override

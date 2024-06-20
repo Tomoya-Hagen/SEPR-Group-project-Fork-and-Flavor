@@ -10,10 +10,16 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeIngredientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Role;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
+import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -40,7 +46,6 @@ import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 @SpringBootTest
 @ActiveProfiles({"test"})
@@ -53,6 +58,12 @@ class RecipeServiceTest implements TestData {
 
     @Autowired
     private RecipeRepository recipeRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Test
     void ReturnARecipeDetailDtoIfARecipeWithTheGivenRecipeIdExists() {
@@ -168,5 +179,15 @@ class RecipeServiceTest implements TestData {
 
         recipePage = recipeService.getRecipesByName("Kaschew", pageable);
         Assertions.assertTrue(recipePage.isEmpty());
+    }
+
+    @Test
+    void verifyingRecipeRecipeNotByAStarCookThrowsError() {
+        userAuthenticationByEmail("admin@email.com");
+        Recipe recipe = recipeRepository.findById(1L);
+        Assertions.assertTrue(recipe.getVerifiedBy().isEmpty());
+        ApplicationUser user = userRepository.findById(2L).get();
+        Assertions.assertFalse(user.getRoles().contains(roleRepository.findByName(Roles.StarCook.name())));
+        Assertions.assertThrows(ForbiddenException.class, () -> recipeService.verifyRecipe(1L));
     }
 }
