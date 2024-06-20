@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
    * @param authRequest authentication data from the user login form
    */
   authenticateUser(authRequest: AuthRequest) {
-    console.log('Try to authenticate user: ' + authRequest.email);
+    console.log('Trying to authenticate user: ' + authRequest.email);
     this.authService.loginUser(authRequest).subscribe({
       next: () => {
         console.log('Successfully logged in user: ' + authRequest.email.toString());
@@ -58,12 +58,7 @@ export class LoginComponent implements OnInit {
       error: error => {
         console.log('Could not log in due to:');
         console.log(error);
-        this.error = true;
-        if (typeof error.error === 'object') {
-          this.notification.error("Passwort passt nicht mit Username überein.", "Authentifizierung Fehler");
-        } else {
-          this.notification.error("Konnte den Benutzer mit der Email Adresse: " + authRequest.email.toString() + " nicht finden.", "Authentifizierung Fehler");
-        }
+        this.notification.error("E-Mail oder Passwort falsch.")
       }
     });
   }
