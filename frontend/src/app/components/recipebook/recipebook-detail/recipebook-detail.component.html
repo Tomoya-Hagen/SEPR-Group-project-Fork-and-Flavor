@@ -7,9 +7,9 @@
     </div>
     <div class="info-box info-box-2" >
       <h4 class="fs-4">Besitzer:</h4>
-        <div>
-          <span (click)="openUserPage()">{{ recipeBook.owner.name }}</span>
-        </div>
+      <div>
+        <span (click)="openUserPage()">{{ recipeBook.owner.name }}</span>
+      </div>
     </div>
     <div class="info-box info-box-3" *ngIf="recipeBook.users.length !== 0">
       <h4 class="fs-4" *ngIf="recipeBook.users.length !== 0">Bearbeiter:</h4>
@@ -20,13 +20,10 @@
       </div>
     </div>
   </div>
-  <div style="text-align: right;position: relative; margin: 30px">
-    <button *ngIf="isOwner" type="button" class="btn btn-primary btn-sm" (click)="editRecipeBook()" style="margin-right: 10px;">edit recipe book</button>
-    <button  type="button" class="btn btn-primary btn-sm" (click)="gotoWeekPlan()" style="margin-right: 10px;">Wochenplan</button>
   <h4 class="mt-4">Rezepte:</h4>
   <div class="row">
     <div class="col-lg-4 p-2" *ngFor="let item of recipeBook.recipes">
-        <app-card [item]="item" [detailUrlPrefix]="'/recipe/details'"></app-card>
+      <app-card [item]="item" [detailUrlPrefix]="'/recipe/details'"></app-card>
     </div>
   </div>
 </div>

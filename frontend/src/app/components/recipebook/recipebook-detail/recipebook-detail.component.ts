@@ -35,6 +35,11 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy {
       label: 'Rezeptbuch bearbeiten',
       action: () => this.editRecipeBook(),
       disabled: true
+    },
+    {
+      label: 'Wochenplan',
+      action: () => this.gotoWeekPlan(),
+      disabled: false
     }
   ];
 
@@ -103,6 +108,11 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy {
         label: 'Rezeptbuch bearbeiten',
         action: () => this.editRecipeBook(),
         disabled: !this.canEdit
+      },
+      {
+        label: 'Wochenplan',
+        action: () => this.gotoWeekPlan(),
+        disabled: false
       }
     ];
   }
