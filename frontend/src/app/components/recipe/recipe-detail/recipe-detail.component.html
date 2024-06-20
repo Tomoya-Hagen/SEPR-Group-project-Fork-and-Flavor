@@ -4,7 +4,17 @@
       <h1 class="display-4" *ngIf="!recipe.isDraft">{{ recipe.name }}</h1>
       <h1 class="display-4" *ngIf="recipe.isDraft">{{ recipe.name }} (Template)</h1>
     </div>
+    <div class="RecipeInfos">
+      <div class="info-box info-box-6" >
+        <h4>Verifikationen: {{ verification}}
+        </h4>
+        <button type="button" (click)="addVerfication()" class=" btn btn-info"> <i
+          class="bi bi-check-lg">Klicke hier!</i></button>
+      </div>
+    </div>
+
   </div>
+
   <ng-template #spoonRecipeModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Spoon</h5>
@@ -45,7 +55,8 @@
     </div>
     <div class="info-box info-box-2">
       <h4>Portionen:</h4>
-      <input #portionInput type="number" [(ngModel)]="selectedPortions" (input)="onPortionsInput(portionInput)" (blur)="onPortionsBlur(portionInput)" class="input-width" min="1" max="10">
+      <input #portionInput type="number" [(ngModel)]="selectedPortions" (input)="onPortionsInput(portionInput)"
+             (blur)="onPortionsBlur(portionInput)" class="input-width" min="1" max="10">
     </div>
     <div class="info-box info-box-3" *ngIf="isCategoriesNotEmpty()">
       <h4>Kategorien:</h4>
@@ -57,7 +68,7 @@
       <h4>Allergene: </h4>
       <div>
         <span *ngFor="let allergen of recipe.allergens; let isLast=last">
-           {{allergen.type}}{{isLast ? '' : ', '}}
+           {{ allergen.type }}{{ isLast ? '' : ', ' }}
         </span>
       </div>
       <div *ngIf="recipe.allergens.length === 0">
@@ -73,34 +84,29 @@
     <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--acent-color);"
          *ngIf="isForkedFromRecipe()">
       <h4>Geforkt von:</h4>
-      <span>{{recipeForkedFrom}}</span>
+      <span>{{ recipeForkedFrom }}</span>
     </div>
-    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: #08688e;" *ngIf="hasForkedRecipes">
+    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: #08688e;"
+         *ngIf="hasForkedRecipes">
       <h4>Hiervon geforkt:</h4>
       <div>
         <span *ngFor="let forkedFrom of recipeForkedFrom; let isLast=last">
            {{ recipeForkedFrom }}{{ isLast ? '' : ', ' }}
-        <span *ngFor="let forkedRecipe of recipe.forkedRecipes.slice(0, 5); let last = last">
-          {{forkedRecipe}}{{last && recipe.forkedRecipes.length <= 5 ? '' : ', '}}
+          <span *ngFor="let forkedRecipe of recipe.forkedRecipes.slice(0, 5); let last = last">
+          {{ forkedRecipe }}{{ last && recipe.forkedRecipes.length <= 5 ? '' : ', ' }}
         </span>
         <span *ngIf="recipe.forkedRecipes.length > 5">...</span>
         </span>
       </div>
     </div>
-    <div class="info-box info-box-5 clickable" *ngIf="screenWidth <= 767" style="box-shadow: 0 0 10px rgba(111, 66, 193, 0); background-color: rgba(111, 66, 193, 1);" (click)="toggleNutrition()">
+    <div class="info-box info-box-5 clickable" *ngIf="screenWidth <= 767"
+         style="box-shadow: 0 0 10px rgba(111, 66, 193, 0); background-color: rgba(111, 66, 193, 1);"
+         (click)="toggleNutrition()">
       <h4>Nährwerte:</h4>
-        <span *ngIf="!showNutrition">Zeigen</span>
-        <span *ngIf="showNutrition">Verstecken</span>
-    </div>
-    <div class="info-box info-box-6" >
-      <h4>Verifikation: <button type="button" (click)="addVerfication()" class=" btn btn-info"><i
-        class="bi bi-check-lg"></i></button></h4>
-      <div>
-        Anzahl: {{ verification }}
-      </div>
+      <span *ngIf="!showNutrition">Zeigen</span>
+      <span *ngIf="showNutrition">Verstecken</span>
     </div>
   </div>
-
 
   <div class="columns">
     <div *ngIf="screenWidth <= 767 && showNutrition">
@@ -204,23 +210,23 @@
   <ng-container class="ratings-container">
     <h2>Bewertungen:</h2>
     <div class="ratings-wrapper" *ngIf="ratings.length > 0 && areRatingsLoaded">
-        <div *ngFor="let rating of ratings" class="rating-box">
-          <div class="rating-header">
-            <p class="user-name">{{ rating.user.name }}</p>
-          </div>
-          <div class="rating-details">
-            <p>Geschmack:
-              <app-star-rating [disabled]="true" [value]="rating.taste"></app-star-rating>
-            </p>
-            <p>Einfachheit:
-              <app-star-rating [disabled]="true" [value]="rating.easeOfPrep"></app-star-rating>
-            </p>
-            <p>Kosten:
-              <app-star-rating [disabled]="true" [value]="rating.cost"></app-star-rating>
-            </p>
-            <p class="review">{{ rating.review }}</p>
-          </div>
+      <div *ngFor="let rating of ratings" class="rating-box">
+        <div class="rating-header">
+          <p class="user-name">{{ rating.user.name }}</p>
         </div>
+        <div class="rating-details">
+          <p>Geschmack:
+            <app-star-rating [disabled]="true" [value]="rating.taste"></app-star-rating>
+          </p>
+          <p>Einfachheit:
+            <app-star-rating [disabled]="true" [value]="rating.easeOfPrep"></app-star-rating>
+          </p>
+          <p>Kosten:
+            <app-star-rating [disabled]="true" [value]="rating.cost"></app-star-rating>
+          </p>
+          <p class="review">{{ rating.review }}</p>
+        </div>
+      </div>
     </div>
     <!-- Add Rating Box -->
     <div class="rating-box add-rating-box" (click)="openRatingModal(ratingModal)" *ngIf="!isOwner">
@@ -255,7 +261,8 @@
               </div>
               <div class="form-group">
                 <label>Bewertung*:</label>
-                <input [(ngModel)]="rating.review" name="review" type="text" class="form-control" id="description" placeholder="Einfach Köstlich" required>
+                <input [(ngModel)]="rating.review" name="review" type="text" class="form-control" id="description"
+                       placeholder="Einfach Köstlich" required>
               </div>
               <div class="form-group text-center">
                 <button [disabled]="!isFormValid()" type="submit" class="btn btn-primary">Bewertung abgeben</button>
@@ -270,7 +277,8 @@
 
 <div *ngIf="!areRatingsLoaded" (click)="loadRatings()" class="ratingsSummary">
   <span>Alle Bewertungen anzeigen</span><br><br>
-  <app-star-rating [disabled]="true" [value]="recipe.rating"></app-star-rating><br>
+  <app-star-rating [disabled]="true" [value]="recipe.rating"></app-star-rating>
+  <br>
 </div>
 <br><br>
 <app-floating-menu [options]="menuOptions"></app-floating-menu>

@@ -21,7 +21,7 @@ body {
   background-color: whitesmoke;
 }
 
-h1,h2 {
+h1, h2 {
   text-align: center;
 }
 
@@ -44,7 +44,7 @@ h1,h2 {
   width: 18%;
   color: white;
   cursor: pointer;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin-right: 1%;
 }
 
@@ -78,30 +78,35 @@ h1,h2 {
   border: var(--box-2);
   border-radius: var(--bs-border-radius);
 }
+
 .step-box-2 {
   box-shadow: 0px 0px 10px var(--box-3);
   background-color: var(--box-3);
   border: var(--box-3);
   border-radius: var(--bs-border-radius);
 }
+
 .step-box-3 {
   box-shadow: 0px 0px 10px var(--box-4);
   background-color: var(--box-4);
   border: var(--box-4);
   border-radius: var(--bs-border-radius);
 }
+
 .step-box-4 {
   box-shadow: 0px 0px 10px var(--box-5);
   background-color: var(--box-5);
   border: var(--box-5);
   border-radius: var(--bs-border-radius);
 }
+
 .step-box-5 {
   box-shadow: 0px 0px 10px var(--acent-color);
   background-color: var(--acent-color);
   border: var(--acent-color);
   border-radius: var(--bs-border-radius);
 }
+
 .step-box-6 {
   box-shadow: 0px 0px 10px var(--box-4);
   background-color: var(--box-3);
@@ -182,11 +187,11 @@ label[for="pageSize"] {
   background-color: #f0f0f0;
 }
 
-.RecipeCard.link1{
+.RecipeCard.link1 {
   background-color: var(--secondary-color);
 }
 
-.RecipeCard.link2{
+.RecipeCard.link2 {
   background-color: var(--secondary-color);
 }
 
@@ -205,8 +210,6 @@ label[for="pageSize"] {
 .pointer {
   cursor: pointer;
 }
-
-
 
 button.login {
   background-color: var(--primary-color);
