@@ -82,10 +82,6 @@ public class Recipe {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<RecipeVerified> recipesVerified = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<WeeklyPlanner> weeklyPlanner = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -204,6 +200,12 @@ public class Recipe {
             && Objects.equals(forkedFrom, recipe.forkedFrom) && Objects.equals(owner, recipe.owner) && Objects.equals(isDraft, recipe.isDraft);
     }
 
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "recipe_verified",
+        joinColumns = {@JoinColumn(name = "recipe_id")},
+        inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    private List<ApplicationUser> verifiedBy = new ArrayList<>();
+
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description, numberOfServings, forkedFrom, owner, isDraft);
@@ -234,7 +236,6 @@ public class Recipe {
         private List<Rating> ratings;
         private List<RecipeStep> recipeSteps;
         private List<RecipeStep> recipeRecipeSteps;
-        private List<RecipeVerified> recipesVerified;
         private List<WeeklyPlanner> weeklyPlanner;
         private List<RecipeIngredient> ingredients;
         private List<Recipe> recipesForkedFromThis;
@@ -310,11 +311,6 @@ public class Recipe {
             return this;
         }
 
-        public RecipeBuilder withRecipesVerified(List<RecipeVerified> recipesVerified) {
-            this.recipesVerified = recipesVerified;
-            return this;
-        }
-
         public RecipeBuilder withWeeklyPlanner(List<WeeklyPlanner> weeklyPlanner) {
             this.weeklyPlanner = weeklyPlanner;
             return this;
@@ -352,7 +348,6 @@ public class Recipe {
             recipe.ratings = this.ratings;
             recipe.recipeBooks = this.recipeBooks;
             recipe.weeklyPlanner = this.weeklyPlanner;
-            recipe.recipesVerified = this.recipesVerified;
             recipe.goesWellWithRecipes = this.goesWellWithRecipes;
             return recipe;
         }
