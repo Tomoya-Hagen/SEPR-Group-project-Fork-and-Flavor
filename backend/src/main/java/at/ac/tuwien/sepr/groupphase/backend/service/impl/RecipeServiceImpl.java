@@ -116,7 +116,8 @@ public class RecipeServiceImpl implements RecipeService {
             result.allergens(),
             result.nutritions(),
             forkedRecipeNames,
-            result.rating()
+            result.rating(),
+            recipe.getVerifiers().size()
         );
     }
 
@@ -131,15 +132,20 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void verifyRecipe(long recipeId) {
+    public void verifyRecipe(long recipeId) throws ValidationException {
         LOGGER.trace("verifyRecipe({})", recipeId);
-        if (!userManager.hasRole(Roles.StarCook)) {
+        ApplicationUser user = userManager.getCurrentUser();
+        if (!userManager.hasUserRole(user, Roles.StarCook)) {
             throw new ForbiddenException();
         }
         Recipe recipe = recipeRepository.getRecipeById(recipeId).orElseThrow(NotFoundException::new);
-        List<ApplicationUser> verifiers = recipe.getVerifiedBy();
-        verifiers.add(userManager.getCurrentUser());
-        recipe.setVerifiedBy(verifiers);
+        if (user.equals(recipe.getOwner())) {
+            throw new ValidationException("Owner can not verify recipe", List.of());
+        }
+        List<ApplicationUser> verifiers = recipe.getVerifiers();
+        verifiers.add(user);
+        recipe.setVerifiers(verifiers);
+        recipeRepository.save(recipe);
     }
 
     @Override

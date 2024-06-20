@@ -111,5 +111,5 @@ public interface RecipeService {
      *
      * @param recipeId that should be verified.
      */
-    void verifyRecipe(long recipeId);
+    void verifyRecipe(long recipeId) throws ValidationException;
 }

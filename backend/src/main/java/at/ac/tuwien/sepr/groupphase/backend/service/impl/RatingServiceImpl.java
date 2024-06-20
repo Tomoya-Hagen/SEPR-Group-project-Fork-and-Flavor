@@ -74,6 +74,9 @@ public class RatingServiceImpl implements RatingService {
         if (ratingRepository.getRatingsByRecipeIdAndUserId(recipe.getId(), user.getId()).isPresent()) {
             throw new DuplicateObjectException("A rating to this recipe already exists");
         }
+        if (user.equals(recipe.getOwner())) {
+            throw new ValidationException("Owner can not rate recipe", List.of());
+        }
         Rating rating = ratingMapper.mapRatingCreateDtoToRating(ratingCreateDto);
         rating.setRecipe(recipe);
         rating.setUser(user);

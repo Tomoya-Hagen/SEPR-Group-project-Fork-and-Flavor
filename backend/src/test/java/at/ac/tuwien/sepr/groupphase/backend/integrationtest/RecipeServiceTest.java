@@ -12,7 +12,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Role;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
@@ -185,7 +184,7 @@ class RecipeServiceTest implements TestData {
     void verifyingRecipeRecipeNotByAStarCookThrowsError() {
         userAuthenticationByEmail("admin@email.com");
         Recipe recipe = recipeRepository.findById(1L);
-        Assertions.assertTrue(recipe.getVerifiedBy().isEmpty());
+        Assertions.assertTrue(recipe.getVerifiers().isEmpty());
         ApplicationUser user = userRepository.findById(2L).get();
         Assertions.assertFalse(user.getRoles().contains(roleRepository.findByName(Roles.StarCook.name())));
         Assertions.assertThrows(ForbiddenException.class, () -> recipeService.verifyRecipe(1L));
