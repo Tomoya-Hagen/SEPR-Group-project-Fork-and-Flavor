@@ -100,4 +100,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     @Query("SELECT r FROM Recipe r WHERE r.forkedFrom.id = :id")
     List<Recipe> findAllForkedRecipesById(@Param("id") long id);
+
+    //  @Query("select r.verfiedNumber.size from Recipe r where r.id = :id")
+ //   List<Recipe> findAllVerifiedNumberById(Param("id") long id);
 }
