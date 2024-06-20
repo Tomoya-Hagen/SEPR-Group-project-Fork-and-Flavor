@@ -2,6 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 
+import java.util.List;
+
 public interface BadgeService {
     /**
      * Gives the given user the Role Contributor.
@@ -11,4 +13,9 @@ public interface BadgeService {
      */
     void addRoleToUser(ApplicationUser user, Roles role);
 
+    /** Returns all badges of the currently logged in user.
+     *
+     * @return a list of string that represent the names of the badges a user has.
+     */
+    List<String> getBadgesOfCurrentUser();
 }

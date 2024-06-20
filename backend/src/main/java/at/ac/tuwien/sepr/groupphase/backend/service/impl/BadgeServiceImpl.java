@@ -10,6 +10,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,15 +22,18 @@ public class BadgeServiceImpl implements BadgeService {
     private final RoleRepository roleRepository;
     private final EmailService emailService;
     private final RecipeRepository recipeRepository;
+    private final UserManager userManager;
 
     public BadgeServiceImpl(UserRepository userRepository,
                             RoleRepository roleRepository,
                             EmailService emailService,
-                            RecipeRepository recipeRepository) {
+                            RecipeRepository recipeRepository,
+                            UserManager userManager) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.emailService = emailService;
         this.recipeRepository = recipeRepository;
+        this.userManager = userManager;
     }
 
     @Override
@@ -68,5 +72,16 @@ public class BadgeServiceImpl implements BadgeService {
         return userRoles.stream().anyMatch(r -> r.getName().equals(role.name()));
     }
 
-
+    @Override
+    public List<String> getBadgesOfCurrentUser() {
+        List<String> roles = new ArrayList<>();
+        ApplicationUser user = userManager.getCurrentUser();
+        List<Role> userRoles = user.getRoles();
+        for (int i = 0; i < Roles.values().length; i++) {
+            if (userRoles.contains(roleRepository.findByName(Roles.values()[i].name()))) {
+                roles.add(Roles.values()[i].name());
+            }
+        }
+        return roles;
+    }
 }
