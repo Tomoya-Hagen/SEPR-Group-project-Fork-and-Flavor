@@ -15,7 +15,6 @@ import java.util.Optional;
 
 /**
  * This is the interface for the persistence layer of Recipes.
- *
  */
 @DynamicInsert
 @DynamicUpdate
@@ -37,7 +36,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      * gets a list recipe entities by the given range from to.
      *
      * @param from represents the start value of ids which will be returned.
-     * @param to represents the end value of ids which will be returned.
+     * @param to   represents the end value of ids which will be returned.
      * @return a list of recipes which hava an id in the range @from to @to.
      */
     List<Recipe> findByIdBetweenOrderById(Long from, Long to);
@@ -100,7 +99,4 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     @Query("SELECT r FROM Recipe r WHERE r.forkedFrom.id = :id")
     List<Recipe> findAllForkedRecipesById(@Param("id") long id);
-
-    //  @Query("select r.verfiedNumber.size from Recipe r where r.id = :id")
- //   List<Recipe> findAllVerifiedNumberById(Param("id") long id);
 }
