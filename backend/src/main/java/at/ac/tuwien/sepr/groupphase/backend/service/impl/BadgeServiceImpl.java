@@ -1,7 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Rating;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Role;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
@@ -9,6 +12,7 @@ import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,21 +20,39 @@ public class BadgeServiceImpl implements BadgeService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final EmailService emailService;
+    private final RecipeRepository recipeRepository;
 
     public BadgeServiceImpl(UserRepository userRepository,
                             RoleRepository roleRepository,
-                            EmailService emailService) {
+                            EmailService emailService,
+                            RecipeRepository recipeRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.emailService = emailService;
+        this.recipeRepository = recipeRepository;
     }
 
     @Override
     public void addRoleToUser(ApplicationUser user, Roles role) {
+        if (role.equals(Roles.StarCook) && !hasUserRequirementsToBeaStarCook(user)) {
+            return;
+        }
         if (!hasUserTheRole(user, role)) {
             setRoleForUser(user, role);
             emailService.sendSimpleEmail(user.getEmail(), "Neuer Badge", "Gratulation, du bist jetzt " + role.name() + "!");
         }
+    }
+
+    private boolean hasUserRequirementsToBeaStarCook(ApplicationUser user) {
+        List<Recipe> recipes = recipeRepository.findRecipesByOwnerId(user.getId());
+        List<Rating> ratings = new ArrayList<>();
+        for (Recipe recipe : recipes) {
+            ratings.addAll(recipe.getRatings());
+            if (ratings.size() > 20) {
+                break;
+            }
+        }
+        return recipes.size() > 10 && ratings.size() > 20;
     }
 
     private void setRoleForUser(ApplicationUser user, Roles role) {
@@ -45,4 +67,6 @@ public class BadgeServiceImpl implements BadgeService {
         List<Role> userRoles = user.getRoles();
         return userRoles.stream().anyMatch(r -> r.getName().equals(role.name()));
     }
+
+
 }

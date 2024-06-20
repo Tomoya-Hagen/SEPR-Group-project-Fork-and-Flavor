@@ -217,7 +217,7 @@ public class Recipe {
     @JoinTable(name = "recipe_verified",
         joinColumns = {@JoinColumn(name = "recipe_id")},
         inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    private List<ApplicationUser> verifiedBy = new ArrayList<>();
+    private List<ApplicationUser> verifiers = new ArrayList<>();
 
     @Override
     public int hashCode() {
@@ -236,12 +236,12 @@ public class Recipe {
         return "Recipe(id=" + this.getId() + ", name=" + this.getName() + ", description=" + this.getDescription() + ", numberOfServings=" + this.getNumberOfServings() + ", owner=" + this.getOwner().getUsername() + ")";
     }
 
-    public List<ApplicationUser> getVerifiedBy() {
-        return verifiedBy;
+    public List<ApplicationUser> getVerifiers() {
+        return verifiers;
     }
 
-    public void setVerifiedBy(List<ApplicationUser> verifiedBy) {
-        this.verifiedBy = verifiedBy;
+    public void setVerifiers(List<ApplicationUser> verifiers) {
+        this.verifiers = verifiers;
     }
 
     public static final class RecipeBuilder {

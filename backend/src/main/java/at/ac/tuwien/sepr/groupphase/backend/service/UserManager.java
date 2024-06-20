@@ -37,7 +37,7 @@ public class UserManager {
         return userRepository.findFirstUserByEmail(email);
     }
 
-    public boolean hasRole(Roles role) {
-        return getCurrentUser().getRoles().contains(roleRepository.findByName(role.name()));
+    public boolean hasUserRole(ApplicationUser user, Roles role) {
+        return user.getRoles().contains(roleRepository.findByName(role.name()));
     }
 }

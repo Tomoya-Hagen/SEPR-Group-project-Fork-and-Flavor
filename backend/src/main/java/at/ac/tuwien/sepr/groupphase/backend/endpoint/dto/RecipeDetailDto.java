@@ -68,7 +68,6 @@ public record RecipeDetailDto(
     ArrayList<String> forkedRecipes,
 
     long rating,
-
-    long verifiedNumber
+    long verification
 ) {
 }
