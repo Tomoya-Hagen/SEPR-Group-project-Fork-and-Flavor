@@ -43,15 +43,17 @@ public class Recipe {
     @JoinColumn(name = "forked_from")
     private Recipe forkedFrom;
 
-    @Basic
-    @Column(name = "verified_number")
-    private long verfiedNumber;
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "verfied_Number",
+        joinColumns = {@JoinColumn(name = "recipe_id")},
+        inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    private List <Recipe> verfiedNumber;
 
-    public void setVerfiedNumber(long verfiedNumber) {
+    public void setVerfiedNumber(List <Recipe> verfiedNumber) {
         this.verfiedNumber = verfiedNumber;
     }
 
-    public long getVerfiedNumber() {
+    public List <Recipe> getVerifiedNumber() {
         return verfiedNumber;
     }
 
@@ -259,7 +261,6 @@ public class Recipe {
         private List<RecipeIngredient> ingredients;
         private List<Recipe> recipesForkedFromThis;
         private List<Recipe> goesWellWithRecipes = new ArrayList<>();
-        private long verifiedNumber;
 
         private RecipeBuilder() {
         }
@@ -351,11 +352,6 @@ public class Recipe {
             return this;
         }
 
-        public RecipeBuilder withVerifiedNumber(long number) {
-            this.verifiedNumber = number;
-            return this;
-        }
-
         public Recipe build() {
             Recipe recipe = new Recipe();
             recipe.setId(id);
@@ -374,7 +370,6 @@ public class Recipe {
             recipe.recipeBooks = this.recipeBooks;
             recipe.weeklyPlanner = this.weeklyPlanner;
             recipe.goesWellWithRecipes = this.goesWellWithRecipes;
-            recipe.setVerfiedNumber(verifiedNumber);
             return recipe;
         }
     }
