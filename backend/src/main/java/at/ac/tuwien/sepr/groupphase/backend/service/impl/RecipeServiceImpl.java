@@ -213,8 +213,8 @@ public class RecipeServiceImpl implements RecipeService {
 
         recipeRepository.save(simple);
         badgeService.addRoleToUser(owner, Roles.Cook);
-        var x = recipeMapper.recipeToDetailedRecipeDto(simple);
-        return x;
+        badgeService.addRoleToUser(owner, Roles.StarCook);
+        return recipeMapper.recipeToDetailedRecipeDto(simple);
     }
 
     @Override

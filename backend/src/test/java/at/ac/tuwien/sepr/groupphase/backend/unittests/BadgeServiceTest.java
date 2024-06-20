@@ -49,7 +49,7 @@ class BadgeServiceTest {
     }
 
     @Test
-    void addRoleToUserShouldAddRoleToUser(){
+    void addRoleToUserShouldAddRoleToUser() {
         ApplicationUser user = userRepository.findFirstById(1L);
         Role role = roleRepository.findByName(Roles.StarCook.name());
         int rolesCount = user.getRoles().size();
