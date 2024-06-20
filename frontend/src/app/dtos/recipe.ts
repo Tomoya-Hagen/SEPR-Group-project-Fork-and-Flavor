@@ -47,7 +47,8 @@ export interface RecipeDetailDto {
     recipeSteps: RecipeStepDetailDto[],
     ingredients: IngredientDetailDto[],
     allergens: AllergenDetailDto[],
-    nutritions: NutritionDetailDto[]
+    nutritions: NutritionDetailDto[],
+    forkedRecipes: string[];
 }
 
 export interface RecipeList{

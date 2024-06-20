@@ -57,6 +57,11 @@ public record RecipeDetailDto(
     ArrayList<AllergenDetailDto> allergens,
 
     @NotNull
-    ArrayList<NutritionDetailDto> nutritions
+    ArrayList<NutritionDetailDto> nutritions,
+
+    @NotNull
+    ArrayList<String> forkedRecipes,
+
+    long rating
 ) {
 }

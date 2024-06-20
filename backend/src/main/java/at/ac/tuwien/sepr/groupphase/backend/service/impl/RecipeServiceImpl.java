@@ -8,8 +8,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.IngredientNutrition;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Nutrition;
@@ -19,20 +19,24 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
+import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
+import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
+import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -46,6 +50,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Transactional
@@ -59,17 +64,21 @@ public class RecipeServiceImpl implements RecipeService {
     private final CategoryRepository categoryRepository;
     private final RecipeValidator recipeValidator;
     private final UserManager userManager;
+    private final BadgeService badgeService;
 
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
                              RecipeMapper recipeMapper,
                              CategoryRepository categoryRepository,
-                             RecipeValidator recipeValidator, UserManager userManager) {
+                             RecipeValidator recipeValidator,
+                             UserManager userManager,
+                             BadgeService badgeService) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
         this.categoryRepository = categoryRepository;
         this.recipeValidator = recipeValidator;
         this.userManager = userManager;
+        this.badgeService = badgeService;
     }
 
 
@@ -88,7 +97,29 @@ public class RecipeServiceImpl implements RecipeService {
         ArrayList<Allergen> allergens = new ArrayList<>();
         getRecipeDetails(recipe, ingredients, nutritions, allergens, recursive);
         long rating = calculateAverageTasteRating(recipe.getRatings());
-        return recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
+        RecipeDetailDto result = recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
+
+        List<Recipe> forkedRecipes = recipeRepository.findAllForkedRecipesById(id);
+        ArrayList<String> forkedRecipeNames = new ArrayList<>();
+        for (Recipe forkedRecipe : forkedRecipes) {
+            forkedRecipeNames.add(forkedRecipe.getName());
+        }
+        return new RecipeDetailDto(
+            result.id(),
+            result.name(),
+            result.description(),
+            result.numberOfServings(),
+            result.forkedFromId(),
+            result.ownerId(),
+            result.categories(),
+            result.isDraft(),
+            result.recipeSteps(),
+            result.ingredients(),
+            result.allergens(),
+            result.nutritions(),
+            forkedRecipeNames,
+            result.rating()
+        );
     }
 
     @Override
@@ -101,6 +132,47 @@ public class RecipeServiceImpl implements RecipeService {
         });
     }
 
+    @Override
+    public Page<RecipeListDto> getRecipesThatGoWellWith(long id, Pageable pageable) throws NotFoundException {
+        Recipe origRecipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
+        List<Recipe> goWellWith = origRecipe.getGoesWellWithRecipes();
+
+        List<RecipeListDto> recipeListDtos = goWellWith.stream()
+            .map(recipe -> {
+                Long rating = calculateAverageTasteRating(recipe.getRatings());
+                return recipeMapper.recipeToRecipeListDto(recipe, rating);
+            })
+            .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), recipeListDtos.size());
+        List<RecipeListDto> subList = recipeListDtos.subList(start, end);
+
+        return new PageImpl<>(subList, pageable, recipeListDtos.size());
+    }
+
+    @Override
+    public RecipeDetailDto addGoesWellWith(long id, List<RecipeListDto> goWellWith) throws ResponseStatusException {
+        Recipe origRecipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
+        if (origRecipe.getOwner().getId() != userManager.getCurrentUser().getId()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+        List<Recipe> goWellWithRecipes = goWellWith.stream()
+            .map(recipeListDto -> recipeRepository.getRecipeById(recipeListDto.id()).orElseThrow(NotFoundException::new))
+            .collect(Collectors.toList());
+
+        List<Recipe> uniqueRecipes = new ArrayList<>();
+        for (Recipe recipe : goWellWithRecipes) {
+            if (!origRecipe.getGoesWellWithRecipes().contains(recipe)) {
+                uniqueRecipes.add(recipe);
+            }
+        }
+
+        origRecipe.setGoesWellWithRecipes(uniqueRecipes);
+        recipeRepository.save(origRecipe);
+
+        return getRecipeDetailDtoById(id);
+    }
 
     @Override
     public DetailedRecipeDto createRecipe(RecipeCreateDto recipeDto) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException {
@@ -123,8 +195,8 @@ public class RecipeServiceImpl implements RecipeService {
         simple.setCategories(categories);
         simple.setRecipeSteps(recipe.getRecipeSteps());
 
-
         recipeRepository.save(simple);
+        badgeService.addRoleToUser(owner, Roles.Cook);
         var x = recipeMapper.recipeToDetailedRecipeDto(simple);
         return x;
     }
@@ -146,7 +218,7 @@ public class RecipeServiceImpl implements RecipeService {
 
         List<Category> categories = new ArrayList<>();
         for (Category category : recipe.getCategories()) {
-            categories.add(categoryRepository.getById(category.getId()));
+            categories.add(categoryRepository.findById(category.getId()).orElseThrow(NotFoundException::new));
         }
         simple.setIngredients(recipe.getIngredients());
         simple.setCategories(categories);
@@ -168,7 +240,8 @@ public class RecipeServiceImpl implements RecipeService {
         long rating = 0;
         if (!ratings.isEmpty()) {
             for (Rating value : ratings) {
-                rating += value.getTaste().longValue();
+                rating += (value.getTaste().longValue()
+                    + value.getCost().longValue() + value.getEaseOfPrep().longValue()) / 3;
             }
             rating /= ratings.size();
         }

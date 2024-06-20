@@ -3,9 +3,10 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
@@ -25,11 +26,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -37,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -48,25 +50,23 @@ public class RecipeEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final RecipeService recipeService;
-    private final UserService userService;
-
 
     @Autowired
-    public RecipeEndpoint(RecipeService recipeService, UserService userService) {
+    public RecipeEndpoint(RecipeService recipeService) {
         this.recipeService = recipeService;
-        this.userService = userService;
     }
 
     @PermitAll
     @GetMapping(value = "/details/{id}")
     @Operation(summary = "Get recipe details by id")
-    public RecipeDetailDto findBy(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<RecipeDetailDto> findBy(@PathVariable(name = "id") Long id) {
         LOGGER.info("GET /api/v1/recipe/details/{}", id);
         try {
-            return recipeService.getRecipeDetailDtoById(id);
+            RecipeDetailDto recipeDetailDto = recipeService.getRecipeDetailDtoById(id);
+            return ResponseEntity.ok(recipeDetailDto);
         } catch (NotFoundException e) {
             HttpStatus status = HttpStatus.NOT_FOUND;
-            logClientError(status, "no recipe found by the given is", e);
+            logClientError(status, "no recipe found by the given id", e);
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
     }
@@ -78,6 +78,35 @@ public class RecipeEndpoint {
         LOGGER.info("GET /api/v1/recipe/details/{}", id);
         try {
             return recipeService.getRecipeDetailDtoById(id, false);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no recipe found by the given is", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+    }
+
+    @PermitAll
+    @GetMapping(value = "/{id}/goesWellWith")
+    @Operation(summary = "Get recipes that go well with the recipe with the given id")
+    public Page<RecipeListDto> goesWellWith(@PathVariable(name = "id") Long id,
+                                            @RequestParam(name = "page", defaultValue = "0") int page,
+                                            @RequestParam(name = "size", defaultValue = "3") int size) {
+        LOGGER.info("GET /api/v1/recipe/goesWellWith/{}", id);
+        try {
+            return recipeService.getRecipesThatGoWellWith(id, PageRequest.of(page, size));
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no recipe found by the given is", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+    }
+
+    @PutMapping("/{id}/goesWellWith")
+    @Operation(summary = "Add a recipes that go well with the recipe with the given id")
+    public RecipeDetailDto addGoesWellWith(@PathVariable(name = "id") Long id, @RequestBody List<RecipeListDto> goWellWith) {
+        LOGGER.info("PUT /api/v1/recipe/goesWellWith/{}", id);
+        try {
+            return recipeService.addGoesWellWith(id, goWellWith);
         } catch (NotFoundException e) {
             HttpStatus status = HttpStatus.NOT_FOUND;
             logClientError(status, "no recipe found by the given is", e);

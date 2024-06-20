@@ -32,6 +32,11 @@ import {MatIconButton} from "@angular/material/button";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatIcon} from "@angular/material/icon";
 import {ResetPasswordComponent} from "./components/login/reset-password/reset-password.component";
+import {RecipeModalComponent} from "./components/recipe/recipe-detail/recipe-modal/recipe-modal.component";
+import {FloatingMenuComponent} from "./components/floating-menu/floating-menu.component";
+import {CommonModule} from "@angular/common";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { StarRatingComponent } from './components/star-rating/star-rating.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +58,9 @@ import {ResetPasswordComponent} from "./components/login/reset-password/reset-pa
     RegisterComponent,
     RecipebookCreateEditComponent,
     ResetPasswordComponent,
+    RecipeModalComponent,
+    FloatingMenuComponent,
+    StarRatingComponent
   ],
   imports: [
     BrowserModule,
@@ -67,6 +75,7 @@ import {ResetPasswordComponent} from "./components/login/reset-password/reset-pa
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
+    CommonModule,
     ToastrModule.forRoot({
       timeOut: 10000,
       positionClass: 'toast-top-left',
@@ -80,6 +89,7 @@ import {ResetPasswordComponent} from "./components/login/reset-password/reset-pa
     MatIconButton,
     MatTooltip,
     MatIcon,
+    FontAwesomeModule,
   ],
   providers: [httpInterceptorProviders],
   exports: [

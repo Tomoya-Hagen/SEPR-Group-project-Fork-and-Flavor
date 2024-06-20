@@ -1,0 +1,13 @@
+<div class="fab-container">
+  <button type="button" class="b1 fab" (click)="toggleMenu()">
+    <span><img src="assets/images/icon_white.png" height="32px" alt="logo" class="logo" [ngClass]="{'spin': isSpinning, 'spin-reverse': !isSpinning}"></span>
+  </button>
+  <div class="fab-menu" [ngClass]="{'active': menuOpen}">
+    <div class="fab-menu-item" *ngFor="let option of options" [ngClass]="{'fade-in-up': menuOpen, 'fade-out-down': !menuOpen}">
+      <button type="button" class="menu-item-btn" [disabled]="option.disabled" (click)="option.action()" [ngClass]="{'disabled': option.disabled}">
+        <span class="menu-item-label">{{ option.label }}</span>
+        <span class="menu-item-icon" [ngClass]="option.iconClass"></span>
+      </button>
+    </div>
+  </div>
+</div>

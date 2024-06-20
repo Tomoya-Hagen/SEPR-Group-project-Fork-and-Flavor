@@ -129,8 +129,8 @@ class RecipeServiceTest implements TestData {
 
         DetailedRecipeDto ret = recipeService.createRecipe(recipeCreateDto);
         Assertions.assertNotNull(ret);
-        Assertions.assertEquals(ret.getDescription(), "Beschreibung");
-        Assertions.assertEquals(ret.getName(), "Name");
+        Assertions.assertEquals("Beschreibung", ret.getDescription());
+        Assertions.assertEquals("Name", ret.getName());
         long retid = ret.getId();
 
         Recipe recipefDB = recipeRepository.getRecipeById(retid).get();

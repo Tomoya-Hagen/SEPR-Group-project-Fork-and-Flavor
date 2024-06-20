@@ -10,6 +10,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.IngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
@@ -19,13 +20,18 @@ import java.util.List;
 @Component
 public class RecipeValidator {
 
-    final CategoryRepository categoryRepository;
-    final IngredientRepository ingredientRepository;
-    final RecipeRepository recipeRepository;
+    @Autowired
+    CategoryRepository categoryRepository;
+    @Autowired
+    IngredientRepository ingredientRepository;
+    @Autowired
+    RecipeRepository recipeRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public RecipeValidator(CategoryRepository categoryRepository, IngredientRepository ingredientRepository, RecipeRepository recipeRepository) {
+    public RecipeValidator(CategoryRepository categoryRepository,
+                           IngredientRepository ingredientRepository,
+                           RecipeRepository recipeRepository) {
         this.categoryRepository = categoryRepository;
         this.ingredientRepository = ingredientRepository;
         this.recipeRepository = recipeRepository;

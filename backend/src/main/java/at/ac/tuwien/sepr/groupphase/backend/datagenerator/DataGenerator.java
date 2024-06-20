@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.IngredientNutrition;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Nutrition;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Rating;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeDescriptionStep;
@@ -14,10 +15,12 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Role;
 import at.ac.tuwien.sepr.groupphase.backend.entity.WeeklyPlanner;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.AllergenRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.IngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.NutritionRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeIngredientRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
@@ -25,6 +28,8 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeStepRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.WeeklyPlannerRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
+import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -35,9 +40,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.HashMap;
@@ -61,6 +64,7 @@ public class DataGenerator implements CommandLineRunner {
     private final RecipeRepository recipeRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
     private final RecipeStepRepository recipeStepRepository;
+    private final RatingRepository ratingRepository;
 
     private final ResourceLoader resourceLoader;
     private final WeeklyPlannerRepository weeklyPlannerRepository;
@@ -73,7 +77,9 @@ public class DataGenerator implements CommandLineRunner {
                          AllergenRepository allergenRepository, NutritionRepository nutritionRepository,
                          RecipeBookRepository recipeBookRepository, RecipeRepository recipeRepository,
                          RecipeIngredientRepository recipeIngredientRepository,
-                         RecipeStepRepository recipeStepRepository, ResourceLoader resourceLoader, WeeklyPlannerRepository weeklyPlannerRepository) {
+                         RecipeStepRepository recipeStepRepository, ResourceLoader resourceLoader,
+                         RatingRepository ratingRepository,
+                         WeeklyPlannerRepository weeklyPlannerRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -86,10 +92,12 @@ public class DataGenerator implements CommandLineRunner {
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.recipeStepRepository = recipeStepRepository;
         this.resourceLoader = resourceLoader;
+        this.ratingRepository = ratingRepository;
         this.idMap = new HashMap<>();
         this.weeklyPlannerRepository = weeklyPlannerRepository;
     }
 
+    @Transactional
     @Override
     public void run(String... args) throws Exception {
         generateUserData();
@@ -102,22 +110,24 @@ public class DataGenerator implements CommandLineRunner {
         generateRecipeCategories();
         generateRecipeSteps();
         generateRecipeBooks();
+        generateRatings();
+        generateGoesWellWidth();
         generateWeekPlan();
     }
 
     private void generateUserData() {
 
-        String[] roles = {"Admin", "User", "Contributor", "Cook", "StarCook"};
+        Roles[] roles = Roles.values();
         String[] usernames = {"admin", "user", "contributor", "cook", "starcook"};
         String[] emails = {"admin@email.com", "user@email.com", "contributor@email.com", "cook@email.com", "starcook@email.com"};
 
         // Create and save roles
         List<Role> savedRoles = new ArrayList<>();
-        for (String s : roles) {
-            if (roleRepository.existsByName(s)) {
+        for (Roles r : roles) {
+            if (roleRepository.existsByName(r.name())) {
                 continue;
             }
-            Role role = new Role.RoleBuilder().withroleId(s).build();
+            Role role = new Role.RoleBuilder().withroleId(r.name()).build();
             savedRoles.add(roleRepository.save(role));
         }
 
@@ -219,8 +229,8 @@ public class DataGenerator implements CommandLineRunner {
 
     protected void generateIngredientData() {
         String[] nutritionNames = {
-            "Calories", "Fat Total", "Fat Saturated", "Protein", "Sodium",
-            "Potassium", "Cholesterol", "Carbohydrates Total", "Fiber", "Sugar"
+            "Kalorien", "Fett total", "-davon gesättigt", "Eiweiß", "Kohlenhydrate total", "-davon Zucker", "Salz",
+            "Kalcium", "Cholesterol", "Ballaststoffe"
         };
 
         Map<String, Nutrition> nutritionMap = new HashMap<>();
@@ -499,6 +509,35 @@ public class DataGenerator implements CommandLineRunner {
         weeklyPlannerRepository.flush();
     }
 
+    @Transactional
+    protected void generateGoesWellWidth() {
+        recipeRepository.flush();
+        Resource resource = resourceLoader.getResource("classpath:recipeGoesWellWith.csv");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                List<String> fields = parseCsvLine(line, ',');
+                if (fields.size() == 2) {
+                    Long recipe1Id = Long.parseLong(fields.get(0));
+                    Long recipe2Id = Long.parseLong(fields.get(1));
+                    if (skippedRecipes.contains(recipe1Id) || skippedRecipes.contains(recipe2Id)) {
+                        continue;
+                    }
+                    Recipe recipe1 = recipeRepository.findById(idMap.get(recipe1Id)).orElse(null);
+                    Recipe recipe2 = recipeRepository.findById(idMap.get(recipe2Id)).orElse(null);
+                    if (recipe1 != null && recipe2 != null) {
+                        recipe1.getGoesWellWithRecipes().add(recipe2);
+                        recipeRepository.save(recipe1);
+                        recipeRepository.flush();
+                    }
+                }
+
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private List<String> parseCsvLine(String line, char separator) {
         List<String> fields = new ArrayList<>();
         StringBuilder field = new StringBuilder();
@@ -519,6 +558,39 @@ public class DataGenerator implements CommandLineRunner {
         }
         fields.add(field.toString());
         return fields;
+    }
+
+    protected void generateRatings() {
+        Resource resource = resourceLoader.getResource("classpath:rating.csv");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+            String line = reader.readLine();
+            while ((line = reader.readLine()) != null) {
+                List<String> fields = parseCsvLine(line, ',');
+                if (fields.size() == 6) {
+                    long recipeId = Long.parseLong(fields.get(0).trim());
+                    long userId = Long.parseLong(fields.get(1).trim());
+                    long cost = Long.parseLong(fields.get(2).trim());
+                    long taste = Long.parseLong(fields.get(3).trim());
+                    long easeOfPrep = Long.parseLong(fields.get(4).trim());
+                    String review = fields.get(5).trim();
+                    Optional<Rating> existingRating = ratingRepository.findByAllAttributes(
+                        userId, recipeId, taste, cost, easeOfPrep, review);
+                    if (existingRating.isEmpty()) {
+                        Rating rating = new Rating();
+                        rating.setCost(BigDecimal.valueOf(cost));
+                        rating.setRecipe(recipeRepository.getRecipeById(recipeId).orElseThrow(NotFoundException::new));
+                        rating.setUser(userRepository.findFirstById(userId));
+                        rating.setTaste(BigInteger.valueOf(taste));
+                        rating.setReview(review);
+                        rating.setEaseOfPrep(BigInteger.valueOf(easeOfPrep));
+                        ratingRepository.save(rating);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        categoryRepository.flush();
     }
 
     private Set<Allergen> findAllergensByCodes(String codes) {

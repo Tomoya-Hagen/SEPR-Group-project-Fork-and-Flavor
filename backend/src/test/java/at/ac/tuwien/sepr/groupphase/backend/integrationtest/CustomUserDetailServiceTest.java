@@ -103,7 +103,7 @@ class CustomUserDetailServiceTest implements TestData {
     }
 
     @Test
-    public void getRecipesByUserIdReturnsRecipesWhenUserExists() throws Exception {
+    void getRecipesByUserIdReturnsRecipesWhenUserExists() throws Exception {
         mockMvc.perform(get("/api/v1/users/1/recipes")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -111,7 +111,7 @@ class CustomUserDetailServiceTest implements TestData {
     }
 
     @Test
-    public void getRecipesByUserIdReturnsEmptyListWhenUserHasNoRecipes() throws Exception {
+    void getRecipesByUserIdReturnsEmptyListWhenUserHasNoRecipes() throws Exception {
         mockMvc.perform(get("/api/v1/users/2/recipes")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -119,14 +119,14 @@ class CustomUserDetailServiceTest implements TestData {
     }
 
     @Test
-    public void getRecipesByUserIdReturnsNotFoundWhenUserDoesNotExist() throws Exception {
+    void getRecipesByUserIdReturnsNotFoundWhenUserDoesNotExist() throws Exception {
         mockMvc.perform(get("/api/v1/users/0/recipes")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
 
     @Test
-    public void getRecipeBooksByUserIdReturnsRecipeBooksWhenUserExists() throws Exception {
+    void getRecipeBooksByUserIdReturnsRecipeBooksWhenUserExists() throws Exception {
         mockMvc.perform(get("/api/v1/users/1/recipebooks")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -135,7 +135,7 @@ class CustomUserDetailServiceTest implements TestData {
     }
 
     @Test
-    public void getRecipeBooksByUserIdReturnsEmptyListWhenUserHasNoRecipeBooks() throws Exception {
+    void getRecipeBooksByUserIdReturnsEmptyListWhenUserHasNoRecipeBooks() throws Exception {
         mockMvc.perform(get("/api/v1/users/2/recipebooks")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -143,14 +143,14 @@ class CustomUserDetailServiceTest implements TestData {
     }
 
     @Test
-    public void getRecipeBooksByUserIdReturnsNotFoundWhenUserDoesNotExist() throws Exception {
+    void getRecipeBooksByUserIdReturnsNotFoundWhenUserDoesNotExist() throws Exception {
         mockMvc.perform(get("/api/v1/users/0/recipebooks")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
 
     @Test
-    public void getUserReturnsUserWhenUserExists() throws Exception {
+    void getUserReturnsUserWhenUserExists() throws Exception {
         mockMvc.perform(get("/api/v1/users/1/details")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -158,7 +158,7 @@ class CustomUserDetailServiceTest implements TestData {
     }
 
     @Test
-    public void getUserReturnsNotFoundWhenUserDoesNotExist() throws Exception {
+    void getUserReturnsNotFoundWhenUserDoesNotExist() throws Exception {
         mockMvc.perform(get("/api/v1/users/0/details")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
