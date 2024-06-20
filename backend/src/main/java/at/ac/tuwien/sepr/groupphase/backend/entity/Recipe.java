@@ -223,6 +223,14 @@ public class Recipe {
         return "Recipe(id=" + this.getId() + ", name=" + this.getName() + ", description=" + this.getDescription() + ", numberOfServings=" + this.getNumberOfServings() + ", owner=" + this.getOwner().getUsername() + ")";
     }
 
+    public List<ApplicationUser> getVerifiedBy() {
+        return verifiedBy;
+    }
+
+    public void setVerifiedBy(List<ApplicationUser> verifiedBy) {
+        this.verifiedBy = verifiedBy;
+    }
+
     public static final class RecipeBuilder {
         private long id;
         private String name;

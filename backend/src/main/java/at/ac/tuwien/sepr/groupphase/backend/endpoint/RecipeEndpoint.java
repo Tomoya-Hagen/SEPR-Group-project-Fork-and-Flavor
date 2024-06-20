@@ -6,13 +6,12 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
-import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.security.PermitAll;
@@ -26,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -180,6 +180,23 @@ public class RecipeEndpoint {
         Pageable pageable = PageRequest.of(page, size);
 
         return recipeService.getRecipesByName(name, pageable);
+    }
+
+    @PostMapping("/verify/{id}")
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "verify a recipe")
+    public void verifyRecipe(@PathVariable("id") long id) {
+        try {
+            recipeService.verifyRecipe(id);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        } catch (ForbiddenException e) {
+            HttpStatus status = HttpStatus.FORBIDDEN;
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+        recipeService.verifyRecipe(id);
     }
 
     private void logClientError(HttpStatus status, String message, Exception e) {
