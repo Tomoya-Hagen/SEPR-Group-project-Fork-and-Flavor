@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from "../../services/user.service";
 import {userDto} from "../../dtos/user";
-import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-header',
@@ -12,9 +11,12 @@ import {ToastrService} from "ngx-toastr";
 
 export class HeaderComponent implements OnInit {
 
-  user: userDto;
+  user: userDto = {
+    id: 0,
+    name: ""
+  };
 
-  constructor(public authService: AuthService, private userService: UserService, private notification: ToastrService) { }
+  constructor(public authService: AuthService, private userService: UserService) { }
 
   ngOnInit() {
     this.userService.getCurrentUser().subscribe({

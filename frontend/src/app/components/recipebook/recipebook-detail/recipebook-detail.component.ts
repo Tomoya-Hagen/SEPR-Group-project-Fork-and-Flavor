@@ -17,7 +17,10 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy {
     description: "",
     id: 0,
     ownerId: 0,
-    owner: null,
+    owner: {
+      id: 0,
+      name: ""
+    },
     recipes: [],
     users: []
   }
