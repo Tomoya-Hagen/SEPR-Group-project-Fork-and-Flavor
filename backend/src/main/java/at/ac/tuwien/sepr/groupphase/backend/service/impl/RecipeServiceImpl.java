@@ -132,7 +132,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void verifyRecipe(long recipeId) throws ValidationException {
+    public long verifyRecipe(long recipeId) throws ValidationException {
         LOGGER.trace("verifyRecipe({})", recipeId);
         ApplicationUser user = userManager.getCurrentUser();
         if (!userManager.hasUserRole(user, Roles.StarCook)) {
@@ -146,6 +146,7 @@ public class RecipeServiceImpl implements RecipeService {
         verifiers.add(user);
         recipe.setVerifiers(verifiers);
         recipeRepository.save(recipe);
+        return recipe.getVerifiers().size();
     }
 
     @Override

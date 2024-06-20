@@ -185,9 +185,9 @@ public class RecipeEndpoint {
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "verify a recipe")
-    public void verifyRecipe(@PathVariable("id") long id) {
+    public long verifyRecipe(@PathVariable("id") long id) {
         try {
-            recipeService.verifyRecipe(id);
+            return recipeService.verifyRecipe(id);
         } catch (NotFoundException e) {
             HttpStatus status = HttpStatus.NOT_FOUND;
             throw new ResponseStatusException(status, e.getMessage(), e);
