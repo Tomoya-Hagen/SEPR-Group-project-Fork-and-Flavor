@@ -1,5 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
@@ -41,6 +46,15 @@ public interface RecipeService {
      * @return created recipe entry
      */
     DetailedRecipeDto forkRecipe(RecipeCreateDto recipe, int forkid) throws ValidationException, RecipeStepNotParsableException, RecipeStepSelfReferenceException;
+
+    /**
+     * Find all recipes having a name like name.
+     *
+     * @param searchDto searchDto  of recipes to find
+     *             limit max amount of recipe to return
+     * @return limit amount of recipes found
+     */
+    Stream<SimpleRecipeResultDto> bynamecategories(RecipeSearchDto searchDto, int limit);
 
     /**
      * Find all recipes having a name like name.
@@ -97,6 +111,15 @@ public interface RecipeService {
      * @return The updated recipe
      */
     DetailedRecipeDto updateRecipe(RecipeUpdateDto recipeUpdateDto);
+
+    /**
+     * This method finds a page of recipes by name.
+     *
+     * @param searchDto the name or parts of it of the recipe to look for.
+     * @param pageable the page information.
+     * @return A list of RecipeListDto.
+     */
+    Page<RecipeListDto> getRecipesByNameCategories(RecipeSearchDto searchDto, Pageable pageable);
 
     /**
      * This method finds a page of recipes by name.

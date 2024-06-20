@@ -74,7 +74,7 @@ class RecipeRepositoryTest {
         eggFriedRiceRecipe.setName("Egg Fried Rice");
         eggFriedRiceRecipe.setDescription("Ein schnelles asiatisches Gericht.");
         eggFriedRiceRecipe.setCategories(List.of(
-            categoryRepository.findByNameAndType("Hautpspeise", "MAIN_COURSE").get())
+            categoryRepository.findByNameAndType("Hauptspeise", "MAIN_COURSE").get())
         );
         eggFriedRiceRecipe.setNumberOfServings((short) 1);
         eggFriedRiceRecipe.setIngredients(List.of(

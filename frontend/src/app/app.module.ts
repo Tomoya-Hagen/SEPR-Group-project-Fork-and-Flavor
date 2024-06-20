@@ -37,6 +37,8 @@ import {FloatingMenuComponent} from "./components/floating-menu/floating-menu.co
 import {CommonModule} from "@angular/common";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { StarRatingComponent } from './components/star-rating/star-rating.component';
+import {UserpageComponent} from "./components/userpage/userpage.component";
+import {RecipebookDetailComponent} from "./components/recipebook/recipebook-detail/recipebook-detail.component";
 
 @NgModule({
   declarations: [
@@ -60,7 +62,8 @@ import { StarRatingComponent } from './components/star-rating/star-rating.compon
     ResetPasswordComponent,
     RecipeModalComponent,
     FloatingMenuComponent,
-    StarRatingComponent
+    StarRatingComponent,
+    RecipebookDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -90,6 +93,7 @@ import { StarRatingComponent } from './components/star-rating/star-rating.compon
     MatTooltip,
     MatIcon,
     FontAwesomeModule,
+    UserpageComponent,
   ],
   providers: [httpInterceptorProviders],
   exports: [

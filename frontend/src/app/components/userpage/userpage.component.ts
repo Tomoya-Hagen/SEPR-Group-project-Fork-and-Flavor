@@ -21,8 +21,6 @@ import {RatingService} from "../../services/rating.service";
   styleUrl: './userpage.component.scss'
 })
 export class UserpageComponent implements OnInit {
-
-
   recipeBook: RecipeBookListDto[] = [];
   recipes: RecipeListDto[] = [];
   user: userDto = {
@@ -52,26 +50,6 @@ export class UserpageComponent implements OnInit {
           this.notification.error('Rezeptbücher für die Benutzerseite können nicht abgerufen werden.',"Fehler - Benutzerseite Rezeptbücher");
         }
       });
-      let observable2 = this.service.getUser(params['id']);
-      observable2.subscribe({
-        next: data => {
-          this.user = data;
-        },
-        error: error => {
-          console.error('Error fetching user by id', error);
-          this.notification.error('Gesuchte Benutzerseite kann nicht geladen werden.',"Fehler - Benutzerseite");
-        }
-      });
-      let observable3 = this.service.getAllRecipesForUserId(params['id']);
-      observable3.subscribe({
-        next: data => {
-          this.recipes = data;
-        },
-        error: error => {
-          console.error('Error fetching recipes by user id', error);
-          this.notification.error('Rezepte für die Benutzerseite können nicht abgerufen werden.',"Fehler - Benutzerseite Rezepte");
-        }
-      });
       this.service.getCurrentUser().subscribe({
         next: (data: userDto) => {
           this.isMyPage = (data.id == params['id']);
@@ -80,8 +58,7 @@ export class UserpageComponent implements OnInit {
           console.error('Error fetching current User', error);
           this.notification.error('Eigene Benutzerseite kann nicht geladen werden.',"Fehler - Benutzerseite");
         }
-      })
-
+      });
       this.ratingService.getRatingsByUserId(params['id']).subscribe({
         next: data => {
           this.ratings = data;
@@ -91,8 +68,26 @@ export class UserpageComponent implements OnInit {
           this.notification.error('Bewertungen für die Benutzerseite können nicht abgerufen werden.',"Fehler - Benutzerseite Bewertungen");
         }
       });
+      this.service.getAllRecipesForUserId(params['id']).subscribe({
+        next: data => {
+          this.recipes = data;
+        },
+        error: error => {
+          console.error('Error fetching recipes by user id', error);
+          this.notification.error('Rezepte für die Benutzerseite können nicht abgerufen werden.',"Fehler - Benutzerseite Rezepte");
+        }
+      });
+
+      this.service.getUser(params['id']).subscribe({
+        next: data => {
+          this.user = data;
+        },
+        error: error => {
+          console.error('Error fetching user by id', error);
+          this.notification.error('Gesuchte Benutzerseite kann nicht geladen werden.',"Fehler - Benutzerseite");
+        }
+      });
 
     });
-
   }
 }

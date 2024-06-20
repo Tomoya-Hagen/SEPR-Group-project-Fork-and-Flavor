@@ -205,8 +205,7 @@ export class RecipeEditComponent implements OnInit {
 
   recipeStepSuggestions = (input: string) => (input === '')
     ? of([])
-    :  this.recipeService.recipeByName(input, 5);
-
+    :  this.recipeService.recipeByName(input, 0,5);
 
 
   public formatCategory(simpleCategory: SimpleCategory | null): string {
