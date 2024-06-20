@@ -296,12 +296,14 @@ public class DataGenerator implements CommandLineRunner {
                     forkedFrom = recipeRepository.findFirstById(idMap.get(Long.parseLong(fields.get(4))));
                 }
                 ApplicationUser user = userRepository.findFirstById(Long.parseLong(fields.get(5)));
+                long number = Long.parseLong(fields.get(6));
                 Recipe recipe = Recipe.RecipeBuilder.aRecipe()
                     .withName(fields.get(1))
                     .withDescription(fields.get(2))
                     .withNumberOfServings(Short.parseShort(fields.get(3)))
                     .withOwner(user)
                     .withForkedFrom(forkedFrom)
+                    .withVerifiedNumber(number)
                     .build();
                 recipeRepository.save(recipe);
                 idMap.put(id, recipe.getId());

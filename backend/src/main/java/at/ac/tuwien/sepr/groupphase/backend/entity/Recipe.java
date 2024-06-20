@@ -43,6 +43,17 @@ public class Recipe {
     @JoinColumn(name = "forked_from")
     private Recipe forkedFrom;
 
+    @Basic
+    @Column(name = "verified_number")
+    private long verfiedNumber;
+
+    public void setVerfiedNumber(long verfiedNumber) {
+        this.verfiedNumber = verfiedNumber;
+    }
+
+    public long getVerfiedNumber() {
+        return verfiedNumber;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
@@ -239,6 +250,7 @@ public class Recipe {
         private List<RecipeIngredient> ingredients;
         private List<Recipe> recipesForkedFromThis;
         private List<Recipe> goesWellWithRecipes = new ArrayList<>();
+        private long verifiedNumber;
 
         private RecipeBuilder() {
         }
@@ -335,6 +347,11 @@ public class Recipe {
             return this;
         }
 
+        public RecipeBuilder withVerifiedNumber(long number) {
+            this.verifiedNumber = number;
+            return this;
+        }
+
         public Recipe build() {
             Recipe recipe = new Recipe();
             recipe.setId(id);
@@ -354,6 +371,7 @@ public class Recipe {
             recipe.weeklyPlanner = this.weeklyPlanner;
             recipe.recipesVerified = this.recipesVerified;
             recipe.goesWellWithRecipes = this.goesWellWithRecipes;
+            recipe.setVerfiedNumber(verifiedNumber);
             return recipe;
         }
     }
