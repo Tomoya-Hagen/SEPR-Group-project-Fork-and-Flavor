@@ -14,6 +14,9 @@ import {RecipeModalComponent} from "./recipe-modal/recipe-modal.component";
 import { RatingCreateDto, RatingListDto } from 'src/app/dtos/rating';
 import { RatingService } from 'src/app/services/rating.service';
 import { NgForm } from '@angular/forms';
+import {AuthService} from "../../../services/auth.service";
+import {tap} from "rxjs/operators";
+import {catchError, of} from "rxjs";
 
 @Component({
   selector: 'app-recipe-detail',
@@ -77,6 +80,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   totalElements: number;
   page: number = 1;
   size: number = 3;
+  loggedIn: boolean = false;
   menuOptions = [
     {
       label: 'Neues Rezept erstellen',
@@ -113,6 +117,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     private recipeBookService: RecipeBookService,
     private titleService: Title,
     private userService: UserService,
+    private authService: AuthService,
   ) { }
 
   ngOnInit(): void {
@@ -138,6 +143,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           }
           this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
           this.onPageChange(1);
+
+
         },
         error: error => {
           console.error('Error fetching recipe', error);
@@ -146,6 +153,13 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         }
       });
     });
+    this.authService.isLogged()
+      .pipe(
+        tap((isLoggedIn: boolean) => {
+          this.loggedIn = true;
+        })
+      )
+      .subscribe();
   }
 
   ngOnDestroy(): void {
@@ -418,7 +432,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   }
 
   openRatingModal(modal: TemplateRef<any>) {
-    this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' });
+    if (this.loggedIn){
+      this.modalService.open(modal, {ariaLabelledBy: 'modal-basic-title'});
+    } else {
+      this.notification.error('Sie müssen eingeloggt sein, um ein Rating abzugeben.', 'Nicht eingeloggt');
+      this.router.navigate(['/login']);
+    }
   }
 
   closeRatingModal() {
