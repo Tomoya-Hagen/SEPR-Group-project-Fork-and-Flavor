@@ -96,4 +96,8 @@ export class UserpageComponent implements OnInit {
   changePassword() {
     this.router.navigate(['/userpage', this.user.id, 'edit']);
   }
+
+  goToRecipeDetails(recipeId: number): void {
+    this.router.navigate([`/recipe/details/${recipeId}`]);
+  }
 }

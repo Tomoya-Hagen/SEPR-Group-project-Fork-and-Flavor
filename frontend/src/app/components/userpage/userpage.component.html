@@ -42,11 +42,11 @@
 
   <br>
   <div class="row mb-3 justify-content-center d-flex align-items-center" *ngIf="ratings.length">
-    <h2>Bewertungen:</h2>
+    <h2 class="display-6 ">Bewertungen:</h2>
     <div class="ratings-wrapper">
-      <div *ngFor="let rating of ratings" class="rating-box">
+      <div *ngFor="let rating of ratings" class="rating-box" (click)="goToRecipeDetails(rating.recipeId)">
         <div class="rating-header">
-          <p class="user-name">{{ rating.user.name }}</p>
+          <p class="user-name">{{ rating.name }}</p>
         </div>
         <div class="rating-details">
           <p>Geschmack:
