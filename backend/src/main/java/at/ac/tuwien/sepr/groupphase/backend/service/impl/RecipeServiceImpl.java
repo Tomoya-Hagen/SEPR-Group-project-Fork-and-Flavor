@@ -327,28 +327,28 @@ public class RecipeServiceImpl implements RecipeService {
         Random r = new Random();
         ApplicationUser owner = userManager.getCurrentUser();
         List<Recipe> all = recipeRepository.findAllRecipesByInteraction(owner);
-        var x = this.Trainmodel();
+        var x = this.trainmodel();
 
         //Compare Recipe
         Recipe choosen = all.get(r.nextInt(all.size()));
         List<ApplicationUser> similarUsers = ratingRepository.getOwnersbyRecipe(choosen);
         long choosenUserId = similarUsers.get(0).getId();
-        var possibles = recipeRepository.findRandomRecipeByInteraction(choosenUserId,PageRequest.of(0, 5));
+        var possibles = recipeRepository.findRandomRecipeByInteraction(choosenUserId, PageRequest.of(0, 5));
         return recipeMapper.recipesToRecipeListDto(possibles);
     }
 
-    public HashMap<ApplicationUser, List<RecommendEvaluation>> Trainmodel() {
+    public HashMap<ApplicationUser, List<RecommendEvaluation>> trainmodel() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         int ingredientscount = 212;
-        HashMap<ApplicationUser,LinkedHashMap<Ingredient, Integer>> all = new HashMap();
+        HashMap<ApplicationUser, LinkedHashMap<Ingredient, Integer>> all = new HashMap();
         List<ApplicationUser> users = userRepository.findAll();
-        for(ApplicationUser user : users) {
+        for (ApplicationUser user : users) {
             Dictionary<ApplicationUser, RecommendEvaluation> map = new Hashtable<>();
             HashMap<Ingredient, Integer> ingredients = new HashMap<>();
             var recipes = recipeRepository.findAllRecipesByInteraction(user);
-            for(Recipe recipe : recipes) {
-                for(RecipeIngredient ingredient : recipe.getIngredients()) {
+            for (Recipe recipe : recipes) {
+                for (RecipeIngredient ingredient : recipe.getIngredients()) {
                     if (ingredients.containsKey(ingredient.getIngredient())) {
                         ingredients.put(ingredient.getIngredient(), ingredients.get(ingredient.getIngredient()) + 1);
                     } else {
@@ -376,7 +376,7 @@ public class RecipeServiceImpl implements RecipeService {
             for (Ingredient ing : ings.keySet()) {
                 RecommendEvaluation r = new RecommendEvaluation();
                 r.setIngredient(ing);
-                int t = ings.get(ing);
+                int  t = ings.get(ing);
                 r.setScore((float) t / count);
                 r.setMultiplicator(1);
                 recommendEvaluation.add(r);

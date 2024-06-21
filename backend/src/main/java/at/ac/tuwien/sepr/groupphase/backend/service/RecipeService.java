@@ -132,6 +132,7 @@ public interface RecipeService {
 
     /**
      * This method finds some recipes by Recommendation.
+     *
      * @return A list of Recommended RecipeListDto
      */
     List<RecipeListDto> getRecipesByRecommendation();
