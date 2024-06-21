@@ -5,7 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Ingredient;
 public class RecommendEvaluation {
 
     Ingredient ingredient;
-    int score;
+    float score;
     int multiplicator;
 
     public Ingredient getIngredient() {
@@ -16,11 +16,11 @@ public class RecommendEvaluation {
         this.ingredient = ingredient;
     }
 
-    public int getScore() {
+    public float getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(float score) {
         this.score = score;
     }
 

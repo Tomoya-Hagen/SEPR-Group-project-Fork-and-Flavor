@@ -337,39 +337,57 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeMapper.recipesToRecipeListDto(possibles);
     }
 
-    public List<LinkedHashMap<String, Integer>> Trainmodel() {
+    public HashMap<ApplicationUser, List<RecommendEvaluation>> Trainmodel() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         int ingredientscount = 212;
-        List<LinkedHashMap<String, Integer>> all = new ArrayList<>();
+        HashMap<ApplicationUser,LinkedHashMap<Ingredient, Integer>> all = new HashMap();
         List<ApplicationUser> users = userRepository.findAll();
         for(ApplicationUser user : users) {
             Dictionary<ApplicationUser, RecommendEvaluation> map = new Hashtable<>();
-            HashMap<String, Integer> ingredients = new HashMap<>();
+            HashMap<Ingredient, Integer> ingredients = new HashMap<>();
             var recipes = recipeRepository.findAllRecipesByInteraction(user);
             for(Recipe recipe : recipes) {
                 for(RecipeIngredient ingredient : recipe.getIngredients()) {
-                    if (ingredients.containsKey(ingredient.getIngredient().getName())) {
-                        ingredients.put(ingredient.getIngredient().getName(), ingredients.get(ingredient.getIngredient().getName()) + 1);
+                    if (ingredients.containsKey(ingredient.getIngredient())) {
+                        ingredients.put(ingredient.getIngredient(), ingredients.get(ingredient.getIngredient()) + 1);
                     } else {
-                        ingredients.put(ingredient.getIngredient().getName(), 1);
+                        ingredients.put(ingredient.getIngredient(), 1);
                     }
                 }
             }
 
-            List<Map.Entry<String, Integer>> list = new ArrayList<>(ingredients.entrySet());
+            List<Map.Entry<Ingredient, Integer>> list = new ArrayList<>(ingredients.entrySet());
             list.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
-            LinkedHashMap<String, Integer> sortedByValue = new LinkedHashMap<>();
-            for (Map.Entry<String, Integer> entry : list) {
+            LinkedHashMap<Ingredient, Integer> sortedByValue = new LinkedHashMap<>();
+            for (Map.Entry<Ingredient, Integer> entry : list) {
                 sortedByValue.put(entry.getKey(), entry.getValue());
             }
-            all.add(sortedByValue);
+            all.put(user, sortedByValue);
         }
+        HashMap<ApplicationUser, List<RecommendEvaluation>> recommendEvaluations = new HashMap();
+
+        all.forEach((user, ings) -> {
+            List<RecommendEvaluation> recommendEvaluation = new ArrayList<>();
+            int count = 0;
+            for (int cw : ings.values()) {
+                count += cw;
+            }
+            for (Ingredient ing : ings.keySet()) {
+                RecommendEvaluation r = new RecommendEvaluation();
+                r.setIngredient(ing);
+                int t = ings.get(ing);
+                r.setScore((float) t / count);
+                r.setMultiplicator(1);
+                recommendEvaluation.add(r);
+            }
+            recommendEvaluations.put(user, recommendEvaluation);
+        });
 
 
         stopWatch.stop();
         var diff = stopWatch.getTotalTimeSeconds();
-        return all;
+        return recommendEvaluations;
 
     }
 
