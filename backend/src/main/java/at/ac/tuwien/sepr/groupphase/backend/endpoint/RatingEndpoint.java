@@ -47,7 +47,20 @@ public class RatingEndpoint {
             return ratingService.getRatingsByRecipeId(id);
         } catch (NotFoundException e) {
             HttpStatus status = HttpStatus.NOT_FOUND;
-            logClientError(status, "no recipe found by the given is", e);
+            logClientError(status, "no recipe found by the given id", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+    }
+
+    @PermitAll
+    @GetMapping("/user/{id}")
+    public List<RatingListDto> getRatingFromUserById(@PathVariable("id") long id) {
+        LOGGER.info("GET /api/v1/ratings/user/{}", id);
+        try {
+            return ratingService.getRatingsByUserId(id);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no user found by the given id", e);
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
     }

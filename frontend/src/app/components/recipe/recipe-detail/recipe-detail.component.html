@@ -117,14 +117,15 @@
         <tbody>
         <tr *ngFor="let ingredient of recipe.ingredients">
           <td>{{ ingredient.name }}</td>
-          <td>{{ ingredient.amount }} {{ ingredient.unit }}</td>
+          <td>
+            <span *ngIf="ingredient.amount > 0">{{ ingredient.amount }}</span>
+            <span *ngIf="ingredient.unit !== 'EMPTY'">{{ ingredient.unit }}</span>
+          </td>
         </tr>
         </tbody>
       </table>
       <h4>Beschreibung:</h4>
       <p>{{ recipe.description }}</p>
-    </div>
-    <div class="edit-spoon">
     </div>
 
     <!-- Nutrition Section -->
@@ -146,29 +147,10 @@
   <h2>Schritte:</h2>
 
   <div class="recipe-steps">
-    <ng-container *ngFor="let step of recipeSteps">
-      <div [ngClass]="{'recipe-step': true, 'sub-recipe': step.recipe}">
-        <h4 (click)="step.recipe && toggleStep(step)" class="rec-step">
-          <span *ngIf="step.recipe">
-            <img src="assets/images/icon_black.png" height="25px" alt="subrecepy" class="subrecepy-icon">
-          </span>
-          {{ step.name }}
-        </h4>
-        <p *ngIf="!step.recipe">{{ step.description }}</p>
-        <div *ngIf="step.recipe && step.expanded">
-          <ng-container *ngFor="let subStep of step.recipe.recipeSteps">
-            <div class="recipe-step">
-              <h5>{{ subStep.name }}</h5>
-              <p>{{ subStep.description }}</p>
-            </div>
-          </ng-container>
-        </div>
-        <button *ngIf="step.recipe && step.expanded" type="button" class="btn btn-primary btn-sm"
-                (click)="navigateToDetailsInNewTab(step.recipe.id)">zum Unterrezept
-        </button>
-      </div>
+    <ng-container *ngFor="let step of recipe.recipeSteps">
+      <app-recipe-step [step]="step"></app-recipe-step>
     </ng-container>
-
+  </div>
   </div>
 
 
@@ -189,7 +171,6 @@
       </ngb-pagination>
     </div>
   </div>
-</div>
 
 <!-- Ratings -->
 <hr class="my-4">

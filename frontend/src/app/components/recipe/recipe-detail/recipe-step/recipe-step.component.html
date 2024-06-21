@@ -1,0 +1,17 @@
+<div [ngClass]="{'recipe-step': true, 'sub-recipe': step.recipe}">
+  <h4 (click)="step.recipe && toggleStep()" class="rec-step">
+    <span *ngIf="step.recipe">
+      <img src="assets/images/icon_black.png" height="25px" alt="subrecepy" class="subrecepy-icon">
+    </span>
+    {{ step.name }}
+  </h4>
+  <p *ngIf="!step.recipe">{{ step.description }}</p>
+  <div *ngIf="step.recipe && expanded">
+    <ng-container *ngFor="let subStep of step.recipe.recipeSteps">
+      <app-recipe-step [step]="subStep"></app-recipe-step>
+    </ng-container>
+  </div>
+  <button *ngIf="step.recipe && expanded" type="button" class="btn btn-primary btn-sm"
+          (click)="navigateToDetailsInNewTab(step.recipe.id)">zum Unterrezept
+  </button>
+</div>

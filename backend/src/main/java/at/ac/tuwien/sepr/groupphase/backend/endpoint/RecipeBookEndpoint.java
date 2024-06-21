@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -142,7 +143,7 @@ public class RecipeBookEndpoint {
 
     @Secured("ROLE_USER")
     @PatchMapping("{id}/update")
-    public void updateRecipeBook(@PathVariable(name = "id") Long id, @RequestBody RecipeBookCreateDto recipeBook) {
+    public void updateRecipeBook(@PathVariable(name = "id") Long id, @RequestBody RecipeBookUpdateDto recipeBook) {
         LOGGER.info("PATCH /api/v1/users/{}/update", id);
         try {
             recipeBookService.updateRecipeBook(id, recipeBook);
@@ -155,7 +156,18 @@ public class RecipeBookEndpoint {
             logClientError(status, "recipe book update is not valid", e);
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
+    }
 
+    @GetMapping("{id}/getUserId")
+    public long getUserIdForRecipeBookId(@PathVariable(name = "id") Long id) {
+        LOGGER.info("PATCH /api/v1/users/{}/getUserId", id);
+        try {
+            return recipeBookService.getUserIdByRecipeBookId(id);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            logClientError(status, "no recipe book with specified id found", e);
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
     }
 
     /**

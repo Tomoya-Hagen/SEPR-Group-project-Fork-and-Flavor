@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeBookMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
@@ -16,6 +17,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeBookService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeBookValidator;
@@ -23,11 +25,12 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -39,8 +42,9 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     private final RecipeRepository recipeRepository;
     private final UserRepository userRepository;
     private final RecipeBookValidator recipeBookValidator;
-    private final UserManager userManager;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final UserManager userManager;
+    private final EmailService emailService;
 
     public RecipeBookServiceImpl(RecipeBookRepository recipeBookRepository,
                                  RecipeMapper recipeMapper,
@@ -48,7 +52,8 @@ public class RecipeBookServiceImpl implements RecipeBookService {
                                  RecipeRepository recipeRepository,
                                  UserRepository userRepository,
                                  RecipeBookValidator recipeBookValidator,
-                                 UserManager userManager) {
+                                 UserManager userManager,
+                                 EmailService emailService) {
         this.recipeBookRepository = recipeBookRepository;
         this.recipeBookMapper = recipeBookMapper;
         this.recipeRepository = recipeRepository;
@@ -56,6 +61,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         this.userRepository = userRepository;
         this.recipeBookValidator = recipeBookValidator;
         this.userManager = userManager;
+        this.emailService = emailService;
     }
 
     @Override
@@ -108,7 +114,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     @Override
     public RecipeBookDetailDto createRecipeBook(@Valid RecipeBookCreateDto recipeBookCreateDto) throws ValidationException {
         LOGGER.trace("createRecipeBook({})", recipeBookCreateDto);
-        recipeBookValidator.validateForCreateAndUpdate(recipeBookCreateDto);
+        recipeBookValidator.validateForCreate(recipeBookCreateDto);
         RecipeBook recipeBook = new RecipeBook();
         recipeBook.setName(recipeBookCreateDto.name());
         recipeBook.setDescription(recipeBookCreateDto.description());
@@ -129,22 +135,54 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     }
 
     @Override
-    public void updateRecipeBook(Long id, RecipeBookCreateDto recipeBookCreateDto) throws ValidationException, NotFoundException {
-        LOGGER.trace("updateRecipeBook({})", recipeBookCreateDto);
-        recipeBookValidator.validateForCreateAndUpdate(recipeBookCreateDto);
-        recipeBookRepository.findById(id).orElseThrow(NotFoundException::new);
-        RecipeBook recipeBook = new RecipeBook();
-        recipeBook.setName(recipeBookCreateDto.name());
-        recipeBook.setDescription(recipeBookCreateDto.description());
+    public void updateRecipeBook(Long id, RecipeBookUpdateDto recipeBookUpdateDto) throws ValidationException, NotFoundException {
+        LOGGER.trace("updateRecipeBook({})", recipeBookUpdateDto);
+        recipeBookValidator.validateForUpdate(recipeBookUpdateDto);
+        var oldRecipeBook = recipeBookRepository.findById(id).orElseThrow(NotFoundException::new);
+        List<ApplicationUser> newUsers = new ArrayList<>();
+        if (!oldRecipeBook.getEditors().isEmpty()) {
+            boolean alreadyExists = recipeBookUpdateDto.users().isEmpty();
+            if (!alreadyExists) {
+                for (var newEditors : recipeBookUpdateDto.users()) {
+                    for (var editors : oldRecipeBook.getEditors()) {
+                        if (editors.getId() == newEditors.id()) {
+                            alreadyExists = true;
+                            break;
+                        }
+                    }
 
-        ApplicationUser owner = userManager.getCurrentUser();
+                    if (!alreadyExists) {
+                        newUsers.add(userRepository.findFirstById(newEditors.id()));
+                    }
+                }
+            }
+        } else {
+            for (var editors : recipeBookUpdateDto.users()) {
+                newUsers.add(userRepository.findFirstById(editors.id()));
+            }
+        }
+        RecipeBook recipeBook = new RecipeBook();
+        recipeBook.setName(recipeBookUpdateDto.name());
+        recipeBook.setDescription(recipeBookUpdateDto.description());
+
+        ApplicationUser owner = userRepository.findFirstById(recipeBookUpdateDto.ownerId());
         recipeBook.setOwner(owner);
-        List<Long> userIds = recipeBookCreateDto.users().stream().map(UserListDto::id).toList();
+        List<Long> userIds = recipeBookUpdateDto.users().stream().map(UserListDto::id).toList();
         List<ApplicationUser> users = userRepository.findAllById(userIds);
 
         recipeBook.setId(id);
         recipeBook.setEditors(users);
-        recipeBook.setRecipes(recipeBookRecipeMapper.listOfRecipeListDtoToRecipeList(recipeBookCreateDto.recipes()));
+        recipeBook.setRecipes(recipeBookRecipeMapper.listOfRecipeListDtoToRecipeList(recipeBookUpdateDto.recipes()));
         recipeBookRepository.save(recipeBook);
+
+        for (var editors : newUsers) {
+            LOGGER.trace("name {}", editors.getUsername());
+            emailService.sendSimpleEmail(editors.getEmail(), "Zum neuen Rezeptbuch hinzugefügt: " + recipeBook.getName(), "Sie wurden zu einem neuen Rezeptbuch" + recipeBook.getName() + " hinzugefügt.");
+        }
+    }
+
+    @Override
+    public long getUserIdByRecipeBookId(Long id) throws NotFoundException {
+        return recipeBookRepository.findById(id).orElseThrow(NotFoundException::new).getOwnerId();
     }
 }

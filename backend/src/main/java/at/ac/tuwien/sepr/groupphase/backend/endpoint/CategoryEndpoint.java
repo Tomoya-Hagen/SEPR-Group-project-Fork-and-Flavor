@@ -4,11 +4,11 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.security.PermitAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +31,7 @@ public class CategoryEndpoint {
         this.categoryService = categoryService;
     }
 
-    @Secured("ROLE_USER")
+    @PermitAll
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     @Operation(summary = "Getting categories", security = @SecurityRequirement(name = "apiKey"))
@@ -40,7 +40,7 @@ public class CategoryEndpoint {
         return categoryService.byname(name, limit);
     }
 
-    @Secured("ROLE_USER")
+    @PermitAll
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/all")
     @Operation(summary = "Getting categories", security = @SecurityRequirement(name = "apiKey"))

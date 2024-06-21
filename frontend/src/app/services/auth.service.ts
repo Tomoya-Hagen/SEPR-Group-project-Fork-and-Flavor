@@ -26,6 +26,7 @@ export class AuthService {
     return this.httpClient.post(this.authBaseUri, authRequest, {responseType: 'text'})
       .pipe(
         tap((authResponse: string) => this.setToken(authResponse))
+
       );
   }
 

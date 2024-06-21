@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingListDto;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 
 import java.util.List;
@@ -23,4 +24,13 @@ public interface RatingService {
      * @throws ValidationException if the data given by the user was invalid.
      */
     RatingListDto createRating(RatingCreateDto ratingCreateDto) throws ValidationException;
+
+    /**
+     * Retrieves a list of RatingListDto objects associated with a specific user.
+     *
+     * @param id The ID of the user.
+     * @return List of RatingListDto objects.
+     * @throws NotFoundException If no user is found with the provided ID.
+     */
+    List<RatingListDto> getRatingsByUserId(long id) throws NotFoundException;
 }
