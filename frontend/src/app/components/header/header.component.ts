@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 
 @Component({
@@ -7,15 +7,15 @@ import {AuthService} from '../../services/auth.service';
   styleUrls: ['./header.component.scss']
 })
 
-export class HeaderComponent implements OnInit{
-
-  user: String = "";
-  id: number = 0;
+export class HeaderComponent{
 
   constructor(public authService: AuthService) { }
 
-  ngOnInit(): void {
-    this.user = localStorage.getItem("username");
-    this.id = Number(localStorage.getItem("userId"));
-    }
+  getUser(): string {
+    return localStorage.getItem("username");
+  }
+
+  getUserId(): number {
+    return Number(localStorage.getItem("userId"));
+  }
 }
