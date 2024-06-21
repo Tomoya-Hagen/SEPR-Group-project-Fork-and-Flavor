@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -108,4 +109,14 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     @Query("SELECT r FROM Recipe r WHERE r.forkedFrom.id = :id")
     List<Recipe> findAllForkedRecipesById(@Param("id") long id);
+
+    @Query("SELECT r FROM Recipe r Join fetch r.ratings rat Where r.owner = :owner OR rat.user = :owner")
+    List<Recipe> findAllRecipesByInteraction(@Param("owner") ApplicationUser owner);
+
+    @Query("SELECT r FROM Recipe r Join fetch r.ratings rat Where r.owner.id = :owner OR rat.user.id = :owner ORDER BY RAND()")
+    List<Recipe> findRandomRecipeByInteraction(@Param("owner") long owner, Pageable pageable);
+
+    @Query("SELECT r FROM Recipe r")
+    List<Recipe> findAllRecipes();
+
 }

@@ -4,7 +4,7 @@
     <div class="row mb-3 justify-content-end d-flex align-items-center" *ngIf="recipes.length">
       <h2 class="display-5 mr-2">Top Rezepte:</h2>
       <div class="row">
-        <div class="col-lg-4 p-2" *ngFor="let item of recipes; let last = last">
+        <div class="col-lg-4 p-2" *ngFor="let item of recommended; let last = last">
           <app-card [item]="item" *ngIf="!last" [detailUrlPrefix]="'/recipe/details'"></app-card>
           <div class="card RecipeCard h-100 link link1" *ngIf="last" [routerLink]="'/recipe'">
             <div class="card-body d-flex justify-content-center align-items-center">

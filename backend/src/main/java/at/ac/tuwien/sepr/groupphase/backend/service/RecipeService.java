@@ -129,4 +129,10 @@ public interface RecipeService {
      * @return A list of RecipeListDto.
      */
     Page<RecipeListDto> getRecipesByName(String name, Pageable pageable);
+
+    /**
+     * This method finds some recipes by Recommendation.
+     * @return A list of Recommended RecipeListDto
+     */
+    List<RecipeListDto> getRecipesByRecommendation();
 }

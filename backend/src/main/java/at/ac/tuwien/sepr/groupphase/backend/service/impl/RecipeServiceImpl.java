@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecommendEvaluation;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
@@ -24,33 +25,44 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableExcep
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -66,6 +78,8 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeValidator recipeValidator;
     private final UserManager userManager;
     private final BadgeService badgeService;
+    private final UserRepository userRepository;
+    private final RatingRepository ratingRepository;
 
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
@@ -73,13 +87,16 @@ public class RecipeServiceImpl implements RecipeService {
                              CategoryRepository categoryRepository,
                              RecipeValidator recipeValidator,
                              UserManager userManager,
-                             BadgeService badgeService) {
+                             BadgeService badgeService, UserRepository userRepository,
+                             RatingRepository ratingRepository) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
         this.categoryRepository = categoryRepository;
         this.recipeValidator = recipeValidator;
         this.userManager = userManager;
         this.badgeService = badgeService;
+        this.userRepository = userRepository;
+        this.ratingRepository = ratingRepository;
     }
 
 
@@ -303,6 +320,59 @@ public class RecipeServiceImpl implements RecipeService {
 
         return recipeMapper.recipeToDetailedRecipeDto(oldRecipe);
     }
+
+    @Override
+    public List<RecipeListDto> getRecipesByRecommendation() {
+
+        Random r = new Random();
+        ApplicationUser owner = userManager.getCurrentUser();
+        List<Recipe> all = recipeRepository.findAllRecipesByInteraction(owner);
+        var x = this.Trainmodel();
+
+        //Compare Recipe
+        Recipe choosen = all.get(r.nextInt(all.size()));
+        List<ApplicationUser> similarUsers = ratingRepository.getOwnersbyRecipe(choosen);
+        long choosenUserId = similarUsers.get(0).getId();
+        var possibles = recipeRepository.findRandomRecipeByInteraction(choosenUserId,PageRequest.of(0, 5));
+        return recipeMapper.recipesToRecipeListDto(possibles);
+    }
+
+    public List<LinkedHashMap<String, Integer>> Trainmodel() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        int ingredientscount = 212;
+        List<LinkedHashMap<String, Integer>> all = new ArrayList<>();
+        List<ApplicationUser> users = userRepository.findAll();
+        for(ApplicationUser user : users) {
+            Dictionary<ApplicationUser, RecommendEvaluation> map = new Hashtable<>();
+            HashMap<String, Integer> ingredients = new HashMap<>();
+            var recipes = recipeRepository.findAllRecipesByInteraction(user);
+            for(Recipe recipe : recipes) {
+                for(RecipeIngredient ingredient : recipe.getIngredients()) {
+                    if (ingredients.containsKey(ingredient.getIngredient().getName())) {
+                        ingredients.put(ingredient.getIngredient().getName(), ingredients.get(ingredient.getIngredient().getName()) + 1);
+                    } else {
+                        ingredients.put(ingredient.getIngredient().getName(), 1);
+                    }
+                }
+            }
+
+            List<Map.Entry<String, Integer>> list = new ArrayList<>(ingredients.entrySet());
+            list.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
+            LinkedHashMap<String, Integer> sortedByValue = new LinkedHashMap<>();
+            for (Map.Entry<String, Integer> entry : list) {
+                sortedByValue.put(entry.getKey(), entry.getValue());
+            }
+            all.add(sortedByValue);
+        }
+
+
+        stopWatch.stop();
+        var diff = stopWatch.getTotalTimeSeconds();
+        return all;
+
+    }
+
 
 
     private void getRecipeDetails(
