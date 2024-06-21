@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FullRatingListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
@@ -54,7 +55,7 @@ public class RatingEndpoint {
 
     @PermitAll
     @GetMapping("/user/{id}")
-    public List<RatingListDto> getRatingFromUserById(@PathVariable("id") long id) {
+    public List<FullRatingListDto> getRatingFromUserById(@PathVariable("id") long id) {
         LOGGER.info("GET /api/v1/ratings/user/{}", id);
         try {
             return ratingService.getRatingsByUserId(id);
