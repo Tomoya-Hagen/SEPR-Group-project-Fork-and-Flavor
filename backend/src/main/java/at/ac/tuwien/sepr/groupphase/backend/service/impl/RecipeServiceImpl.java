@@ -25,9 +25,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceExc
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
-import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
@@ -125,7 +123,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Page<RecipeListDto> getRecipesByName(String name, Pageable pageable) {
-        Page<Recipe> recipePage = recipeRepository.findByNameContainingIgnoreCase(name, pageable);
+        Page<Recipe> recipePage = recipeRepository.findByNameContainingIgnoreCaseOrderByName(name, pageable);
 
         return recipePage.map(recipe -> {
             Long rating = calculateAverageTasteRating(recipe.getRatings());
@@ -135,7 +133,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Page<RecipeListDto> getRecipesByNameCategories(RecipeSearchDto searchDto, Pageable pageable) {
-        Page<Recipe> recipePage = recipeRepository.findByCategoryIdContainingIgnoreCase(searchDto.name(), searchDto.categorieId(), pageable);
+        Page<Recipe> recipePage = recipeRepository.findByCategoryIdContainingIgnoreCaseOrderByName(searchDto.name(), searchDto.categorieId(), pageable);
 
         return recipePage.map(recipe -> {
             Long rating = calculateAverageTasteRating(recipe.getRatings());
