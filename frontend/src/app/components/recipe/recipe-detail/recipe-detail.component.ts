@@ -166,6 +166,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     this.titleService.setTitle("Fork & Flavour");
   }
 
+  getCategoryList(): string {
+    return this.recipe.categories.map(category => category.name).join(', ');
+  }
+
   updateMenuOptions() {
     this.menuOptions = [
       {
