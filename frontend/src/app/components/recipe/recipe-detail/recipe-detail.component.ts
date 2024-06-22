@@ -81,6 +81,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   page: number = 1;
   size: number = 3;
   loggedIn: boolean = false;
+  hasRated: boolean = false;
   menuOptions = [
     {
       label: 'Neues Rezept erstellen',
@@ -387,6 +388,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         this.notification.success(`Ratings loaded successfully.`);
         this.ratings = data;
         this.areRatingsLoaded = true;
+        // @ts-ignore
+        this.hasRated = this.ratings.some(rating => rating.user.name === localStorage.getItem("username"));
+        console.log(this.hasRated);
       },
       error: error => {
         this.notification.error(error);
@@ -403,6 +407,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         this.modalService.dismissAll();
         this.currentRecipeBook=null;
         this.loadRatings();
+        this.hasRated = true;
       },
       error: error => {
         this.notification.error(error);

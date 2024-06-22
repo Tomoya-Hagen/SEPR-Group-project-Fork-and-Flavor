@@ -195,7 +195,7 @@
         </div>
     </div>
     <!-- Add Rating Box -->
-    <div class="rating-box add-rating-box" (click)="openRatingModal(ratingModal)" *ngIf="!isOwner">
+    <div class="rating-box add-rating-box" (click)="openRatingModal(ratingModal)" *ngIf="!isOwner && !hasRated">
       <div class="add-rating-text">+ Bewertung hinzufügen</div>
     </div>
   </ng-container>
