@@ -30,18 +30,23 @@ h1,h2 {
 
 .RecipeInfos {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 .RecipeInfos .info-box {
+  flex: 1 1 18%;
   text-align: center;
   padding: 20px 10px;
   width: 18%;
   color: white;
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  margin-right: 1%;
+  margin: 1%;
+  max-width: 350px;
+  min-width: 120px;
+  box-sizing: border-box;
 }
 
 .info-box-1 {
@@ -95,27 +100,18 @@ h1,h2 {
   border-radius: var(--bs-border-radius);
 }
 
-@media (min-width: 768px) {
-  .RecipeInfos {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-
-  .RecipeInfos .info-box {
-    flex: 1 0 18%;
-    margin-right: 1%;
-    box-sizing: border-box;
-  }
-}
 
 @media (max-width: 767px) {
   .RecipeInfos {
     display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
     flex-direction: column;
   }
 
   .RecipeInfos .info-box {
+    flex: 1 0 18%;
+    box-sizing: border-box;
     width: 100%;
     margin-bottom: 1%;
     display: flex;
@@ -123,6 +119,7 @@ h1,h2 {
     align-items: center;
     padding-left: 35px;
     padding-right: 40px;
+    max-width: 100%;
   }
 
   .RecipeInfos .info-box h4 {

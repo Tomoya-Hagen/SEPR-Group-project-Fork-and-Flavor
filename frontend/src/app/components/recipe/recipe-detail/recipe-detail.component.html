@@ -53,11 +53,9 @@
     </div>
     <div class="info-box info-box-3" *ngIf="isCategoriesNotEmpty()">
       <h4>Kategorien:</h4>
-      <div *ngFor="let category of recipe.categories">
-        {{ category.name }}
-      </div>
+      <div>{{ getCategoryList() }}</div>
     </div>
-    <div class="info-box info-box-4">
+    <div class="info-box info-box-4" *ngIf="isAllergensNotEmpty()">
       <h4>Allergene: </h4>
       <div>
         <span *ngFor="let allergen of recipe.allergens; let isLast=last">
@@ -74,7 +72,7 @@
       <span>{{recipeForkedFrom}}</span>
     </div>
     <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: #08688e;" *ngIf="hasForkedRecipes">
-      <h4>Hiervon geforkt:</h4>
+      <h4>Geforkt:</h4>
       <div>
         <span *ngFor="let forkedFrom of recipeForkedFrom; let isLast=last">
            {{ recipeForkedFrom }}{{ isLast ? '' : ', ' }}
@@ -127,8 +125,8 @@
     </div>
 
     <!-- Nutrition Section -->
-    <div class="columns">
-      <div *ngIf="screenWidth > 767">
+    <div class="columns"  *ngIf="screenWidth > 767">
+      <div>
         <h4>Nährwerte:</h4>
         <table class="table">
           <tbody>
@@ -195,7 +193,7 @@
         </div>
     </div>
     <!-- Add Rating Box -->
-    <div class="rating-box add-rating-box" (click)="openRatingModal(ratingModal)" *ngIf="!isOwner">
+    <div class="rating-box add-rating-box" (click)="openRatingModal(ratingModal)" *ngIf="!isOwner && !hasRated">
       <div class="add-rating-text">+ Bewertung hinzufügen</div>
     </div>
   </ng-container>
