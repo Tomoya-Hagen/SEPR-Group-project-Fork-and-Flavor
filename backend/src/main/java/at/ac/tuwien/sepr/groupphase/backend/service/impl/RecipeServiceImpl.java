@@ -54,6 +54,7 @@ import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Dictionary;
@@ -63,6 +64,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.DoubleAdder;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -323,30 +326,21 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<RecipeListDto> getRecipesByRecommendation() {
-
-        Random r = new Random();
-        ApplicationUser owner = userManager.getCurrentUser();
-        List<Recipe> all = recipeRepository.findAllRecipesByInteraction(owner);
-        var x = this.trainmodel();
-
-        //Compare Recipe
-        Recipe choosen = all.get(r.nextInt(all.size()));
-        List<ApplicationUser> similarUsers = ratingRepository.getOwnersbyRecipe(choosen);
-        long choosenUserId = similarUsers.get(0).getId();
-        var possibles = recipeRepository.findRandomRecipeByInteraction(choosenUserId, PageRequest.of(0, 5));
-        return recipeMapper.recipesToRecipeListDto(possibles);
+        List<Recipe> result = this.trainmodel();
+        return recipeMapper.recipesToRecipeListDto(result);
     }
 
-    public HashMap<ApplicationUser, List<RecommendEvaluation>> trainmodel() {
+    public List<Recipe> trainmodel() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        int ingredientscount = 212;
         HashMap<ApplicationUser, LinkedHashMap<Ingredient, Integer>> all = new HashMap();
+        HashMap<ApplicationUser, List<Recipe>> compareMap = new HashMap();
         List<ApplicationUser> users = userRepository.findAll();
         for (ApplicationUser user : users) {
             Dictionary<ApplicationUser, RecommendEvaluation> map = new Hashtable<>();
             HashMap<Ingredient, Integer> ingredients = new HashMap<>();
             var recipes = recipeRepository.findAllRecipesByInteraction(user);
+            compareMap.put(user, recipes);
             for (Recipe recipe : recipes) {
                 for (RecipeIngredient ingredient : recipe.getIngredients()) {
                     if (ingredients.containsKey(ingredient.getIngredient())) {
@@ -384,13 +378,70 @@ public class RecipeServiceImpl implements RecipeService {
             recommendEvaluations.put(user, recommendEvaluation);
         });
 
+        ApplicationUser owner = userManager.getCurrentUser();
+        var self = recommendEvaluations.get(owner);
+
+
+        var bestguess = findMostSimilarUser(owner, self, recommendEvaluations);
+
+        List<Recipe> mine = compareMap.get(owner);
+
+        List<Recipe> recommends = new ArrayList<>();
+
+        int current = 0;
+        while (recommends.size() < 6) {
+            var their = compareMap.get(bestguess.get(current));
+            List<Recipe> result = their.stream()
+                .filter(item -> !mine.contains(item))
+                .toList();
+            for (int i = 0; i < result.toArray().length; i++) {
+                Recipe possible = result.get(i);
+                if (!recommends.contains(possible)) {
+                    recommends.add(possible);
+                }
+                if(recommends.size() >= 6){
+                    break;
+                }
+            }
+            current++;
+        }
 
         stopWatch.stop();
+
         var diff = stopWatch.getTotalTimeSeconds();
-        return recommendEvaluations;
+
+        return recommends;
 
     }
 
+
+
+    public List<ApplicationUser> findMostSimilarUser(
+        ApplicationUser targetUser,
+        List<RecommendEvaluation> targetEvaluations,
+        Map<ApplicationUser, List<RecommendEvaluation>> allUsersEvaluations) {
+
+        // Create a list to hold the map entries (user and distance)
+        List<Map.Entry<ApplicationUser, Double>> userDistances = new ArrayList<>();
+
+        // Calculate distance for each user and add to the list
+        allUsersEvaluations.entrySet().parallelStream()
+            .filter(entry -> !entry.getKey().equals(targetUser)) // Exclude the target user itself
+            .forEach(entry -> {
+                double distance = SimilarityUtils.calculateDistance(targetEvaluations, entry.getValue());
+                userDistances.add(new AbstractMap.SimpleEntry<>(entry.getKey(), distance));
+            });
+
+        // Sort the list by distance
+        userDistances.sort(Comparator.comparingDouble(Map.Entry::getValue));
+
+        // Extract the sorted users
+        List<ApplicationUser> sortedUsers = userDistances.stream()
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toList());
+
+        return sortedUsers;
+    }
 
 
     private void getRecipeDetails(
@@ -455,5 +506,39 @@ public class RecipeServiceImpl implements RecipeService {
                 allergens.add(allergen);
             }
         }
+    }
+}
+
+class SimilarityUtils {
+
+    public static double calculateDistance(List<RecommendEvaluation> list1, List<RecommendEvaluation> list2) {
+        // Create maps from lists for easy lookup
+        Map<Ingredient, Float> map1 = createEvaluationMap(list1);
+        Map<Ingredient, Float> map2 = createEvaluationMap(list2);
+
+        // Union of keys from both maps
+        double sum = 0.0;
+        for (Ingredient key : map1.keySet()) {
+            double weight1 = map1.get(key);
+            double weight2 = map2.getOrDefault(key, 0.0f);
+            sum += Math.pow(weight1 - weight2, 2);
+        }
+
+        for (Ingredient key : map2.keySet()) {
+            if (!map1.containsKey(key)) {
+                double weight2 = map2.get(key);
+                sum += Math.pow(weight2, 2);
+            }
+        }
+
+        return Math.sqrt(sum);
+    }
+
+    private static Map<Ingredient, Float> createEvaluationMap(List<RecommendEvaluation> list) {
+        Map<Ingredient, Float> map = new HashMap<>();
+        for (RecommendEvaluation eval : list) {
+            map.put(eval.getIngredient(), eval.getScore());
+        }
+        return map;
     }
 }
