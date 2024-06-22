@@ -45,7 +45,11 @@
     </div>
     <div class="info-box info-box-2">
       <h4>Portionen:</h4>
-      <input #portionInput type="number" [(ngModel)]="selectedPortions" (input)="onPortionsInput(portionInput)" (blur)="onPortionsBlur(portionInput)" class="input-width" min="1" max="10">
+      <div class="custom-number-input">
+        <button (click)="decrement()">-</button>
+        <span class="portionenzahl">{{ selectedPortions }}</span>
+        <button (click)="increment()">+</button>
+      </div>
     </div>
     <div class="info-box info-box-3" *ngIf="isCategoriesNotEmpty()">
       <h4>Kategorien:</h4>
@@ -63,12 +67,6 @@
       <div *ngIf="recipe.allergens.length === 0">
         none
       </div>
-    </div>
-    <div class="info-box info-box-5 clickable" *ngIf="screenWidth <= 767"
-         style="box-shadow: 0 0 10px rgba(111, 66, 193, 0); background-color: rgba(111, 66, 193, 1);"
-         (click)="toggleNutrition()">
-      <h4>Nährwerte:</h4>
-      Click to Show
     </div>
     <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--acent-color);"
          *ngIf="isForkedFromRecipe()">
@@ -119,7 +117,7 @@
           <td>{{ ingredient.name }}</td>
           <td>
             <span *ngIf="ingredient.amount > 0">{{ ingredient.amount }}</span>
-            <span *ngIf="ingredient.unit !== 'EMPTY'">{{ ingredient.unit }}</span>
+            <span *ngIf="ingredient.unit !== 'EMPTY'"> {{ ingredient.unit }}</span>
           </td>
         </tr>
         </tbody>
