@@ -41,6 +41,7 @@ const routes: Routes = [
       {path: ':id', component: UserpageComponent},
       {path: ':id/edit', component: UserpageEditComponent},
   ]},
+  { path: 'not-found', component: NotFoundComponent },
   { path: '**', component: NotFoundComponent }
 ];
 

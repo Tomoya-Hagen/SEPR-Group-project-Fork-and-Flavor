@@ -64,7 +64,7 @@ export class RecipebookCreateEditComponent implements OnInit {
       console.error('Error:', error);
         this.notification.error('Sie müssen sich als Benutzer anmelden oder als Benutzer registrieren, um ein Rezeptbuch zu erstellen.' , 'Rezeptbuch kann nicht erstellt werden.');
         this.router.navigate(['/login']);
-      return of(false); // Handle the error and return a fallback value
+      return of(false);
     })
       )
       .subscribe();
