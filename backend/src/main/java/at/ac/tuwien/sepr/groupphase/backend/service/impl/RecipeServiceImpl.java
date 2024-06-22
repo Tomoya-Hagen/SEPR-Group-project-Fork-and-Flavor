@@ -25,9 +25,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceExc
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
-import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
@@ -46,6 +44,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -81,7 +80,6 @@ public class RecipeServiceImpl implements RecipeService {
         this.userManager = userManager;
         this.badgeService = badgeService;
     }
-
 
 
     @Override
@@ -316,7 +314,7 @@ public class RecipeServiceImpl implements RecipeService {
         for (RecipeIngredient recipeIngredient : recipe.getIngredients()) {
             Ingredient ingredient = recipeIngredient.getIngredient();
             updateMapOfIngredients(recipeIngredient, ingredient, ingredients);
-            updateMapOfNutritions(ingredient, nutritions);
+            updateMapOfNutritions(recipeIngredient, nutritions);
             updateListOfAllergens(ingredient, allergens);
         }
         List<RecipeStep> recipeSteps = recipe.getRecipeSteps();
@@ -345,16 +343,19 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-    private void updateMapOfNutritions(Ingredient ingredient, Map<Nutrition, BigDecimal> nutritions) {
+    private void updateMapOfNutritions(RecipeIngredient recipeIngredient, Map<Nutrition, BigDecimal> nutritions) {
         LOGGER.trace("updateMapOfNutritions({}, {})",
-            ingredient, nutritions);
-        for (IngredientNutrition ingredientNutrition : ingredient.getNutritions()) {
-            if (nutritions.containsKey(ingredientNutrition.getNutrition())) {
-                nutritions.put(ingredientNutrition.getNutrition(),
-                    nutritions.get(ingredientNutrition.getNutrition())
-                        .add(ingredientNutrition.getValue()));
+            recipeIngredient, nutritions);
+
+        for (IngredientNutrition nutrition : recipeIngredient.getIngredient().getNutritions()) {
+            BigDecimal nutritionValue = nutrition.getValue()
+                .multiply((recipeIngredient.getAmount())
+                    .divide(BigDecimal.valueOf(100), RoundingMode.DOWN));
+            if (nutritions.containsKey(nutrition.getNutrition())) {
+                nutritions.put(nutrition.getNutrition(), nutritionValue
+                    .add(nutritions.get(nutrition.getNutrition())));
             } else {
-                nutritions.put(ingredientNutrition.getNutrition(), ingredientNutrition.getValue());
+                nutritions.put(nutrition.getNutrition(), nutritionValue);
             }
         }
     }
