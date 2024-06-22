@@ -65,7 +65,8 @@ import {RecipeStepComponent} from "./components/recipe/recipe-detail/recipe-step
     FloatingMenuComponent,
     StarRatingComponent,
     RecipebookDetailComponent,
-    RecipeStepComponent
+    RecipeStepComponent,
+    UserpageComponent
   ],
   imports: [
     BrowserModule,
@@ -95,7 +96,6 @@ import {RecipeStepComponent} from "./components/recipe/recipe-detail/recipe-step
     MatTooltip,
     MatIcon,
     FontAwesomeModule,
-    UserpageComponent,
   ],
   providers: [httpInterceptorProviders],
   exports: [

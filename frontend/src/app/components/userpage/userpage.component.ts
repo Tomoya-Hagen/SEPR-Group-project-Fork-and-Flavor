@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {NgForOf, NgIf} from "@angular/common";
-import {ActivatedRoute, RouterLink} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {RecipeBookListDto} from "../../dtos/recipe-book";
 import {userDto} from "../../dtos/user";
 import {RecipeListDto} from "../../dtos/recipe";
@@ -8,15 +8,10 @@ import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
 import {RatingListDto} from "../../dtos/rating";
 import {RatingService} from "../../services/rating.service";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-userpage',
-  standalone: true,
-  imports: [
-    NgForOf,
-    RouterLink,
-    NgIf
-  ],
   templateUrl: './userpage.component.html',
   styleUrl: './userpage.component.scss'
 })
@@ -29,12 +24,19 @@ export class UserpageComponent implements OnInit {
   };
   isMyPage: boolean = false;
   ratings: RatingListDto[] = [];
+  menuOptions = [
+    {
+      label: 'Passwort ändern',
+      action: () => this.changePassword()
+    }
+  ];
 
   constructor(
     private service: UserService,
     private route: ActivatedRoute,
     private notification: ToastrService,
     private ratingService: RatingService,
+    private router: Router,
   ) {
   }
 
@@ -89,5 +91,13 @@ export class UserpageComponent implements OnInit {
       });
 
     });
+  }
+
+  changePassword() {
+    this.router.navigate(['/userpage', this.user.id, 'edit']);
+  }
+
+  goToRecipeDetails(recipeId: number): void {
+    this.router.navigate([`/recipe/details/${recipeId}`]);
   }
 }
