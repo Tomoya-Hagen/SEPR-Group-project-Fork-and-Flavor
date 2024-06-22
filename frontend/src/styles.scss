@@ -286,3 +286,14 @@ button {
   margin: 10px 0;
   font-size: 18px;
 }
+
+button.btn-success, button.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+button.btn-success:hover, button.btn-primary:hover {
+  background-color: var(--acent-color);
+  border-color: var(--acent-color);
+  color: white;
+}
