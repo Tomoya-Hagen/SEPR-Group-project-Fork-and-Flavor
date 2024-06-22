@@ -68,6 +68,9 @@ public record RecipeDetailDto(
     ArrayList<String> forkedRecipes,
 
     long rating,
-    long verification
+
+    long verification,
+
+    Boolean isVerified
 ) {
 }

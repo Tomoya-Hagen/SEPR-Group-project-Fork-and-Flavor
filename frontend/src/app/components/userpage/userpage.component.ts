@@ -61,16 +61,20 @@ export class UserpageComponent implements OnInit {
       observable3.subscribe({
         next: data => {
           this.recipes = data;
-          if (this.recipes.length > 0) {
-            this.role.push(Role.cook);
-          }
-          if (this.recipes.length >= 10) {
-            this.role.push(Role.starcook);
-          }
         },
         error: error => {
           console.error('Error fetching recipes by user id', error);
           this.notification.error('Rezepte für die Benutzerseite können nicht abgerufen werden.', "Backend Fehler - Benutzerseite Rezepte");
+        }
+      });
+      let observable4 = this.service.getBadgesOfCurrentUser();
+      observable4.subscribe({
+        next: data => {
+          this.role = data;
+        },
+        error: error => {
+          console.error('Error fetching badges by user id', error);
+          this.notification.error('Badges für die Benutzerseite können nicht abgerufen werden.', "Backend Fehler - Benutzerseite Rezepte");
         }
       });
       this.service.getCurrentUser().subscribe({

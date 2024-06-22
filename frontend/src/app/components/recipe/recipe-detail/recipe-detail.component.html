@@ -2,17 +2,15 @@
   <div>
     <div class="rcp-d">
       <h1 class="display-4" *ngIf="!recipe.isDraft">{{ recipe.name }}</h1>
-      <h1 class="display-4" *ngIf="recipe.isDraft">{{ recipe.name }} (Template)</h1>
+      <h1 class="display-4" *ngIf="recipe.isDraft" >{{ recipe.name }} (Template)</h1>
     </div>
-    <div class="RecipeInfos">
-      <div class="info-box info-box-6" >
-        <h4>Verifikationen: {{ verification}}
+    <div class="Infos">
+        <h4>Verifikationen: {{ verification }}
         </h4>
-        <button type="button" (click)="addVerfication()" class=" btn btn-info"> <i
-          class="bi bi-check-lg">Klicke hier!</i></button>
-      </div>
+      <button type="button" (click)="addVerfication()" class="btn btn-success btn-floating"  *ngIf="!recipe.isVerified" mdbRipple>
+        <i class="bi bi-star"></i>
+      </button>
     </div>
-
   </div>
 
   <ng-template #spoonRecipeModal let-modal>

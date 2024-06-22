@@ -38,6 +38,23 @@ h1, h2 {
   width: 100%;
 }
 
+.Infos {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.Infos .info-box {
+  text-align: center;
+  padding: 20px 10px;
+  width: 18%;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-right: 1%;
+}
+
+
 .RecipeInfos .info-box {
   text-align: center;
   padding: 20px 10px;

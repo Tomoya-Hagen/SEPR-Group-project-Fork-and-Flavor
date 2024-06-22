@@ -303,6 +303,7 @@ public class DataGenerator implements CommandLineRunner {
                     .withNumberOfServings(Short.parseShort(fields.get(3)))
                     .withOwner(user)
                     .withForkedFrom(forkedFrom)
+                    .withVerifyNumber(number)
                     .build();
                 recipeRepository.save(recipe);
                 idMap.put(id, recipe.getId());

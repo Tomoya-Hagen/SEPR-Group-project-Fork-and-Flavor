@@ -53,6 +53,7 @@ public class BadgeServiceImpl implements BadgeService {
         for (Recipe recipe : recipes) {
             ratings.addAll(recipe.getRatings());
             if (ratings.size() > 20) {
+                addRoleToUser(user, Roles.Contributor);
                 break;
             }
         }
@@ -81,7 +82,12 @@ public class BadgeServiceImpl implements BadgeService {
             if (userRoles.contains(roleRepository.findByName(Roles.values()[i].name()))) {
                 roles.add(Roles.values()[i].name());
             }
+            if (hasUserTheRole(user, Roles.StarCook)) {
+                addRoleToUser(user, Roles.Cook);
+                addRoleToUser(user, Roles.Contributor);
+            }
         }
         return roles;
     }
+
 }

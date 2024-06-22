@@ -135,6 +135,10 @@ export class RecipeService {
     );
   }
 
+  public verifyRecipe(recipeId: number): Observable<any> {
+    return this.http.post<DetailedRecipeDto>(this.baseUri + '/verify/' + recipeId , recipeId);
+  }
+
   private mapToUpdateDto(existingRecipe: RecipeDetailDto): RecipeUpdateDto {
     return {
       id: existingRecipe.id,

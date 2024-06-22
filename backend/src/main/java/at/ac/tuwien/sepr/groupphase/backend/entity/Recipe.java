@@ -43,20 +43,6 @@ public class Recipe {
     @JoinColumn(name = "forked_from")
     private Recipe forkedFrom;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "verfied_Number",
-            joinColumns = {@JoinColumn(name = "recipe_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    private List<Recipe> verfiedNumber;
-
-    public void setVerfiedNumber(List<Recipe> verfiedNumber) {
-        this.verfiedNumber = verfiedNumber;
-    }
-
-    public List<Recipe> getVerifiedNumber() {
-        return verfiedNumber;
-    }
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private ApplicationUser owner;
@@ -244,6 +230,30 @@ public class Recipe {
         this.verifiers = verifiers;
     }
 
+    @Basic
+    @Column(name = "verified_Number")
+    public long verifyNumber;
+
+    public void setVerifyNumber(long verifyNumber) {
+        this.verifyNumber = verifyNumber;
+    }
+
+    public long getVerifyNumber() {
+        return verifyNumber;
+    }
+
+    @Basic
+    @Column(name = "is_verified")
+    private Boolean isVerified;
+
+    public Boolean getVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(Boolean verified) {
+        this.isVerified = verified;
+    }
+
     public static final class RecipeBuilder {
         private long id;
         private String name;
@@ -261,6 +271,8 @@ public class Recipe {
         private List<RecipeIngredient> ingredients;
         private List<Recipe> recipesForkedFromThis;
         private List<Recipe> goesWellWithRecipes = new ArrayList<>();
+        private long verifyNumber;
+        private Boolean isVerified;
 
         private RecipeBuilder() {
         }
@@ -352,6 +364,17 @@ public class Recipe {
             return this;
         }
 
+        public RecipeBuilder withVerifyNumber(long verifyNumber) {
+            this.verifyNumber = verifyNumber;
+            return this;
+        }
+
+        public RecipeBuilder withIsVerified(boolean verified) {
+            this.isVerified = verified;
+            return this;
+        }
+
+
         public Recipe build() {
             Recipe recipe = new Recipe();
             recipe.setId(id);
@@ -370,6 +393,8 @@ public class Recipe {
             recipe.recipeBooks = this.recipeBooks;
             recipe.weeklyPlanner = this.weeklyPlanner;
             recipe.goesWellWithRecipes = this.goesWellWithRecipes;
+            recipe.setVerifyNumber(verifyNumber);
+            recipe.setVerified(isVerified);
             return recipe;
         }
     }

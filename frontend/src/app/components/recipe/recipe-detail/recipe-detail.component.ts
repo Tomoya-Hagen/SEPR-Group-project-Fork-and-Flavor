@@ -38,7 +38,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     allergens: [],
     nutritions: [],
     forkedRecipes: [],
-    verification: 0
+    verifiedNumber: 0,
+    isVerified: false
   };
 
   cost = 0;
@@ -64,6 +65,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   screenWidth: number;
   isOwner: boolean = false;
   currentRole: Role;
+  role: Role[] = [];
   areRatingsLoaded: boolean = false;
   rating: RatingCreateDto = {
     review: "",
@@ -123,7 +125,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.notification.info("Eine Verifikation kann man nur abgeben, wenn man ein Starcook ist und das Rezept nicht erstellt hat.", "Verifikation von Rezept")
     this.screenWidth = window.innerWidth;
     this.route.params.subscribe(params => {
       let observable = this.service.getRecipeDetailsBy(params['id']);
@@ -141,8 +142,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           this.getForkedFromRecipeName();
           this.isCurrentUserOwner();
           this.orderNutritions();
-          this.verification = this.recipe.id;
-         // this.verification = this.recipe.verification;
+          // this.verification = this.recipe.verifiedNumber;
+          this.addVerfication();
           if (this.recipe.forkedRecipes.length > 0) {
             this.hasForkedRecipes = true;
           }
@@ -363,12 +364,21 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.userService.getCurrentUser().subscribe(currentUser => {
       if (currentUser && this.recipe.ownerId === currentUser.id) {
         this.isOwner = true;
-        if (this.verified) {
-         // currentUser.verified = this.verified;
+      }
+    });
+    let observable4 = this.userService.getBadgesOfCurrentUser();
+    observable4.subscribe({
+      next: data => {
+        this.role = data;
+        for (let i = 0; i < this.role.length; i++) {
+          if (this.role[i].length === Role.starcook.length) {
+            this.currentRole = this.role[i];
+          }
         }
       }
     });
   }
+
 
   loadRatings() {
     this.ratingService.getRatingsByRecipeId(this.recipe.id).subscribe({
@@ -475,17 +485,20 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   }
 
   addVerfication() {
-    this.currentRole = Role.starcook;
-    if (this.verified == false && this.isOwner == false && this.currentRole == Role.starcook) {
-      this.verification = this.verification + 1;
-      this.recipe.verification = this.verification;
+    if (this.verified == false && this.isOwner == false && this.currentRole.length === Role.starcook.length) {
+      this.service.verifyRecipe(this.recipe.id)
+        .subscribe({
+          next: (data: any): void => {
+            this.verification = data;
+          }
+        });
       this.verified = true;
       this.notification.success("Verifikation als Starcook ist erfolgreich. Anzahl der Verifikation ist erhöht.", "Verifikation von Rezept")
     } else if (this.verified == true) {
       this.notification.error("Verifikation ist nicht möglich, da sie die Verifikation bereits durchgeführt haben.", "Verifikation von Rezept")
     } else if (this.isOwner == true) {
       this.notification.error("Verifikation ist nicht möglich, da sie das Rezept erstellt haben.", "Verifikation von Rezept")
-    } else if (this.currentRole == Role.starcook) {
+    } else if (this.currentRole != Role.starcook) {
       this.notification.error("Verifikation ist nicht möglich, da sie nicht ein Starcook haben.", "Verifikation von Rezept")
     }
   }

@@ -55,6 +55,10 @@ export class UserService {
       );
   }
 
+  public getBadgesOfCurrentUser(): Observable<any> {
+    return this.http.get<String>(this.baseUri+"/badge");
+  }
+
   public updatePassword(id: number, passwordChange: userPasswordChangeDto) {
     return this.http.patch(this.baseUri+"/changePassword/"+id,passwordChange);
   }

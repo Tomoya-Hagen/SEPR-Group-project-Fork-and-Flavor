@@ -25,11 +25,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceExc
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
-import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
-import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
-import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
-import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
+import at.ac.tuwien.sepr.groupphase.backend.service.*;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -67,6 +63,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final BadgeService badgeService;
     private final EmailService emailService;
 
+    private final UserService userRepository;
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
                              RecipeMapper recipeMapper,
@@ -74,7 +71,7 @@ public class RecipeServiceImpl implements RecipeService {
                              RecipeValidator recipeValidator,
                              UserManager userManager,
                              BadgeService badgeService,
-                             EmailService emailService) {
+                             EmailService emailService, UserService userRepository) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
         this.categoryRepository = categoryRepository;
@@ -82,6 +79,7 @@ public class RecipeServiceImpl implements RecipeService {
         this.userManager = userManager;
         this.badgeService = badgeService;
         this.emailService = emailService;
+        this.userRepository = userRepository;
     }
 
 
@@ -106,6 +104,7 @@ public class RecipeServiceImpl implements RecipeService {
         for (Recipe forkedRecipe : forkedRecipes) {
             forkedRecipeNames.add(forkedRecipe.getName());
         }
+
         return new RecipeDetailDto(
                 result.id(),
                 result.name(),
@@ -121,7 +120,8 @@ public class RecipeServiceImpl implements RecipeService {
                 result.nutritions(),
                 forkedRecipeNames,
                 result.rating(),
-                recipe.getVerifiers().size()
+                recipe.getVerifyNumber(),
+                recipe.getVerified()
         );
     }
 
@@ -147,13 +147,17 @@ public class RecipeServiceImpl implements RecipeService {
             throw new ValidationException("Owner can not verify recipe", List.of());
         }
         List<ApplicationUser> verifiers = recipe.getVerifiers();
+        long number = recipe.getVerifyNumber();
+        number = number + 1;
         verifiers.add(user);
         recipe.setVerifiers(verifiers);
+        recipe.setVerifyNumber(number);
+        recipe.setVerified(true);
         recipeRepository.save(recipe);
         emailService.sendSimpleEmail(recipe.getOwner().getEmail(), "Rezept verifiziert",
                 "Dein Rezept " + recipe.getName()
-                        + " wurde verifiziert. \n Die aktuelle Anzahl an Verifikationen beträgt: " + recipe.getVerifiers().size());
-        return recipe.getVerifiers().size();
+                        + " wurde verifiziert. \n Die aktuelle Anzahl an Verifikationen beträgt: " + recipe.getVerifyNumber());
+        return recipe.getVerifyNumber();
     }
 
     @Override
@@ -221,7 +225,7 @@ public class RecipeServiceImpl implements RecipeService {
 
         recipeRepository.save(simple);
         badgeService.addRoleToUser(owner, Roles.Cook);
-        badgeService.addRoleToUser(owner, Roles.StarCook);
+
         return recipeMapper.recipeToDetailedRecipeDto(simple);
     }
 
@@ -249,7 +253,6 @@ public class RecipeServiceImpl implements RecipeService {
         simple.setRecipeSteps(recipe.getRecipeSteps());
         recipeRepository.save(simple);
         badgeService.addRoleToUser(owner, Roles.Cook);
-        badgeService.addRoleToUser(owner, Roles.StarCook);
         return recipeMapper.recipeToDetailedRecipeDto(simple);
     }
 
