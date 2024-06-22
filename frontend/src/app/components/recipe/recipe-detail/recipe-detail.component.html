@@ -55,7 +55,7 @@
       <h4>Kategorien:</h4>
       <div>{{ getCategoryList() }}</div>
     </div>
-    <div class="info-box info-box-4">
+    <div class="info-box info-box-4" *ngIf="isAllergensNotEmpty()">
       <h4>Allergene: </h4>
       <div>
         <span *ngFor="let allergen of recipe.allergens; let isLast=last">
@@ -72,7 +72,7 @@
       <span>{{recipeForkedFrom}}</span>
     </div>
     <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: #08688e;" *ngIf="hasForkedRecipes">
-      <h4>Hiervon geforkt:</h4>
+      <h4>Geforkt:</h4>
       <div>
         <span *ngFor="let forkedFrom of recipeForkedFrom; let isLast=last">
            {{ recipeForkedFrom }}{{ isLast ? '' : ', ' }}
