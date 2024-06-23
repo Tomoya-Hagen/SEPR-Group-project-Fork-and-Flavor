@@ -162,7 +162,7 @@ public class WeekPlanServiceImpl implements WeekPlanService {
             .toList();
         while (calculationAttempt < 10) {
             for (int i = 0; i < weeklyPlannerItems.size(); i++) {
-                Map<String, Double> dailyNutrition = new HashMap<>();
+                Map<Nutrition, BigDecimal> dailyNutrition = new HashMap<>();
                 List<WeeklyPlanner> currentDay = weeklyPlannerItems.get(i);
                 for (WeeklyPlanner planner : currentDay) {
                     Recipe selectedRecipe;
@@ -179,13 +179,13 @@ public class WeekPlanServiceImpl implements WeekPlanService {
                     for (Map.Entry<Nutrition, BigDecimal> entry : recipes.get(selectedRecipe).entrySet()) {
                         dailyNutrition.merge(entry.getKey(), entry.getValue(), BigDecimal::add);
                     }
+
+                    double currentAttemptRate = calculateAttemptRate(dailyNutrition, recommendedNutritionMin, recommendedNutritionMax);
+                    if (currentBestAttemptRate > currentAttemptRate) {
+                        calculationAttempt = 0;
+                        currentBestWeekPlan = currentWeekPlan;
+                    }
                 }
-            }
-            int currentAttemptRate = 0;
-            if (currentBestAttemptRate > currentAttemptRate) {
-                calculationAttempt = 0;
-                currentBestWeekPlan = currentWeekPlan;
-            } else {
                 calculationAttempt++;
             }
         }
