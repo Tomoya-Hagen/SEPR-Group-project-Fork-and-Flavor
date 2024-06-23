@@ -92,4 +92,15 @@ public class BadgeServiceImpl implements BadgeService {
         return roles;
     }
 
+    @Override
+    public List<String> getBadgesOfUser(Long userId) {
+        ApplicationUser user = userRepository.findFirstById(userId);
+        List<Role> roles = user.getRoles();
+        List<String> roleNames = new ArrayList<>();
+        for (Role role : roles) {
+            roleNames.add(role.getName());
+        }
+        return roleNames;
+    }
+
 }

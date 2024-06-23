@@ -20,4 +20,12 @@ public interface BadgeService {
      */
     List<String> getBadgesOfCurrentUser();
 
+    /**
+     * Returns all badges of the given user.
+     *
+     * @param userId the user to get the badges from.
+     * @return a list of string that represent the names of the badges a user has.
+     */
+    List<String> getBadgesOfUser(Long userId);
+
 }
