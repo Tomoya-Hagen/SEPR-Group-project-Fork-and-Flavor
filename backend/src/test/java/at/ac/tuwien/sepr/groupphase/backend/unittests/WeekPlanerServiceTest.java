@@ -43,6 +43,7 @@ class WeekPlanerServiceTest implements TestData {
                     new WeekDayDto(Weekday.Friday, List.of()),
                     new WeekDayDto(Weekday.Saturday, List.of()),
                     new WeekDayDto(Weekday.Sunday, List.of())));
+        WeekPlanDetailDto[] weekPlanerResponse = weekPlanService.create(firstPlan);
         WeekPlanCreateDto secondPlan =
             new WeekPlanCreateDto(1L,
                 LocalDate.of(2025, 10, 1),
