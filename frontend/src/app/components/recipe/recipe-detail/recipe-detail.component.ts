@@ -148,9 +148,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
         },
         error: error => {
-          console.error('Error fetching recipe', error);
-          this.notification.error('Rezepte können nicht abgerufen werden.', "Backend Fehler - Rezepte");
-          this.router.navigate([''])
+          this.router.navigate(['not-found']);
         }
       });
     });
