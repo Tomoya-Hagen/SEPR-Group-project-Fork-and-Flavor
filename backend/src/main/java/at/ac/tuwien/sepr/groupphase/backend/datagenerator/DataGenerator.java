@@ -141,7 +141,7 @@ public class DataGenerator implements CommandLineRunner {
             savedRoles.add(roleRepository.save(role));
         }
 
-        if (MailProperties.getAdminEmail() != null){
+        if (MailProperties.getAdminEmail() != null) {
             testData = false;
             String adminEmail = MailProperties.getAdminEmail();
             if (userRepository.existsByEmail(adminEmail)) {
