@@ -193,7 +193,7 @@ public class RecipeEndpoint {
         }
     }
 
-    @PostMapping("/verify/{id}")
+    @PutMapping("/verify/{id}")
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "verify a recipe")

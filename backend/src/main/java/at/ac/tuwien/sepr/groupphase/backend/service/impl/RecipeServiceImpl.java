@@ -24,9 +24,11 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.*;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
+import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -94,12 +96,13 @@ public class RecipeServiceImpl implements RecipeService {
     public RecipeDetailDto getRecipeDetailDtoById(long id, boolean recursive) throws NotFoundException {
         LOGGER.trace("getRecipeDetailDtoById({})", id);
         Recipe recipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
+        int verifications = recipe.getVerifiers().size();
         HashMap<Ingredient, RecipeIngredient> ingredients = new HashMap<>();
         HashMap<Nutrition, BigDecimal> nutritions = new HashMap<>();
         ArrayList<Allergen> allergens = new ArrayList<>();
         getRecipeDetails(recipe, ingredients, nutritions, allergens, recursive);
         long rating = calculateAverageTasteRating(recipe.getRatings());
-        RecipeDetailDto result = recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
+        RecipeDetailDto result = recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating, verifications);
 
         List<Recipe> forkedRecipes = recipeRepository.findAllForkedRecipesById(id);
         ArrayList<String> forkedRecipeNames = new ArrayList<>();
@@ -121,7 +124,8 @@ public class RecipeServiceImpl implements RecipeService {
                 result.allergens(),
                 result.nutritions(),
                 forkedRecipeNames,
-                result.rating()
+                result.rating(),
+                result.verifications()
         );
     }
 

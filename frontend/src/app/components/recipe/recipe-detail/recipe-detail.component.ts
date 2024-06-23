@@ -10,17 +10,6 @@ import { RecipeService } from 'src/app/services/recipe.service';
 import { RecipeBookService } from 'src/app/services/recipebook.service';
 import { Title } from '@angular/platform-browser';
 import { UserService } from 'src/app/services/user.service';
-import {Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ToastrService} from 'ngx-toastr';
-import {Observable} from 'rxjs/internal/Observable';
-import {Recipe, RecipeDetailDto} from 'src/app/dtos/recipe';
-import {RecipeBookListDto} from 'src/app/dtos/recipe-book';
-import {RecipeService} from 'src/app/services/recipe.service';
-import {RecipeBookService} from 'src/app/services/recipebook.service';
-import {Title} from '@angular/platform-browser';
-import {UserService} from 'src/app/services/user.service';
 import {RecipeModalComponent} from "./recipe-modal/recipe-modal.component";
 import { RatingCreateDto, RatingListDto } from 'src/app/dtos/rating';
 import { RatingService } from 'src/app/services/rating.service';
@@ -28,9 +17,6 @@ import { NgForm } from '@angular/forms';
 import {AuthService} from "../../../services/auth.service";
 import {tap} from "rxjs/operators";
 import {catchError, of} from "rxjs";
-import {RatingCreateDto, RatingListDto} from 'src/app/dtos/rating';
-import {RatingService} from 'src/app/services/rating.service';
-import {NgForm} from '@angular/forms';
 import {Role} from "../../../dtos/role";
 import {userDto} from "../../../dtos/user";
 
@@ -58,6 +44,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     nutritions: [],
     forkedRecipes: [],
     isVerified: false,
+    verifications: 0,
   };
 
   ratings: RatingListDto[] = [];
@@ -102,31 +89,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   size: number = 3;
   loggedIn: boolean = false;
   hasRated: boolean = false;
-  menuOptions = [
-    {
-      label: 'Neues Rezept erstellen',
-      action: () => this.addRecipe()
-    },
-    {
-      label: 'Rezept bearbeiten',
-      action: () => this.editRecipe(),
-      disabled: !this.isOwner
-    },
-    {
-      label: 'Rezept forken',
-      action: () => this.fork()
-    },
-    {
-      label: 'Rezept spoonen', buttonClass: 'info-box-3',
-      iconClass: 'info-box-3',
-      action: () => this.openSpoonModal(this.spoonRecipeModal)
-    },
-    {
-      label: 'Rezepte die gut dazupassen bearbeiten',
-      action: () => this.openRecipeGoesWellWithModal(),
-      disabled: !this.isOwner
-    }
-  ];
+  menuOptions = [];
 
   constructor(
     private ratingService: RatingService,
@@ -190,7 +153,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         for (let i = 0; i < this.role.length; i++) {
           if (this.role[i].length === Role.starcook.length) {
             this.isStarcook = true;
-            this.notification.success("Du bist ein StarCook");
           }
         }
       },
@@ -228,6 +190,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         label: 'Rezept spoonen', buttonClass: 'info-box-3',
         iconClass: 'info-box-3',
         action: () => this.openSpoonModal(this.spoonRecipeModal)
+      },
+      {
+        label: 'Rezept verifizieren',
+        action: () => this.addVerfication(),
+        disabled: this.isOwner || this.isVerified
       },
       {
         label: 'Rezepte die gut dazupassen bearbeiten',
@@ -537,16 +504,17 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   }
 
   addVerfication() {
-    if (this.isVerified == false && this.isOwner == false && this.isStarcook) {
-     this.service.verifyRecipe(this.recipe.id);
-      this.isVerified = true;
-      this.notification.success("Verifikation als Starcook ist erfolgreich.", "Verifikation von Rezept")
-    } else if (this.isOwner == false && !this.isStarcook) {
-      this.notification.error("Verifikation ist nicht möglich, da sie nicht ein Starcook haben.", "Verifikation von Rezept")
-    } else if (this.isOwner == true) {
-      this.notification.error("Verifikation ist nicht möglich, da sie das Rezept erstellt haben.", "Verifikation von Rezept")
-    } else if (this.isVerified == true) {
-      this.notification.error("Verifikation ist nicht möglich, da sie die Verifikation bereits durchgeführt haben.", "Verifikation von Rezept")
-    }
-  }
+     this.service.verifyRecipe(this.recipe.id).subscribe({
+        next: () => {
+          this.notification.success(`Rezept verifiziert.`);
+          this.isVerified = true;
+          this.updateMenuOptions();
+          this.recipe.verifications++;
+        },
+        error: error => {
+          this.notification.error(error);
+          this.defaultServiceErrorHandling(error);
+        }
+    });
+   }
 }

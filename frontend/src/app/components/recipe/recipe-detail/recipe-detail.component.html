@@ -4,11 +4,6 @@
       <h1 class="display-4" *ngIf="!recipe.isDraft">{{ recipe.name }}</h1>
       <h1 class="display-4" *ngIf="recipe.isDraft">{{ recipe.name }} (Template)</h1>
     </div>
-    <div class="Infos">
-      <button type="button" (click)="addVerfication()" class="btn btn-success btn-floating" *ngIf="!this.recipe.isVerified" mdbRipple>
-        <i class="bi bi-star"></i>
-      </button>
-    </div>
   </div>
 
   <ng-template #spoonRecipeModal let-modal>
@@ -93,6 +88,10 @@
       <h4>Nährwerte:</h4>
         <span *ngIf="!showNutrition">Zeigen</span>
         <span *ngIf="showNutrition">Verstecken</span>
+    </div>
+    <div class="info-box info-box-6" *ngIf="recipe.verifications !== 0">
+      <h4>Verifikationen:</h4>
+      <span class="number">{{ recipe.verifications }}</span>
     </div>
   </div>
 

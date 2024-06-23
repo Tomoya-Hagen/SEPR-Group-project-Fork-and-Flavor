@@ -140,7 +140,7 @@ export class RecipeService {
   }
 
   public verifyRecipe(recipeId: number): Observable<any> {
-    return this.http.post<DetailedRecipeDto>(this.baseUri + '/verify/' + recipeId , recipeId);
+    return this.http.put<DetailedRecipeDto>(this.baseUri + '/verify/' + recipeId, null);
   }
 
   private mapToUpdateDto(existingRecipe: RecipeDetailDto): RecipeUpdateDto {
