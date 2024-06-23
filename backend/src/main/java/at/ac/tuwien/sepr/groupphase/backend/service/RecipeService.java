@@ -110,7 +110,6 @@ public interface RecipeService {
      * verifies a Recipe, but only if the user is a star cook.
      *
      * @param recipeId that should be verified.
-     * @return new number of verifers
      */
-    long verifyRecipe(long recipeId) throws ValidationException;
+    void verifyRecipe(long recipeId) throws ValidationException;
 }

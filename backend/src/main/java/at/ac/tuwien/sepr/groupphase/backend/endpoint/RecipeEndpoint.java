@@ -1,11 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
@@ -185,9 +180,9 @@ public class RecipeEndpoint {
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "verify a recipe")
-    public long verifyRecipe(@PathVariable("id") long id) {
+    public void verifyRecipe(@PathVariable("id") long id) {
         try {
-            return recipeService.verifyRecipe(id);
+            recipeService.verifyRecipe(id);
         } catch (NotFoundException e) {
             HttpStatus status = HttpStatus.NOT_FOUND;
             throw new ResponseStatusException(status, e.getMessage(), e);

@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 
 import java.util.List;
 
@@ -18,4 +19,5 @@ public interface BadgeService {
      * @return a list of string that represent the names of the badges a user has.
      */
     List<String> getBadgesOfCurrentUser();
+
 }

@@ -231,27 +231,15 @@ public class Recipe {
     }
 
     @Basic
-    @Column(name = "verified_Number")
-    public long verifyNumber;
-
-    public void setVerifyNumber(long verifyNumber) {
-        this.verifyNumber = verifyNumber;
-    }
-
-    public long getVerifyNumber() {
-        return verifyNumber;
-    }
-
-    @Basic
     @Column(name = "is_verified")
-    private Boolean isVerified;
+    private Boolean isVerfied;
 
-    public Boolean getVerified() {
-        return isVerified;
+    public void setIsVerfied(Boolean verfied) {
+        isVerfied = verfied;
     }
 
-    public void setVerified(Boolean verified) {
-        this.isVerified = verified;
+    public Boolean getVerfied() {
+        return isVerfied;
     }
 
     public static final class RecipeBuilder {
@@ -271,8 +259,6 @@ public class Recipe {
         private List<RecipeIngredient> ingredients;
         private List<Recipe> recipesForkedFromThis;
         private List<Recipe> goesWellWithRecipes = new ArrayList<>();
-        private long verifyNumber;
-        private Boolean isVerified;
 
         private RecipeBuilder() {
         }
@@ -364,17 +350,6 @@ public class Recipe {
             return this;
         }
 
-        public RecipeBuilder withVerifyNumber(long verifyNumber) {
-            this.verifyNumber = verifyNumber;
-            return this;
-        }
-
-        public RecipeBuilder withIsVerified(boolean verified) {
-            this.isVerified = verified;
-            return this;
-        }
-
-
         public Recipe build() {
             Recipe recipe = new Recipe();
             recipe.setId(id);
@@ -393,8 +368,6 @@ public class Recipe {
             recipe.recipeBooks = this.recipeBooks;
             recipe.weeklyPlanner = this.weeklyPlanner;
             recipe.goesWellWithRecipes = this.goesWellWithRecipes;
-            recipe.setVerifyNumber(verifyNumber);
-            recipe.setVerified(isVerified);
             return recipe;
         }
     }

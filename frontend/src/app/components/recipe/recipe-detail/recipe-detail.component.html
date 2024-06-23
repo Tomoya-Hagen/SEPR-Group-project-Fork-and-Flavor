@@ -5,9 +5,7 @@
       <h1 class="display-4" *ngIf="recipe.isDraft" >{{ recipe.name }} (Template)</h1>
     </div>
     <div class="Infos">
-        <h4>Verifikationen: {{ verification }}
-        </h4>
-      <button type="button" (click)="addVerfication()" class="btn btn-success btn-floating"  *ngIf="!recipe.isVerified" mdbRipple>
+      <button type="button" (click)="addVerfication()" class="btn btn-success btn-floating" *ngIf="!this.recipe.isVerified" mdbRipple>
         <i class="bi bi-star"></i>
       </button>
     </div>

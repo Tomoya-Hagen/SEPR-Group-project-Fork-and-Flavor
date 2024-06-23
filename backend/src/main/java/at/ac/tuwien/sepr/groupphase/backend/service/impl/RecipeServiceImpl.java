@@ -1,11 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -18,11 +13,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
-import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.*;
 import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.*;
@@ -119,9 +110,7 @@ public class RecipeServiceImpl implements RecipeService {
                 result.allergens(),
                 result.nutritions(),
                 forkedRecipeNames,
-                result.rating(),
-                recipe.getVerifyNumber(),
-                recipe.getVerified()
+                result.rating()
         );
     }
 
@@ -136,28 +125,27 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public long verifyRecipe(long recipeId) throws ValidationException {
+    public void verifyRecipe(long recipeId) throws ValidationException {
         LOGGER.trace("verifyRecipe({})", recipeId);
         ApplicationUser user = userManager.getCurrentUser();
         if (!userManager.hasUserRole(user, Roles.StarCook)) {
             throw new ForbiddenException();
         }
         Recipe recipe = recipeRepository.getRecipeById(recipeId).orElseThrow(NotFoundException::new);
+        if (recipeRepository.getVerifysByRecipeIdAndUserId(recipe.getId(), user.getId()).isPresent()) {
+            throw new DuplicateObjectException("A verification to this recipe already exists");
+        }
         if (user.equals(recipe.getOwner())) {
             throw new ValidationException("Owner can not verify recipe", List.of());
         }
         List<ApplicationUser> verifiers = recipe.getVerifiers();
-        long number = recipe.getVerifyNumber();
-        number = number + 1;
         verifiers.add(user);
         recipe.setVerifiers(verifiers);
-        recipe.setVerifyNumber(number);
-        recipe.setVerified(true);
+
         recipeRepository.save(recipe);
-        emailService.sendSimpleEmail(recipe.getOwner().getEmail(), "Rezept verifiziert",
+        emailService.sendSimpleEmail(recipe.getOwner().getEmail(), "Rezept Verifikation",
                 "Dein Rezept " + recipe.getName()
-                        + " wurde verifiziert. \n Die aktuelle Anzahl an Verifikationen beträgt: " + recipe.getVerifyNumber());
-        return recipe.getVerifyNumber();
+                        + " wurde verifiziert.");
     }
 
     @Override

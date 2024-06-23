@@ -5,6 +5,7 @@ import {IngredientDetailDto} from "./ingredient"
 import {RecipeStepDetailDto} from "./recipe-step"
 import {NutritionDetailDto} from "./nutrition"
 import {Step} from "./Step";
+import {userDto} from "./user";
 
 export interface RecipeListDto {
   id: number,
@@ -22,7 +23,6 @@ export interface Recipe {
   recipeSteps: Step[]
   categories: Category[]
 }
-
 export interface RecipeUpdateDto {
   id: number;
   name: string;
@@ -32,8 +32,6 @@ export interface RecipeUpdateDto {
   recipeSteps: Step[];
   ingredients: IngredientDetailDto[];
 }
-
-
 export interface RecipeDetailDto {
   id: number,
   rating: number,
@@ -49,7 +47,6 @@ export interface RecipeDetailDto {
   allergens: AllergenDetailDto[],
   nutritions: NutritionDetailDto[],
   forkedRecipes: string[],
-  verifiedNumber: number,
   isVerified: boolean
 }
 
