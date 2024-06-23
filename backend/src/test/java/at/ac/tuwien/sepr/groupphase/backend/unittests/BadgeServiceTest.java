@@ -69,46 +69,24 @@ class BadgeServiceTest {
     }
 
     @Test
-    void getAllBadgesfromUserShouldGetRoles() {
-
-        List<Role> rolesList = new ArrayList<>();
-        Role r = new Role();
-        r.setId(1);
-        r.setName("StarCook");
-
-        rolesList.add(r);
-        Role r2 = new Role();
-        r.setId(1);
-        r.setName("Contributor");
-
-        rolesList.add(r2);
-        Role r3 = new Role();
-        r.setId(1);
-        r.setName("Cook");
-        rolesList.add(r3);
-
-        List<Roles> rolesL = new ArrayList<>();
-        Roles rL = Roles.Cook;
-        rolesL.add(rL);
-        Roles rL2 = Roles.Contributor;
-        rolesL.add(rL2);
-        Roles rL3 = Roles.StarCook;
-        rolesL.add(rL3);
-
-        ApplicationUser user = new ApplicationUser.ApplicationUserBuilder()
-                .withEmail("allahthesame@cmail.com")
-                .withPassword("passkey")
-                .withUsername("tbero")
-                .withhasProfilePicture(false)
-                .withRoles(rolesList)
-                .build();
-
-        Assertions.assertTrue(userManager.hasUserRole(user,rL));
-
-        userManager.getCurrentUser();
-        badgeService.addRoleToUser(user, rL);
-
-        Assertions.assertTrue(user.getRoles().contains(r2));
+    void getAllBadgesFromUserShouldGetRoles() {
+        ApplicationUser user = userRepository.findFirstById(1L);
+        List<Role> roles = new ArrayList<>();
+        user.setRoles(roles);
+        userRepository.save(user);
+        Assertions.assertAll(
+                ()->Assertions.assertFalse(user.getRoles().contains(roleRepository.findByName(Roles.Contributor.name()))),
+                ()->Assertions.assertFalse(user.getRoles().contains(roleRepository.findByName(Roles.Cook.name()))),
+                ()->Assertions.assertFalse(user.getRoles().contains(roleRepository.findByName(Roles.StarCook.name())))
+        );
+        for (Roles role : Roles.values()) {
+            badgeService.addRoleToUser(user, role);
+        }
+        Assertions.assertAll(
+                ()->Assertions.assertTrue(user.getRoles().contains(roleRepository.findByName(Roles.Contributor.name()))),
+                ()->Assertions.assertTrue(user.getRoles().contains(roleRepository.findByName(Roles.Cook.name()))),
+                ()->Assertions.assertTrue(user.getRoles().contains(roleRepository.findByName(Roles.StarCook.name())))
+        );
     }
 
 

@@ -85,6 +85,7 @@ public class RatingServiceImpl implements RatingService {
         emailService.sendSimpleEmail(recipe.getOwner().getEmail(), "Neue Bewertung!", "Neue Bewertung für das Rezept " + recipe.getName() + " erhalten.\n\n"
             + rating.toEmailString() + "\n");
         badgeService.addRoleToUser(user, Roles.Contributor);
+        badgeService.addRoleToUser(recipe.getOwner(), Roles.StarCook);
         return ratingMapper.mapRatingToRatingListDto(rating);
     }
 }
