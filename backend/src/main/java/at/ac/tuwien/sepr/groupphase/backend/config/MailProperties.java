@@ -11,6 +11,16 @@ public class MailProperties {
 
     private String frontendUrl;
 
+    private static String adminEmail = null;
+
+    public void setAdminEmail(String adminEmail) {
+        MailProperties.adminEmail = adminEmail;
+    }
+
+    public static String getAdminEmail() {
+        return adminEmail;
+    }
+
     public String getFromAddress() {
         return fromAddress;
     }
