@@ -118,7 +118,9 @@ public class DataGenerator implements CommandLineRunner {
     private void generateUserData() {
 
         Roles[] roles = Roles.values();
-
+        String[] usernames = {"admin", "user", "contributor", "cook", "starcook", "user1", "user2", "user3", "user4", "user5"};
+        String[] emails = {"admin@email.com", "user@email.com", "contributor@email.com", "cook@email.com", "starcook@email.com",
+            "user1@email.com", "user2@email.com", "user3@email.com", "user4@email.com", "user5@email.com"};
 
         // Create and save roles
         List<Role> savedRoles = new ArrayList<>();
@@ -129,20 +131,22 @@ public class DataGenerator implements CommandLineRunner {
             Role role = new Role.RoleBuilder().withroleId(r.name()).build();
             savedRoles.add(roleRepository.save(role));
         }
-        savedRoles.add(savedRoles.get(1));
-        savedRoles.add(savedRoles.get(1));
-        savedRoles.add(savedRoles.get(1));
-
-        String[] usernames = {"admin", "user", "contributor", "cook", "starcook", "User1", "User2", "User3"};
-        String[] emails = {"admin@email.com", "user@email.com", "contributor@email.com", "cook@email.com", "starcook@email.com",
-            "userone@email.com", "usertwo@email.com", "userthree@email.com"};
 
         // Create and save users and their roles
         for (int i = 0; i < usernames.length; i++) {
             // Check if a user with the same username already exists
             if (!userRepository.existsByUsername(usernames[i])) {
                 List<Role> userRoles = new ArrayList<>();
-                userRoles.add(savedRoles.get(i));
+                if (usernames[i] == "admin") {
+                    userRoles = savedRoles;
+                } else if (usernames[i].contains("user")) {
+                    userRoles.add(savedRoles.get(1));
+                } else {
+                    for (int j = 1; j <= i; j++) {
+                        userRoles.add(savedRoles.get(j));
+                    }
+                }
+
                 ApplicationUser user = new ApplicationUser.ApplicationUserBuilder()
                     .withEmail(emails[i])
                     .withPassword(passwordEncoder.encode("password"))
