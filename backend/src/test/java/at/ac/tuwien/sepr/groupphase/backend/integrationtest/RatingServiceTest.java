@@ -38,7 +38,7 @@ class RatingServiceTest implements TestData {
         RatingCreateDto ratingCreateDto = new RatingCreateDto(1,2,3,4,"test review");
         RatingListDto newRating = ratingService.createRating(ratingCreateDto);
         ratings = ratingService.getRatingsByRecipeId(1);
-        Assertions.assertEquals(5,ratings.size());
+        Assertions.assertEquals(7,ratings.size());
         Assertions.assertAll(
             () -> Assertions.assertEquals(ratingCreateDto.cost(), newRating.cost()),
             () -> Assertions.assertEquals(ratingCreateDto.recipeId(), newRating.recipeId()),
