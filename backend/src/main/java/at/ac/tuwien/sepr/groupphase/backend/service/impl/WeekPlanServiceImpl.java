@@ -154,9 +154,9 @@ public class WeekPlanServiceImpl implements WeekPlanService {
                 Map<String, Double> nutritions = new HashMap<>();
                 List<WeeklyPlanner> currentDay = weeklyPlannerItems.get(i);
                 for (int j = 0; j < currentDay.size(); j++) {
-                    if ()
                 }
             }
+            int currentAttemptRate = 0;
             if (currentBestAttemptRate > currentAttemptRate) {
                 calculationAttempt = 0;
                 currentBestWeekPlan = currentWeekPlan;
