@@ -35,6 +35,7 @@ class BadgeServiceTest {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
     private UserManager userManager;
 
     @Test

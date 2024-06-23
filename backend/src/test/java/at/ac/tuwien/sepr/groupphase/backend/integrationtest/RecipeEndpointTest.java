@@ -491,7 +491,7 @@ class RecipeEndpointTest implements TestData {
 
     @Test
     void verifyRecipeAsANonStarCook() throws Exception {
-        String jwttoken = LoginHelper("admin@email.com");
+        String jwttoken = LoginHelper("user@email.com");
         mockMvc.perform(post(RECIPE_BASE_URI + "/verify/1")
                 .header(securityProperties.getAuthHeader(), jwttoken)
                 .contentType(MediaType.APPLICATION_JSON))

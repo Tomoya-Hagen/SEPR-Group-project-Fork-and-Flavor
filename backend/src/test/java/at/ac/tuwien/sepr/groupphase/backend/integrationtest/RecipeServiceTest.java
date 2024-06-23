@@ -182,7 +182,7 @@ class RecipeServiceTest implements TestData {
 
     @Test
     void verifyingRecipeRecipeNotByAStarCookThrowsError() {
-        userAuthenticationByEmail("admin@email.com");
+        userAuthenticationByEmail("user@email.com");
         Recipe recipe = recipeRepository.findById(1L);
         Assertions.assertTrue(recipe.getVerifiers().isEmpty());
         ApplicationUser user = userRepository.findById(2L).get();
