@@ -110,8 +110,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query("SELECT r FROM Recipe r WHERE r.forkedFrom.id = :id")
     List<Recipe> findAllForkedRecipesById(@Param("id") long id);
 
-    @Query("SELECT r FROM Recipe r Join fetch r.ratings rat Where r.owner = :owner OR rat.user = :owner")
-    List<Recipe> findAllRecipesByInteraction(@Param("owner") ApplicationUser owner);
+    @Query("SELECT r FROM Recipe r Join fetch r.ratings rat Where r.owner = :owner OR (rat.user = :owner AND rat.taste >= 3)")
+    List<Recipe> findAllRecipesByGoodInteraction(@Param("owner") ApplicationUser owner);
 
     @Query("SELECT r FROM Recipe r Join fetch r.ratings rat Where r.owner.id = :owner OR rat.user.id = :owner ORDER BY RAND()")
     List<Recipe> findRandomRecipeByInteraction(@Param("owner") long owner, Pageable pageable);

@@ -333,13 +333,13 @@ public class RecipeServiceImpl implements RecipeService {
     public List<Recipe> trainmodel() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        HashMap<ApplicationUser, LinkedHashMap<Ingredient, Integer>> all = new HashMap();
+        HashMap<ApplicationUser, HashMap<Ingredient, Integer>> all = new HashMap();
         HashMap<ApplicationUser, List<Recipe>> compareMap = new HashMap();
         List<ApplicationUser> users = userRepository.findAll();
         for (ApplicationUser user : users) {
             Dictionary<ApplicationUser, RecommendEvaluation> map = new Hashtable<>();
             HashMap<Ingredient, Integer> ingredients = new HashMap<>();
-            var recipes = recipeRepository.findAllRecipesByInteraction(user);
+            var recipes = recipeRepository.findAllRecipesByGoodInteraction(user);
             compareMap.put(user, recipes);
             for (Recipe recipe : recipes) {
                 for (RecipeIngredient ingredient : recipe.getIngredients()) {
@@ -350,14 +350,7 @@ public class RecipeServiceImpl implements RecipeService {
                     }
                 }
             }
-
-            List<Map.Entry<Ingredient, Integer>> list = new ArrayList<>(ingredients.entrySet());
-            list.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
-            LinkedHashMap<Ingredient, Integer> sortedByValue = new LinkedHashMap<>();
-            for (Map.Entry<Ingredient, Integer> entry : list) {
-                sortedByValue.put(entry.getKey(), entry.getValue());
-            }
-            all.put(user, sortedByValue);
+            all.put(user, ingredients);
         }
         HashMap<ApplicationUser, List<RecommendEvaluation>> recommendEvaluations = new HashMap();
 
@@ -399,7 +392,7 @@ public class RecipeServiceImpl implements RecipeService {
                 if (!recommends.contains(possible)) {
                     recommends.add(possible);
                 }
-                if(recommends.size() >= 6){
+                if (recommends.size() >= 6) {
                     break;
                 }
             }
@@ -407,9 +400,7 @@ public class RecipeServiceImpl implements RecipeService {
         }
 
         stopWatch.stop();
-
         var diff = stopWatch.getTotalTimeSeconds();
-
         return recommends;
 
     }
@@ -421,10 +412,8 @@ public class RecipeServiceImpl implements RecipeService {
         List<RecommendEvaluation> targetEvaluations,
         Map<ApplicationUser, List<RecommendEvaluation>> allUsersEvaluations) {
 
-        // Create a list to hold the map entries (user and distance)
         List<Map.Entry<ApplicationUser, Double>> userDistances = new ArrayList<>();
 
-        // Calculate distance for each user and add to the list
         allUsersEvaluations.entrySet().parallelStream()
             .filter(entry -> !entry.getKey().equals(targetUser)) // Exclude the target user itself
             .forEach(entry -> {
@@ -432,10 +421,8 @@ public class RecipeServiceImpl implements RecipeService {
                 userDistances.add(new AbstractMap.SimpleEntry<>(entry.getKey(), distance));
             });
 
-        // Sort the list by distance
         userDistances.sort(Comparator.comparingDouble(Map.Entry::getValue));
 
-        // Extract the sorted users
         List<ApplicationUser> sortedUsers = userDistances.stream()
             .map(Map.Entry::getKey)
             .collect(Collectors.toList());
