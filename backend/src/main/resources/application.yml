@@ -41,6 +41,7 @@ spring:
 mail:
   from-address: "no-reply.ForkAndFlavour@mpp.one"
   frontend-url: "http://localhost:4200"
+#  admin-email: "admin.forkandflavour@mpp.one"
 
 security:
   auth:

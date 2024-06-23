@@ -30,7 +30,6 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
-import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
@@ -55,6 +54,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.AbstractMap;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Dictionary;
@@ -103,7 +103,6 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
 
-
     @Override
     public RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException {
         return getRecipeDetailDtoById(id, true);
@@ -121,16 +120,23 @@ public class RecipeServiceImpl implements RecipeService {
         RecipeDetailDto result = recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
 
         List<Recipe> forkedRecipes = recipeRepository.findAllForkedRecipesById(id);
-        ArrayList<String> forkedRecipeNames = new ArrayList<>();
+        ArrayList<RecipeListDto> forkedRecipeNames = new ArrayList<>();
         for (Recipe forkedRecipe : forkedRecipes) {
-            forkedRecipeNames.add(forkedRecipe.getName());
+            forkedRecipeNames.add(
+                new RecipeListDto(
+                    forkedRecipe.getId(),
+                    forkedRecipe.getName(),
+                    forkedRecipe.getDescription(),
+                    calculateAverageTasteRating(forkedRecipe.getRatings())
+                )
+            );
         }
         return new RecipeDetailDto(
             result.id(),
             result.name(),
             result.description(),
             result.numberOfServings(),
-            result.forkedFromId(),
+            result.forkedFrom(),
             result.ownerId(),
             result.categories(),
             result.isDraft(),
@@ -145,7 +151,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Page<RecipeListDto> getRecipesByName(String name, Pageable pageable) {
-        Page<Recipe> recipePage = recipeRepository.findByNameContainingIgnoreCase(name, pageable);
+        Page<Recipe> recipePage = recipeRepository.findByNameContainingIgnoreCaseOrderByName(name, pageable);
 
         return recipePage.map(recipe -> {
             Long rating = calculateAverageTasteRating(recipe.getRatings());
@@ -155,7 +161,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Page<RecipeListDto> getRecipesByNameCategories(RecipeSearchDto searchDto, Pageable pageable) {
-        Page<Recipe> recipePage = recipeRepository.findByCategoryIdContainingIgnoreCase(searchDto.name(), searchDto.categorieId(), pageable);
+        Page<Recipe> recipePage = recipeRepository.findByCategoryIdContainingIgnoreCaseOrderByName(searchDto.name(), searchDto.categorieId(), pageable);
 
         return recipePage.map(recipe -> {
             Long rating = calculateAverageTasteRating(recipe.getRatings());
@@ -442,7 +448,7 @@ public class RecipeServiceImpl implements RecipeService {
         for (RecipeIngredient recipeIngredient : recipe.getIngredients()) {
             Ingredient ingredient = recipeIngredient.getIngredient();
             updateMapOfIngredients(recipeIngredient, ingredient, ingredients);
-            updateMapOfNutritions(ingredient, nutritions);
+            updateMapOfNutritions(recipeIngredient, nutritions);
             updateListOfAllergens(ingredient, allergens);
         }
         List<RecipeStep> recipeSteps = recipe.getRecipeSteps();
@@ -471,16 +477,19 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-    private void updateMapOfNutritions(Ingredient ingredient, Map<Nutrition, BigDecimal> nutritions) {
+    private void updateMapOfNutritions(RecipeIngredient recipeIngredient, Map<Nutrition, BigDecimal> nutritions) {
         LOGGER.trace("updateMapOfNutritions({}, {})",
-            ingredient, nutritions);
-        for (IngredientNutrition ingredientNutrition : ingredient.getNutritions()) {
-            if (nutritions.containsKey(ingredientNutrition.getNutrition())) {
-                nutritions.put(ingredientNutrition.getNutrition(),
-                    nutritions.get(ingredientNutrition.getNutrition())
-                        .add(ingredientNutrition.getValue()));
+            recipeIngredient, nutritions);
+
+        for (IngredientNutrition nutrition : recipeIngredient.getIngredient().getNutritions()) {
+            BigDecimal nutritionValue = nutrition.getValue()
+                .multiply((recipeIngredient.getAmount())
+                    .divide(BigDecimal.valueOf(100), RoundingMode.DOWN));
+            if (nutritions.containsKey(nutrition.getNutrition())) {
+                nutritions.put(nutrition.getNutrition(), nutritionValue
+                    .add(nutritions.get(nutrition.getNutrition())));
             } else {
-                nutritions.put(ingredientNutrition.getNutrition(), ingredientNutrition.getValue());
+                nutritions.put(nutrition.getNutrition(), nutritionValue);
             }
         }
     }

@@ -62,8 +62,7 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy {
           this.isCurrentUserOwner();
         },
         error: error => {
-          console.error('Error fetching recipebook.', error);
-          this.notification.error('Rezeptbücher können nicht abgerufen werden.',"Backend Fehler - Rezeptbuch");
+          this.router.navigate(['not-found']);
         }
       });
     });

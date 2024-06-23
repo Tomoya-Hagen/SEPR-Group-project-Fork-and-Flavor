@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FullRatingListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -32,5 +33,5 @@ public interface RatingService {
      * @return List of RatingListDto objects.
      * @throws NotFoundException If no user is found with the provided ID.
      */
-    List<RatingListDto> getRatingsByUserId(long id) throws NotFoundException;
+    List<FullRatingListDto> getRatingsByUserId(long id) throws NotFoundException;
 }

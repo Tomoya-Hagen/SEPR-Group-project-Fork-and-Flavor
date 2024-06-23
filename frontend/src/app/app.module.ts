@@ -39,6 +39,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { StarRatingComponent } from './components/star-rating/star-rating.component';
 import {UserpageComponent} from "./components/userpage/userpage.component";
 import {RecipebookDetailComponent} from "./components/recipebook/recipebook-detail/recipebook-detail.component";
+import {RecipeStepComponent} from "./components/recipe/recipe-detail/recipe-step/recipe-step.component";
 
 @NgModule({
   declarations: [
@@ -63,7 +64,9 @@ import {RecipebookDetailComponent} from "./components/recipebook/recipebook-deta
     RecipeModalComponent,
     FloatingMenuComponent,
     StarRatingComponent,
-    RecipebookDetailComponent
+    RecipebookDetailComponent,
+    RecipeStepComponent,
+    UserpageComponent
   ],
   imports: [
     BrowserModule,
@@ -93,7 +96,6 @@ import {RecipebookDetailComponent} from "./components/recipebook/recipebook-deta
     MatTooltip,
     MatIcon,
     FontAwesomeModule,
-    UserpageComponent,
   ],
   providers: [httpInterceptorProviders],
   exports: [

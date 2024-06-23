@@ -36,8 +36,7 @@ public record RecipeDetailDto(
     @Min(1)
     Short numberOfServings,
 
-    @NotNull
-    Long forkedFromId,
+    RecipeListDto forkedFrom,
 
     @NotNull
     Long ownerId,
@@ -60,7 +59,7 @@ public record RecipeDetailDto(
     ArrayList<NutritionDetailDto> nutritions,
 
     @NotNull
-    ArrayList<String> forkedRecipes,
+    ArrayList<RecipeListDto> forkedRecipes,
 
     long rating
 ) {

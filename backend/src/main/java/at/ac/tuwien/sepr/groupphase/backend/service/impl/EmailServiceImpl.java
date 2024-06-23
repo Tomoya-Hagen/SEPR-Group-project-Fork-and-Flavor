@@ -26,6 +26,9 @@ public class EmailServiceImpl implements EmailService {
     @Async
     @Override
     public void sendSimpleEmail(String to, String subject, String text) {
+        if (to.contains("@email.com")) {
+            return;
+        }
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject("Fork And Flavour " + subject);

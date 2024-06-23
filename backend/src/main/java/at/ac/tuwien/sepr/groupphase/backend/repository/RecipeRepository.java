@@ -45,10 +45,10 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query("SELECT COALESCE(MAX(i.id),0) FROM Recipe i")
     Long findMaxId();
 
-    Page<Recipe> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<Recipe> findByNameContainingIgnoreCaseOrderByName(String name, Pageable pageable);
 
     @Query("SELECT distinct i FROM Recipe i join FETCH i.categories rc WHERE LOWER(i.name) LIKE LOWER(CONCAT('%', :name, '%')) AND rc.id = :id")
-    Page<Recipe> findByCategoryIdContainingIgnoreCase(@Param("name") String name, @Param("id") long ids, Pageable pageable);
+    Page<Recipe> findByCategoryIdContainingIgnoreCaseOrderByName(@Param("name") String name, @Param("id") long ids, Pageable pageable);
 
     /**
      * Search for recipes in the persistent data store matching  provided field.

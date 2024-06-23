@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FullRatingListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingListDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -54,14 +56,12 @@ public class RatingEndpoint {
 
     @PermitAll
     @GetMapping("/user/{id}")
-    public List<RatingListDto> getRatingFromUserById(@PathVariable("id") long id) {
+    public List<FullRatingListDto> getRatingFromUserById(@PathVariable("id") long id) {
         LOGGER.info("GET /api/v1/ratings/user/{}", id);
         try {
             return ratingService.getRatingsByUserId(id);
         } catch (NotFoundException e) {
-            HttpStatus status = HttpStatus.NOT_FOUND;
-            logClientError(status, "no user found by the given id", e);
-            throw new ResponseStatusException(status, e.getMessage(), e);
+            return new ArrayList<>();
         }
     }
 

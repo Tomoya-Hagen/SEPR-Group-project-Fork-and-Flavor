@@ -1,7 +1,7 @@
 <div class="jumbotron mt-5" *ngIf="recipes.length || recipeBooks.length">
   <div class="container">
     <!-- Top Rezepte -->
-    <div class="row mb-3 justify-content-end d-flex align-items-center" *ngIf="recipes.length">
+    <div class="row mb-3 justify-content-center d-flex align-items-center" *ngIf="recipes.length">
       <h2 class="display-5 mr-2">Top Rezepte:</h2>
       <div class="row">
         <div class="col-lg-4 p-2" *ngFor="let item of recipes; let last = last">
@@ -16,7 +16,7 @@
     </div>
     <hr class="my-4">
     <!-- Top Rezeptbücher -->
-    <div class="row mb-3 justify-content-end d-flex align-items-center" *ngIf="recipeBooks.length">
+    <div class="row mb-3 justify-content-center d-flex align-items-center" *ngIf="recipeBooks.length">
       <h2 class="display-5 mr-2">Top Rezeptbücher:</h2>
       <div class="row">
         <div class="col-lg-4 p-2" *ngFor="let item of recipeBooks; let last = last">
@@ -31,7 +31,7 @@
     </div>
     <hr class="my-4">
     <!-- Könnte dir auch gefallen -->
-    <div class="row mb-3 justify-content-end d-flex align-items-center" *ngIf="recipes.length">
+    <div class="row mb-3 justify-content-center d-flex align-items-center" *ngIf="recipes.length">
       <h2 class="display-5 mr-2">Könnte dir auch gefallen:</h2>
       <div class="row">
         <div class="col-lg-4 p-2" *ngFor="let item of recommended; let last = last">
