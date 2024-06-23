@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.UserEndPoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
@@ -20,6 +21,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepr.groupphase.backend.service.impl.CustomUserDetailService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
@@ -78,6 +80,8 @@ class RecipeEndpointTest implements TestData {
 
     @Autowired
     private SecurityProperties securityProperties;
+    @Autowired
+    private UserEndPoint userEndPoint;
 
     @Test
     void ReturnARecipeDetailDtoIfARecipeExistsByRecipeId() throws Exception {
@@ -485,4 +489,5 @@ class RecipeEndpointTest implements TestData {
                 .content(new ObjectMapper().writeValueAsString(recipeCreateDto)))
             .andExpect(status().isCreated());
     }
+
 }
