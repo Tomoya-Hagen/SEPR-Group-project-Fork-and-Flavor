@@ -59,6 +59,10 @@ export class UserService {
     return this.http.get<String>(this.baseUri+"/badge");
   }
 
+  public getBadgesOfUser(id: number): Observable<any> {
+    return this.http.get<String>(this.baseUri + "/" + id + "/badge");
+  }
+
   public updatePassword(id: number, passwordChange: userPasswordChangeDto) {
     return this.http.patch(this.baseUri+"/changePassword/"+id,passwordChange);
   }

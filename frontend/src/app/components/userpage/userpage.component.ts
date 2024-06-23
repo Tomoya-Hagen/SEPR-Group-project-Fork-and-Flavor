@@ -24,7 +24,7 @@ export class UserpageComponent implements OnInit {
     name: ""
   };
   isMyPage: boolean = false;
-  role: Role[] = [];
+  badges: Role[] = [];
   ratings: RatingListDto[] = [];
   menuOptions = [
     {
@@ -91,6 +91,16 @@ export class UserpageComponent implements OnInit {
           this.notification.error('Gesuchte Benutzerseite kann nicht geladen werden.',"Fehler - Benutzerseite");
         }
       });
+      this.service.getBadgesOfUser(params['id']).subscribe({
+        next: data => {
+          this.badges = data;
+        },
+        error: error => {
+          console.error('Error fetching badges by user id', error);
+          this.notification.error('Badges für die Benutzerseite können nicht abgerufen werden.', "Backend Fehler - Benutzerseite Rezepte");
+        }
+      });
+
 
     });
   }

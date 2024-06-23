@@ -16,7 +16,11 @@
     </div>
     <div class="info-box info-box-3">
       <h4>Badges:</h4>
-      <p class="badges">abc, abc, abc</p>
+      <p class="badges">
+                <span *ngFor="let badge of badges; let isLast=last">
+           {{badge}}{{isLast ? '' : ', '}}
+        </span>
+      </p>
     </div>
   </div>
 
