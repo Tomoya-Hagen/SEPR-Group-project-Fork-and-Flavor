@@ -256,6 +256,13 @@ public class Recipe {
         this.verifiers.add(user);
     }
 
+    public boolean hasVerified(ApplicationUser user) {
+        if (this.verifiers == null) {
+            return false;
+        }
+        return this.verifiers.contains(user);
+    }
+
     @Basic
     @Column(name = "is_verified")
     private Boolean isVerfied;

@@ -90,6 +90,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   loggedIn: boolean = false;
   hasRated: boolean = false;
   menuOptions = [];
+  currentUser: userDto = null;
 
   constructor(
     private ratingService: RatingService,
@@ -123,6 +124,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           this.isCurrentUserOwner();
           this.orderNutritions();
           this.getBadgesUser();
+/*
+          this.hasVerified();
+*/
           if (this.recipe.forkedRecipes.length > 0) {
             this.hasForkedRecipes = true;
           }
@@ -158,9 +162,19 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       },
       error: error => {
         console.error('Error fetching badges by user id', error);
-        this.notification.error('Badges für die Benutzerseite können nicht abgerufen werden.', "Backend Fehler - Benutzerseite Rezepte");
       }
     });
+  }
+
+  hasVerified() {
+    this.service.getHasVerified(this.currentUser.id).subscribe({
+      next: data => {
+        this.isVerified = data;
+        this.updateMenuOptions();
+      },
+      error: error => {
+        console.error('Error fetching badges by user id', error);
+    }});
   }
 
   ngOnDestroy(): void {
@@ -384,6 +398,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   isCurrentUserOwner() {
     this.userService.getCurrentUser().subscribe(currentUser => {
+      this.currentUser = currentUser;
       if (currentUser && this.recipe.ownerId === currentUser.id) {
         this.isOwner = true;
       }
