@@ -15,8 +15,7 @@
     <div ngbDropdown>
       <input name="unit" id="unit" type="text" [(ngModel)]="Ingredient.unit" (ngModelChange)="unitchanged()"
              class="form-control col-md-12" ngbDropdownToggle>
-      <div ngbDropdownMenu aria-labelledby="inputrecipestep" class="col-md-12 overflow-auto dropdown-menu-right"
-           style="height: 25vh">
+      <div ngbDropdownMenu aria-labelledby="inputrecipestep" class="col-md-12 overflow-auto dropdown-menu-right">
         <a ngbDropdownItem (click)="selectunit(unit)" *ngFor="let unit of units">{{ unit }}</a>
       </div>
     </div>

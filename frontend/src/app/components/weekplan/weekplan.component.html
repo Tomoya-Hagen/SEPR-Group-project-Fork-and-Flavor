@@ -35,7 +35,7 @@
   <div *ngIf="weekplan.length !== 0 && mobile" class="w-100">
     <div class="col-12 overflow-auto py-3">
       <div class="">
-        <div class="w-100 p-3 my-1 border rounded-2" *ngFor="let dayplan of weekplan; index as i" style="min-width: 300px;">
+        <div class="w-100 p-3 my-1 border rounded-2 weekplan1" *ngFor="let dayplan of weekplan; index as i">
           <div>
             <strong>{{ dayplan.date.toLocaleDateString() }}:</strong> {{ dayplan.day }}
           </div>
