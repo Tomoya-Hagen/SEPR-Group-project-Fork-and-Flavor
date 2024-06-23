@@ -136,7 +136,13 @@ public class DataGenerator implements CommandLineRunner {
             // Check if a user with the same username already exists
             if (!userRepository.existsByUsername(usernames[i])) {
                 List<Role> userRoles = new ArrayList<>();
-                userRoles.add(savedRoles.get(i));
+                if (usernames[i] == "admin") {
+                    userRoles = savedRoles;
+                } else {
+                    for (int j = 1; j <= i; j++) {
+                        userRoles.add(savedRoles.get(j));
+                    }
+                }
                 ApplicationUser user = new ApplicationUser.ApplicationUserBuilder()
                         .withEmail(emails[i])
                         .withPassword(passwordEncoder.encode("password"))
