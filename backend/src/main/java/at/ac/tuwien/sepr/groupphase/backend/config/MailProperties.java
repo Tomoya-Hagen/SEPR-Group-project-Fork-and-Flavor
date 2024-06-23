@@ -8,18 +8,8 @@ import org.springframework.stereotype.Component;
 public class MailProperties {
 
     private String fromAddress;
-
     private String frontendUrl;
-
-    private static String adminEmail = null;
-
-    public void setAdminEmail(String adminEmail) {
-        MailProperties.adminEmail = adminEmail;
-    }
-
-    public static String getAdminEmail() {
-        return adminEmail;
-    }
+    private String adminEmail;
 
     public String getFromAddress() {
         return fromAddress;
@@ -36,4 +26,13 @@ public class MailProperties {
     public void setFrontendUrl(String frontendUrl) {
         this.frontendUrl = frontendUrl;
     }
+
+    public String getAdminEmail() {
+        return adminEmail;
+    }
+
+    public void setAdminEmail(String adminEmail) {
+        this.adminEmail = adminEmail;
+    }
+
 }

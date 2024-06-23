@@ -32,7 +32,6 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.WeeklyPlannerRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -69,12 +68,9 @@ public class DataGenerator implements CommandLineRunner {
     private final RecipeStepRepository recipeStepRepository;
     private final RatingRepository ratingRepository;
     private final EmailService emailService;
-
     private final ResourceLoader resourceLoader;
     private final WeeklyPlannerRepository weeklyPlannerRepository;
-
-    @Autowired
-    private MailProperties mailProperties;
+    private final MailProperties mailProperties; // Add this line
 
     private HashMap<Long, Long> idMap;
     private List<Long> skippedRecipes = new ArrayList<>();
@@ -86,8 +82,8 @@ public class DataGenerator implements CommandLineRunner {
                          RecipeBookRepository recipeBookRepository, RecipeRepository recipeRepository,
                          RecipeIngredientRepository recipeIngredientRepository,
                          RecipeStepRepository recipeStepRepository, EmailService emailService, ResourceLoader resourceLoader,
-                         RatingRepository ratingRepository,
-                         WeeklyPlannerRepository weeklyPlannerRepository) {
+                         RatingRepository ratingRepository, WeeklyPlannerRepository weeklyPlannerRepository,
+                         MailProperties mailProperties) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -104,6 +100,7 @@ public class DataGenerator implements CommandLineRunner {
         this.ratingRepository = ratingRepository;
         this.idMap = new HashMap<>();
         this.weeklyPlannerRepository = weeklyPlannerRepository;
+        this.mailProperties = mailProperties;
     }
 
     @Transactional
@@ -125,7 +122,6 @@ public class DataGenerator implements CommandLineRunner {
     }
 
     private void generateUserData() {
-
         Roles[] roles = Roles.values();
         String[] usernames = {"admin", "user", "contributor", "cook", "starcook", "user1", "user2", "user3", "user4", "user5"};
         String[] emails = {"admin@email.com", "user@email.com", "contributor@email.com", "cook@email.com", "starcook@email.com",
@@ -141,9 +137,10 @@ public class DataGenerator implements CommandLineRunner {
             savedRoles.add(roleRepository.save(role));
         }
 
-        if (MailProperties.getAdminEmail() != null) {
+        // Use the injected mailProperties instance
+        if (mailProperties.getAdminEmail() != null) {
             testData = false;
-            String adminEmail = MailProperties.getAdminEmail();
+            String adminEmail = mailProperties.getAdminEmail();
             if (userRepository.existsByEmail(adminEmail)) {
                 return;
             }
