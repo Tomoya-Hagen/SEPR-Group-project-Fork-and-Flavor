@@ -178,6 +178,14 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public boolean hasVerified(long recipeId) {
+        LOGGER.trace("hasVerified({})", recipeId);
+        ApplicationUser user = userManager.getCurrentUser();
+        Recipe recipe = recipeRepository.getRecipeById(recipeId).orElseThrow(NotFoundException::new);
+        return recipe.getVerifiers().contains(user);
+    }
+
+    @Override
     public Page<RecipeListDto> getRecipesThatGoWellWith(long id, Pageable pageable) throws NotFoundException {
         Recipe origRecipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
         List<Recipe> goWellWith = origRecipe.getGoesWellWithRecipes();

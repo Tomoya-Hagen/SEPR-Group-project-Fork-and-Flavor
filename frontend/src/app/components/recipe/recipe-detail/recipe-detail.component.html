@@ -248,4 +248,4 @@
   <app-star-rating [disabled]="true" [value]="recipe.rating"></app-star-rating><br>
 </div>
 <br><br>
-<app-floating-menu [options]="menuOptions"></app-floating-menu>
+<app-floating-menu [options]="menuOptions" *ngIf="this.loggedIn"></app-floating-menu>

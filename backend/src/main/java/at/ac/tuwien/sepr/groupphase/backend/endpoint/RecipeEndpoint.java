@@ -212,7 +212,7 @@ public class RecipeEndpoint {
         }
     }
 
-/*    @GetMapping("/hasVerified/{id}")
+    @GetMapping("/hasVerified/{id}")
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Check if a recipe has been verified by a user")
@@ -223,7 +223,7 @@ public class RecipeEndpoint {
             HttpStatus status = HttpStatus.NOT_FOUND;
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
-    }*/
+    }
 
     private void logClientError(HttpStatus status, String message, Exception e) {
         LOGGER.warn("{} {}: {}: {}", status.value(), message, e.getClass().getSimpleName(), e.getMessage());

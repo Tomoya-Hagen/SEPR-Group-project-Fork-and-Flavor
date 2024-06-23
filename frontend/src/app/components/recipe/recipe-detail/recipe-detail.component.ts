@@ -123,10 +123,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           this.getForkedFromRecipeName();
           this.isCurrentUserOwner();
           this.orderNutritions();
-          this.getBadgesUser();
-/*
-          this.hasVerified();
-*/
+          if (this.loggedIn) {
+            this.getBadgesUser();
+            this.hasVerified();
+          }
+
           if (this.recipe.forkedRecipes.length > 0) {
             this.hasForkedRecipes = true;
           }
@@ -167,7 +168,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   }
 
   hasVerified() {
-    this.service.getHasVerified(this.currentUser.id).subscribe({
+    this.service.getHasVerified(this.recipe.id).subscribe({
       next: data => {
         this.isVerified = data;
         this.updateMenuOptions();
@@ -186,36 +187,38 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   }
 
   updateMenuOptions() {
-    this.menuOptions = [
-      {
-        label: 'Neues Rezept erstellen',
-        action: () => this.addRecipe()
-      },
-      {
-        label: 'Rezept bearbeiten',
-        action: () => this.editRecipe(),
-        disabled: !this.isOwner
-      },
-      {
-        label: 'Rezept forken',
-        action: () => this.fork()
-      },
-      {
-        label: 'Rezept spoonen', buttonClass: 'info-box-3',
-        iconClass: 'info-box-3',
-        action: () => this.openSpoonModal(this.spoonRecipeModal)
-      },
-      {
-        label: 'Rezept verifizieren',
-        action: () => this.addVerfication(),
-        disabled: this.isOwner || this.isVerified
-      },
-      {
-        label: 'Rezepte die gut dazupassen bearbeiten',
-        action: () => this.openRecipeGoesWellWithModal(),
-        disabled: !this.isOwner
-      }
-    ];
+    if (this.loggedIn) {
+      this.menuOptions = [
+        {
+          label: 'Neues Rezept erstellen',
+          action: () => this.addRecipe()
+        },
+        {
+          label: 'Rezept bearbeiten',
+          action: () => this.editRecipe(),
+          disabled: !this.isOwner
+        },
+        {
+          label: 'Rezept forken',
+          action: () => this.fork()
+        },
+        {
+          label: 'Rezept spoonen', buttonClass: 'info-box-3',
+          iconClass: 'info-box-3',
+          action: () => this.openSpoonModal(this.spoonRecipeModal)
+        },
+        {
+          label: 'Rezept verifizieren',
+          action: () => this.addVerfication(),
+          disabled: this.isOwner || this.isVerified
+        },
+        {
+          label: 'Rezepte die gut dazupassen bearbeiten',
+          action: () => this.openRecipeGoesWellWithModal(),
+          disabled: !this.isOwner
+        }
+      ];
+    }
   }
 
   roundTo(value: number): number {

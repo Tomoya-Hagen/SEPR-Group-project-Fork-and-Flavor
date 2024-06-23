@@ -135,4 +135,12 @@ public interface RecipeService {
      * @param recipeId that should be verified.
      */
     void verifyRecipe(long recipeId) throws ValidationException;
+
+    /**
+     * checks if the logged in user has verified the recipe.
+     *
+     * @param recipeId id of the recipe
+      * @return true if the user has verified the recipe, false otherwise
+     */
+    boolean hasVerified(long recipeId);
 }
