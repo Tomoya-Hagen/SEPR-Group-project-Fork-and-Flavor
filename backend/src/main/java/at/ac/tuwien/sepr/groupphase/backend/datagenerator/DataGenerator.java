@@ -111,6 +111,7 @@ public class DataGenerator implements CommandLineRunner {
         generateRecipeSteps();
         generateRecipeBooks();
         generateRatings();
+        generateVerifications();
         generateGoesWellWidth();
         generateWeekPlan();
     }
@@ -599,6 +600,29 @@ public class DataGenerator implements CommandLineRunner {
             throw new RuntimeException(e);
         }
         categoryRepository.flush();
+    }
+
+    public void generateVerifications() {
+        Resource resource = resourceLoader.getResource("classpath:verifications.csv");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+            String line = reader.readLine();
+            while ((line = reader.readLine()) != null) {
+                List<String> fields = parseCsvLine(line, ',');
+                if (fields.size() == 2) {
+                    long recipeId = Long.parseLong(fields.get(0).trim());
+                    if (skippedRecipes.contains(recipeId)) {
+                        continue;
+                    }
+                    long userId = Long.parseLong(fields.get(1).trim());
+                    Recipe recipe = recipeRepository.getRecipeById(idMap.get(recipeId)).orElseThrow(NotFoundException::new);
+                    ApplicationUser user = userRepository.findFirstById(userId);
+                    recipe.addVerifier(user);
+                    userRepository.save(user);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Set<Allergen> findAllergensByCodes(String codes) {

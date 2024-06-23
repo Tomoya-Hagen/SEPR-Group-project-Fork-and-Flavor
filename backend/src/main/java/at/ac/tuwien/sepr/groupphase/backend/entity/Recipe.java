@@ -249,6 +249,13 @@ public class Recipe {
         this.verifiers = verifiers;
     }
 
+    public void addVerifier(ApplicationUser user) {
+        if (this.verifiers == null) {
+            this.verifiers = new ArrayList<>();
+        }
+        this.verifiers.add(user);
+    }
+
     @Basic
     @Column(name = "is_verified")
     private Boolean isVerfied;
