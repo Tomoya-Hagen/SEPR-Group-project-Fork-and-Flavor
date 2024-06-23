@@ -5,6 +5,22 @@
       <h1 class="display-4" *ngIf="recipe.isDraft">{{ recipe.name }} (Template)</h1>
     </div>
   </div>
+  <ng-template #showForkedRecipesModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Forked Recipes</h5>
+      <button type="button" class="close" (click)="closeForkedRecipes()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div *ngFor="let forkedRecipe of recipe.forkedRecipes">
+        <app-card [item]="forkedRecipe" [detailUrlPrefix]="'/recipe/details'" (cardClicked)="closeRatingModal()"></app-card>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeForkedRecipes()">Close</button>
+    </div>
+  </ng-template>
   <ng-template #spoonRecipeModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Spoon</h5>
@@ -67,21 +83,13 @@
       </div>
     </div>
     <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--acent-color);"
-         *ngIf="isForkedFromRecipe()">
+         *ngIf="recipe.forkedFrom !== null" (click)="goToRecipe(recipe.forkedFrom.id)">
       <h4>Geforkt von:</h4>
-      <span>{{recipeForkedFrom}}</span>
+      <span>{{ recipe.forkedFrom.name }}</span>
     </div>
-    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: #08688e;" *ngIf="hasForkedRecipes">
-      <h4>Geforkt:</h4>
-      <div>
-        <span *ngFor="let forkedFrom of recipeForkedFrom; let isLast=last">
-           {{ recipeForkedFrom }}{{ isLast ? '' : ', ' }}
-        <span *ngFor="let forkedRecipe of recipe.forkedRecipes.slice(0, 5); let last = last">
-          {{forkedRecipe}}{{last && recipe.forkedRecipes.length <= 5 ? '' : ', '}}
-        </span>
-        <span *ngIf="recipe.forkedRecipes.length > 5">...</span>
-        </span>
-      </div>
+    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: #08688e;" *ngIf="recipe.forkedRecipes.length !== 0" (click)="openForkedRecipesModal()">
+      <h4>Geforkte Rezepte:</h4>
+      <span class="number">{{ recipe.forkedRecipes.length }}</span>
     </div>
     <div class="info-box info-box-5 clickable" *ngIf="screenWidth <= 767" style="box-shadow: 0 0 10px rgba(111, 66, 193, 0); background-color: rgba(111, 66, 193, 1);" (click)="toggleNutrition()">
       <h4>Nährwerte:</h4>

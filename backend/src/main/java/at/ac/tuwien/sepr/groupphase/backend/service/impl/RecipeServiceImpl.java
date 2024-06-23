@@ -99,16 +99,23 @@ public class RecipeServiceImpl implements RecipeService {
         RecipeDetailDto result = recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
 
         List<Recipe> forkedRecipes = recipeRepository.findAllForkedRecipesById(id);
-        ArrayList<String> forkedRecipeNames = new ArrayList<>();
+        ArrayList<RecipeListDto> forkedRecipeNames = new ArrayList<>();
         for (Recipe forkedRecipe : forkedRecipes) {
-            forkedRecipeNames.add(forkedRecipe.getName());
+            forkedRecipeNames.add(
+                new RecipeListDto(
+                    forkedRecipe.getId(),
+                    forkedRecipe.getName(),
+                    forkedRecipe.getDescription(),
+                    calculateAverageTasteRating(forkedRecipe.getRatings())
+                )
+            );
         }
         return new RecipeDetailDto(
             result.id(),
             result.name(),
             result.description(),
             result.numberOfServings(),
-            result.forkedFromId(),
+            result.forkedFrom(),
             result.ownerId(),
             result.categories(),
             result.isDraft(),
