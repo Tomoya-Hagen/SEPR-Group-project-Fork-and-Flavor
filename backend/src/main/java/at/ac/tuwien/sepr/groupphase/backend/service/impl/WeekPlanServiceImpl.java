@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Transactional
 @Service
@@ -140,7 +141,8 @@ public class WeekPlanServiceImpl implements WeekPlanService {
     }
 
     private void calculateWeekPlan(List<List<WeeklyPlanner>> weeklyPlannerItems, Map<Recipe, Map<Nutrition, BigDecimal>> recipes) {
-        Map<Nutrition, Double> recommendedNutrition = getDailyRecommendedNutritions();
+        Map<Nutrition, Double> recommendedNutritionMin = getDailyRecommendedNutritionsMin();
+        Map<Nutrition, Double> recommendedNutritionMax = getDailyRecommendedNutritionsMax();
         List<List<WeeklyPlanner>> currentWeekPlan = List.copyOf(weeklyPlannerItems);
         List<List<WeeklyPlanner>> currentBestWeekPlan = List.copyOf(weeklyPlannerItems);
         double currentBestAttemptRate = Double.MAX_VALUE;
@@ -148,15 +150,38 @@ public class WeekPlanServiceImpl implements WeekPlanService {
         List<Recipe> usedBreakfastRecipes = new ArrayList<>();
         List<Recipe> usedNonBreakfastRecipes = new ArrayList<>();
         List<Recipe> breakfastRecipes = recipes.keySet().stream().filter(r -> r.getCategories().contains(categoryRepository.findFirstByName("Frühstück"))).toList();
-        List<Recipe> nonBreakfastRecipes = recipes.keySet().stream().filter(r -> !r.getCategories().contains(categoryRepository.findFirstByName("Frühstück"))).toList();
+        List<Recipe> lunchOrDinnerRecipes = recipes.keySet().stream()
+            .filter(r -> {
+                var categories = r.getCategories();
+                return !categories.contains(categoryRepository.findFirstByName("Frühstück"))
+                    && !categories.contains(categoryRepository.findFirstByName("Desserts"))
+                    && !categories.contains(categoryRepository.findFirstByName("Jause"))
+                    && !categories.contains(categoryRepository.findFirstByName("Vorspeise"))
+                    && !categories.contains(categoryRepository.findFirstByName("Beilage"));
+            })
+            .toList();
         while (calculationAttempt < 10) {
             for (int i = 0; i < weeklyPlannerItems.size(); i++) {
-                Map<String, Double> nutritions = new HashMap<>();
+                Map<String, Double> dailyNutrition = new HashMap<>();
                 List<WeeklyPlanner> currentDay = weeklyPlannerItems.get(i);
-                for (int j = 0; j < currentDay.size(); j++) {
-                    if ()
+                for (WeeklyPlanner planner : currentDay) {
+                    Recipe selectedRecipe;
+                    if (planner.getDaytime() == WeeklyPlanner.EatingTime.Frühstück) {
+                        selectedRecipe = getRandomRecipe(breakfastRecipes, usedBreakfastRecipes);
+                        usedBreakfastRecipes.add(selectedRecipe);
+                    } else {
+                        selectedRecipe = getRandomRecipe(lunchOrDinnerRecipes, usedNonBreakfastRecipes);
+                        usedNonBreakfastRecipes.add(selectedRecipe);
+                    }
+                    planner.setRecipe(selectedRecipe);
+
+                    // Add the recipe's nutrition to the daily total
+                    for (Map.Entry<Nutrition, BigDecimal> entry : recipes.get(selectedRecipe).entrySet()) {
+                        dailyNutrition.merge(entry.getKey(), entry.getValue(), BigDecimal::add);
+                    }
                 }
             }
+            int currentAttemptRate = 0;
             if (currentBestAttemptRate > currentAttemptRate) {
                 calculationAttempt = 0;
                 currentBestWeekPlan = currentWeekPlan;
@@ -169,9 +194,34 @@ public class WeekPlanServiceImpl implements WeekPlanService {
         }
     }
 
-    private Map<Nutrition, Double> getDailyRecommendedNutritions() {
+    private Recipe getRandomRecipe(List<Recipe> recipes, List<Recipe> usedRecipes) {
+        List<Recipe> availableRecipes = recipes.stream()
+            .filter(r -> !usedRecipes.contains(r))
+            .toList();
+        return availableRecipes.get(new Random().nextInt(availableRecipes.size()));
+    }
+
+
+    private Map<Nutrition, Double> getDailyRecommendedNutritionsMin() {
         Map<Nutrition, Double> recommendedNutrition = new HashMap<>();
-        recommendedNutrition.put(nutritionRepository.findByName("Kalorien").orElseThrow(NotFoundException::new), 2000d);
+        recommendedNutrition.put(nutritionRepository.findByName("Kalorien").orElseThrow(NotFoundException::new), 1900d);
+        recommendedNutrition.put(nutritionRepository.findByName("Cholesterin").orElseThrow(NotFoundException::new), 1200d);
+        recommendedNutrition.put(nutritionRepository.findByName("Ballaststoffe").orElseThrow(NotFoundException::new), 20000d);
+        recommendedNutrition.put(nutritionRepository.findByName("Kohlenhydrate").orElseThrow(NotFoundException::new), 200000d);
+        recommendedNutrition.put(nutritionRepository.findByName("Eiweiß").orElseThrow(NotFoundException::new), 55000d);
+
+        return recommendedNutrition;
+    }
+
+    private Map<Nutrition, Double> getDailyRecommendedNutritionsMax() {
+        Map<Nutrition, Double> recommendedNutrition = new HashMap<>();
+        recommendedNutrition.put(nutritionRepository.findByName("Kalorien").orElseThrow(NotFoundException::new), 2500d);
+        recommendedNutrition.put(nutritionRepository.findByName("Cholesterin").orElseThrow(NotFoundException::new), 3000d);
+        recommendedNutrition.put(nutritionRepository.findByName("Ballaststoffe").orElseThrow(NotFoundException::new), 60000d);
+        recommendedNutrition.put(nutritionRepository.findByName("Salz").orElseThrow(NotFoundException::new), 6000d);
+        recommendedNutrition.put(nutritionRepository.findByName("Fett").orElseThrow(NotFoundException::new), 60000d);
+        recommendedNutrition.put(nutritionRepository.findByName("Eiweiß").orElseThrow(NotFoundException::new), 120000d);
+
         return recommendedNutrition;
     }
 
@@ -185,5 +235,39 @@ public class WeekPlanServiceImpl implements WeekPlanService {
                 [DayTime.valueOf(weekDayDto.dayTimes().get(i).name()).ordinal()]);
             weeklyPlannerItems.add(weeklyPlanner);
         }
+    }
+
+    private double calculateAttemptRate(Map<Nutrition, BigDecimal> dailyNutrition, Map<Nutrition, Double> recommendedMin, Map<Nutrition, Double> recommendedMax) {
+        double attemptRate = 0.0;
+        for (Map.Entry<Nutrition, BigDecimal> entry : dailyNutrition.entrySet()) {
+            Nutrition nutrition = entry.getKey();
+            BigDecimal value = entry.getValue();
+            double min = recommendedMin.getOrDefault(nutrition, 0.0);
+            double max = recommendedMax.getOrDefault(nutrition, Double.MAX_VALUE);
+
+            if (value.doubleValue() < min) {
+                attemptRate += min - value.doubleValue();
+            } else if (value.doubleValue() > max) {
+                attemptRate += value.doubleValue() - max;
+            }
+        }
+        return attemptRate;
+    }
+
+    private List<List<WeeklyPlanner>> copyWeekPlan(List<List<WeeklyPlanner>> weekPlan) {
+        List<List<WeeklyPlanner>> copiedPlan = new ArrayList<>();
+        for (List<WeeklyPlanner> dayPlan : weekPlan) {
+            List<WeeklyPlanner> copiedDay = new ArrayList<>();
+            for (WeeklyPlanner planner : dayPlan) {
+                WeeklyPlanner copiedPlanner = new WeeklyPlanner();
+                copiedPlanner.setRecipe(planner.getRecipe());
+                copiedPlanner.setRecipeBook(planner.getRecipeBook());
+                copiedPlanner.setDate(planner.getDate());
+                copiedPlanner.setDaytime(planner.getDaytime());
+                copiedDay.add(copiedPlanner);
+            }
+            copiedPlan.add(copiedDay);
+        }
+        return copiedPlan;
     }
 }
