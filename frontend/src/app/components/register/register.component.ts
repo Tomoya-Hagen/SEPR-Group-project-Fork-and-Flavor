@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
 import {ToastrService} from "ngx-toastr";
+import {userDto} from "../../dtos/user";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-register',
@@ -17,7 +19,8 @@ export class RegisterComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,
               private notification: ToastrService,
-              private router: Router) {
+              private router: Router,
+              private userService: UserService) {
     this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -46,6 +49,7 @@ export class RegisterComponent implements OnInit {
       this.authService.registerUser(newUserRequest).subscribe({
         next: () => {
           console.log(`Successfully registered user: ${newUserRequest.email}`);
+          this.setUserName();
           this.notification.success("Erfolgreich registriert als User:" + newUserRequest.email, "Registrierung erfolgreich!");
           this.router.navigate(['/']);  // Redirect after successful registration
         },
@@ -89,6 +93,18 @@ export class RegisterComponent implements OnInit {
     }
 
     return validationErrors;
+  }
+
+  setUserName() {
+    this.userService.getCurrentUser().subscribe({
+      next: (data: userDto) => {
+        localStorage.setItem("username",data.name);
+        localStorage.setItem("userId",String(data.id));
+      },
+      error: (error: any) => {
+        this.notification.error('You are not logged in as user', 'Authentication Error');
+      }
+    })
   }
 
   goToLogin(): void {

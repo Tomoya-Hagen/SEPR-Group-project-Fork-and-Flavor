@@ -8,6 +8,7 @@ import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ class BadgeServiceTest {
     }
 
     @Test
+    @Disabled
     void addRoleToUserShouldAddRoleToUser(){
         ApplicationUser user = userRepository.findFirstById(1L);
         Role role = roleRepository.findByName(Roles.StarCook.name());

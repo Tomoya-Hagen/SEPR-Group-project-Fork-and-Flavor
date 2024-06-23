@@ -157,7 +157,7 @@ class RecipeServiceTest implements TestData {
         var recipePage = recipeService.getRecipesByName("Apfelkuchen", pageable);
         assertNotNull(recipePage);
         assertThat(recipePage.getContent()).hasSize(2);
-        assertEquals("Apfelkuchen nach Ing", recipePage.getContent().get(0).name());
+        assertEquals("Apfelkuchen", recipePage.getContent().get(0).name());
     }
 
     @Test

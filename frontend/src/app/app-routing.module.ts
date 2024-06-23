@@ -15,6 +15,8 @@ import { RecipeEditComponent } from './components/recipe/recipe-edit/recipe-edit
 import {UserpageComponent} from "./components/userpage/userpage.component";
 import {UserpageEditComponent} from "./components/userpage/userpage-edit/userpage-edit.component";
 import { WeekplanCreateComponent } from './components/weekplan/weekplan-create/weekplan-create.component';
+import {NotFoundComponent} from "./components/not-found/not-found.component";
+import {DisclamerComponent} from "./components/disclamer/disclamer.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -41,7 +43,10 @@ const routes: Routes = [
   {path: 'userpage', children:[
       {path: ':id', component: UserpageComponent},
       {path: ':id/edit', component: UserpageEditComponent},
-  ]}
+  ]},
+  { path: 'disclamer', component: DisclamerComponent },
+  { path: 'not-found', component: NotFoundComponent },
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FullRatingListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RatingMapper;
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,10 +91,25 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public List<RatingListDto> getRatingsByUserId(long id) throws NotFoundException {
+    public List<FullRatingListDto> getRatingsByUserId(long id) throws NotFoundException {
         LOGGER.trace("getRatingsByUserId({})", id);
         ApplicationUser user = userRepository.findById(id).orElseThrow(NotFoundException::new);
         List<Rating> ratings = ratingRepository.getRatingsByUserId(user.getId()).stream().toList();
-        return ratingMapper.mapListOfRatingToListOfRatingListDto(ratings);
+        List<RatingListDto> ratingsListDto =  ratingMapper.mapListOfRatingToListOfRatingListDto(ratings);
+        List<FullRatingListDto> fullRatingListDto = new ArrayList<>(ratingsListDto.size());
+        for (RatingListDto ratingListDto : ratingsListDto) {
+            fullRatingListDto.add(
+                new FullRatingListDto(
+                    ratingListDto.user(),
+                    ratingListDto.cost(),
+                    ratingListDto.taste(),
+                    ratingListDto.easeOfPrep(),
+                    ratingListDto.review(),
+                    ratingListDto.recipeId(),
+                    recipeRepository.getRecipeById(ratingListDto.recipeId()).orElseThrow(NotFoundException::new).getName()
+                )
+            );
+        }
+        return fullRatingListDto;
     }
 }

@@ -67,7 +67,8 @@ import { WeekplanCreateComponent } from './components/weekplan/weekplan-create/w
     StarRatingComponent,
     RecipebookDetailComponent,
     RecipeStepComponent,
-    WeekplanCreateComponent
+    WeekplanCreateComponent,
+    UserpageComponent
   ],
   imports: [
     BrowserModule,
@@ -97,7 +98,6 @@ import { WeekplanCreateComponent } from './components/weekplan/weekplan-create/w
     MatTooltip,
     MatIcon,
     FontAwesomeModule,
-    UserpageComponent,
   ],
   providers: [httpInterceptorProviders],
   exports: [
