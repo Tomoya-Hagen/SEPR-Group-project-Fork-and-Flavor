@@ -73,7 +73,7 @@ public class Recipe {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<Rating> ratings;
+    private List<Rating> ratings = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
