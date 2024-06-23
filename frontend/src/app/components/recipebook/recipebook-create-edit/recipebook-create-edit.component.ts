@@ -203,17 +203,17 @@ export class RecipebookCreateEditComponent implements OnInit {
 
   public isFormValid(): boolean {
     let isValid = true;
-    if (this.recipes.length <= 0) {
+    if (this.isOwner && this.recipes.length <= 0) {
       this.notification.error("Rezepte können nicht leer sein")
       isValid = false;
     }
 
-    if (this.recipeBook.description == '') {
+    if (this.isOwner && this.recipeBook.description == '') {
       this.notification.error("Die Beschreibung kann nicht leer sein")
       isValid = false;
     }
 
-    if (this.recipeBook.name == '') {
+    if (this.isOwner && this.recipeBook.name == '') {
       this.notification.error("Der Name kann nicht leer sein")
       isValid = false;
     }
