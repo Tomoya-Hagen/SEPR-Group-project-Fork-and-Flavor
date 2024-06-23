@@ -28,4 +28,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
 
     List<Category> findByName(String name);
+
+    Category findFirstByName(String name);
+
+    Optional<Category> findById(long ids);
 }

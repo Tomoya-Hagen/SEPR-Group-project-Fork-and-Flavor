@@ -1,7 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NgForOf, NgIf} from "@angular/common";
-import {SlickCarouselModule} from "ngx-slick-carousel";
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 import {RecipeBookService} from "../../../services/recipebook.service";
 import {RecipeBookDetailDto} from "../../../dtos/recipe-book";
@@ -10,27 +8,40 @@ import {UserService} from "../../../services/user.service";
 
 @Component({
   selector: 'app-recipebook-detail',
-  standalone: true,
-  imports: [
-    NgForOf,
-    NgIf,
-    SlickCarouselModule,
-    RouterLink
-  ],
   templateUrl: './recipebook-detail.component.html',
-  styleUrl: './recipebook-detail.component.scss'
+  styleUrls: ['./recipebook-detail.component.scss']
 })
-export class RecipebookDetailComponent implements OnInit, OnDestroy{
+export class RecipebookDetailComponent implements OnInit, OnDestroy {
   recipeBook: RecipeBookDetailDto = {
     name: "",
     description: "",
     id: 0,
     ownerId: 0,
-    owner: null,
+    owner: {
+      id: 0,
+      name: ""
+    },
     recipes: [],
     users: []
   }
-  isOwner: boolean = false;
+  canEdit: boolean = false;
+  menuOptions = [
+    {
+      label: 'Neues Rezeptbuch erstellen',
+      action: () => this.newRecipeBook(),
+      disabled: false
+    },
+    {
+      label: 'Rezeptbuch bearbeiten',
+      action: () => this.editRecipeBook(),
+      disabled: true
+    },
+    {
+      label: 'Wochenplan',
+      action: () => this.gotoWeekPlan(),
+      disabled: false
+    }
+  ];
 
   constructor(
     private service: RecipeBookService,
@@ -39,9 +50,7 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
     private notification: ToastrService,
     private titleService: Title,
     private userService: UserService,
-  ) {
-
-  }
+  ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -71,12 +80,51 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy{
   isCurrentUserOwner() {
     this.userService.getCurrentUser().subscribe(currentUser => {
       if (currentUser && this.recipeBook.ownerId === currentUser.id) {
-        this.isOwner = true;
+        this.canEdit = true;
+        this.updateMenuOptions();
+        console.log("User is owner");
+        return;
+      }
+
+      for (let i = 0; i < this.recipeBook.users.length; i++) {
+        if (currentUser && this.recipeBook.users[i].id === currentUser.id) {
+          this.canEdit = true;
+          this.updateMenuOptions();
+          console.log("User is in recipebook");
+          return;
+        }
       }
     });
   }
 
+  updateMenuOptions() {
+    this.menuOptions = [
+      {
+        label: 'Neues Rezeptbuch erstellen',
+        action: () => this.newRecipeBook(),
+        disabled: false
+      },
+      {
+        label: 'Rezeptbuch bearbeiten',
+        action: () => this.editRecipeBook(),
+        disabled: !this.canEdit
+      },
+      {
+        label: 'Wochenplan',
+        action: () => this.gotoWeekPlan(),
+        disabled: false
+      }
+    ];
+  }
+
   editRecipeBook() {
-    this.router.navigate(['/recipebook/edit',this.recipeBook.id])
+    this.router.navigate(['/recipebook/edit', this.recipeBook.id]);
+  }
+
+  newRecipeBook() {
+    this.router.navigate(['/recipebook/create']);
+  }
+  gotoWeekPlan(){
+    this.router.navigate(['/weekplan/'+ this.recipeBook.id])
   }
 }

@@ -57,6 +57,7 @@ export interface RecipeList {
 
 export interface RecipeSearch {
   name?: string;
+  categoryId?: number;
 }
 
 

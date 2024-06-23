@@ -133,7 +133,7 @@ export class RecipeCreateComponent implements OnInit {
       }
     });
 
-    this.recipeService.recipeByName('',999).subscribe({
+    this.recipeService.recipeByName('',0,999).subscribe({
       next:(response) => {
         this.possible.recipestep = response
         this.show.recipestep = response

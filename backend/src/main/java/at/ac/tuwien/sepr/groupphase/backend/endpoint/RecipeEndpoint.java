@@ -1,5 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.*;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -130,11 +137,15 @@ public class RecipeEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/simple")
     @Operation(summary = "Getting simple recipes", security = @SecurityRequirement(name = "apiKey"))
-    public Stream<SimpleRecipeResultDto> get(@RequestParam("name") String name, @RequestParam("limit") int limit) {
-        LOGGER.info("POST /api/v1/recipe params: {} {}", name, limit);
-        return recipeService.byname(name, limit);
+    public Stream<SimpleRecipeResultDto> get(@RequestParam("name") String name, @RequestParam("categoryId") long categoryId, @RequestParam("limit") int limit) {
+        LOGGER.info("POST /api/v1/recipe params: {} {} {}", name, categoryId, limit);
+        RecipeSearchDto searchDto = new RecipeSearchDto(name, categoryId);
+        if (categoryId != 0) {
+            return recipeService.bynamecategories(searchDto, limit);
+        } else {
+            return recipeService.byname(name, limit);
+        }
     }
-
 
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
@@ -168,12 +179,18 @@ public class RecipeEndpoint {
     @GetMapping
     @Operation(summary = "Get a list of recipes")
     public Page<RecipeListDto> getRecipesByName(@RequestParam(name = "name", required = false, defaultValue = "") String name,
+                                                @RequestParam(name = "categoryId", required = false, defaultValue = "0") long categoryId,
                                                 @RequestParam(name = "page", defaultValue = "0") int page,
                                                 @RequestParam(name = "size", defaultValue = "9") int size) {
-        LOGGER.info("GET /api/v1/recipes?page={}&size={}&name={}", page, size, name);
+        LOGGER.info("GET /api/v1/recipes?page={}&size={}&name={}&categoryId={}", page, size, name, categoryId);
         Pageable pageable = PageRequest.of(page, size);
 
-        return recipeService.getRecipesByName(name, pageable);
+        RecipeSearchDto searchDto = new RecipeSearchDto(name, categoryId);
+        if (categoryId != 0) {
+            return recipeService.getRecipesByNameCategories(searchDto, pageable);
+        } else {
+            return recipeService.getRecipesByName(name, pageable);
+        }
     }
 
     @PostMapping("/verify/{id}")

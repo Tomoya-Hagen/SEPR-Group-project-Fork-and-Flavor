@@ -23,6 +23,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -126,5 +128,22 @@ class RatingEndpointTest implements TestData {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+    @Test
+    void getRatingFromUserByIdReturnsRatingsWhenUserExists() throws Exception {
+        long userId = 2L;
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/ratings/user/" + userId)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(10));
+    }
+
+    @Test
+    void getRatingFromUserByIdThrowsNotFoundExceptionWhenUserDoesNotExist() throws Exception {
+        long userId = 9999L;
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/ratings/user/" + userId)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }

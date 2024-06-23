@@ -11,6 +11,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import {Globals} from '../global/globals';
 import {RecipeSearch} from "../dtos/recipe";
 import { Page } from '../models/page.model';
+import {Category} from "../dtos/category";
 
 /**
  * Service for handling recipe books.
@@ -39,15 +40,17 @@ export class RecipeService {
   public search(searchParams: RecipeSearch, page: number, size: number): Observable<any> {
     const params = {
       name: searchParams.name,
+      categoryId: searchParams.categoryId,
       page: page.toString(),  // Ensure zero-based page indexing
       size: size.toString()
     };
     return this.http.get<any>(this.baseUri + '', { params });
   }
 
-  recipesByName(name: string, limit: number): Observable<RecipeListDto[]> {
+  recipesByName(name: string, id:number, limit: number): Observable<RecipeListDto[]> {
     let params = new HttpParams()
       .set('name', name)
+      .set('categoryId', id)
       .set('limit', limit.toString());
 
     return this.http.get<Page<RecipeListDto>>(this.baseUri, { params })
@@ -72,15 +75,15 @@ export class RecipeService {
     return this.http.put<Recipe[]>(this.baseUri + '/' + id + '/goesWellWith', recipes);
   }
 
-  getRecipes(name: string, page: number, size: number): Observable<Page<Recipe>> {
+  getRecipes(name: string, id: number, page: number, size: number): Observable<Page<Recipe>> {
     let params = new HttpParams()
       .set('name', name)
+      .set('categoryId', id)
       .set('page', page.toString())
       .set('size', size.toString());
 
     return this.http.get<Page<Recipe>>(this.baseUri, { params });
   }
-
 
   public getRecipeDetailsBy(recipeId: number): Observable<RecipeDetailDto> {
     return this.http.get<RecipeDetailDto>(
@@ -94,9 +97,10 @@ export class RecipeService {
     );
   }
 
-  public recipeByName(name: string, limit: number | undefined): Observable<SimpleRecipe[]> {
+  public recipeByName(name: string, id:number, limit: number | undefined): Observable<SimpleRecipe[]> {
     let params = new HttpParams();
     params = params.append("name", name);
+    params = params.append("categoryId", id);
     if (limit != null) {
       params = params.append("limit", limit);
     }

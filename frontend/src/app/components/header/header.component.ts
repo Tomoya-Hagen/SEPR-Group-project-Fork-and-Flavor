@@ -1,8 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
-import {UserService} from "../../services/user.service";
-import {userDto} from "../../dtos/user";
-import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-header',
@@ -10,22 +7,15 @@ import {ToastrService} from "ngx-toastr";
   styleUrls: ['./header.component.scss']
 })
 
-export class HeaderComponent implements OnInit {
+export class HeaderComponent{
 
-  protected user: userDto;
+  constructor(public authService: AuthService) { }
 
-  constructor(public authService: AuthService, private userService: UserService, private notification: ToastrService) { }
+  getUser(): string {
+    return localStorage.getItem("username");
+  }
 
-  ngOnInit() {
-    this.userService.getCurrentUser().subscribe({
-      next: (data: userDto) => {
-        this.user = data;
-      },
-      error: (error: any) => {
-/*
-        this.notification.error('You are not logged in as user', 'Authentication Error');
-*/
-      }
-    })
+  getUserId(): number {
+    return Number(localStorage.getItem("userId"));
   }
 }

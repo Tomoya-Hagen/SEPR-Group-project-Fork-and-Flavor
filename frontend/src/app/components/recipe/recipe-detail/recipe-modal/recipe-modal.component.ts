@@ -39,7 +39,7 @@ export class RecipeModalComponent implements OnInit{
 
   loadRecipes() {
     if (this.newRecipeName.trim()) {
-      this.recipeService.getRecipes(this.newRecipeName, this.page, this.size).subscribe((page: Page<Recipe>) => {
+      this.recipeService.getRecipes(this.newRecipeName, 0,this.page, this.size).subscribe((page: Page<Recipe>) => {
         this.filteredRecipes = page.content.filter(recipe =>
           !this.recipes.some(r => r.name === recipe.name)
         );

@@ -27,11 +27,11 @@ public interface RecipeStepMapper {
     default ArrayList<RecipeStepDetailDto> recipeStepListToRecipeStepDetailDtoList(
         List<RecipeStep> recipeSteps) {
         ArrayList<RecipeStepDetailDto> result = new ArrayList<>();
-        for (int i = 0; i < recipeSteps.size(); i++) {
-            if (recipeSteps.get(i) instanceof RecipeRecipeStep recipeRecipeStep) {
+        for (RecipeStep recipeStep : recipeSteps) {
+            if (recipeStep instanceof RecipeRecipeStep recipeRecipeStep) {
                 result.add(recipeStepToRecipeStepDetailDto(recipeRecipeStep));
             } else {
-                result.add(recipeStepToRecipeStepDetailDto((RecipeDescriptionStep) recipeSteps.get(i)));
+                result.add(recipeStepToRecipeStepDetailDto((RecipeDescriptionStep) recipeStep));
             }
         }
         return result;

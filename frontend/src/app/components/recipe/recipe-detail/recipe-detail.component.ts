@@ -1,4 +1,16 @@
 import {Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs/internal/Observable';
+import {Recipe, RecipeDetailDto} from 'src/app/dtos/recipe';
+import { RecipeBookListDto } from 'src/app/dtos/recipe-book';
+import { RecipeStepDetailDto, RecipeStepRecipeDetailDto } from 'src/app/dtos/recipe-step';
+import { RecipeService } from 'src/app/services/recipe.service';
+import { RecipeBookService } from 'src/app/services/recipebook.service';
+import { Title } from '@angular/platform-browser';
+import { UserService } from 'src/app/services/user.service';
+import {Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ToastrService} from 'ngx-toastr';
@@ -10,6 +22,12 @@ import {RecipeBookService} from 'src/app/services/recipebook.service';
 import {Title} from '@angular/platform-browser';
 import {UserService} from 'src/app/services/user.service';
 import {RecipeModalComponent} from "./recipe-modal/recipe-modal.component";
+import { RatingCreateDto, RatingListDto } from 'src/app/dtos/rating';
+import { RatingService } from 'src/app/services/rating.service';
+import { NgForm } from '@angular/forms';
+import {AuthService} from "../../../services/auth.service";
+import {tap} from "rxjs/operators";
+import {catchError, of} from "rxjs";
 import {RatingCreateDto, RatingListDto} from 'src/app/dtos/rating';
 import {RatingService} from 'src/app/services/rating.service';
 import {NgForm} from '@angular/forms';
@@ -42,8 +60,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     isVerified: false,
   };
 
-  cost = 0;
-  ratingValues = [0, 1, 2, 3, 4, 5];
   ratings: RatingListDto[] = [];
   dummyRecipeBookSelectionModel: unknown;
   recipeSteps = [];
@@ -84,6 +100,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   totalElements: number;
   page: number = 1;
   size: number = 3;
+  loggedIn: boolean = false;
+  hasRated: boolean = false;
   menuOptions = [
     {
       label: 'Neues Rezept erstellen',
@@ -120,8 +138,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private recipeBookService: RecipeBookService,
     private titleService: Title,
     private userService: UserService,
-  ) {
-  }
+    private authService: AuthService,
+  ) { }
 
   ngOnInit(): void {
     this.screenWidth = window.innerWidth;
@@ -155,6 +173,13 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         }
       });
     });
+    this.authService.isLogged()
+      .pipe(
+        tap((isLoggedIn: boolean) => {
+          this.loggedIn = true;
+        })
+      )
+      .subscribe();
   }
 
   getBadgesUser() {
@@ -180,43 +205,55 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.titleService.setTitle("Fork & Flavour");
   }
 
+  getCategoryList(): string {
+    return this.recipe.categories.map(category => category.name).join(', ');
+  }
+
+  updateMenuOptions() {
+    this.menuOptions = [
+      {
+        label: 'Neues Rezept erstellen',
+        action: () => this.addRecipe()
+      },
+      {
+        label: 'Rezept bearbeiten',
+        action: () => this.editRecipe(),
+        disabled: !this.isOwner
+      },
+      {
+        label: 'Rezept forken',
+        action: () => this.fork()
+      },
+      {
+        label: 'Rezept spoonen', buttonClass: 'info-box-3',
+        iconClass: 'info-box-3',
+        action: () => this.openSpoonModal(this.spoonRecipeModal)
+      },
+      {
+        label: 'Rezepte die gut dazupassen bearbeiten',
+        action: () => this.openRecipeGoesWellWithModal(),
+        disabled: !this.isOwner
+      }
+    ];
+  }
+
   roundTo(value: number): number {
     const factor = Math.pow(10, 1);
     return Math.round(value * factor) / factor;
   }
 
-  onPortionsInput(portionInput: HTMLInputElement): void {
-    let value = portionInput.value;
-    if (value === '') {
-      // Allow empty value temporarily
-      this.selectedPortions = null;
-    } else {
-      let numericValue = parseInt(value, 10);
-      if (!isNaN(numericValue)) {
-        if (numericValue <= 0) {
-          numericValue = 1;
-        } else if (numericValue >= 11) {
-          numericValue = 10;
-        }
-        portionInput.value = numericValue.toString();
-        this.selectedPortions = numericValue;
-        if (this.selectedPortions >= 1 && this.selectedPortions <= 10) {
-          this.onPortionsChange();
-        }
-      }
+  increment() {
+    if (this.selectedPortions < 10) {
+      this.selectedPortions++;
+      this.onPortionsChange();
     }
   }
 
-  onPortionsBlur(portionInput: HTMLInputElement): void {
-    let value = parseInt(portionInput.value, 10);
-    if (isNaN(value) || value <= 0) {
-      value = 1;
-    } else if (value >= 11) {
-      value = 10;
+  decrement() {
+    if (this.selectedPortions > 1) {
+      this.selectedPortions--;
+      this.onPortionsChange();
     }
-    portionInput.value = value.toString();
-    this.selectedPortions = value;
-    this.onPortionsChange();
   }
 
   onPortionsChange(): void {
@@ -245,22 +282,21 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     return recipeStep.hasOwnProperty('description') && !('recipe' in recipeStep);
   }
 
-  isCategoriesNotEmpty(): boolean {
+  isCategoriesNotEmpty(): boolean{
     return this.recipe.categories.length != 0;
   }
-
-  isAllergensNotEmpty(): boolean {
+  isAllergensNotEmpty(): boolean{
     return this.recipe.allergens.length != 0;
   }
 
-  isForkedFromRecipe(): boolean {
+  isForkedFromRecipe(): boolean{
     if (this.recipe.id == this.recipe.forkedFromId) {
       return false;
     }
     return this.recipe.forkedFromId != 0 && this.recipe.forkedFromId != null;
   }
 
-  getForkedFromRecipeName() {
+  getForkedFromRecipeName(){
     if (this.recipe.forkedFromId == 0 || this.recipe.forkedFromId == null) {
       return;
     }
@@ -289,23 +325,25 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   spoon(form) {
     this.submitted = true;
-    this.spoonRecipe(this.recipe.id, this.currentRecipeBook.id);
+
+
+    this.spoonRecipe(this.recipe.id,this.currentRecipeBook.id);
   }
 
-  private spoonRecipe(recipeId: number, recipeBookId: number) {
-    this.recipeBookService.spoonRecipe(recipeId, recipeBookId).subscribe({
-        next: () => {
-          this.notification.success(`Rezepte hinzufügen war erfolgreich.`, "Rezepte erstellen erfolgreich!");
-          this.modalService.dismissAll();
-          this.currentRecipeBook = null;
-        },
-        error: error => {
-          this.notification.error(error);
-          this.defaultServiceErrorHandling(error);
+  private spoonRecipe(recipeId:number, recipeBookId:number) {
+    this.recipeBookService.spoonRecipe(recipeId,recipeBookId).subscribe({
+          next: () => {
+            this.notification.success(`Rezepte hinzufügen war erfolgreich.`, "Rezepte erstellen erfolgreich!");
+            this.modalService.dismissAll();
+            this.currentRecipeBook=null;
+          },
+          error: error => {
+            this.notification.error(error);
+            this.defaultServiceErrorHandling(error);
+          }
         }
-      }
-    );
-  }
+      );
+    }
 
   private defaultServiceErrorHandling(error: any) {
     console.log(error);
@@ -315,18 +353,18 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       this.notification.error('Spoon Rezepte ist nicht möglich.' + this.errorMessage, 'Backend Fehler - Rezepte');
     } else {
       this.errorMessage = error.error;
-      this.notification.error('Spoon Rezepte ist nicht möglich.' + this.errorMessage, 'Backend Fehler - Rezepte');
+      this.notification.error( 'Spoon Rezepte ist nicht möglich.' + this.errorMessage, 'Backend Fehler - Rezepte');
     }
   }
 
   recipeBookSuggestions = (input: string): Observable<RecipeBookListDto[]> =>
     this.recipeBookService.getRecipeBooksTheUserHasWriteAccessTo()
 
-  public formatRecipeBook(recipeBook: RecipeBookListDto | null): string {
-    return !recipeBook
-      ? ""
-      : `${recipeBook.name}`
-  }
+    public formatRecipeBook(recipeBook: RecipeBookListDto | null): string {
+      return !recipeBook
+        ? ""
+        : `${recipeBook.name}`
+    }
 
   public selectRecipeBook(recipeBook: RecipeBookListDto | null) {
     this.currentRecipeBook = recipeBook;
@@ -382,53 +420,63 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       if (currentUser && this.recipe.ownerId === currentUser.id) {
         this.isOwner = true;
       }
+      this.updateMenuOptions();
     });
   }
 
-  loadRatings() {
+  loadRatings(){
     this.ratingService.getRatingsByRecipeId(this.recipe.id).subscribe({
-        next: data => {
-          this.notification.success(`Ratings loaded successfully.`);
-          this.ratings = data;
-          this.areRatingsLoaded = true;
-        },
-        error: error => {
-          this.notification.error(error);
-          this.defaultServiceErrorHandling(error);
-        }
+      next: data => {
+        this.notification.success(`Ratings loaded successfully.`);
+        this.ratings = data;
+        this.areRatingsLoaded = true;
+        // @ts-ignore
+        this.hasRated = this.ratings.some(rating => rating.user.name === localStorage.getItem("username"));
+        console.log(this.hasRated);
+      },
+      error: error => {
+        this.notification.error(error);
+        this.defaultServiceErrorHandling(error);
       }
-    );
+    }
+  );
   }
 
-  onSubmitRating(form: NgForm) {
+  onSubmitRating(form:NgForm){
     this.ratingService.createRating(this.rating).subscribe({
-        next: () => {
-          this.notification.success(`Rating added successfully.`);
-          this.modalService.dismissAll();
-          this.currentRecipeBook = null;
-          this.loadRatings();
-        },
-        error: error => {
-          this.notification.error(error);
-          this.defaultServiceErrorHandling(error);
-        }
+      next: () => {
+        this.notification.success(`Rating added successfully.`);
+        this.modalService.dismissAll();
+        this.currentRecipeBook=null;
+        this.loadRatings();
+        this.hasRated = true;
+      },
+      error: error => {
+        this.notification.error(error);
+        this.defaultServiceErrorHandling(error);
       }
-    );
+    }
+  );
   }
 
   openRatingModal(modal: TemplateRef<any>) {
-    this.modalService.open(modal, {ariaLabelledBy: 'modal-basic-title'});
+    if (this.loggedIn){
+      this.modalService.open(modal, {ariaLabelledBy: 'modal-basic-title'});
+    } else {
+      this.notification.error('Sie müssen eingeloggt sein, um ein Rating abzugeben.', 'Nicht eingeloggt');
+      this.router.navigate(['/login']);
+    }
   }
 
   closeRatingModal() {
     this.modalService.dismissAll();
   }
 
-  isFormValid(): boolean {
+  isFormValid():boolean{
     return this.rating.cost != 0 &&
-      this.rating.easeOfPrep != 0 &&
-      this.rating.taste != 0 &&
-      this.rating.review.length > 0
+    this.rating.easeOfPrep != 0 &&
+    this.rating.taste != 0 &&
+    this.rating.review.length > 0
   }
 
   public selectEaseOfPrep(value: number | null) {
@@ -445,8 +493,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   async getRecipesGoingWellTogether(): Promise<void> {
     const data = this.service.getGoesWellWith(this.recipe.id, this.page - 1, this.size)
-      .subscribe({
-        next: (data: any): void => {
+      .subscribe( {
+        next: (data: any) : void => {
           this.recipes = data.content;
           this.totalElements = data.totalElements;
         },
@@ -454,13 +502,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           console.error('Error fetching recipes.', error);
           this.notification.error('Rezepte können nicht abgerufen werden.', 'Backend Fehler - Rezepte');
         }
-      })
+    })
   }
 
   onPageChange(pageNumber: number): void {
     this.page = pageNumber;
-    this.getRecipesGoingWellTogether().then(r => {
-    });
+    this.getRecipesGoingWellTogether().then(r => {});
   }
 
   detail(id: number): void {
@@ -503,4 +550,3 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     }
   }
 }
-

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AuthRequest} from '../dtos/auth-request';
-import {catchError, Observable, of} from 'rxjs';
+import { Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
 import {jwtDecode} from 'jwt-decode';
@@ -26,6 +26,7 @@ export class AuthService {
     return this.httpClient.post(this.authBaseUri, authRequest, {responseType: 'text'})
       .pipe(
         tap((authResponse: string) => this.setToken(authResponse))
+
       );
   }
 
@@ -67,6 +68,8 @@ export class AuthService {
   logoutUser() {
     console.log('Logout');
     localStorage.removeItem('authToken');
+    localStorage.removeItem("username");
+    localStorage.removeItem("userId")
   }
 
   getToken() {

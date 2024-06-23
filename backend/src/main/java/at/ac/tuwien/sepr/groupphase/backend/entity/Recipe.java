@@ -47,6 +47,10 @@ public class Recipe {
     @JoinColumn(name = "owner_id", nullable = false)
     private ApplicationUser owner;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(
             name = "recipe_category",
@@ -175,12 +179,27 @@ public class Recipe {
         this.categories = categories;
     }
 
+    public void addCategory(Category category) {
+        if (this.categories == null) {
+            this.categories = new ArrayList<>();
+        }
+        this.categories.add(category);
+    }
+
     public Boolean getIsDraft() {
         return isDraft;
     }
 
     public void setIsDraft(Boolean draft) {
         isDraft = draft;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     @Override
@@ -250,6 +269,7 @@ public class Recipe {
         private Recipe forkedFrom;
         private ApplicationUser owner;
         private List<Category> categories;
+        private Category category;
         private Boolean isDraft;
         private List<RecipeBook> recipeBooks;
         private List<Rating> ratings;
@@ -359,6 +379,7 @@ public class Recipe {
             recipe.setForkedFrom(forkedFrom);
             recipe.setOwner(owner);
             recipe.setCategories(categories);
+            recipe.setCategory(category);
             recipe.setIsDraft(isDraft);
             recipe.setRecipeSteps(recipeSteps);
             recipe.setIngredients(ingredients);

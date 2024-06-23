@@ -4,6 +4,8 @@ import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {AuthRequest} from '../../dtos/auth-request';
 import {ToastrService} from "ngx-toastr";
+import {userDto} from "../../dtos/user";
+import {UserService} from "../../services/user.service";
 
 
 @Component({
@@ -22,7 +24,8 @@ export class LoginComponent implements OnInit {
 
   constructor(private formBuilder: UntypedFormBuilder,
               private notification: ToastrService,
-              private authService: AuthService, private router: Router) {
+              private authService: AuthService, private router: Router,
+              private userService: UserService) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]]
@@ -48,9 +51,10 @@ export class LoginComponent implements OnInit {
    * @param authRequest authentication data from the user login form
    */
   authenticateUser(authRequest: AuthRequest) {
-    console.log('Try to authenticate user: ' + authRequest.email);
+    console.log('Trying to authenticate user: ' + authRequest.email);
     this.authService.loginUser(authRequest).subscribe({
       next: () => {
+        this.setUserName();
         console.log('Successfully logged in user: ' + authRequest.email.toString());
         this.notification.success('Erfolgreich eingeloggt als Benutzer: ' + authRequest.email.toString(), "Authentifizierung erfolgreich!")
         this.router.navigate(['/']);
@@ -58,12 +62,7 @@ export class LoginComponent implements OnInit {
       error: error => {
         console.log('Could not log in due to:');
         console.log(error);
-        this.error = true;
-        if (typeof error.error === 'object') {
-          this.notification.error("Passwort passt nicht mit Username überein.", "Authentifizierung Fehler");
-        } else {
-          this.notification.error("Konnte den Benutzer mit der Email Adresse: " + authRequest.email.toString() + " nicht finden.", "Authentifizierung Fehler");
-        }
+        this.notification.error("E-Mail oder Passwort falsch.")
       }
     });
   }
@@ -86,4 +85,15 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/login/reset']);
   }
 
+  setUserName() {
+    this.userService.getCurrentUser().subscribe({
+      next: (data: userDto) => {
+        localStorage.setItem("username",data.name);
+        localStorage.setItem("userId",String(data.id));
+      },
+      error: (error: any) => {
+        this.notification.error('You are not logged in as user', 'Authentication Error');
+      }
+    })
+  }
 }

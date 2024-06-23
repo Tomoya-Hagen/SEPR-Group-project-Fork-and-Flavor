@@ -24,4 +24,8 @@ export class RatingService {
       this.baseUri + "/recipe/" + recipeId
     );
   }
+
+  public getRatingsByUserId(userId: number): Observable<RatingListDto[]> {
+    return this.http.get<RatingListDto[]>(this.baseUri + "/user/" + userId);
+  }
 }

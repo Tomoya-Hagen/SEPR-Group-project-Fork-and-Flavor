@@ -1,38 +1,30 @@
 <div class="jumbotron mt-5">
   <h1 class="display-4 text-center mb-5">{{ recipeBook.name }}</h1>
-  <div class="row">
-    <div class="col-md-6 offset-md-3">
-      <h4>Description:</h4>
+  <div class="RecipeInfos">
+    <div class="info-box info-box-1">
+      <h4>Beschreibung:</h4>
       <p>{{ recipeBook.description }}</p>
-
-      <h4 class="mt-4">Recipes:</h4>
-      <table class="table">
-        <tbody>
-        <tr *ngFor="let recipe of recipeBook.recipes">
-          <td>{{ recipe.name }}</td>
-          <td>{{ recipe.description }}</td>
-          <td>
-            <button class="btn btn-primary btn-sm"
-                    [routerLink]="['/recipe/details', recipe.id]">
-              Go to recipe
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
     </div>
-    <div class="col-2" >
-      <p class="fs-4">Owner:</p>
-      <ul>
-        <li><a (click)="openUserPage()" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{{ recipeBook.owner.name }}</a></li>
-      </ul>
-      <p class="fs-4" *ngIf="recipeBook.users.length !== 0">Contributors:</p>
-      <ul class="list-style-none " *ngFor="let users of recipeBook.users">
-        <li class="mb-2" [routerLink]="['/userpage', users.id]"><a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{{ users.name }}</a></li>
-      </ul>
+    <div class="info-box info-box-2" >
+      <h4 class="fs-4">Besitzer:</h4>
+      <div>
+        <span (click)="openUserPage()">{{ recipeBook.owner.name }}</span>
+      </div>
+    </div>
+    <div class="info-box info-box-3" *ngIf="recipeBook.users.length !== 0">
+      <h4 class="fs-4" *ngIf="recipeBook.users.length !== 0">Bearbeiter:</h4>
+      <div class="list-style-none" *ngIf="recipeBook.users.length !== 0">
+    <span *ngFor="let user of recipeBook.users; let i = index">
+      <span [routerLink]="['/userpage', user.id]">{{ user.name }}</span><span *ngIf="i < recipeBook.users.length - 1">, </span>
+    </span>
+      </div>
     </div>
   </div>
-  <div style="text-align: right;position: relative; margin: 30px">
-    <button *ngIf="isOwner" type="button" class="btn btn-primary btn-sm" (click)="editRecipeBook()" style="margin-right: 10px;">edit recipe book</button>
+  <h4 class="mt-4">Rezepte:</h4>
+  <div class="row">
+    <div class="col-lg-4 p-2" *ngFor="let item of recipeBook.recipes">
+      <app-card [item]="item" [detailUrlPrefix]="'/recipe/details'"></app-card>
+    </div>
   </div>
 </div>
+<app-floating-menu [options]="menuOptions"></app-floating-menu>

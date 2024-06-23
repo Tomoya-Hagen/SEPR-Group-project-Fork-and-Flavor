@@ -1,56 +1,70 @@
 <div class="jumbotron mt-5">
-  <div class="row">
-    <div class="col-6 col-md-4">
-      <div>
-        <h1>{{ user.name }}</h1>
-        <button *ngIf="isMyPage" class="btn btn-light btn-lg " routerLink="/userpage/{{user.id}}/edit">
-          <i class="bi bi-pencil-fill"></i>  Edit profile
-        </button>
-        <h5 class="h5 mb-3 margin-top-5"><i class="bi bi-book"></i> {{ recipeBook.length }} RecipeBooks</h5>
-        <h5 class="h5 mb-3 margin-top-5"><i class="bi bi-receipt"></i> {{ recipes.length }} Recipes</h5>
-      </div>
-      <div class="border-top">
-        <h2 class="h2 mb-3 margin-top-5"><p>Badges</p></h2>
-        <ul>
-          <h5 *ngFor="let r of role"><i class="bi bi-gem"></i> {{ r }}</h5>
-        </ul>
-      </div>
-      <div class="border-top">
-        <h2 class="h2 mb-3 margin-top-5">latest Reviews</h2>
-        <p></p>
-      </div>
-    </div>
-    <div class="col-12 col-md-8">
-      <h4 class="mt-4" *ngIf="recipeBook.length !== 0">Recipe books:</h4>
-      <table class="table">
-        <tbody>
-        <tr *ngFor="let recipe of recipeBook">
-          <td>{{ recipe.name }}</td>
-          <td>{{ recipe.description }}</td>
-          <td>
-            <button class="btn btn-primary btn-sm"
-                    [routerLink]="['/recipebook/details', recipe.id]">
-              Go to recipe book
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      <h4 class="mt-4" *ngIf="recipes.length !== 0">Recipes:</h4>
-      <table class="table">
-        <tbody>
-        <tr *ngFor="let recipe of recipes">
-          <td>{{ recipe.name }}</td>
-          <td>{{ recipe.description }}</td>
-          <td>
-            <button class="btn btn-primary btn-sm"
-                    [routerLink]="['/recipe/details', recipe.id]">
-              Go to recipe
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+  <div>
+    <div class="rcp-d">
+      <h1 class="display-4">{{ user.name }}</h1>
     </div>
   </div>
+  <br>
+  <div class="RecipeInfos">
+    <div class="info-box info-box-1">
+      <h4>Rezepte:</h4>
+      <p class="number">{{recipes.length}}</p>
+    </div>
+    <div class="info-box info-box-2">
+      <h4>Rezeptbücher:</h4>
+      <p class="number">{{recipeBook.length}}</p>
+    </div>
+    <div class="info-box info-box-3">
+      <h4>Badges:</h4>
+      <p class="badges">abc, abc, abc</p>
+    </div>
+  </div>
+
+  <br>
+  <div class="row mb-3 justify-content-center d-flex align-items-center" *ngIf="recipes.length">
+    <h2 class="display-6 ">Rezepte:</h2>
+    <div class="row">
+      <div class="col-lg-4 p-2" *ngFor="let recipe of recipes">
+        <app-card [item]="recipe" [detailUrlPrefix]="'/recipe/details'"></app-card>
+      </div>
+    </div>
+  </div>
+
+  <br>
+  <div class="row mb-3 justify-content-center d-flex align-items-center" *ngIf="recipeBook.length">
+    <h2 class="display-6 ">Rezeptbücher:</h2>
+    <div class="row">
+      <div class="col-lg-4 p-2" *ngFor="let recipe of recipeBook">
+        <app-card [item]="recipe" [detailUrlPrefix]="'/recipe/details'"></app-card>
+      </div>
+    </div>
+  </div>
+
+  <br>
+  <div class="row mb-3 justify-content-center d-flex align-items-center" *ngIf="ratings.length">
+    <h2 class="display-6 ">Bewertungen:</h2>
+    <div class="ratings-wrapper">
+      <div *ngFor="let rating of ratings" class="rating-box" (click)="goToRecipeDetails(rating.recipeId)">
+        <div class="rating-header">
+          <p class="user-name">{{ rating.name }}</p>
+        </div>
+        <div class="rating-details">
+          <p>Geschmack:
+            <app-star-rating [disabled]="true" [value]="rating.taste"></app-star-rating>
+          </p>
+          <p>Einfachheit:
+            <app-star-rating [disabled]="true" [value]="rating.easeOfPrep"></app-star-rating>
+          </p>
+          <p>Kosten:
+            <app-star-rating [disabled]="true" [value]="rating.cost"></app-star-rating>
+          </p>
+          <p class="review">{{ rating.review }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
+
+
+<app-floating-menu *ngIf="isMyPage" [options]="menuOptions"></app-floating-menu>

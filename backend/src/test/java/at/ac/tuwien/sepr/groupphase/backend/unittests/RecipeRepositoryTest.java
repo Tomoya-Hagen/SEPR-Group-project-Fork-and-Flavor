@@ -74,7 +74,7 @@ class RecipeRepositoryTest {
         eggFriedRiceRecipe.setName("Egg Fried Rice");
         eggFriedRiceRecipe.setDescription("Ein schnelles asiatisches Gericht.");
         eggFriedRiceRecipe.setCategories(List.of(
-            categoryRepository.findByNameAndType("Hautpspeise", "MAIN_COURSE").get())
+            categoryRepository.findByNameAndType("Hauptspeise", "MAIN_COURSE").get())
         );
         eggFriedRiceRecipe.setNumberOfServings((short) 1);
         eggFriedRiceRecipe.setIngredients(List.of(
@@ -175,7 +175,7 @@ class RecipeRepositoryTest {
         user.setId(1L);
 
         List<Recipe> result = recipeRepository.findRecipesByOwnerId(1L);
-        assertEquals(81, result.size());
+        assertEquals(82, result.size());
         assertEquals(user.getId(), result.get(0).getOwner().getId());
         assertEquals(user.getId(), result.get(1).getOwner().getId());
     }

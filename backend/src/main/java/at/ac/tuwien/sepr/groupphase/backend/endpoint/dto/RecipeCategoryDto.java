@@ -12,7 +12,6 @@ public class RecipeCategoryDto {
     public RecipeCategoryDto() {
     }
 
-
     public RecipeCategoryDto(long id) {
         this.id = id;
     }
