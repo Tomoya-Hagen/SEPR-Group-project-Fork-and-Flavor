@@ -219,4 +219,21 @@ class RecipeBookEndpointTest implements TestData {
                 .content(new ObjectMapper().writeValueAsString(recipeBookCreateDto)))
             .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void getUserIdForRecipeBookIdReturnsUserIdWhenRecipeBookExists() throws Exception {
+        long recipeBookId = 1L;
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/recipebook/" + recipeBookId + "/getUserId")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().string("1"));
+    }
+
+    @Test
+    void getUserIdForRecipeBookIdThrowsNotFoundExceptionWhenRecipeBookDoesNotExist() throws Exception {
+        long recipeBookId = 9999L;
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/recipebook/" + recipeBookId + "/getUserId")
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
 }

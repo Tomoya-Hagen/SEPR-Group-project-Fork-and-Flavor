@@ -14,6 +14,7 @@ import { RecipebookDetailComponent } from "./components/recipebook/recipebook-de
 import { RecipeEditComponent } from './components/recipe/recipe-edit/recipe-edit.component';
 import {UserpageComponent} from "./components/userpage/userpage.component";
 import {UserpageEditComponent} from "./components/userpage/userpage-edit/userpage-edit.component";
+import {NotFoundComponent} from "./components/not-found/not-found.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -35,11 +36,13 @@ const routes: Routes = [
       {path: 'create', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.create}},
       {path: 'edit/:id', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.edit}}
   ]},
-  {path: 'weekplan', component: WeekplanComponent},
+  {path: 'weekplan/:id', component: WeekplanComponent},
   {path: 'userpage', children:[
       {path: ':id', component: UserpageComponent},
       {path: ':id/edit', component: UserpageEditComponent},
-  ]}
+  ]},
+  { path: 'not-found', component: NotFoundComponent },
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({

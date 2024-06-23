@@ -3,7 +3,7 @@
     <div>
       <h1 class="text-center mb-4">{{ heading }}</h1>
     </div>
-      <div class="form-group">
+      <div class="form-group" *ngIf="isOwner">
         <label for="name">Name</label>
           <input  type="text"
                   id="name"
@@ -14,11 +14,11 @@
                   required
           >
           <div class="invalid-feedback">
-            Name is required
+            Name is erforderlich
           </div>
       </div>
-      <div class="form-group">
-        <label for="description">Description</label>
+      <div class="form-group" *ngIf="isOwner">
+        <label for="description">Beschreibung</label>
           <textarea id="description"
                     class="form-control desc"
                     placeholder="Enter a description for the recipe book"
@@ -32,7 +32,7 @@
       </div>
 
       <div>
-        <label>Recipes</label>
+        <label>Rezepte</label>
         <div class="row">
           <div class="mb-2">
             <app-automatic-complete
@@ -54,7 +54,7 @@
                 <td>{{formatRecipeName(recipe)}}</td>
                 <td class="min-width paperbin">
                   <button type="button"
-                          class="btn btn-light ms-2"
+                          class="btn btn-danger ms-2"
                           (click)="removeRecipe(i)"
                           [style.visibility]="recipe ? 'visible' : 'hidden'">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
@@ -73,8 +73,8 @@
         </div>
       </div>
 
-      <div>
-        <label>Users</label>
+      <div *ngIf="isOwner">
+        <label>Bearbeiter</label>
         <div class="row">
           <div class="mb-2">
             <app-automatic-complete
@@ -89,14 +89,14 @@
             </app-automatic-complete>
           </div>
 
-          <div>
+          <div *ngIf="isOwner">
             <table class="table align-baseline">
               <tbody>
               <tr *ngFor="let user of users; index as j">
                 <td>{{formatUserName(user)}}</td>
                 <td class="min-width paperbin">
                   <button type="button"
-                          class="btn btn-light ms-2"
+                          class="btn btn-danger ms-2"
                           (click)="removeUser(j)"
                           [style.visibility]="user ? 'visible' : 'hidden'">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
@@ -113,7 +113,10 @@
       </div>
 
       <div class="submit">
-        <button type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
+        <button [disabled]="!form.valid || !isFormValid()" type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
+      </div>
+      <div style="text-align: right;">
+        <button *ngIf="!isOwner" (click)="removeContributor()" type="button" class="btn btn-warning">Rezeptbuch verlassen</button>
       </div>
   </div>
 </form>

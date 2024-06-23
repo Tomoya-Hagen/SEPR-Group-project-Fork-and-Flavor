@@ -6,7 +6,8 @@ export interface RatingListDto {
     taste: number,
     easeOfPrep: number,
     review: String,
-    recipeId: number
+    recipeId: number,
+    name: String
 }
 
 export interface RatingCreateDto {

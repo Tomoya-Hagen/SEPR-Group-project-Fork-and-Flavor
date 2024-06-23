@@ -1,9 +1,9 @@
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs/internal/Observable';
-import {Recipe, RecipeDetailDto, RecipeListDto} from 'src/app/dtos/recipe';
+import {Recipe, RecipeDetailDto} from 'src/app/dtos/recipe';
 import { RecipeBookListDto } from 'src/app/dtos/recipe-book';
 import { RecipeStepDetailDto, RecipeStepRecipeDetailDto } from 'src/app/dtos/recipe-step';
 import { RecipeService } from 'src/app/services/recipe.service';
@@ -13,7 +13,10 @@ import { UserService } from 'src/app/services/user.service';
 import {RecipeModalComponent} from "./recipe-modal/recipe-modal.component";
 import { RatingCreateDto, RatingListDto } from 'src/app/dtos/rating';
 import { RatingService } from 'src/app/services/rating.service';
-import { Form, NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import {AuthService} from "../../../services/auth.service";
+import {tap} from "rxjs/operators";
+import {catchError, of} from "rxjs";
 
 @Component({
   selector: 'app-recipe-detail',
@@ -40,8 +43,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     forkedRecipes: []
   };
 
-  cost = 0;
-  ratingValues = [0,1,2,3,4,5];
   ratings: RatingListDto[] = [];
   dummyRecipeBookSelectionModel: unknown;
   recipeSteps = [];
@@ -79,6 +80,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   totalElements: number;
   page: number = 1;
   size: number = 3;
+  loggedIn: boolean = false;
+  hasRated: boolean = false;
   menuOptions = [
     {
       label: 'Neues Rezept erstellen',
@@ -115,6 +118,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     private recipeBookService: RecipeBookService,
     private titleService: Title,
     private userService: UserService,
+    private authService: AuthService,
   ) { }
 
   ngOnInit(): void {
@@ -140,18 +144,57 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           }
           this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
           this.onPageChange(1);
+
+
         },
         error: error => {
-          console.error('Error fetching recipe', error);
-          this.notification.error('Rezepte können nicht abgerufen werden.', "Backend Fehler - Rezepte");
-          this.router.navigate([''])
+          this.router.navigate(['not-found']);
         }
       });
     });
+    this.authService.isLogged()
+      .pipe(
+        tap((isLoggedIn: boolean) => {
+          this.loggedIn = true;
+        })
+      )
+      .subscribe();
   }
 
   ngOnDestroy(): void {
     this.titleService.setTitle("Fork & Flavour");
+  }
+
+  getCategoryList(): string {
+    return this.recipe.categories.map(category => category.name).join(', ');
+  }
+
+  updateMenuOptions() {
+    this.menuOptions = [
+      {
+        label: 'Neues Rezept erstellen',
+        action: () => this.addRecipe()
+      },
+      {
+        label: 'Rezept bearbeiten',
+        action: () => this.editRecipe(),
+        disabled: !this.isOwner
+      },
+      {
+        label: 'Rezept forken',
+        action: () => this.fork()
+      },
+      {
+        label: 'Rezept spoonen', buttonClass: 'info-box-3',
+        iconClass: 'info-box-3',
+        action: () => this.openSpoonModal(this.spoonRecipeModal)
+      },
+      {
+        label: 'Rezepte die gut dazupassen bearbeiten',
+        action: () => this.openRecipeGoesWellWithModal(),
+        disabled: !this.isOwner
+      }
+    ];
   }
 
   roundTo(value: number): number {
@@ -159,39 +202,20 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     return Math.round(value * factor) / factor;
   }
 
-  onPortionsInput(portionInput: HTMLInputElement): void {
-    let value = portionInput.value;
-    if (value === '') {
-      // Allow empty value temporarily
-      this.selectedPortions = null;
-    } else {
-      let numericValue = parseInt(value, 10);
-      if (!isNaN(numericValue)) {
-        if (numericValue <= 0) {
-          numericValue = 1;
-        } else if (numericValue >= 11) {
-          numericValue = 10;
-        }
-        portionInput.value = numericValue.toString();
-        this.selectedPortions = numericValue;
-        if(this.selectedPortions >= 1 && this.selectedPortions <= 10) {
-          this.onPortionsChange();
-        }
-      }
+  increment() {
+    if (this.selectedPortions < 10) {
+      this.selectedPortions++;
+      this.onPortionsChange();
     }
   }
 
-  onPortionsBlur(portionInput: HTMLInputElement): void {
-    let value = parseInt(portionInput.value, 10);
-    if (isNaN(value) || value <= 0) {
-      value = 1;
-    } else if (value >= 11) {
-      value = 10;
+  decrement() {
+    if (this.selectedPortions > 1) {
+      this.selectedPortions--;
+      this.onPortionsChange();
     }
-    portionInput.value = value.toString();
-    this.selectedPortions = value;
-    this.onPortionsChange();
   }
+
   onPortionsChange(): void {
     this.adjustIngredientsAndNutritions();
     this.changeIngredientsToGramm();
@@ -356,6 +380,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
       if (currentUser && this.recipe.ownerId === currentUser.id) {
         this.isOwner = true;
       }
+      this.updateMenuOptions();
     });
   }
 
@@ -365,6 +390,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         this.notification.success(`Ratings loaded successfully.`);
         this.ratings = data;
         this.areRatingsLoaded = true;
+        // @ts-ignore
+        this.hasRated = this.ratings.some(rating => rating.user.name === localStorage.getItem("username"));
+        console.log(this.hasRated);
       },
       error: error => {
         this.notification.error(error);
@@ -381,6 +409,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         this.modalService.dismissAll();
         this.currentRecipeBook=null;
         this.loadRatings();
+        this.hasRated = true;
       },
       error: error => {
         this.notification.error(error);
@@ -391,7 +420,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   }
 
   openRatingModal(modal: TemplateRef<any>) {
-    this.modalService.open(modal, { ariaLabelledBy: 'modal-basic-title' });
+    if (this.loggedIn){
+      this.modalService.open(modal, {ariaLabelledBy: 'modal-basic-title'});
+    } else {
+      this.notification.error('Sie müssen eingeloggt sein, um ein Rating abzugeben.', 'Nicht eingeloggt');
+      this.router.navigate(['/login']);
+    }
   }
 
   closeRatingModal() {

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FullRatingListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RatingMapper;
@@ -11,6 +12,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RatingService;
@@ -23,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +40,7 @@ public class RatingServiceImpl implements RatingService {
     private final UserManager userManager;
     private final EmailService emailService;
     private final BadgeService badgeService;
+    private final UserRepository userRepository;
 
     public RatingServiceImpl(RecipeRepository recipeRepository,
                              RatingRepository ratingRepository,
@@ -44,7 +48,7 @@ public class RatingServiceImpl implements RatingService {
                              RatingValidator ratingValidator,
                              UserManager userManager,
                              EmailService emailService,
-                             BadgeService badgeService) {
+                             BadgeService badgeService, UserRepository userRepository) {
         this.recipeRepository = recipeRepository;
         this.ratingRepository = ratingRepository;
         this.ratingMapper = ratingMapper;
@@ -52,6 +56,7 @@ public class RatingServiceImpl implements RatingService {
         this.userManager = userManager;
         this.emailService = emailService;
         this.badgeService = badgeService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -83,5 +88,28 @@ public class RatingServiceImpl implements RatingService {
             + rating.toEmailString() + "\n");
         badgeService.addRoleToUser(user, Roles.Contributor);
         return ratingMapper.mapRatingToRatingListDto(rating);
+    }
+
+    @Override
+    public List<FullRatingListDto> getRatingsByUserId(long id) throws NotFoundException {
+        LOGGER.trace("getRatingsByUserId({})", id);
+        ApplicationUser user = userRepository.findById(id).orElseThrow(NotFoundException::new);
+        List<Rating> ratings = ratingRepository.getRatingsByUserId(user.getId()).stream().toList();
+        List<RatingListDto> ratingsListDto =  ratingMapper.mapListOfRatingToListOfRatingListDto(ratings);
+        List<FullRatingListDto> fullRatingListDto = new ArrayList<>(ratingsListDto.size());
+        for (RatingListDto ratingListDto : ratingsListDto) {
+            fullRatingListDto.add(
+                new FullRatingListDto(
+                    ratingListDto.user(),
+                    ratingListDto.cost(),
+                    ratingListDto.taste(),
+                    ratingListDto.easeOfPrep(),
+                    ratingListDto.review(),
+                    ratingListDto.recipeId(),
+                    recipeRepository.getRecipeById(ratingListDto.recipeId()).orElseThrow(NotFoundException::new).getName()
+                )
+            );
+        }
+        return fullRatingListDto;
     }
 }

@@ -1,3 +1,52 @@
 <div class="jumbotron mt-5">
   <h1 class="display-4">Wochenplaner</h1>
+
+  <div class="d-flex justify-content-center m-5" *ngIf="weekplan.length === 0">
+    Du musst zuerst einen Wochenplan erstellen!
+  </div>
+
+  <div *ngIf="weekplan.length !== 0 && !mobile" class="row w-100">
+    <div class="col-sm-1 col-md-2 g-0 px-0  mx-0 border py-3" >
+      <div class="info-day-card py-3 px-0  mx-0 my-1 w-100" >
+        <div class="d-flex justify-content-center">
+          <strong>INFO</strong>
+        </div>
+        <div >
+          <div class="my-2 w-100 "><button name="btnInfo" type="button"  class="recipe-btn btn m-0 p-1 w-100 ">Frühstück</button></div>
+          <div class="my-2 w-100 "><button name="btnInfo" type="button"  class="recipe-btn btn m-0 p-1 w-100 ">Mitagessen</button></div>
+          <div class="my-2 w-100 "><button name="btnInfo" type="button"  class="recipe-btn btn m-0 p-1 w-100 ">Abendessen</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-11 col-md-10 d-flex overflow-x-auto border p-3" #scrollContainer>
+      <div class="day-card p-3 m-1 border rounded-2" *ngFor="let dayplan of weekplan; index as i">
+        <div class="">
+          <strong>{{ dayplan.date.toLocaleDateString()}}:</strong> {{ dayplan.day}}
+        </div>
+        <div class="">
+          <div class="m-2 w-100 "><button name="btn{{i}}1" [disabled]="!dayplan.breakfast" type="button" (click)="redirect(!dayplan.breakfast ? '0' : dayplan.breakfast.recipeId)"    class="recipe-btn btn w-100 btn-secondary">{{!dayplan.breakfast? '-' : dayplan.breakfast.recipename}}  </button></div>
+          <div class="m-2 w-100 "><button name="btn{{i}}2" [disabled]="!dayplan.lunch"         type="button" (click)="redirect(!dayplan.lunch ? '0' : dayplan.lunch.recipeId        )"        class="recipe-btn btn w-100 btn-secondary">{{!dayplan.lunch? '-' : dayplan.lunch.recipename}}          </button></div>
+          <div class="m-2 w-100 "><button name="btn{{i}}3" [disabled]="!dayplan.dinner"       type="button" (click)="redirect(!dayplan.dinner  ?  '0' : dayplan.dinner.recipeId        )"       class="recipe-btn btn w-100 btn-secondary">{{!dayplan.dinner? '-' : dayplan.dinner.recipename}}          </button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="weekplan.length !== 0 && mobile" class="w-100">
+    <div class="col-12 overflow-auto py-3">
+      <div class="">
+        <div class="w-100 p-3 my-1 border rounded-2" *ngFor="let dayplan of weekplan; index as i" style="min-width: 300px;">
+          <div>
+            <strong>{{ dayplan.date.toLocaleDateString() }}:</strong> {{ dayplan.day }}
+          </div>
+          <div class="">
+            <div class="m-2 w-100 "><button name="btn{{i}}1" type="button" (click)="redirect(dayplan.breakfast ? '0' : dayplan.breakfast.recipeId)"    class="recipe-btn btn w-100 btn-secondary">{{dayplan.breakfast? '-' : dayplan.breakfast.recipename}}  </button></div>
+            <div class="m-2 w-100 "><button name="btn{{i}}2"     type="button" (click)="redirect(dayplan.lunch ? '0' : dayplan.lunch.recipeId        )"        class="recipe-btn btn w-100 btn-secondary">{{dayplan.lunch? '-' : dayplan.lunch.recipename}}          </button></div>
+            <div class="m-2 w-100 "><button name="btn{{i}}3"    type="button" (click)="redirect(dayplan.lunch  ?  '0' : dayplan.lunch.recipeId        )"       class="recipe-btn btn w-100 btn-secondary">{{dayplan.lunch? '-' : dayplan.lunch.recipename}}          </button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

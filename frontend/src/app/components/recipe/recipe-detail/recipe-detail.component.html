@@ -45,15 +45,17 @@
     </div>
     <div class="info-box info-box-2">
       <h4>Portionen:</h4>
-      <input #portionInput type="number" [(ngModel)]="selectedPortions" (input)="onPortionsInput(portionInput)" (blur)="onPortionsBlur(portionInput)" class="input-width" min="1" max="10">
+      <div class="custom-number-input">
+        <button (click)="decrement()">-</button>
+        <span class="portionenzahl">{{ selectedPortions }}</span>
+        <button (click)="increment()">+</button>
+      </div>
     </div>
     <div class="info-box info-box-3" *ngIf="isCategoriesNotEmpty()">
       <h4>Kategorien:</h4>
-      <div *ngFor="let category of recipe.categories">
-        {{ category.name }}
-      </div>
+      <div>{{ getCategoryList() }}</div>
     </div>
-    <div class="info-box info-box-4">
+    <div class="info-box info-box-4" *ngIf="isAllergensNotEmpty()">
       <h4>Allergene: </h4>
       <div>
         <span *ngFor="let allergen of recipe.allergens; let isLast=last">
@@ -64,19 +66,13 @@
         none
       </div>
     </div>
-    <div class="info-box info-box-5 clickable" *ngIf="screenWidth <= 767"
-         style="box-shadow: 0 0 10px rgba(111, 66, 193, 0); background-color: rgba(111, 66, 193, 1);"
-         (click)="toggleNutrition()">
-      <h4>Nährwerte:</h4>
-      Click to Show
-    </div>
     <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--acent-color);"
          *ngIf="isForkedFromRecipe()">
       <h4>Geforkt von:</h4>
       <span>{{recipeForkedFrom}}</span>
     </div>
     <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: #08688e;" *ngIf="hasForkedRecipes">
-      <h4>Hiervon geforkt:</h4>
+      <h4>Geforkt:</h4>
       <div>
         <span *ngFor="let forkedFrom of recipeForkedFrom; let isLast=last">
            {{ recipeForkedFrom }}{{ isLast ? '' : ', ' }}
@@ -117,19 +113,20 @@
         <tbody>
         <tr *ngFor="let ingredient of recipe.ingredients">
           <td>{{ ingredient.name }}</td>
-          <td>{{ ingredient.amount }} {{ ingredient.unit }}</td>
+          <td>
+            <span *ngIf="ingredient.amount > 0">{{ ingredient.amount }}</span>
+            <span *ngIf="ingredient.unit !== 'EMPTY'"> {{ ingredient.unit }}</span>
+          </td>
         </tr>
         </tbody>
       </table>
       <h4>Beschreibung:</h4>
       <p>{{ recipe.description }}</p>
     </div>
-    <div class="edit-spoon">
-    </div>
 
     <!-- Nutrition Section -->
-    <div class="columns">
-      <div *ngIf="screenWidth > 767">
+    <div class="columns"  *ngIf="screenWidth > 767">
+      <div>
         <h4>Nährwerte:</h4>
         <table class="table">
           <tbody>
@@ -146,29 +143,10 @@
   <h2>Schritte:</h2>
 
   <div class="recipe-steps">
-    <ng-container *ngFor="let step of recipeSteps">
-      <div [ngClass]="{'recipe-step': true, 'sub-recipe': step.recipe}">
-        <h4 (click)="step.recipe && toggleStep(step)" class="rec-step">
-          <span *ngIf="step.recipe">
-            <img src="assets/images/icon_black.png" height="25px" alt="subrecepy" class="subrecepy-icon">
-          </span>
-          {{ step.name }}
-        </h4>
-        <p *ngIf="!step.recipe">{{ step.description }}</p>
-        <div *ngIf="step.recipe && step.expanded">
-          <ng-container *ngFor="let subStep of step.recipe.recipeSteps">
-            <div class="recipe-step">
-              <h5>{{ subStep.name }}</h5>
-              <p>{{ subStep.description }}</p>
-            </div>
-          </ng-container>
-        </div>
-        <button *ngIf="step.recipe && step.expanded" type="button" class="btn btn-primary btn-sm"
-                (click)="navigateToDetailsInNewTab(step.recipe.id)">zum Unterrezept
-        </button>
-      </div>
+    <ng-container *ngFor="let step of recipe.recipeSteps">
+      <app-recipe-step [step]="step"></app-recipe-step>
     </ng-container>
-
+  </div>
   </div>
 
 
@@ -189,7 +167,6 @@
       </ngb-pagination>
     </div>
   </div>
-</div>
 
 <!-- Ratings -->
 <hr class="my-4">
@@ -216,7 +193,7 @@
         </div>
     </div>
     <!-- Add Rating Box -->
-    <div class="rating-box add-rating-box" (click)="openRatingModal(ratingModal)" *ngIf="!isOwner">
+    <div class="rating-box add-rating-box" (click)="openRatingModal(ratingModal)" *ngIf="!isOwner && !hasRated">
       <div class="add-rating-text">+ Bewertung hinzufügen</div>
     </div>
   </ng-container>

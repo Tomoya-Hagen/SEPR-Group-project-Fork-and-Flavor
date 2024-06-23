@@ -35,6 +35,9 @@ export class RecipebookCreateEditComponent implements OnInit {
   currentUserId: number = 0;
   dummyUserSelectionModel: unknown;
   dummyRecipeSelectionModel: unknown;
+  isOwner: boolean = false;
+  currentUser: (userListDto | null);
+  canEdit: boolean = true;
 
   constructor(
     private recipeBookService: RecipeBookService,
@@ -50,6 +53,8 @@ export class RecipebookCreateEditComponent implements OnInit {
     this.userService.getCurrentUser().pipe(
       tap((user: userListDto) => {
         this.currentUserId = user.id;
+        this.currentUser = user;
+        this.isOwnerOfRecipeBook();
       }),
       switchMap(() => this.authService.isLogged()),
       tap((isLoggedIn: boolean) => {
@@ -59,7 +64,7 @@ export class RecipebookCreateEditComponent implements OnInit {
       console.error('Error:', error);
         this.notification.error('Sie müssen sich als Benutzer anmelden oder als Benutzer registrieren, um ein Rezeptbuch zu erstellen.' , 'Rezeptbuch kann nicht erstellt werden.');
         this.router.navigate(['/login']);
-      return of(false); // Handle the error and return a fallback value
+      return of(false);
     })
       )
       .subscribe();
@@ -70,12 +75,39 @@ export class RecipebookCreateEditComponent implements OnInit {
         this.recipes = recipeBook.recipes;
         this.users = recipeBook.users;
         this.mode = RecipeBookCreateEditMode.edit;
+        if (!this.canEdit) {
+          for (let i = 0; i < this.users.length; i++) {
+            if (this.currentUserId == this.users[i].id) {
+              this.canEdit = true;
+            }
+          }
+          if (!this.canEdit) {
+            this.notification.error('Sie können nicht Rezeptbücher bearbeiten, wo Sie nicht beteiligt sind.', 'Rezeptbuch kann nicht bearbeitet werden.');
+            this.router.navigate(['/recipebook']);
+          }
+        }
       });
+
     } else {
       this.mode = RecipeBookCreateEditMode.create;
+      this.isOwner = true;
     }
   }
 
+  isOwnerOfRecipeBook() {
+    const id = this.route.snapshot.params['id'];
+    if (id) {
+      this.recipeBookService.getUserIdByRecipeBookId(id).subscribe({
+        next: data => {
+          this.isOwner = (data == this.currentUserId);
+          this.canEdit = (data == this.currentUserId);
+        }, error: error => {
+          console.error('Error Fehler beim Laden der User id vom Rezeptbuch', error);
+          this.notification.error('Fehler beim Laden der User id vom Rezeptbuch.',"Fehler - User Id");
+        }
+      });
+    }
+  }
 
   public get heading(): string {
     switch (this.mode) {
@@ -108,17 +140,17 @@ export class RecipebookCreateEditComponent implements OnInit {
       }
       observable.subscribe({
         next: data => {
-          this.notification.success(`Recipe book ${this.recipeBook.name} successfully ${this.modeActionFinished}.`);
+          this.notification.success(`Rezeptbuch ${this.recipeBook.name} erfolgreich ${this.modeActionFinished}.`);
           this.router.navigate(['/recipebook']);
         },
         error: error => {
           if(this.mode === RecipeBookCreateEditMode.create) {
-            console.error('Error creating recipebook', error);
-            this.notification.error('Rezeptbuch kann nicht erstellt werden.', 'Backend Fehler - Rezeptbuch erstellen');
+            console.error('Error creating recipe book', error);
+            this.notification.error('Rezeptbuch kann nicht erstellt werden.', 'Fehler - Rezeptbuch erstellen');
           }
           if(this.mode === RecipeBookCreateEditMode.edit) {
-            console.error('Error editing recipebook', error);
-            this.notification.error('Rezeptbuch kann nicht bearbeitet werden.', 'Backend Fehler - Rezeptbuch bearbeiten');
+            console.error('Error editing recipe book', error);
+            this.notification.error('Rezeptbuch kann nicht bearbeitet werden.', 'Fehler - Rezeptbuch bearbeiten');
           }
         }
       });
@@ -128,9 +160,9 @@ export class RecipebookCreateEditComponent implements OnInit {
   private get modeActionFinished(): string {
     switch (this.mode) {
       case RecipeBookCreateEditMode.create:
-        return 'created';
+        return 'erstellt';
       case RecipeBookCreateEditMode.edit:
-        return 'updated';
+        return 'bearbeitet';
       default:
         return '?';
     }
@@ -139,9 +171,9 @@ export class RecipebookCreateEditComponent implements OnInit {
   public get submitButtonText(): string {
     switch (this.mode) {
       case RecipeBookCreateEditMode.create:
-        return 'Create';
+        return 'Erstellen';
       case RecipeBookCreateEditMode.edit:
-        return 'Update';
+        return 'Bearbeiten';
       default:
         return '?';
     }
@@ -149,7 +181,7 @@ export class RecipebookCreateEditComponent implements OnInit {
 
   recipeSuggestions = (input: string) => (input === '')
   ? of([])
-  :  this.recipeService.recipesByName(input, 5);
+  :  this.recipeService.recipesByName(input, 0,5);
 
   userSuggestions = (input: string) => (input === '')
   ? of([])
@@ -228,12 +260,32 @@ export class RecipebookCreateEditComponent implements OnInit {
       }
     });
   }
-public removeRecipe(index: number) {
-  this.recipes.splice(index, 1);
-}
 
-public removeUser(index: number) {
-  this.users.splice(index, 1);
-}
+  public removeRecipe(index: number) {
+    this.recipes.splice(index, 1);
+  }
 
+  public removeUser(index: number) {
+    this.users.splice(index, 1);
+  }
+
+  public removeContributor() {
+    for (let i = 0; i < this.users.length; i++) {
+      if(this.users[i].id == this.currentUserId) {
+        this.users.splice(i,1);
+        break;
+      }
+    }
+    this.recipeBookService.update(this.recipeBook, this.route.snapshot.params['id']).subscribe({
+      next: data => {
+        this.notification.success(`Rezeptbuch ${this.recipeBook.name} erfolgreich verlassen.`);
+        this.router.navigate(['/recipebook']);
+      },
+      error: error => {
+        console.error('Error leaving recipe book', error);
+        this.notification.error('Rezeptbuch kann nicht verlassen werden.', 'Fehler - Rezeptbuch verlassen');
+      }
+    });
+
+  }
 }

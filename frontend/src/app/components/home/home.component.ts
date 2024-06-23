@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit {
   }
 
   getRecipes(): void {
-    this.recipeService.getRecipes('', 0, 6)
+    this.recipeService.getRecipes('', 0,0, 6)
       .subscribe(data => {
         this.recipes = data.content;
       });
