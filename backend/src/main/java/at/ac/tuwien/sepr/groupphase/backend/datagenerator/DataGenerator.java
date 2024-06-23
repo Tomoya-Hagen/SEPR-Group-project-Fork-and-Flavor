@@ -121,7 +121,7 @@ public class DataGenerator implements CommandLineRunner {
         Roles[] roles = Roles.values();
         String[] usernames = {"admin", "user", "contributor", "cook", "starcook", "user1", "user2", "user3", "user4", "user5"};
         String[] emails = {"admin@email.com", "user@email.com", "contributor@email.com", "cook@email.com", "starcook@email.com",
-        "user1@email.com", "user2@email.com", "user3@email.com", "user4@email.com", "user5@email.com"};
+            "user1@email.com", "user2@email.com", "user3@email.com", "user4@email.com", "user5@email.com"};
 
         // Create and save roles
         List<Role> savedRoles = new ArrayList<>();
@@ -141,7 +141,7 @@ public class DataGenerator implements CommandLineRunner {
                 if (usernames[i] == "admin") {
                     userRoles = savedRoles;
                 } else if (usernames[i].contains("user")) {
-                    userRoles.add (savedRoles.get(1));
+                    userRoles.add(savedRoles.get(1));
                 } else {
                     for (int j = 1; j <= i; j++) {
                         userRoles.add(savedRoles.get(j));
