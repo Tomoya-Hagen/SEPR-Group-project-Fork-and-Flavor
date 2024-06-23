@@ -41,7 +41,7 @@ class BadgeServiceTest {
     @Test
     void addRoleToUserThatAlreadyHasThisRoleShouldNotChangeAnything() {
         ApplicationUser user = userRepository.findFirstById(1L);
-        List<Role> roles = user.getRoles();
+        List<Role> roles = new ArrayList<>();
         Role role = roleRepository.findByName(Roles.StarCook.name());
         roles.add(role);
         user.setRoles(roles);
@@ -50,7 +50,7 @@ class BadgeServiceTest {
         Assertions.assertTrue(user.getRoles().contains(role));
         badgeService.addRoleToUser(user, Roles.StarCook);
         Assertions.assertAll(
-                () -> Assertions.assertNotEquals(rolesCount, user.getRoles().size()),
+                () -> Assertions.assertEquals(rolesCount, user.getRoles().size()),
                 () -> Assertions.assertTrue(user.getRoles().contains(role))
         );
     }
@@ -59,11 +59,13 @@ class BadgeServiceTest {
     void addRoleToUserShouldAddRoleToUser() {
         ApplicationUser user = userRepository.findFirstById(1L);
         Role role = roleRepository.findByName(Roles.StarCook.name());
-        int rolesCount = user.getRoles().size();
-        Assertions.assertTrue(user.getRoles().contains(role));
+        List<Role> newRoles = new ArrayList<>();
+        user.setRoles(newRoles);
+        userRepository.save(user);
+        Assertions.assertFalse(user.getRoles().contains(role));
         badgeService.addRoleToUser(user, Roles.StarCook);
         Assertions.assertAll(
-                () -> Assertions.assertEquals(rolesCount + 1, user.getRoles().size()),
+                () -> Assertions.assertEquals(1, user.getRoles().size()),
                 () -> Assertions.assertTrue(user.getRoles().contains(role))
         );
     }

@@ -492,7 +492,7 @@ class RecipeEndpointTest implements TestData {
     @Test
     void verifyRecipeAsANonStarCook() throws Exception {
         String jwttoken = LoginHelper("user@email.com");
-        mockMvc.perform(post(RECIPE_BASE_URI + "/verify/1")
+        mockMvc.perform(put(RECIPE_BASE_URI + "/verify/1")
                 .header(securityProperties.getAuthHeader(), jwttoken)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isForbidden())
@@ -507,7 +507,7 @@ class RecipeEndpointTest implements TestData {
         user.setRoles(roles);
         userRepository.save(user);
         String jwttoken = LoginHelper("user@email.com");
-        mockMvc.perform(post(RECIPE_BASE_URI + "/verify/1")
+        mockMvc.perform(put(RECIPE_BASE_URI + "/verify/1")
                 .header(securityProperties.getAuthHeader(), jwttoken)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())

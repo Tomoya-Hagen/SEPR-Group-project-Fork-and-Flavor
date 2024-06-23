@@ -55,7 +55,6 @@ public class BadgeServiceImpl implements BadgeService {
         for (Recipe recipe : recipes) {
             ratings.addAll(recipe.getRatings());
             if (ratings.size() > 20) {
-                addRoleToUser(user, Roles.Contributor);
                 break;
             }
         }
