@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Form } from '@angular/forms';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs/internal/Observable';
 import { RecipeBookListDto } from 'src/app/dtos/recipe-book';
@@ -14,8 +14,6 @@ import { WeekplanService } from 'src/app/services/weekplan.service';
   styleUrl: './weekplan-create.component.scss'
 })
 export class WeekplanCreateComponent implements OnInit {
-  ngOnInit(): void {
-  }
   public Daytime = Daytime;
   fromDate: string | null = null;
   toDate: string | null = null;
@@ -67,7 +65,23 @@ export class WeekplanCreateComponent implements OnInit {
     private recipeBookService: RecipeBookService,
     private weekplanService: WeekplanService,
     private router: Router,
-    private notification: ToastrService,){}
+    private notification: ToastrService,
+    private route: ActivatedRoute){}
+
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.createDto.recipeBookId = +params.get('id');
+      this.recipeBookService.getRecipeBookDetailsBy(this.createDto.recipeBookId).subscribe({
+        next: (data: any) => {
+          this.currentRecipeBook = data;
+        },
+        error: error => {
+          console.error('Error getting recipe book.', error);
+          this.notification.error('Rezeptbuch konnte nicht geladen werden.', 'Backend Fehler - Rezeptbuch');
+        }
+      });
+    });
+  }
 
   onSubmit(form:Form){
     if(!this.isFormValid()){
@@ -78,13 +92,13 @@ export class WeekplanCreateComponent implements OnInit {
     for (let i = 0; i < this.weekdays.length; i++) {
       let currentWeekday : WeekDayDto = {weekday: "", dayTimes: []};
       currentWeekday.weekday = Object.keys(Weekday).filter((x) => Weekday[x] == this.weekdays[i].weekday)[0];
-      for (let j = 0; j < this.weekdays[i].dayTimes.length; j++) {        
+      for (let j = 0; j < this.weekdays[i].dayTimes.length; j++) {
         currentWeekday.dayTimes.push(Object.keys(Daytime).filter((x) => Daytime[x] == this.weekdays[i].dayTimes[j])[0]);
       }
       this.createDto.weekdays.push(currentWeekday);
     }
     this.createDto.recipeBookId = this.currentRecipeBook.id;
-    
+
     this.weekplanService.createWeekplan(this.createDto).subscribe({
       next: (data: any) => {
       },
@@ -110,7 +124,7 @@ export class WeekplanCreateComponent implements OnInit {
     } else {
       this.weekdays[this.weekdays.indexOf(day)].dayTimes.splice(
       this.weekdays[this.weekdays.indexOf(day)].dayTimes.indexOf(daytime),1);
-    }    
+    }
   }
 
   public selectRecipeBook(recipeBook: RecipeBookListDto | null) {

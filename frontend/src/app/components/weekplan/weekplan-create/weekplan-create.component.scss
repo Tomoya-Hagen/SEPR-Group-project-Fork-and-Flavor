@@ -1,0 +1,54 @@
+.createContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  padding: 20px;
+  width: 600px;
+}
+
+.rotate-text {
+  transform: rotate(-90deg);
+  white-space: nowrap;
+  width: auto;
+}
+
+input[type="checkbox"] {
+  margin: 5px;
+  width: 40px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  text-align: center;
+  padding: 8px;
+}
+
+.day-header {
+  width: 150px;
+}
+
+.meal-header {
+  width: 100px;
+}
+
+.day {
+  width: 150px;
+}
+
+.btn {
+  margin-left: auto;
+  display: block;
+}
+
+@media screen and (max-width: 777px) {
+  .createContainer {
+    width: 100%;
+  }
+}
