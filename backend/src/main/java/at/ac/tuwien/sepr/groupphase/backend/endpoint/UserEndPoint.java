@@ -41,6 +41,7 @@ public class UserEndPoint {
         this.badgeService = badgeService;
     }
 
+    @Secured("ROLE_USER")
     @GetMapping
     public ResponseEntity<List<UserListDto>> getUsers(@RequestParam(name = "name") String name, @RequestParam(name = "limit") int limit) {
         LOGGER.info("Getting {} using {}", limit, name);
@@ -48,6 +49,7 @@ public class UserEndPoint {
         return ResponseEntity.ok(userService.findUsersByName(name, limit));
     }
 
+    @PermitAll
     @GetMapping("{id}/details")
     public UserDto getUser(@PathVariable(name = "id") Long id) {
         LOGGER.info("GET /api/v1/users/{}/details", id);
@@ -60,18 +62,21 @@ public class UserEndPoint {
         }
     }
 
+    @PermitAll
     @GetMapping("{id}/recipebooks")
     public List<RecipeBookListDto> getRecipeBooksByUserId(@PathVariable(name = "id") Long id) {
         LOGGER.info("GET /api/v1/users/{}/recipebooks", id);
         return userService.findRecipeBooksByUserId(id);
     }
 
+    @PermitAll
     @GetMapping("{id}/recipes")
     public List<RecipeListDto> getRecipesByUserId(@PathVariable(name = "id") Long id) {
         LOGGER.info("GET /api/v1/users/{}/recipes", id);
         return userService.findRecipesByUserId(id);
     }
 
+    @Secured("ROLE_USER")
     @GetMapping("/current")
     public ResponseEntity<UserDto> getCurrentUser() {
         try {
@@ -84,6 +89,7 @@ public class UserEndPoint {
         }
     }
 
+    @Secured("ROLE_USER")
     @GetMapping("/badge")
     public List<String> getBadgesOfCurrentUser() {
         return badgeService.getBadgesOfCurrentUser();
