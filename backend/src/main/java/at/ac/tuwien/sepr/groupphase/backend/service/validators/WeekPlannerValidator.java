@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validators;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.WeekPlanCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -53,13 +54,18 @@ public class WeekPlannerValidator {
         } else {
             int breakfastCount = 0;
             int nonBreakfastCount = 0;
+            Category breakfast = categoryRepository.findFirstByName("Frühstück");
+            Category dessert = categoryRepository.findFirstByName("Dessert");
+            Category vorspeise = categoryRepository.findFirstByName("Vorspeise");
+            Category jause = categoryRepository.findFirstByName("Jause");
+            Category beilage = categoryRepository.findFirstByName("Beilage");
             for (Recipe recipe : rb.getRecipes()) {
-                if (recipe.getCategories().contains(categoryRepository.findFirstByName("Frühstück"))) {
+                if (recipe.getCategories().contains(breakfast)) {
                     breakfastCount++;
-                } else if (!recipe.getCategories().contains(categoryRepository.findFirstByName("Dessert"))
-                    && !recipe.getCategories().contains(categoryRepository.findFirstByName("Beilage"))
-                    && !recipe.getCategories().contains(categoryRepository.findFirstByName("Vorspeise"))
-                    && !recipe.getCategories().contains(categoryRepository.findFirstByName("Jause"))) {
+                } else if (!recipe.getCategories().contains(dessert)
+                    && !recipe.getCategories().contains(beilage)
+                    && !recipe.getCategories().contains(vorspeise)
+                    && !recipe.getCategories().contains(jause)) {
                     nonBreakfastCount++;
                 }
             }
