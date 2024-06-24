@@ -12,10 +12,10 @@ recipeId;stepNumber;name;description;unterRezeptId
 17;3;mit Wein ablöschen;Mit Wein ablöschen und kochen bis der Wein weg ist
 17;4;Deckel drauf;Wasser hinzufügen und mit Salz, Pfeffer und Suppengewürz würzen. Kochen bis der Reis durch ist.
 18;1;Milch erhitzen;Die ganze Milch in einen Topf geben und erhitzen.
-18;2;Griesbrei dazugeben;Dann den Griesbrei dazugeben und umrühren.
+18;2;Grießbrei dazugeben;Dann den Grießbrei dazugeben und umrühren.
 18;3;Aufkochen;nochmal aufkochen lassen
 18;4;stehen lassen;10 min stehen lassen
-18;5;Serviertipp;mit Zimmt gesprenkelt
+18;5;Serviertipp;mit Zimt gesprenkelt
 20;1;in einer Schüssel;Butter cremig schlagen, Zucker, Ei und Vanille dazu.
 20;2;in einer weiteren Schüssel;Die trockenen Zutaten in einer separaten Schüssel vermischen und zur Butter dazu mixen.
 20;3;alles vermischen;Dann die Milch und die Schokostückchen zur Butter untermischen und den Teig lange im Kühlschrank ruhen lassen.
@@ -28,7 +28,7 @@ recipeId;stepNumber;name;description;unterRezeptId
 22;1;Erdäpfel wedgen;Erdäpfel in Wedgesform bringen. ev. davor schälen.
 22;2;Alles vermischen;In eine Schüssel geben und nach eigenem Ermessen die Gewürze, das Öl und den Parmesan dazu geben und gut durchmischen
 22;3;Backen Backen Backen!;Alles auf einem Backblech + Papier austeilen und bei 200°C, 40-50 Minuten lang backen. :)
-23;1;In einen großen Topf;In einen Topf das Öl geben und den Boden mit Poppcornmais bedecken. Einen Deckel draufgeben und alle paar Sekunden den Topf schütteln.
+23;1;In einen großen Topf;In einen Topf das Öl geben und den Boden mit Poppcornmais bedecken. Einen Deckel drauf geben und alle paar Sekunden den Topf schütteln.
 23;2;Wann fertig?;Nachdem die meisten Popcorn gepoppt sind und die Pops länger 3 Sekunden auseinander liegen sind die Popcorn fertig.
 23;3;Würzen;Danach würzen (Salz, Kräuter-Salz Mischungen, alles Mögliche, ...)
 24;1;Nudeln zubereiten;;16
@@ -54,14 +54,14 @@ recipeId;stepNumber;name;description;unterRezeptId
 28;6;Servieren;Servieren
 29;1;Nudeln zubereiten;;16
 29;2;Anrösten;Lauch/Jungzwiebel anrösten in einer Pfanne kurz anrösten.
-29;3;Brokoli dazu;Schinken dazu und Brokkoli dazu. 5 Minuten Deckel drauf und kochen lassen. Eventuell bissi wasser dazuhauen damit der Brokoli schön gedämpft wird.
+29;3;Brokkoli dazu;Schinken dazu und Brokkoli dazu. 5 Minuten Deckel drauf und kochen lassen. Eventuell bissi wasser dazuhauen damit der Brokkoli schön gedämpft wird.
 29;4;zur Sauce;Anschließend Tunke dazu (Creme fraiche oder Schlagobers) und mit Salz, Pfeffer, Muskat und etwas Suppenwürze würzen.
 29;5;Nudeln dazu;gekochte Nudeln dazu und schwenken
 31;1;Reis!;;47
 31;2;Erbsen und Karotten?;Wenn man mag Karotten in Wasser geben und kochen lassen. Erbsen nach Abseihen dazu geben. Sonst nur Erbsen mit wenig Wasser kochen lassen.
 31;3;Fleisch!;Bratöl in dem Topf und geschnittenes Fleisch mit Pfeffer und Paprikapulver kurz anrösten
 31;4;Wasser!;Mit Wasser ablöschen - so viel wie man Saft haben will (Fleisch bedeckt). Salzen, Tomatenmark dazu geben und 25 Minuten kochen lassen.
-31;5;Sauce!;Dann Creme Fraiche/Schalgobers mit Maizena verrühren, in den Topf geben und aufkochen lassen.
+31;5;Sauce!;Dann Creme Fraiche/Schlagobers mit Maizena verrühren, in den Topf geben und aufkochen lassen.
 31;6;Servieren!;Fleisch mit Saft, Gemüse und Reis servieren.
 32;1;Reis und Milch;Milchreis/Risotto Reis und Milch im Verhältnis 1:4 in einen Topf geben und warten bis es aufkocht. Dabei regelmäßig umrühren.
 32;2;es Kocht?;Wenn es aufkocht zurück drehen und Ahornsirup hineinmischen.
