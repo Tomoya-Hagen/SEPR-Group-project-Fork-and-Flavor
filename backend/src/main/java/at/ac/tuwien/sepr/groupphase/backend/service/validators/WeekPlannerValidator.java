@@ -26,7 +26,7 @@ public class WeekPlannerValidator {
     public void validateForCreate(WeekPlanCreateDto weekPlanCreateDto) throws ValidationException {
         LOGGER.trace("validateForCreate({})", weekPlanCreateDto);
         List<String> validationErrors = new ArrayList<>();
-        long x = ChronoUnit.DAYS.between(weekPlanCreateDto.endDate(), weekPlanCreateDto.startDate());
+        long x = ChronoUnit.DAYS.between(weekPlanCreateDto.startDate(), weekPlanCreateDto.endDate());
         if (x < 1) {
             validationErrors.add("The span of the week plan has to be greater than or equal to 1");
         }
