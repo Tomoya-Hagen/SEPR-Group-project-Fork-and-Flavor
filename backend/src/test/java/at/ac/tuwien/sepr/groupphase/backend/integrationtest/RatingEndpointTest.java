@@ -75,7 +75,7 @@ class RatingEndpointTest implements TestData {
         RatingListDto[] ratings = objectMapper.readValue(response.getContentAsString(),
             RatingListDto[].class);
         Assertions.assertNotNull(ratings);
-        assertEquals(4, ratings.length);
+        assertEquals(6, ratings.length);
     }
 
     @Test

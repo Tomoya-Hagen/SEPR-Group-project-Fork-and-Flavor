@@ -54,6 +54,14 @@ public interface RecipeStepMapper {
     @Mapping(source = "recipeRecipe", target = "recipe")
     RecipeStepRecipeDetailDto recipeStepToRecipeStepDetailDto(RecipeRecipeStep recipeRecipeStep);
 
+    /**
+     * Converts a RecipeDescriptionStep entity to a RecipeStepDto object.
+     *
+     * @param recipeDescriptionStep The RecipeDescriptionStep entity.
+     * @return A RecipeStepDto object with the name and description fields set to the values
+     *     from the RecipeDescriptionStep entity. The id field is set to 0 and the
+     *     isDescriptionStep field is set to true, indicating it's a description step.
+     */
     default RecipeStepDto recipeDescriptionStepToRecipeStepDto(RecipeDescriptionStep recipeDescriptionStep) {
         return new RecipeStepDto(
             recipeDescriptionStep.getName(),
@@ -63,6 +71,13 @@ public interface RecipeStepMapper {
         );
     }
 
+    /**
+     * Converts a RecipeRecipeStep entity to a RecipeStepDto object.
+     *
+     * @param recipeRecipeStep The RecipeRecipeStep entity.
+     * @return A RecipeStepDto object with the name and ID fields set to the values from the RecipeRecipeStep entity.
+     *      The description field is set to null and the isDescriptionStep field is set to false, indicating it's a recipe reference step.
+     */
     default RecipeStepDto recipeRecipeStepToRecipeStepDto(RecipeRecipeStep recipeRecipeStep) {
         return new RecipeStepDto(
             recipeRecipeStep.getName(),
@@ -72,6 +87,13 @@ public interface RecipeStepMapper {
         );
     }
 
+    /**
+     * Converts a RecipeStep entity to a RecipeStepDto object.
+     *
+     * @param recipeStep The RecipeStep entity.
+     * @return A RecipeStepDto object. If the RecipeStep is an instance of RecipeRecipeStep, it uses the recipeRecipeStepToRecipeStepDto method for conversion.
+     *      Otherwise, it uses the recipeDescriptionStepToRecipeStepDto method for conversion.
+     */
     default RecipeStepDto recipeStepToRecipeStepDto(RecipeStep recipeStep) {
         if (recipeStep instanceof RecipeRecipeStep) {
             return recipeRecipeStepToRecipeStepDto((RecipeRecipeStep) recipeStep);
@@ -80,6 +102,13 @@ public interface RecipeStepMapper {
         }
     }
 
+    /**
+     * Converts an Object to a Long.
+     *
+     * @param value The Object to be converted.
+     * @return A Long value. If the Object is null, it returns null. If the Object is an instance of Number, it returns the long value of the Number.
+     *      If the Object is not an instance of Number, it tries to parse the Object's string representation to a Long. If the parsing fails, it returns null.
+     */
     default Long mapToLong(Object value) {
         if (value == null) {
             return null;
