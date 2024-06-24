@@ -219,6 +219,7 @@ export class RecipebookCreateEditComponent implements OnInit {
     }
 
     return isValid;
+
   }
 
   public addRecipe(recipe: RecipeListDto | null) {

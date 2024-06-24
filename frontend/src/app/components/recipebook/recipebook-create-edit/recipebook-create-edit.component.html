@@ -26,12 +26,8 @@
                     class="form-control desc"
                     placeholder="Enter a description for the recipe book"
                     [(ngModel)]="recipeBook.description"
-                    name="description"
-                    required >
+                    name="description" >
           </textarea>
-        <div class="invalid-feedback">
-          Description is required.
-        </div>
       </div>
 
       <div>
@@ -70,9 +66,6 @@
               </tbody>
             </table>
           </div>
-        </div>
-        <div class="invalid-feedback">
-          Description is required.
         </div>
       </div>
 
@@ -116,7 +109,7 @@
       </div>
 
       <div class="submit">
-        <button [disabled]="!form.valid || !isFormValid()" type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
+        <button type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
       </div>
       <div class="removecont">
         <button *ngIf="!isOwner" (click)="removeContributor()" type="button" class="btn btn-danger">Rezeptbuch verlassen</button>
