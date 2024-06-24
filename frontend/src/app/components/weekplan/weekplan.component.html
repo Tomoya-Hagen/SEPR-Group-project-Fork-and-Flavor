@@ -2,8 +2,10 @@
   <h1 class="display-4">Wochenplaner</h1>
 
   <div class="d-flex justify-content-center m-5" *ngIf="weekplan.length === 0">
-    Du musst zuerst einen Wochenplan erstellen!
-    <button type="button" (click)="goToCreateWeekplan()" class="m-3 w-25">Wochenplan Erstellen</button>
+    <div>
+      Du musst zuerst einen Wochenplan erstellen!
+      <button type="button" (click)="goToCreateWeekplan()" class="m-3 w-25">Wochenplan Erstellen</button>
+    </div>
   </div>
 
   <div *ngIf="weekplan.length !== 0 && !mobile" class="row w-100">
