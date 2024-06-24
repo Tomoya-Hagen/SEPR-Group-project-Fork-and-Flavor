@@ -3,7 +3,7 @@
 
   <div class="d-flex justify-content-center m-5" *ngIf="weekplan.length === 0">
     Du musst zuerst einen Wochenplan erstellen!
-    <button type="button" (click)="goToCreateWeekplan()" class="m-3 w-25 login">Wochenplan Erstellen</button>
+    <button type="button" (click)="goToCreateWeekplan()" class="m-3 w-25">Wochenplan Erstellen</button>
   </div>
 
   <div *ngIf="weekplan.length !== 0 && !mobile" class="row w-100">
