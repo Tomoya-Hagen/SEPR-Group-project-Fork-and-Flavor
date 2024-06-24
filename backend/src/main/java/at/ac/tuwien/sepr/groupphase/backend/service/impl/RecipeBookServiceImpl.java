@@ -203,7 +203,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         boolean containsBreakfast = false;
         boolean containsMainDish = false;
         Category breakfast = categoryRepository.findByNameContainingIgnoreCase("Frühstück", PageRequest.of(0, 1)).getFirst();
-        Category mainDish = categoryRepository.findByNameContainingIgnoreCase("Hauptspeise", PageRequest.of(0,1)).getFirst();
+        Category mainDish = categoryRepository.findByNameContainingIgnoreCase("Hauptspeise", PageRequest.of(0, 1)).getFirst();
         for (Recipe recipe : recipeBook.getRecipes()) {
             if (recipe.getCategories().contains(breakfast)) {
                 containsBreakfast = true;
