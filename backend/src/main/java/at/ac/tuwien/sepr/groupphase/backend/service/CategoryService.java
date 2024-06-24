@@ -4,24 +4,18 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryResultDto;
 
 import java.util.stream.Stream;
 
-/**
- * The CategoryService interface provides methods for retrieving categories.
- */
 public interface CategoryService {
-
     /**
-     * Retrieves a stream of CategoryResultDto entities that have a name like the given name. The results are limited by the given limit.
+     * Find all categories having a name like name.
      *
-     * @param name The string to search for in the names of the CategoryResultDto entities.
-     * @param limit The maximum number of results to return.
-     * @return A stream of CategoryResultDto entities that have a name like the given name, limited by the given limit.
+     * @return limit amount of categories found
      */
     Stream<CategoryResultDto> byname(String name, int limit);
 
     /**
-     * Retrieves a stream of all CategoryResultDto entities.
+     * Find all categories.
      *
-     * @return A stream of all CategoryResultDto entities.
+     * @return all categories found
      */
     Stream<CategoryResultDto> all();
 }

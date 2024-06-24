@@ -1,5 +1,5 @@
 // card.component.ts
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {RouterLink} from "@angular/router";
 
 @Component({
@@ -14,11 +14,4 @@ import {RouterLink} from "@angular/router";
 export class CardComponent {
   @Input() item: any;
   @Input() detailUrlPrefix: string = '/details';
-
-  @Output() cardClicked: EventEmitter<void> = new EventEmitter<void>();
-
-  onCardClick() {
-    this.cardClicked.emit();
-  }
-
 }

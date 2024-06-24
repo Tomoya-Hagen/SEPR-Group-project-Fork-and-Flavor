@@ -1,19 +1,19 @@
 id;name;description;numberofServings;forkedFrom;ownerid
-14;Spaghetti plain;Unterrezept für alle möglichen Nudelgerichte;2;;1
+14;Spagehtti plain;Unterrezept für alle möglichen Nudelgerichte;2;;1
 15;Kartoffeln plain;Unterrezept für Kartoffelgerichte;4;;1
 16;Nudeln plain;Unterrezept für Nudelgerichte;2;;1
-17;Risottoreis plain;Unterrezept für alle möglichen Risottos;4;;1
-18;Grießbrei;griessig bereiig guut;2;;1
+17;Risottoreis plain;Unterrezept für alle möchlichen Risottos;4;;1
+18;Griesbrei;griessig bereiig guut;2;;1
 20;Cookies;richtig geil;2;;1
-21;Risotto (Zucchini);so muss risotto schmecken;2;;1
+21;Risotto (Zuchini);so muss risotto schmecken;2;;1
 22;Potato-Wedges;schnell zubereitet, lange im Ofen;2;;1
 23;Popcorn;Selber machen? SELBER MACHEN!;2;;1
 24;Zucchini-Nudeln;nommige Nudeln;2;;1
-25;Ei scrambled;So scrambled kann Ei sein;2;;1
+25;Ei scrambled;So scrambeld kann Ei sein;2;;1
 26;Ei Spiegelei;So spiegelig kann Ei sein;2;;1
 27;Ei knusprig in Olivenöl;So knusprig kann Ei sein;2;26;1
 28;Ei auf Martin Art;So martin kann Ei sein;2;26;1
-29;Brokkoli-Nudeln;nudeln sind auch kein Broccoli;2;;1
+29;Brokkoli-Nudeln;nudeln sind auch kein Brokoli;2;;1
 31;Putengeschnetzeltes mit Gemüse;Klassiker;2;;1
 32;Milchreis;so muss Milchreis schmecken;2;;1
 34;Alles Speise;Alles Speisen;2;;1
@@ -40,7 +40,7 @@ id;name;description;numberofServings;forkedFrom;ownerid
 57;Spaghetti Bolognese;mit unauffälligem Gemüse;2;;1
 58;Spinat Creme;gute Beilage;2;;1
 63;Pizzaschnecken;Partysnack!;2;;1
-67;Braunhirse Erdmandel Schnitten;etwas für Gluten und Nussallergiker;2;;1
+67;Braunhirse Erdmandel Schnitten;etwas für Gluten und Nussalergiker;2;;1
 71;Hirse mit Tomaten und Speck;gut zum Mitnehmen und aufwärmen;2;;1
 72;Kohlrabi Rahm;gschmackig;2;;1
 73;Zartweizen;Beilagige Beilage;2;;1
@@ -50,7 +50,7 @@ id;name;description;numberofServings;forkedFrom;ownerid
 77;Apfelkuchen nach Ing;Blechkuchen;2;;1
 79;Kaiserschmarren;typisch Österreichisch;3;;1
 81;Malakoff-Torte;Torte unter Torten;2;;1
-82;Streuselkuchen;Streusel auf Kuchen;2;;1
+82;Streusselkuchen;Streussel auf Kuchen;2;;1
 83;Thunfisch-Nudeln;Essen tun fisch;2;;1
 84;Knusprige Kartoffel Asiatisch;guad;2;;1
 85;Zucchini-Kartoffel;fancy;2;;1

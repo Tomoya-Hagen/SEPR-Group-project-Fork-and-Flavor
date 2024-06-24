@@ -27,7 +27,7 @@ public class RecipeStepDto {
     }
 
     public boolean isCorrect() {
-        return (whichstep && description != "" && recipeId == 0) || (!whichstep && description == "" && recipeId != 0);
+        return (whichstep && description != null && recipeId == 0) || (!whichstep && description == null && recipeId != 0);
     }
 
     public String getName() {

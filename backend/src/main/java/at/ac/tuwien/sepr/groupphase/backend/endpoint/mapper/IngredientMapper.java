@@ -47,12 +47,6 @@ public interface IngredientMapper {
     IngredientDetailDto ingredientAndRecipeIngredientToIngredientDetailDto(
         Ingredient ingredient, RecipeIngredient recipeIngredient);
 
-    /**
-     * Converts an Ingredient entity to an IngredientResultDto object.
-     *
-     * @param ingredient The Ingredient entity.
-     * @return An IngredientResultDto object with the ID and name fields set to the values from the Ingredient entity.
-     */
     IngredientResultDto ingredientToIngredientResultDto(Ingredient ingredient);
 
 }

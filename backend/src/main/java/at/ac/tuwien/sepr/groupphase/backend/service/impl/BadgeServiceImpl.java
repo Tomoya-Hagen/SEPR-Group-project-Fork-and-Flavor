@@ -7,13 +7,10 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Transactional
 @Service
 public class BadgeServiceImpl implements BadgeService {
     private final UserRepository userRepository;
@@ -38,7 +35,7 @@ public class BadgeServiceImpl implements BadgeService {
 
     private void setRoleForUser(ApplicationUser user, Roles role) {
         Role newRole = roleRepository.findByName(role.name());
-        List<Role> roles = new ArrayList<>(user.getRoles());
+        List<Role> roles = user.getRoles();
         roles.add(newRole);
         user.setRoles(roles);
         userRepository.save(user);
