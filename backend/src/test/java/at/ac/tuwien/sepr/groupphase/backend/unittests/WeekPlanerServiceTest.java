@@ -33,7 +33,7 @@ class WeekPlanerServiceTest implements TestData {
     void createThrowsErrorIfWeekPlanForThisTimeSpanExists() throws ValidationException {
         userAuthenticationByEmail("admin@email.com");
         WeekPlanCreateDto firstPlan =
-            new WeekPlanCreateDto(10L,
+            new WeekPlanCreateDto(8L,
                 LocalDate.of(2025, 1, 1),
                 LocalDate.of(2025, 5, 31),
                 List.of(new WeekDayDto(Weekday.Monday, List.of(DayTime.Breakfast)),
@@ -45,7 +45,7 @@ class WeekPlanerServiceTest implements TestData {
                     new WeekDayDto(Weekday.Sunday, List.of())));
         WeekPlanDetailDto[] weekPlanerResponse = weekPlanService.create(firstPlan);
         WeekPlanCreateDto secondPlan =
-            new WeekPlanCreateDto(10L,
+            new WeekPlanCreateDto(8L,
                 LocalDate.of(2025, 1, 1),
                 LocalDate.of(2025, 5, 31),
                 List.of(new WeekDayDto(Weekday.Monday, List.of(DayTime.Breakfast)),
@@ -62,7 +62,7 @@ class WeekPlanerServiceTest implements TestData {
     void weekPlannerSuccessfulyyCreatedContainsTwentyOneRecipes() throws ValidationException {
         userAuthenticationByEmail("admin@email.com");
         WeekPlanCreateDto createThis = new WeekPlanCreateDto(
-            10L,
+            8L,
             LocalDate.of(2025, 1, 1),
             LocalDate.of(2025, 1, 7),
             List.of(new WeekDayDto(Weekday.Monday, List.of(DayTime.Breakfast, DayTime.Lunch, DayTime.Dinner)),

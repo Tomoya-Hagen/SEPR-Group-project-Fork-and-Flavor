@@ -230,7 +230,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     }));
     this.recipe.nutritions = this.originalNutritions.map(nutrition => ({
       ...nutrition,
-      value: nutrition.id === 7 ? 2.4 * this.roundTo(nutrition.value * ratio) : this.roundTo(nutrition.value * ratio)
+      value: this.roundTo(nutrition.value * ratio)
     }));
   }
 
