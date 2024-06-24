@@ -72,6 +72,30 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe> findRecipeByCategoryId(@Param("categoryId") long ids, Pageable pageable);
 
     /**
+     * returns all names as list.
+     *
+     * @return a list of recipe names.
+     */
+    @Query("SELECT r.name FROM Recipe r")
+    List<String> getAllNames();
+
+    @Query("SELECT r FROM Recipe r WHERE r.owner.id = :ownerId ")
+    List<Recipe> findRecipesByOwnerId(@Param("ownerId") long ownerId);
+
+    @Query("SELECT r FROM Recipe r WHERE r.forkedFrom.id = :id")
+    List<Recipe> findAllForkedRecipesById(@Param("id") long id);
+
+    /**
+     * requests a verify based on the user and the recipe id.
+     *
+     * @param recipeId id of the recipe.
+     * @param userId   id of the user.
+     * @return return a Optional of a recipe.
+     */
+    @Query("SELECT distinct i FROM Recipe i join FETCH i.verifiers rc WHERE i.id = :recipeId AND rc.id = :userId")
+    Optional<Recipe> getVerifysByRecipeIdAndUserId(@Param("recipeId") long recipeId, @Param("userId") long userId);
+
+    /**
      * Gets a recipe by id.
      *
      * @param id represents the id of a recipe.
@@ -88,14 +112,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     Boolean existsById(long id);
 
     /**
-     * returns all names as list.
-     *
-     * @return a list of recipe names.
-     */
-    @Query("SELECT r.name FROM Recipe r")
-    List<String> getAllNames();
-
-    /**
      * Returns the first recipe by id.
      *
      * @param id represents the id of a recipe.
@@ -103,20 +119,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      */
     Recipe findFirstById(long id);
 
-    @Query("SELECT r FROM Recipe r WHERE r.owner.id = :ownerId ")
-    List<Recipe> findRecipesByOwnerId(@Param("ownerId") long ownerId);
+    @Query("SELECT r FROM Recipe r ORDER BY (SELECT AVG((ra.taste + ra.easeOfPrep + ra.cost) / 3.0) FROM Rating ra WHERE ra.recipe = r) DESC")
+    Page<Recipe> findByBest(Pageable pageable);
 
-    @Query("SELECT r FROM Recipe r WHERE r.forkedFrom.id = :id")
-    List<Recipe> findAllForkedRecipesById(@Param("id") long id);
-
-
-    /**
-     * requests a verify based on the user and the recipe id.
-     *
-     * @param recipeId id of the recipe.
-     * @param userId   id of the user.
-     * @return return a Optional of a recipe.
-     */
-    @Query("SELECT distinct i FROM Recipe i join FETCH i.verifiers rc WHERE i.id = :recipeId AND rc.id = :userId")
-    Optional<Recipe> getVerifysByRecipeIdAndUserId(@Param("recipeId") long recipeId, @Param("userId") long userId);
 }

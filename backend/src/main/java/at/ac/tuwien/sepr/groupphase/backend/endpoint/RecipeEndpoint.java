@@ -148,7 +148,6 @@ public class RecipeEndpoint {
         }
     }
 
-
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -193,6 +192,14 @@ public class RecipeEndpoint {
         } else {
             return recipeService.getRecipesByName(name, pageable);
         }
+    }
+
+    @PermitAll
+    @GetMapping("/best")
+    @Operation(summary = "Get a list of recipes")
+    public Page<RecipeListDto> getListByBest(@RequestParam("size") int size) {
+        LOGGER.info("POST /api/v1/recipe/best params: {} ", size);
+        return recipeService.byBest(size);
     }
 
     @PutMapping("/verify/{id}")

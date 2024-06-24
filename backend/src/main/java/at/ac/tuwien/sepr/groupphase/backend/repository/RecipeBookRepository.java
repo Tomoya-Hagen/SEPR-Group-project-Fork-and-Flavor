@@ -33,6 +33,13 @@ public interface RecipeBookRepository extends JpaRepository<RecipeBook, Long> {
      */
     Page<RecipeBook> findByNameContainingIgnoreCaseOrderByName(String name, Pageable pageable);
 
+
+    @Query("SELECT rb FROM RecipeBook rb "
+            + "LEFT JOIN rb.editors e "
+            + "GROUP BY rb "
+            + "ORDER BY COUNT(e) DESC")
+    Page<RecipeBook> findByRatingOrderByRating(Pageable pageable);
+
     /**
      * This method is responsible for getting a range of recipe books by ID.
      * It uses a custom query to select recipe books where the ID is between the provided from and to values.

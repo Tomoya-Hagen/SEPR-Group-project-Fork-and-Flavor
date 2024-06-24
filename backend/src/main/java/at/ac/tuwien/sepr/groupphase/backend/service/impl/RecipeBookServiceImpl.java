@@ -83,6 +83,13 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     }
 
     @Override
+    public Page<RecipeBookListDto> searchBestRecipeBooks(Pageable pageable) {
+        Page<RecipeBook> recipeBooksPage = recipeBookRepository.findByRatingOrderByRating(pageable);
+        return recipeBooksPage.map(recipeBookMapper::recipeBookToRecipeBookListDto);
+    }
+
+
+    @Override
     public RecipeBookDetailDto addRecipeToRecipeBook(long recipeBookId, long recipeId) throws NotFoundException, ForbiddenException, DuplicateObjectException {
         LOGGER.trace("addRecipeToRecipeBook({}, {})", recipeBookId, recipeId);
         RecipeBook recipeBook = recipeBookRepository.findById(recipeBookId).orElseThrow(() -> new NotFoundException("recipe book not found"));
