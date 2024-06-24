@@ -64,14 +64,14 @@ class WeekPlanerServiceTest implements TestData {
         WeekPlanCreateDto createThis = new WeekPlanCreateDto(
             10L,
             LocalDate.of(2025, 1, 1),
-            LocalDate.of(2025, 5, 31),
-            List.of(new WeekDayDto(Weekday.Monday, List.of(DayTime.Breakfast)),
-                new WeekDayDto(Weekday.Tuesday, List.of()),
-                new WeekDayDto(Weekday.Wednesday, List.of()),
-                new WeekDayDto(Weekday.Thursday, List.of()),
-                new WeekDayDto(Weekday.Friday, List.of()),
-                new WeekDayDto(Weekday.Saturday, List.of()),
-                new WeekDayDto(Weekday.Sunday, List.of())));
+            LocalDate.of(2025, 1, 7),
+            List.of(new WeekDayDto(Weekday.Monday, List.of(DayTime.Breakfast, DayTime.Lunch, DayTime.Dinner)),
+                new WeekDayDto(Weekday.Tuesday, List.of(DayTime.Breakfast, DayTime.Lunch, DayTime.Dinner)),
+                new WeekDayDto(Weekday.Wednesday, List.of(DayTime.Breakfast, DayTime.Lunch, DayTime.Dinner)),
+                new WeekDayDto(Weekday.Thursday, List.of(DayTime.Breakfast, DayTime.Lunch, DayTime.Dinner)),
+                new WeekDayDto(Weekday.Friday, List.of(DayTime.Breakfast, DayTime.Lunch, DayTime.Dinner)),
+                new WeekDayDto(Weekday.Saturday, List.of(DayTime.Breakfast, DayTime.Lunch, DayTime.Dinner)),
+                new WeekDayDto(Weekday.Sunday, List.of(DayTime.Breakfast, DayTime.Lunch, DayTime.Dinner))));
 
         WeekPlanDetailDto[] weekPlanerResponse = weekPlanService.create(createThis);
 

@@ -36,8 +36,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Transactional
 @Service
@@ -145,6 +147,8 @@ public class WeekPlanServiceImpl implements WeekPlanService {
         List<List<WeeklyPlanner>> bestWeekPlan = new ArrayList<>();
         double bestAttemptRate = Double.MAX_VALUE;
         Map<Recipe, Map<Nutrition, BigDecimal>> nutritionPerRecipe = calculateNutritionForRecipes(new ArrayList<>(recipes.keySet()));
+        Set<Recipe> usedBreakfastRecipes = new HashSet<>();
+        Set<Recipe> usedLunchOrDinnerRecipes = new HashSet<>();
 
         for (int attempt = 0; attempt < 10; attempt++) {
             List<List<WeeklyPlanner>> currentWeekPlan = copyWeekPlan(weeklyPlannerItems);
@@ -155,7 +159,8 @@ public class WeekPlanServiceImpl implements WeekPlanService {
             List<Recipe> lunchOrDinnerRecipes = recipes.keySet().stream()
                 .filter(r -> {
                     var categories = r.getCategories();
-                    return !categories.contains(categoryRepository.findFirstByName("Frühstück"))
+                    return categories.contains(categoryRepository.findFirstByName("Hauptspeise"))
+                        && !categories.contains(categoryRepository.findFirstByName("Frühstück"))
                         && !categories.contains(categoryRepository.findFirstByName("Dessert"))
                         && !categories.contains(categoryRepository.findFirstByName("Jause"))
                         && !categories.contains(categoryRepository.findFirstByName("Vorspeise"))
@@ -168,10 +173,18 @@ public class WeekPlanServiceImpl implements WeekPlanService {
                 Map<Nutrition, BigDecimal> dailyNutrition = new HashMap<>();
                 for (WeeklyPlanner planner : dayPlan) {
                     Recipe selectedRecipe;
-                    if (planner.getDaytime() == WeeklyPlanner.EatingTime.Frühstück) {
-                        selectedRecipe = getBestRecipe(breakfastRecipes, dailyNutrition, recommendedNutritionMin, recommendedNutritionMax, nutritionPerRecipe);
+                    if (planner.getDaytime().equals(WeeklyPlanner.EatingTime.Frühstück)) {
+                        selectedRecipe = getBestRecipe(breakfastRecipes, dailyNutrition, recommendedNutritionMin, recommendedNutritionMax, nutritionPerRecipe, usedBreakfastRecipes);
+                        usedBreakfastRecipes.add(selectedRecipe);
+                        if (usedBreakfastRecipes.size() == breakfastRecipes.size()) {
+                            usedBreakfastRecipes.clear();
+                        }
                     } else {
-                        selectedRecipe = getBestRecipe(lunchOrDinnerRecipes, dailyNutrition, recommendedNutritionMin, recommendedNutritionMax, nutritionPerRecipe);
+                        selectedRecipe = getBestRecipe(lunchOrDinnerRecipes, dailyNutrition, recommendedNutritionMin, recommendedNutritionMax, nutritionPerRecipe, usedLunchOrDinnerRecipes);
+                        usedLunchOrDinnerRecipes.add(selectedRecipe);
+                        if (usedLunchOrDinnerRecipes.size() == lunchOrDinnerRecipes.size()) {
+                            usedLunchOrDinnerRecipes.clear();
+                        }
                     }
                     planner.setRecipe(selectedRecipe);
 
@@ -194,11 +207,17 @@ public class WeekPlanServiceImpl implements WeekPlanService {
     }
 
     private Recipe getBestRecipe(List<Recipe> recipes, Map<Nutrition, BigDecimal> dailyNutrition, Map<Nutrition, Double> recommendedMin, Map<Nutrition, Double> recommendedMax, Map<Recipe,
-        Map<Nutrition, BigDecimal>> nutritionPerRecipe) {
+        Map<Nutrition, BigDecimal>> nutritionPerRecipe, Set<Recipe> usedRecipes) {
         Recipe bestRecipe = null;
         double bestScore = Double.MAX_VALUE;
 
-        for (Recipe recipe : recipes) {
+        List<Recipe> availableRecipes = recipes.stream().filter(r -> !usedRecipes.contains(r)).toList();
+
+        if (availableRecipes.isEmpty()) {
+            availableRecipes = recipes;
+        }
+
+        for (Recipe recipe : availableRecipes) {
             double score = 0.0;
             for (Map.Entry<Nutrition, BigDecimal> entry : nutritionPerRecipe.get(recipe).entrySet()) {
                 Nutrition nutrition = entry.getKey();
