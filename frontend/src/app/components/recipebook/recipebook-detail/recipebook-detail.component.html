@@ -2,8 +2,8 @@
   <h1 class="display-4 text-center mb-5">{{ recipeBook.name }}</h1>
   <div class="RecipeInfos">
     <div class="info-box">
-      <h4>Beschreibung:</h4>
-      <p>{{ recipeBook.description }}</p>
+      <h4 class="fs-4">Rezepte:</h4>
+      <span class="number">{{ recipeBook.recipes.length }}</span>
     </div>
     <div class="info-box" >
       <h4 class="fs-4">Besitzer:</h4>
@@ -19,15 +19,15 @@
     </span>
       </div>
     </div>
-    <div class="info-box">
-      <h4 class="fs-4">Rezepte:</h4>
-      <span class="number">{{ recipeBook.recipes.length }}</span>
-    </div>
     <div class="info-box" (click)="gotoWeekPlan()">
       <h4 class="fs-4">zum</h4>
       <h4 class="fs-4">Wochenplan</h4>
     </div>
   </div>
+  <hr>
+  <h4>Beschreibung:</h4>
+  <p>{{ recipeBook.description }}</p>
+  <hr>
   <h4 class="mt-4">Rezepte:</h4>
   <div class="row">
     <div class="col-lg-4 p-2" *ngFor="let item of recipeBook.recipes">
