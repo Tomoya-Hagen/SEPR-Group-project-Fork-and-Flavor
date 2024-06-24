@@ -110,7 +110,7 @@ class RecipeEndpointTest implements TestData {
                 recipeStepDescriptionDetailDto.setDescription(String.valueOf(StandardCharsets.ISO_8859_1.encode(recipeStepDescriptionDetailDto.getDescription())));
             }
         }
-        ArrayList<IngredientDetailDto> actualIngredients = recipeDetailDto.ingredients();
+        List<IngredientDetailDto> actualIngredients = recipeDetailDto.ingredients();
         actualIngredients.sort(Comparator.comparing(IngredientDetailDto::id));
         Assertions.assertAll(
             () -> Assertions.assertEquals("Kartoffeln plain", recipeDetailDto.name()),

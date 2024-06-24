@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -55,7 +56,7 @@ public record RecipeDetailDto(
     ArrayList<RecipeStepDetailDto> recipeSteps,
 
     @NotNull
-    ArrayList<IngredientDetailDto> ingredients,
+    List<IngredientDetailDto> ingredients,
 
     @NotNull
     ArrayList<AllergenDetailDto> allergens,
