@@ -45,7 +45,8 @@ import java.util.Set;
 @Service
 public class WeekPlanServiceImpl implements WeekPlanService {
 
-
+    private List<ApplicationUser> currentCreators = new ArrayList<>();
+    private final Object lock = new Object();
     private final WeeklyPlannerMapper weeklyPlannerMapper;
     private final WeeklyPlannerRepository weeklyPlannerRepository;
     private final RecipeBookRepository recipeBookRepository;
@@ -90,9 +91,9 @@ public class WeekPlanServiceImpl implements WeekPlanService {
             throw new ForbiddenException();
         }
         if (!weeklyPlannerRepository.getWeeklyPlannerItemThatIsInTheGivenTimeFromTheGivenRecipeBook(
-            weekPlanCreateDto.recipeBookId(),
-            weekPlanCreateDto.startDate(),
-            weekPlanCreateDto.endDate()).isEmpty()) {
+                weekPlanCreateDto.recipeBookId(),
+                weekPlanCreateDto.startDate(),
+                weekPlanCreateDto.endDate()).isEmpty()) {
             throw new DuplicateObjectException("week planer for this timespan already exists");
         }
         weekPlannerValidator.validateForCreate(weekPlanCreateDto);
@@ -102,19 +103,28 @@ public class WeekPlanServiceImpl implements WeekPlanService {
             List<WeeklyPlanner> day = new ArrayList<>();
             LocalDate currentDate = date;
             addWeekPlanItemsToListBasedOnWeekDay(
-                weekPlanCreateDto.weekdays().stream().filter(w -> w.weekday().equals(Weekday.values()[currentDate.getDayOfWeek().ordinal()])).findFirst()
-                    .orElseThrow(NotFoundException::new),
-                day,
-                recipeBook,
-                date);
+                    weekPlanCreateDto.weekdays().stream().filter(w -> w.weekday().equals(Weekday.values()[currentDate.getDayOfWeek().ordinal()])).findFirst()
+                            .orElseThrow(NotFoundException::new),
+                    day,
+                    recipeBook,
+                    date);
             weeklyPlannerItems.add(day);
             date = date.plusDays(1);
         }
         Map<Recipe, Map<Nutrition, BigDecimal>> recipesWithNutrition = calculateNutritionForRecipes(recipeBook.getRecipes());
+        synchronized (lock) {
+            if (currentCreators.contains(user)) {
+                throw new ForbiddenException("You are currently creating a weekplan");
+            }
+            currentCreators.add(user);
+        }
         calculateWeekPlan(weeklyPlannerItems, recipesWithNutrition);
+        synchronized (lock) {
+            currentCreators.remove(user);
+        }
         return getWeekplanDetail(weekPlanCreateDto.recipeBookId(),
-            java.sql.Date.valueOf(weekPlanCreateDto.startDate()),
-            java.sql.Date.valueOf(weekPlanCreateDto.endDate()));
+                java.sql.Date.valueOf(weekPlanCreateDto.startDate()),
+                java.sql.Date.valueOf(weekPlanCreateDto.endDate()));
     }
 
     private Map<Recipe, Map<Nutrition, BigDecimal>> calculateNutritionForRecipes(List<Recipe> recipes) {
@@ -125,12 +135,12 @@ public class WeekPlanServiceImpl implements WeekPlanService {
             for (RecipeIngredient recipeIngredient : recipeIngredients) {
                 for (IngredientNutrition nutrition : recipeIngredient.getIngredient().getNutritions()) {
                     BigDecimal nutritionValue = nutrition.getValue()
-                        .multiply((recipeIngredient.getAmount()
-                            .divide(BigDecimal.valueOf(recipe.getNumberOfServings()), RoundingMode.DOWN))
-                            .divide(BigDecimal.valueOf(100), RoundingMode.DOWN));
+                            .multiply((recipeIngredient.getAmount()
+                                    .divide(BigDecimal.valueOf(recipe.getNumberOfServings()), RoundingMode.DOWN))
+                                    .divide(BigDecimal.valueOf(100), RoundingMode.DOWN));
                     if (nutritionPerRecipe.containsKey(nutrition.getNutrition())) {
                         nutritionPerRecipe.put(nutrition.getNutrition(), nutritionValue
-                            .add(nutritionPerRecipe.get(nutrition.getNutrition())));
+                                .add(nutritionPerRecipe.get(nutrition.getNutrition())));
                     } else {
                         nutritionPerRecipe.put(nutrition.getNutrition(), nutritionValue);
                     }
@@ -154,18 +164,18 @@ public class WeekPlanServiceImpl implements WeekPlanService {
             List<List<WeeklyPlanner>> currentWeekPlan = copyWeekPlan(weeklyPlannerItems);
 
             List<Recipe> breakfastRecipes = recipes.keySet().stream()
-                .filter(r -> r.getCategories().contains(categoryRepository.findFirstByName("Frühstück")))
-                .toList();
+                    .filter(r -> r.getCategories().contains(categoryRepository.findFirstByName("Frühstück")))
+                    .toList();
             List<Recipe> lunchOrDinnerRecipes = recipes.keySet().stream()
-                .filter(r -> {
-                    var categories = r.getCategories();
-                    return categories.contains(categoryRepository.findFirstByName("Hauptspeise"))
-                        && !categories.contains(categoryRepository.findFirstByName("Frühstück"))
-                        && !categories.contains(categoryRepository.findFirstByName("Dessert"))
-                        && !categories.contains(categoryRepository.findFirstByName("Jause"))
-                        && !categories.contains(categoryRepository.findFirstByName("Vorspeise"))
-                        && !categories.contains(categoryRepository.findFirstByName("Beilage"));
-                }).toList();
+                    .filter(r -> {
+                        var categories = r.getCategories();
+                        return categories.contains(categoryRepository.findFirstByName("Hauptspeise"))
+                                && !categories.contains(categoryRepository.findFirstByName("Frühstück"))
+                                && !categories.contains(categoryRepository.findFirstByName("Dessert"))
+                                && !categories.contains(categoryRepository.findFirstByName("Jause"))
+                                && !categories.contains(categoryRepository.findFirstByName("Vorspeise"))
+                                && !categories.contains(categoryRepository.findFirstByName("Beilage"));
+                    }).toList();
 
             double totalAttemptRate = 0.0;
 
@@ -207,7 +217,7 @@ public class WeekPlanServiceImpl implements WeekPlanService {
     }
 
     private Recipe getBestRecipe(List<Recipe> recipes, Map<Nutrition, BigDecimal> dailyNutrition, Map<Nutrition, Double> recommendedMin, Map<Nutrition, Double> recommendedMax, Map<Recipe,
-        Map<Nutrition, BigDecimal>> nutritionPerRecipe, Set<Recipe> usedRecipes) {
+            Map<Nutrition, BigDecimal>> nutritionPerRecipe, Set<Recipe> usedRecipes) {
         Recipe bestRecipe = null;
         double bestScore = Double.MAX_VALUE;
 
@@ -275,7 +285,7 @@ public class WeekPlanServiceImpl implements WeekPlanService {
             weeklyPlanner.setRecipeBook(recipeBook);
             weeklyPlanner.setDate(java.sql.Date.valueOf(date));
             weeklyPlanner.setDaytime(WeeklyPlanner.EatingTime.values()
-                [DayTime.valueOf(weekDayDto.dayTimes().get(i).name()).ordinal()]);
+                    [DayTime.valueOf(weekDayDto.dayTimes().get(i).name()).ordinal()]);
             weeklyPlannerItems.add(weeklyPlanner);
         }
     }
