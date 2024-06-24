@@ -18,7 +18,6 @@ recipeId;categoryName
 26;Frühstück
 27;Hauptspeise
 27;Beilage
-26;Frühstück
 28;Hauptspeise
 28;Beilage
 28;Frühstück
@@ -103,3 +102,7 @@ recipeId;categoryName
 113;Jause
 114;Beilage
 115;Jause
+117;Frühstück
+118;Frühstück
+119;Frühstück
+120;Frühstück

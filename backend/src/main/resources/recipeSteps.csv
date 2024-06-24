@@ -335,3 +335,8 @@ recipeId;stepNumber;name;description;unterRezeptId
 115;1;Lachs;Lachs gut würzen und mit Zitronensaft ein einreiben.
 115;2;anbraten;Auf beiden Seiten gut anbraten. (Falls Haut vorhanden diese ruhig stark anbraten.)
 116;1;Spaghetti Bolognese machen;;57
+117;1;Schnitzel zubereiten;Schnitzel bestellen
+117;2;Pommes zubereiten;Pommes bestellen
+117;3;Sauce zubereiten;Sauce bestellen
+118;1;Joghurt rausnehmen;Joghurt 20 min in der Mikrowelle auftauen lassen.
+120;1;Kaffee kochen;Kaffee bestellen
