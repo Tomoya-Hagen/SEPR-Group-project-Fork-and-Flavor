@@ -91,6 +91,10 @@ export class RecipeService {
     );
   }
 
+  getRecommendedRecipes(): Observable<Recipe[]> {
+    return this.http.get<Recipe[]>(this.baseUri + "/recommended",);
+  }
+
   public getEditRecipeDetailsBy(recipeId: number): Observable<RecipeDetailDto> {
     return this.http.get<RecipeDetailDto>(
       this.baseUri + "/edit/" + recipeId
