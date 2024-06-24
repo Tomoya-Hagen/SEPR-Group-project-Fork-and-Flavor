@@ -1,13 +1,14 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validators;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.WeekPlanCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
@@ -20,8 +21,13 @@ import java.util.List;
 public class WeekPlannerValidator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
-    private RecipeBookRepository recipeBookRepository;
+    private final RecipeBookRepository recipeBookRepository;
+    private final CategoryRepository categoryRepository;
+
+    public WeekPlannerValidator(RecipeBookRepository recipeBookRepository, CategoryRepository categoryRepository) {
+        this.recipeBookRepository = recipeBookRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
     public void validateForCreate(WeekPlanCreateDto weekPlanCreateDto) throws ValidationException {
         LOGGER.trace("validateForCreate({})", weekPlanCreateDto);
@@ -33,8 +39,8 @@ public class WeekPlannerValidator {
         if (weekPlanCreateDto.startDate().isBefore(LocalDate.now())) {
             validationErrors.add("start date cannot be before today");
         }
-        if (weekPlanCreateDto.endDate().isAfter(weekPlanCreateDto.endDate().plusYears(1))) {
-            validationErrors.add("end date has to be in the next year");
+        if (weekPlanCreateDto.endDate().isAfter(LocalDate.now().plusYears(1))) {
+            validationErrors.add("end date cannot be further in future than 1 year from today");
         }
         if (weekPlanCreateDto.weekdays().size() != 7) {
             validationErrors.add("every day has to be filled");
@@ -48,13 +54,18 @@ public class WeekPlannerValidator {
         } else {
             int breakfastCount = 0;
             int nonBreakfastCount = 0;
+            Category breakfast = categoryRepository.findFirstByName("Frühstück");
+            Category dessert = categoryRepository.findFirstByName("Dessert");
+            Category vorspeise = categoryRepository.findFirstByName("Vorspeise");
+            Category jause = categoryRepository.findFirstByName("Jause");
+            Category beilage = categoryRepository.findFirstByName("Beilage");
             for (Recipe recipe : rb.getRecipes()) {
-                if (recipe.getCategories().contains("Frühstück")) {
+                if (recipe.getCategories().contains(breakfast)) {
                     breakfastCount++;
-                } else if (!recipe.getCategories().contains("Dessert")
-                    && !recipe.getCategories().contains("Beilage")
-                    && !recipe.getCategories().contains("Vorspeise")
-                    && !recipe.getCategories().contains("Jause")) {
+                } else if (!recipe.getCategories().contains(dessert)
+                    && !recipe.getCategories().contains(beilage)
+                    && !recipe.getCategories().contains(vorspeise)
+                    && !recipe.getCategories().contains(jause)) {
                     nonBreakfastCount++;
                 }
             }
