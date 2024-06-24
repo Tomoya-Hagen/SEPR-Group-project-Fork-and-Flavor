@@ -161,6 +161,8 @@ export class RecipeCreateComponent implements OnInit {
           count++;
         }
       });
+    } else {
+      this.recipe.numberOfServings = 1;
     }
 
 
@@ -176,6 +178,14 @@ export class RecipeCreateComponent implements OnInit {
   }
 
   public onSubmit(form: NgForm): void {
+    if(this.recipe.recipeSteps.length == 0){
+      this.notification.error('Bitte fügen Sie zumindest einen Schritt hinzu!');
+      return;
+    }
+    if(this.recipe.ingredients.length == 0) {
+      this.notification.error('Bitte fügen Sie zumindest eine Zutat hinzu!');
+      return;
+    }
     this.recipe.recipeSteps.forEach(step => {
       if(step.description){
         delete step.recipeId;
@@ -192,7 +202,7 @@ export class RecipeCreateComponent implements OnInit {
           this.router.navigate(['/recipe/details/' + detrecipe.id]);
         },
         error: error => {
-          this.defaultServiceErrorHandling(error);
+          this.notification.error("Fehler beim Erstellen des Rezeptes!",'Fehler-Rezept');
         }
       }
       );
@@ -202,7 +212,7 @@ export class RecipeCreateComponent implements OnInit {
             this.router.navigate(['/recipe/details/' + this.route.snapshot.params['id']]);
           },
           error: error => {
-            this.defaultServiceErrorHandling(error);
+            this.notification.error("Fehler beim Erstellen des Rezeptes!",'Fehler-Rezept');
           }
         }
       );
@@ -212,7 +222,7 @@ export class RecipeCreateComponent implements OnInit {
             this.router.navigate(['/recipe/details/' + detrecipe.id]);
           },
           error: error => {
-            this.defaultServiceErrorHandling(error);
+            this.notification.error("Fehler beim Erstellen des Rezeptes!",'Fehler-Rezept');
           }
         }
       );

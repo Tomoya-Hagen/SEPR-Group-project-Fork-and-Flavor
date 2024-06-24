@@ -7,7 +7,6 @@ public class SimpleRecipeResultDto {
     private String recipename;
     private boolean whichstep;
 
-
     public Long getRecipeId() {
         return recipeId;
     }

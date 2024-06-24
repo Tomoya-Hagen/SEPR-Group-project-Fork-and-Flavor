@@ -14,7 +14,6 @@ import {RouterLink} from "@angular/router";
 export class CardComponent {
   @Input() item: any;
   @Input() detailUrlPrefix: string = '/details';
-
   @Output() cardClicked: EventEmitter<void> = new EventEmitter<void>();
 
   onCardClick() {

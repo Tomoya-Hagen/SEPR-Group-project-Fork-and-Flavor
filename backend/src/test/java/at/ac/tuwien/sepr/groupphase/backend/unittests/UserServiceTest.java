@@ -37,7 +37,7 @@ class UserServiceTest {
     private RoleRepository roleRepository;
 
     @Test
-    void findUsersByNameFindsOneUserWithTheLetterU() {
+    void findUsersByNameFindsTwoUsersWithTheLetterU() {
         Roles[] roles = Roles.values();
         List<Role> rolesList = new ArrayList<>();
         for (Roles r : roles) {
@@ -76,11 +76,17 @@ class UserServiceTest {
         userRepository.save(user2);
         userRepository.save(user3);
         userRepository.save(user4);
-        List<UserListDto> results = userService.findUsersByName("klima", 20);
+        List<UserListDto> results = userService.findUsersByName("u", 20);
 
-        assertEquals(1, results.size());
-        System.out.println(results);
-
-        assertEquals("klimakleber-u", results.get(0).name());
+        assertEquals(9, results.size());
+        assertEquals("user", results.get(0).name());
+        assertEquals("contributor", results.get(1).name());
+        assertEquals("user1", results.get(2).name());
+        assertEquals("user2", results.get(3).name());
+        assertEquals("user3", results.get(4).name());
+        assertEquals("user4", results.get(5).name());
+        assertEquals("user5", results.get(6).name());
+        assertEquals("uber", results.get(7).name());
+        assertEquals("klimakleber-u", results.get(8).name());
     }
 }

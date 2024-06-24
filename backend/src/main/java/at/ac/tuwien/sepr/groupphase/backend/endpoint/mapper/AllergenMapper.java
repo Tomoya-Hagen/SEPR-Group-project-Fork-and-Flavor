@@ -18,5 +18,11 @@ public interface AllergenMapper {
      */
     AllergenDetailDto allergenToAllergenDetailDto(Allergen allergen);
 
+    /**
+     * Converts a list of Allergen entities to a list of AllergenDetailDto objects.
+     *
+     * @param allergens The list of Allergen entities.
+     * @return A list of AllergenDetailDto objects.
+     */
     List<AllergenDetailDto> allergenListToAllergenDetailDtoList(List<Allergen> allergens);
 }

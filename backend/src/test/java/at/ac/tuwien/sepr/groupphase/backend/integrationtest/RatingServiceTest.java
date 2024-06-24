@@ -34,6 +34,7 @@ class RatingServiceTest implements TestData {
     void CreateNewRatingForRecipe() throws ValidationException {
         List<RatingListDto> ratings = ratingService.getRatingsByRecipeId(1);
         Assertions.assertEquals(6,ratings.size());
+        Assertions.assertEquals(6,ratings.size());
         userAuthenticationByEmail("admin@email.com");
         RatingCreateDto ratingCreateDto = new RatingCreateDto(1,2,3,4,"test review");
         RatingListDto newRating = ratingService.createRating(ratingCreateDto);

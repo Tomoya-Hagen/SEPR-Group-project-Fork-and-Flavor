@@ -38,4 +38,3 @@ mail:
 ```
 If the line `admin-email` is commented out the testusers are generated. Have a look at `/backend/src/main/java/at/ac/tuwien/sepr/groupphase/backend/datagenerator/DataGenerator.java` for more information.
 
-

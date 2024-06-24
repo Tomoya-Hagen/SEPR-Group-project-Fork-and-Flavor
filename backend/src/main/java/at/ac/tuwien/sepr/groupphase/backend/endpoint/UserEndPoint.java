@@ -7,10 +7,11 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordChangeDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import jakarta.annotation.security.PermitAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -31,13 +32,16 @@ import java.util.List;
 @RequestMapping(value = "/api/v1/users")
 public class UserEndPoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    UserService userService;
+    private final UserService userService;
+    private final BadgeService badgeService;
 
-    @Autowired
-    public UserEndPoint(UserService userService) {
+    public UserEndPoint(UserService userService,
+                        BadgeService badgeService) {
         this.userService = userService;
+        this.badgeService = badgeService;
     }
 
+    @Secured("ROLE_USER")
     @GetMapping
     public ResponseEntity<List<UserListDto>> getUsers(@RequestParam(name = "name") String name, @RequestParam(name = "limit") int limit) {
         LOGGER.info("Getting {} using {}", limit, name);
@@ -45,6 +49,7 @@ public class UserEndPoint {
         return ResponseEntity.ok(userService.findUsersByName(name, limit));
     }
 
+    @PermitAll
     @GetMapping("{id}/details")
     public UserDto getUser(@PathVariable(name = "id") Long id) {
         LOGGER.info("GET /api/v1/users/{}/details", id);
@@ -57,18 +62,21 @@ public class UserEndPoint {
         }
     }
 
+    @PermitAll
     @GetMapping("{id}/recipebooks")
     public List<RecipeBookListDto> getRecipeBooksByUserId(@PathVariable(name = "id") Long id) {
         LOGGER.info("GET /api/v1/users/{}/recipebooks", id);
         return userService.findRecipeBooksByUserId(id);
     }
 
+    @PermitAll
     @GetMapping("{id}/recipes")
     public List<RecipeListDto> getRecipesByUserId(@PathVariable(name = "id") Long id) {
         LOGGER.info("GET /api/v1/users/{}/recipes", id);
         return userService.findRecipesByUserId(id);
     }
 
+    @Secured("ROLE_USER")
     @GetMapping("/current")
     public ResponseEntity<UserDto> getCurrentUser() {
         try {
@@ -79,6 +87,18 @@ public class UserEndPoint {
             logClientError(status, "no user with found", e);
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/badge")
+    public List<String> getBadgesOfCurrentUser() {
+        return badgeService.getBadgesOfCurrentUser();
+    }
+
+    @PermitAll
+    @GetMapping("{id}/badge")
+    public List<String> getBadgesOfUser(@PathVariable(name = "id") Long id) {
+        return badgeService.getBadgesOfUser(id);
     }
 
     @Secured("ROLE_USER")
@@ -101,9 +121,9 @@ public class UserEndPoint {
     /**
      * This method logs client errors.
      *
-     * @param status The HTTP status of the error.
+     * @param status  The HTTP status of the error.
      * @param message The error message.
-     * @param e The exception that caused the error.
+     * @param e       The exception that caused the error.
      */
     private void logClientError(HttpStatus status, String message, Exception e) {
         LOGGER.warn("{} {}: {}: {}", status.value(), message, e.getClass().getSimpleName(), e.getMessage());

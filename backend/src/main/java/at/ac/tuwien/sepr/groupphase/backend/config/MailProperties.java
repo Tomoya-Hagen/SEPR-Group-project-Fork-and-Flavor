@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 public class MailProperties {
 
     private String fromAddress;
+
     private String frontendUrl;
+
     private String adminEmail;
 
     public String getFromAddress() {

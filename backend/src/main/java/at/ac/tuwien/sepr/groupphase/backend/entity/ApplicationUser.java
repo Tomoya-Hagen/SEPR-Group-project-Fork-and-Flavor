@@ -104,9 +104,11 @@ public class ApplicationUser {
         inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private List<Role> roles = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private List<RecipeVerified> recipesVerified;
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "recipe_verified",
+        joinColumns = {@JoinColumn(name = "user_id")},
+        inverseJoinColumns = {@JoinColumn(name = "recipe_id")})
+    private List<Recipe> verifiedRecipes = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "owner_id", referencedColumnName = "id")

@@ -9,6 +9,7 @@ import {ToastrService} from "ngx-toastr";
 import {RatingListDto} from "../../dtos/rating";
 import {RatingService} from "../../services/rating.service";
 import {FormsModule} from "@angular/forms";
+import {Role} from "../../dtos/role";
 
 @Component({
   selector: 'app-userpage',
@@ -23,6 +24,7 @@ export class UserpageComponent implements OnInit {
     name: ""
   };
   isMyPage: boolean = false;
+  badges: Role[] = [];
   ratings: RatingListDto[] = [];
   menuOptions = [
     {
@@ -86,6 +88,16 @@ export class UserpageComponent implements OnInit {
           this.router.navigate(['not-found']);
         }
       });
+      this.service.getBadgesOfUser(params['id']).subscribe({
+        next: data => {
+          this.badges = data;
+        },
+        error: error => {
+          console.error('Error fetching badges by user id', error);
+          this.notification.error('Badges für die Benutzerseite können nicht abgerufen werden.', "Backend Fehler - Benutzerseite Rezepte");
+        }
+      });
+
     });
   }
 

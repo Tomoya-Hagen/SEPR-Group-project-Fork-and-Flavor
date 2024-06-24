@@ -55,11 +55,11 @@
   </ng-template>
   <br>
   <div class="RecipeInfos">
-    <div class="info-box">
+    <div class="info-box info-box-1">
       <h4>Bewertung:</h4>
       <app-star-rating [disabled]="true" [value]="recipe.rating"></app-star-rating>
     </div>
-    <div class="info-box">
+    <div class="info-box info-box-2">
       <h4>Portionen:</h4>
       <div class="custom-number-input">
         <button (click)="decrement()">-</button>
@@ -67,11 +67,11 @@
         <button (click)="increment()">+</button>
       </div>
     </div>
-    <div class="info-box" *ngIf="isCategoriesNotEmpty()">
+    <div class="info-box info-box-3" *ngIf="isCategoriesNotEmpty()">
       <h4>Kategorien:</h4>
       <div>{{ getCategoryList() }}</div>
     </div>
-    <div class="info-box" *ngIf="isAllergensNotEmpty()">
+    <div class="info-box info-box-4" *ngIf="isAllergensNotEmpty()">
       <h4>Allergene: </h4>
       <div>
         <span *ngFor="let allergen of recipe.allergens; let isLast=last">
@@ -91,12 +91,11 @@
       <h4>Geforkte Rezepte:</h4>
       <span class="number">{{ recipe.forkedRecipes.length }}</span>
     </div>
-    <div class="info-box clickable" *ngIf="screenWidth <= 767" (click)="toggleNutrition()">
+    <div class="info-box info-box-5 clickable" *ngIf="screenWidth <= 767" style="box-shadow: 0 0 10px rgba(111, 66, 193, 0); background-color: rgba(111, 66, 193, 1);" (click)="toggleNutrition()">
       <h4>Nährwerte:</h4>
-        <span *ngIf="!showNutrition">Zeigen</span>
-        <span *ngIf="showNutrition">Verstecken</span>
+      <span *ngIf="!showNutrition">Zeigen</span>
+      <span *ngIf="showNutrition">Verstecken</span>
     </div>
-
   </div>
 
 
@@ -156,26 +155,26 @@
       <app-recipe-step [step]="step"></app-recipe-step>
     </ng-container>
   </div>
-  </div>
+</div>
 
 
-  <div *ngIf="recipes && recipes.length > 0">
-    <hr class="my-4">
-    <h2>Passt gut dazu:</h2>
-    <div class="row">
-      <div class="col-lg-4 p-2" *ngFor="let item of recipes">
-        <app-card [item]="item" [detailUrlPrefix]="'/recipe/details'"></app-card>
-      </div>
-    </div>
-    <div class="navigation-bar" *ngIf="recipes && totalElements > 3">
-      <ngb-pagination
-        [collectionSize]="totalElements"
-        [(page)]="page"
-        [pageSize]="size"
-        (pageChange)="onPageChange($event)">
-      </ngb-pagination>
+<div *ngIf="recipes && recipes.length > 0">
+  <hr class="my-4">
+  <h2>Passt gut dazu:</h2>
+  <div class="row">
+    <div class="col-lg-4 p-2" *ngFor="let item of recipes">
+      <app-card [item]="item" [detailUrlPrefix]="'/recipe/details'"></app-card>
     </div>
   </div>
+  <div class="navigation-bar" *ngIf="recipes && totalElements > 3">
+    <ngb-pagination
+      [collectionSize]="totalElements"
+      [(page)]="page"
+      [pageSize]="size"
+      (pageChange)="onPageChange($event)">
+    </ngb-pagination>
+  </div>
+</div>
 
 <!-- Ratings -->
 <hr class="my-4">
@@ -183,23 +182,23 @@
   <ng-container class="ratings-container">
     <h2>Bewertungen:</h2>
     <div class="ratings-wrapper" *ngIf="ratings.length > 0 && areRatingsLoaded">
-        <div *ngFor="let rating of ratings" class="rating-box">
-          <div class="rating-header">
-            <p class="user-name">{{ rating.user.name }}</p>
-          </div>
-          <div class="rating-details">
-            <p>Geschmack:
-              <app-star-rating [disabled]="true" [value]="rating.taste"></app-star-rating>
-            </p>
-            <p>Einfachheit:
-              <app-star-rating [disabled]="true" [value]="rating.easeOfPrep"></app-star-rating>
-            </p>
-            <p>Kosten:
-              <app-star-rating [disabled]="true" [value]="rating.cost"></app-star-rating>
-            </p>
-            <p class="review">{{ rating.review }}</p>
-          </div>
+      <div *ngFor="let rating of ratings" class="rating-box">
+        <div class="rating-header">
+          <p class="user-name">{{ rating.user.name }}</p>
         </div>
+        <div class="rating-details">
+          <p>Geschmack:
+            <app-star-rating [disabled]="true" [value]="rating.taste"></app-star-rating>
+          </p>
+          <p>Einfachheit:
+            <app-star-rating [disabled]="true" [value]="rating.easeOfPrep"></app-star-rating>
+          </p>
+          <p>Kosten:
+            <app-star-rating [disabled]="true" [value]="rating.cost"></app-star-rating>
+          </p>
+          <p class="review">{{ rating.review }}</p>
+        </div>
+      </div>
     </div>
     <!-- Add Rating Box -->
     <div class="rating-box add-rating-box" (click)="openRatingModal(ratingModal)" *ngIf="!isOwner && !hasRated">

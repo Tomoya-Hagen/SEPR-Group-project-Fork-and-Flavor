@@ -1,8 +1,10 @@
 <form #form="ngForm" (ngSubmit)="onSubmit(form)">
-  <div class="container mt-5">
+<div class="container mt-5">
     <div>
       <h1 class="text-center mb-4">{{ heading }}</h1>
     </div>
+
+
       <div class="form-group" *ngIf="isOwner">
         <label for="name">Name</label>
           <input  type="text"
@@ -11,6 +13,7 @@
                   class="form-control"
                   placeholder="Choose a name"
                   [(ngModel)]="recipeBook.name"
+                  #nameModel="ngModel"
                   required
           >
           <div class="invalid-feedback">
@@ -26,9 +29,9 @@
                     name="description"
                     required >
           </textarea>
-          <div class="invalid-feedback">
-            Description is required.
-          </div>
+        <div class="invalid-feedback">
+          Description is required.
+        </div>
       </div>
 
       <div>

@@ -4,10 +4,10 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecommendEvaluation;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecommendEvaluation;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -20,6 +20,8 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeRecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
+import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
@@ -30,6 +32,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
+import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
@@ -81,16 +84,18 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeValidator recipeValidator;
     private final UserManager userManager;
     private final BadgeService badgeService;
+    private final EmailService emailService;
     private final UserRepository userRepository;
     private final RatingRepository ratingRepository;
-
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
                              RecipeMapper recipeMapper,
                              CategoryRepository categoryRepository,
                              RecipeValidator recipeValidator,
                              UserManager userManager,
-                             BadgeService badgeService, UserRepository userRepository,
+                             BadgeService badgeService,
+                             EmailService emailService,
+                             UserRepository userRepository,
                              RatingRepository ratingRepository) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
@@ -98,10 +103,10 @@ public class RecipeServiceImpl implements RecipeService {
         this.recipeValidator = recipeValidator;
         this.userManager = userManager;
         this.badgeService = badgeService;
+        this.emailService = emailService;
         this.userRepository = userRepository;
         this.ratingRepository = ratingRepository;
     }
-
 
     @Override
     public RecipeDetailDto getRecipeDetailDtoById(long id) throws NotFoundException {
@@ -112,40 +117,43 @@ public class RecipeServiceImpl implements RecipeService {
     public RecipeDetailDto getRecipeDetailDtoById(long id, boolean recursive) throws NotFoundException {
         LOGGER.trace("getRecipeDetailDtoById({})", id);
         Recipe recipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
+        int verifications = recipe.getVerifiers().size();
         HashMap<Ingredient, RecipeIngredient> ingredients = new HashMap<>();
         HashMap<Nutrition, BigDecimal> nutritions = new HashMap<>();
         ArrayList<Allergen> allergens = new ArrayList<>();
         getRecipeDetails(recipe, ingredients, nutritions, allergens, recursive);
         long rating = calculateAverageTasteRating(recipe.getRatings());
-        RecipeDetailDto result = recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating);
+        RecipeDetailDto result = recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating, verifications);
 
         List<Recipe> forkedRecipes = recipeRepository.findAllForkedRecipesById(id);
         ArrayList<RecipeListDto> forkedRecipeNames = new ArrayList<>();
         for (Recipe forkedRecipe : forkedRecipes) {
             forkedRecipeNames.add(
-                new RecipeListDto(
-                    forkedRecipe.getId(),
-                    forkedRecipe.getName(),
-                    forkedRecipe.getDescription(),
-                    calculateAverageTasteRating(forkedRecipe.getRatings())
-                )
+                    new RecipeListDto(
+                            forkedRecipe.getId(),
+                            forkedRecipe.getName(),
+                            forkedRecipe.getDescription(),
+                            calculateAverageTasteRating(forkedRecipe.getRatings())
+                    )
             );
         }
+
         return new RecipeDetailDto(
-            result.id(),
-            result.name(),
-            result.description(),
-            result.numberOfServings(),
-            result.forkedFrom(),
-            result.ownerId(),
-            result.categories(),
-            result.isDraft(),
-            result.recipeSteps(),
-            result.ingredients(),
-            result.allergens(),
-            result.nutritions(),
-            forkedRecipeNames,
-            result.rating()
+                result.id(),
+                result.name(),
+                result.description(),
+                result.numberOfServings(),
+                result.forkedFrom(),
+                result.ownerId(),
+                result.categories(),
+                result.isDraft(),
+                result.recipeSteps(),
+                result.ingredients(),
+                result.allergens(),
+                result.nutritions(),
+                forkedRecipeNames,
+                result.rating(),
+                result.verifications()
         );
     }
 
@@ -170,16 +178,48 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public void verifyRecipe(long recipeId) throws ValidationException {
+        LOGGER.trace("verifyRecipe({})", recipeId);
+        ApplicationUser user = userManager.getCurrentUser();
+        if (!userManager.hasUserRole(user, Roles.StarCook)) {
+            throw new ForbiddenException();
+        }
+        Recipe recipe = recipeRepository.getRecipeById(recipeId).orElseThrow(NotFoundException::new);
+        if (recipeRepository.getVerifysByRecipeIdAndUserId(recipe.getId(), user.getId()).isPresent()) {
+            throw new DuplicateObjectException("A verification to this recipe already exists");
+        }
+        if (user.equals(recipe.getOwner())) {
+            throw new ValidationException("Owner can not verify recipe", List.of());
+        }
+        List<ApplicationUser> verifiers = recipe.getVerifiers();
+        verifiers.add(user);
+        recipe.setVerifiers(verifiers);
+
+        recipeRepository.save(recipe);
+        emailService.sendSimpleEmail(recipe.getOwner().getEmail(), "Rezept Verifikation",
+                "Dein Rezept " + recipe.getName()
+                        + " wurde verifiziert.");
+    }
+
+    @Override
+    public boolean hasVerified(long recipeId) {
+        LOGGER.trace("hasVerified({})", recipeId);
+        ApplicationUser user = userManager.getCurrentUser();
+        Recipe recipe = recipeRepository.getRecipeById(recipeId).orElseThrow(NotFoundException::new);
+        return recipe.getVerifiers().contains(user);
+    }
+
+    @Override
     public Page<RecipeListDto> getRecipesThatGoWellWith(long id, Pageable pageable) throws NotFoundException {
         Recipe origRecipe = recipeRepository.getRecipeById(id).orElseThrow(NotFoundException::new);
         List<Recipe> goWellWith = origRecipe.getGoesWellWithRecipes();
 
         List<RecipeListDto> recipeListDtos = goWellWith.stream()
-            .map(recipe -> {
-                Long rating = calculateAverageTasteRating(recipe.getRatings());
-                return recipeMapper.recipeToRecipeListDto(recipe, rating);
-            })
-            .collect(Collectors.toList());
+                .map(recipe -> {
+                    Long rating = calculateAverageTasteRating(recipe.getRatings());
+                    return recipeMapper.recipeToRecipeListDto(recipe, rating);
+                })
+                .collect(Collectors.toList());
 
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), recipeListDtos.size());
@@ -195,8 +235,8 @@ public class RecipeServiceImpl implements RecipeService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         List<Recipe> goWellWithRecipes = goWellWith.stream()
-            .map(recipeListDto -> recipeRepository.getRecipeById(recipeListDto.id()).orElseThrow(NotFoundException::new))
-            .collect(Collectors.toList());
+                .map(recipeListDto -> recipeRepository.getRecipeById(recipeListDto.id()).orElseThrow(NotFoundException::new))
+                .collect(Collectors.toList());
 
         List<Recipe> uniqueRecipes = new ArrayList<>();
         for (Recipe recipe : goWellWithRecipes) {
@@ -234,8 +274,8 @@ public class RecipeServiceImpl implements RecipeService {
 
         recipeRepository.save(simple);
         badgeService.addRoleToUser(owner, Roles.Cook);
-        var x = recipeMapper.recipeToDetailedRecipeDto(simple);
-        return x;
+        badgeService.addRoleToUser(owner, Roles.StarCook);
+        return recipeMapper.recipeToDetailedRecipeDto(simple);
     }
 
     @Override
@@ -260,11 +300,9 @@ public class RecipeServiceImpl implements RecipeService {
         simple.setIngredients(recipe.getIngredients());
         simple.setCategories(categories);
         simple.setRecipeSteps(recipe.getRecipeSteps());
-
-
         recipeRepository.save(simple);
-        var x = recipeMapper.recipeToDetailedRecipeDto(simple);
-        return x;
+        badgeService.addRoleToUser(owner, Roles.Cook);
+        return recipeMapper.recipeToDetailedRecipeDto(simple);
     }
 
     @Override
@@ -283,7 +321,7 @@ public class RecipeServiceImpl implements RecipeService {
         if (!ratings.isEmpty()) {
             for (Rating value : ratings) {
                 rating += (value.getTaste().longValue()
-                    + value.getCost().longValue() + value.getEaseOfPrep().longValue()) / 3;
+                        + value.getCost().longValue() + value.getEaseOfPrep().longValue()) / 3;
             }
             rating /= ratings.size();
         }
@@ -369,7 +407,7 @@ public class RecipeServiceImpl implements RecipeService {
             for (Ingredient ing : ings.keySet()) {
                 RecommendEvaluation r = new RecommendEvaluation();
                 r.setIngredient(ing);
-                int  t = ings.get(ing);
+                int t = ings.get(ing);
                 r.setScore((float) t / count);
                 r.setMultiplicator(1);
                 recommendEvaluation.add(r);
@@ -391,8 +429,8 @@ public class RecipeServiceImpl implements RecipeService {
         while (recommends.size() < 6) {
             var their = compareMap.get(bestguess.get(current));
             List<Recipe> result = their.stream()
-                .filter(item -> !mine.contains(item))
-                .toList();
+                    .filter(item -> !mine.contains(item))
+                    .toList();
             for (int i = 0; i < result.toArray().length; i++) {
                 Recipe possible = result.get(i);
                 if (!recommends.contains(possible)) {
@@ -412,39 +450,37 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
 
-
     public List<ApplicationUser> findMostSimilarUser(
-        ApplicationUser targetUser,
-        List<RecommendEvaluation> targetEvaluations,
-        Map<ApplicationUser, List<RecommendEvaluation>> allUsersEvaluations) {
+            ApplicationUser targetUser,
+            List<RecommendEvaluation> targetEvaluations,
+            Map<ApplicationUser, List<RecommendEvaluation>> allUsersEvaluations) {
 
         List<Map.Entry<ApplicationUser, Double>> userDistances = new ArrayList<>();
 
         allUsersEvaluations.entrySet().parallelStream()
-            .filter(entry -> !entry.getKey().equals(targetUser)) // Exclude the target user itself
-            .forEach(entry -> {
-                double distance = SimilarityUtils.calculateDistance(targetEvaluations, entry.getValue());
-                userDistances.add(new AbstractMap.SimpleEntry<>(entry.getKey(), distance));
-            });
+                .filter(entry -> !entry.getKey().equals(targetUser)) // Exclude the target user itself
+                .forEach(entry -> {
+                    double distance = SimilarityUtils.calculateDistance(targetEvaluations, entry.getValue());
+                    userDistances.add(new AbstractMap.SimpleEntry<>(entry.getKey(), distance));
+                });
 
         userDistances.sort(Comparator.comparingDouble(Map.Entry::getValue));
 
         List<ApplicationUser> sortedUsers = userDistances.stream()
-            .map(Map.Entry::getKey)
-            .collect(Collectors.toList());
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
 
         return sortedUsers;
     }
 
-
     private void getRecipeDetails(
-        Recipe recipe,
-        Map<Ingredient, RecipeIngredient> ingredients,
-        Map<Nutrition, BigDecimal> nutritions,
-        List<Allergen> allergens,
-        boolean recursive) {
+            Recipe recipe,
+            Map<Ingredient, RecipeIngredient> ingredients,
+            Map<Nutrition, BigDecimal> nutritions,
+            List<Allergen> allergens,
+            boolean recursive) {
         LOGGER.trace("getRecipeDetails({}, {}, {}, {})",
-            recipe, ingredients, nutritions, allergens);
+                recipe, ingredients, nutritions, allergens);
         for (RecipeIngredient recipeIngredient : recipe.getIngredients()) {
             Ingredient ingredient = recipeIngredient.getIngredient();
             updateMapOfIngredients(recipeIngredient, ingredient, ingredients);
@@ -457,7 +493,7 @@ public class RecipeServiceImpl implements RecipeService {
             for (RecipeStep recipeStep : recipeSteps) {
                 if (recipeStep instanceof RecipeRecipeStep recipeRecipeStep) {
                     getRecipeDetails(recipeRecipeStep.getRecipeRecipe(), ingredients,
-                        nutritions, allergens, recursive);
+                            nutritions, allergens, recursive);
                 }
             }
         }
@@ -465,29 +501,29 @@ public class RecipeServiceImpl implements RecipeService {
 
     private void updateMapOfIngredients(RecipeIngredient recipeIngredient, Ingredient ingredient, Map<Ingredient, RecipeIngredient> ingredients) {
         LOGGER.trace("updateMapOfIngredients({}, {}, {})",
-            recipeIngredient, ingredients, ingredients);
+                recipeIngredient, ingredients, ingredients);
         if (ingredients.containsKey(ingredient)) {
             RecipeIngredient temp = ingredients.get(ingredient);
             temp.setAmount(temp.getAmount().add(recipeIngredient.getAmount()));
             ingredients.put(ingredient, temp);
         } else {
             ingredients.put(recipeIngredient.getIngredient(),
-                new RecipeIngredient(null, null,
-                    recipeIngredient.getAmount(), recipeIngredient.getUnit()));
+                    new RecipeIngredient(null, null,
+                            recipeIngredient.getAmount(), recipeIngredient.getUnit()));
         }
     }
 
     private void updateMapOfNutritions(RecipeIngredient recipeIngredient, Map<Nutrition, BigDecimal> nutritions) {
         LOGGER.trace("updateMapOfNutritions({}, {})",
-            recipeIngredient, nutritions);
+                recipeIngredient, nutritions);
 
         for (IngredientNutrition nutrition : recipeIngredient.getIngredient().getNutritions()) {
             BigDecimal nutritionValue = nutrition.getValue()
-                .multiply((recipeIngredient.getAmount())
-                    .divide(BigDecimal.valueOf(100), RoundingMode.DOWN));
+                    .multiply((recipeIngredient.getAmount())
+                            .divide(BigDecimal.valueOf(100), RoundingMode.DOWN));
             if (nutritions.containsKey(nutrition.getNutrition())) {
                 nutritions.put(nutrition.getNutrition(), nutritionValue
-                    .add(nutritions.get(nutrition.getNutrition())));
+                        .add(nutritions.get(nutrition.getNutrition())));
             } else {
                 nutritions.put(nutrition.getNutrition(), nutritionValue);
             }
@@ -496,7 +532,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     private void updateListOfAllergens(Ingredient ingredient, List<Allergen> allergens) {
         LOGGER.trace("getRecipeDetails({}, {})",
-            ingredient, allergens);
+                ingredient, allergens);
         for (Allergen allergen : ingredient.getAllergens()) {
             if (!allergens.contains(allergen)) {
                 allergens.add(allergen);
@@ -504,5 +540,3 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 }
-
-

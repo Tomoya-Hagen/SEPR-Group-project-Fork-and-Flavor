@@ -4,6 +4,9 @@ import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingListDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
@@ -44,6 +47,12 @@ class RatingEndpointTest implements TestData {
     private JwtTokenizer jwtTokenizer;
 
     @Autowired
+    private RecipeRepository recipeRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private SecurityProperties securityProperties;
     @Test
     void GetRatingsByRecipeIdReturnNotFoundIfRecipeDoesNotExist() throws Exception {
@@ -71,6 +80,9 @@ class RatingEndpointTest implements TestData {
 
     @Test
     void CreateNewRatingForRecipe() throws Exception {
+        Recipe recipe = recipeRepository.findById(1L);
+        recipe.setOwner(userRepository.findFirstById(2L));
+        recipeRepository.save(recipe);
         RatingCreateDto ratingCreateDto = new RatingCreateDto(1,2,3,4,"test review");
         MvcResult mvcResult = this.mockMvc.perform(post(RATING_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)

@@ -27,16 +27,17 @@ export class HomeComponent implements OnInit {
     this.getRecommendedRecipes()
   }
 
-  getRecipes(): void {
-    this.recipeService.getRecipes('', 0,0, 6)
-      .subscribe(data => {
-        this.recipes = data.content;
-      });
-  }
   getRecommendedRecipes(){
     this.recipeService.getRecommendedRecipes()
       .subscribe(data => {
         this.recommended = data;
+      });
+  }
+
+  getRecipes(): void {
+    this.recipeService.getRecipes('', 0,0, 6)
+      .subscribe(data => {
+        this.recipes = data.content;
       });
   }
 

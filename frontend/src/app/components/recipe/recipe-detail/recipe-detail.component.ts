@@ -42,6 +42,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     allergens: [],
     nutritions: [],
     forkedRecipes: [],
+    isVerified: false,
+    verifications: 0
   };
 
   ratings: RatingListDto[] = [];
@@ -275,18 +277,18 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   private spoonRecipe(recipeId:number, recipeBookId:number) {
     this.recipeBookService.spoonRecipe(recipeId,recipeBookId).subscribe({
-          next: () => {
-            this.notification.success(`Rezepte hinzufügen war erfolgreich.`, "Rezepte erstellen erfolgreich!");
-            this.modalService.dismissAll();
-            this.currentRecipeBook=null;
-          },
-          error: error => {
-            this.notification.error(error);
-            this.defaultServiceErrorHandling(error);
-          }
+        next: () => {
+          this.notification.success(`Rezepte hinzufügen war erfolgreich.`, "Rezepte erstellen erfolgreich!");
+          this.modalService.dismissAll();
+          this.currentRecipeBook=null;
+        },
+        error: error => {
+          this.notification.error(error);
+          this.defaultServiceErrorHandling(error);
         }
-      );
-    }
+      }
+    );
+  }
 
   private defaultServiceErrorHandling(error: any) {
     console.log(error);
@@ -303,11 +305,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   recipeBookSuggestions = (input: string): Observable<RecipeBookListDto[]> =>
     this.recipeBookService.getRecipeBooksTheUserHasWriteAccessTo()
 
-    public formatRecipeBook(recipeBook: RecipeBookListDto | null): string {
-      return !recipeBook
-        ? ""
-        : `${recipeBook.name}`
-    }
+  public formatRecipeBook(recipeBook: RecipeBookListDto | null): string {
+    return !recipeBook
+      ? ""
+      : `${recipeBook.name}`
+  }
 
   public selectRecipeBook(recipeBook: RecipeBookListDto | null) {
     this.currentRecipeBook = recipeBook;
@@ -369,37 +371,37 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   loadRatings(){
     this.ratingService.getRatingsByRecipeId(this.recipe.id).subscribe({
-      next: data => {
-        this.notification.success(`Ratings loaded successfully.`);
-        this.ratings = data;
-        this.areRatingsLoaded = true;
-        // @ts-ignore
-        this.hasRated = this.ratings.some(rating => rating.user.name === localStorage.getItem("username"));
-        console.log(this.hasRated);
-      },
-      error: error => {
-        this.notification.error(error);
-        this.defaultServiceErrorHandling(error);
+        next: data => {
+          this.notification.success(`Ratings loaded successfully.`);
+          this.ratings = data;
+          this.areRatingsLoaded = true;
+          // @ts-ignore
+          this.hasRated = this.ratings.some(rating => rating.user.name === localStorage.getItem("username"));
+          console.log(this.hasRated);
+        },
+        error: error => {
+          this.notification.error(error);
+          this.defaultServiceErrorHandling(error);
+        }
       }
-    }
-  );
+    );
   }
 
   onSubmitRating(form:NgForm){
     this.ratingService.createRating(this.rating).subscribe({
-      next: () => {
-        this.notification.success(`Rating added successfully.`);
-        this.modalService.dismissAll();
-        this.currentRecipeBook=null;
-        this.loadRatings();
-        this.hasRated = true;
-      },
-      error: error => {
-        this.notification.error(error);
-        this.defaultServiceErrorHandling(error);
+        next: () => {
+          this.notification.success(`Rating added successfully.`);
+          this.modalService.dismissAll();
+          this.currentRecipeBook=null;
+          this.loadRatings();
+          this.hasRated = true;
+        },
+        error: error => {
+          this.notification.error(error);
+          this.defaultServiceErrorHandling(error);
+        }
       }
-    }
-  );
+    );
   }
 
   openRatingModal(modal: TemplateRef<any>) {
@@ -417,9 +419,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   isFormValid():boolean{
     return this.rating.cost != 0 &&
-    this.rating.easeOfPrep != 0 &&
-    this.rating.taste != 0 &&
-    this.rating.review.length > 0
+      this.rating.easeOfPrep != 0 &&
+      this.rating.taste != 0 &&
+      this.rating.review.length > 0
   }
 
   public selectEaseOfPrep(value: number | null) {
@@ -444,7 +446,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           console.error('Error fetching recipes.', error);
           this.notification.error('Rezepte können nicht abgerufen werden.', 'Backend Fehler - Rezepte');
         }
-    })
+      })
   }
 
   onPageChange(pageNumber: number): void {

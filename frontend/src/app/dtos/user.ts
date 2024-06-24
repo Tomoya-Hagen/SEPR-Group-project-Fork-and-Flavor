@@ -1,3 +1,5 @@
+import {Role} from "./role";
+
 export interface userListDto {
   id: number;
   name: string;

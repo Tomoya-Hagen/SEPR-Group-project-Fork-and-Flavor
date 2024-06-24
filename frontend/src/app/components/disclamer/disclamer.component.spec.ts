@@ -10,8 +10,8 @@ describe('DisclamerComponent', () => {
     await TestBed.configureTestingModule({
       imports: [DisclamerComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(DisclamerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -85,14 +85,14 @@ export class RecipeService {
     return this.http.get<Page<Recipe>>(this.baseUri, { params });
   }
 
-  getRecommendedRecipes(): Observable<Recipe[]> {
-    return this.http.get<Recipe[]>(this.baseUri + "/recommended",);
-  }
-
   public getRecipeDetailsBy(recipeId: number): Observable<RecipeDetailDto> {
     return this.http.get<RecipeDetailDto>(
       this.baseUri + "/details/" + recipeId
     );
+  }
+
+  getRecommendedRecipes(): Observable<Recipe[]> {
+    return this.http.get<Recipe[]>(this.baseUri + "/recommended",);
   }
 
   public getEditRecipeDetailsBy(recipeId: number): Observable<RecipeDetailDto> {
@@ -141,6 +141,14 @@ export class RecipeService {
         return throwError(() => new Error('Failed to fetch recipe details: ' + error.message));
       })
     );
+  }
+
+  public verifyRecipe(recipeId: number): Observable<any> {
+    return this.http.put<DetailedRecipeDto>(this.baseUri + '/verify/' + recipeId, null);
+  }
+
+  public getHasVerified(recipeId: number): Observable<any> {
+    return this.http.get<Boolean>(this.baseUri + '/hasVerified/' + recipeId);
   }
 
   private mapToUpdateDto(existingRecipe: RecipeDetailDto): RecipeUpdateDto {

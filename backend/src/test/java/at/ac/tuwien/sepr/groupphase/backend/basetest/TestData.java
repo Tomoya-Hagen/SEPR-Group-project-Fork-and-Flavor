@@ -18,6 +18,7 @@ public interface TestData {
     String RECIPE_BOOK_BASE_URI = BASE_URI + "/recipebook";
 
     String ADMIN_USER = "admin@email.com";
+    String USER_USER = "user@email.com";
     List<String> ADMIN_ROLES = new ArrayList<>() {
         {
             add("ROLE_ADMIN");
