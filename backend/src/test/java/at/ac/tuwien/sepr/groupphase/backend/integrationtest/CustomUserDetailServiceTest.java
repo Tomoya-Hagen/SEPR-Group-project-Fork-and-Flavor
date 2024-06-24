@@ -107,7 +107,7 @@ class CustomUserDetailServiceTest implements TestData {
         mockMvc.perform(get("/api/v1/users/1/recipes")
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].name", org.hamcrest.Matchers.is("Spagehtti plain")));
+            .andExpect(jsonPath("$[0].name", org.hamcrest.Matchers.is("Spaghetti plain")));
     }
 
     @Test

@@ -5,6 +5,22 @@
       <h1 class="display-4" *ngIf="recipe.isDraft">{{ recipe.name }} (Template)</h1>
     </div>
   </div>
+  <ng-template #showForkedRecipesModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Forked Recipes</h5>
+      <button type="button" class="close" (click)="closeForkedRecipes()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div *ngFor="let forkedRecipe of recipe.forkedRecipes">
+        <app-card [item]="forkedRecipe" [detailUrlPrefix]="'/recipe/details'" (cardClicked)="closeRatingModal()"></app-card>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeForkedRecipes()">Close</button>
+    </div>
+  </ng-template>
   <ng-template #spoonRecipeModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">Spoon</h5>
@@ -68,7 +84,7 @@
     </div>
     <div class="info-box" *ngIf="isForkedFromRecipe()">
       <h4>Geforkt von:</h4>
-      <span>{{recipeForkedFrom}}</span>
+      <span>{{ recipe.forkedFrom.name }}</span>
     </div>
     <div class="info-box" *ngIf="hasForkedRecipes">
       <h4>Geforkt:</h4>

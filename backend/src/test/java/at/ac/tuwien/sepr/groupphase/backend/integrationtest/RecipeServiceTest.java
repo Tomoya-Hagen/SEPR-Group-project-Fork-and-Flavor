@@ -92,9 +92,9 @@ class RecipeServiceTest implements TestData {
     @Test
     void ReturnAListOfOneRecipeListDtoFromGetAllFromPageOneWithStepOne() {
         Pageable pageable = PageRequest.of(0, 1);
-        Page<RecipeListDto> recipes = recipeService.getRecipesByName("Spagehtti plain", pageable);
+        Page<RecipeListDto> recipes = recipeService.getRecipesByName("Spaghetti plain", pageable);
         assertEquals(1, recipes.getTotalElements());
-        assertEquals("Spagehtti plain", recipes.getContent().get(0).name());
+        assertEquals("Spaghetti plain", recipes.getContent().get(0).name());
     }
 
     @Test
