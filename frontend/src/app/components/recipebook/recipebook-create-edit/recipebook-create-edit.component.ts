@@ -201,7 +201,24 @@ export class RecipebookCreateEditComponent implements OnInit {
   }
 
   public isFormValid(): boolean {
-    return this.recipes.length > 0 && this.recipeBook.description !== '' && this.recipeBook.name !== '';
+    let isValid = true;
+    if (this.isOwner && this.recipes.length <= 0) {
+      this.notification.error("Rezepte können nicht leer sein")
+      isValid = false;
+    }
+
+    if (this.isOwner && this.recipeBook.description == '') {
+      this.notification.error("Die Beschreibung kann nicht leer sein")
+      isValid = false;
+    }
+
+    if (this.isOwner && this.recipeBook.name == '') {
+      this.notification.error("Der Name kann nicht leer sein")
+      isValid = false;
+    }
+
+    return isValid;
+
   }
 
   public addRecipe(recipe: RecipeListDto | null) {
