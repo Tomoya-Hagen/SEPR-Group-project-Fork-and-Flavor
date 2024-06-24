@@ -44,19 +44,14 @@
             </div>
           </div>
       </ul>
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item d-flex align-items-center">
-          <a class="nav-link" *ngIf="!authService.isLoggedIn()" class="btn btn-primary btn-lg" routerLink="/login"
-             routerLinkActive="active" role="button">Login</a>
-        </li>
-        <li class="nav-item d-flex align-items-center">
+      <ul class="navbar-nav user">
+        <li class="nav-item">
           <div ngbDropdown class="d-inline-block" *ngIf="authService.isLoggedIn()">
             <button type="button" class="btn" id="dropdownBasic4" ngbDropdownToggle>
               {{ getUser() }}
             </button>
-            <div ngbDropdownMenu>
-              <a ngbDropdownItem class="nav-link btn btn-primary btn-lg"
-                 routerLink="userpage/{{getUserId()}}">{{ getUser() }}</a>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic4">
+              <a ngbDropdownItem class="nav-link btn btn-primary btn-lg" routerLink="userpage/{{getUserId()}}">{{ getUser() }}</a>
               <a ngbDropdownItem class="nav-link" routerLink="/" (click)="authService.logoutUser()">Logout</a>
             </div>
           </div>

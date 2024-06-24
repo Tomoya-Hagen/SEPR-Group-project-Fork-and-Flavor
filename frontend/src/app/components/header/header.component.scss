@@ -2,3 +2,17 @@ img.logo {
   margin: 5px;
   margin-right: 10px;
 }
+
+.user {
+  margin-left: auto;
+}
+
+@media (max-width: 990px) {
+  .nav-link {
+    margin: 0 10px;
+  }
+
+  .user {
+    margin: 10px;
+  }
+}

@@ -11,7 +11,7 @@ export class HeaderComponent{
 
   constructor(public authService: AuthService) { }
 
-  isCollapsed = false;
+  isCollapsed = true;
   getUser(): string {
     return localStorage.getItem("username");
   }
