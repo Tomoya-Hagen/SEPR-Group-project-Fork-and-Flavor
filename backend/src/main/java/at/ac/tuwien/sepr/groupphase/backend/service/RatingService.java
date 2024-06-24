@@ -8,6 +8,10 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 
 import java.util.List;
 
+/**
+ * The RatingService interface provides methods for managing ratings in the application.
+ * It includes methods for retrieving ratings by recipe id, creating a new rating, and retrieving ratings by user id.
+ */
 public interface RatingService {
     /**
      * return all ratings based on the given recipe id.
