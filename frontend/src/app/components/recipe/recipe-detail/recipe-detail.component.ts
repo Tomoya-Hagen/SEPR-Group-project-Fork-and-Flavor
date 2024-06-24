@@ -25,6 +25,7 @@ import {catchError, of} from "rxjs";
 })
 export class RecipeDetailComponent implements OnInit, OnDestroy{
   @ViewChild('spoonRecipeModal', { static: true }) spoonRecipeModal: TemplateRef<any>;
+  @ViewChild('showForkedRecipesModal', { static: true }) showForkedRecipesModal: TemplateRef<any>;
 
   recipe: RecipeDetailDto = {
     id: 0,
@@ -32,7 +33,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     name: "",
     description: "",
     numberOfServings: 0,
-    forkedFromId: 0,
+    forkedFrom: null,
     ownerId: 0,
     categories: [],
     isDraft: false,
@@ -40,7 +41,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     ingredients: [],
     allergens: [],
     nutritions: [],
-    forkedRecipes: []
+    forkedRecipes: [],
   };
 
   ratings: RatingListDto[] = [];
@@ -81,6 +82,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   page: number = 1;
   size: number = 3;
   loggedIn: boolean = false;
+  hasRated: boolean = false;
+  showForkedRecipesModalModal: boolean = false;
   menuOptions = [
     {
       label: 'Neues Rezept erstellen',
@@ -135,21 +138,15 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           this.selectedPortions = this.recipe.numberOfServings;
           this.changeIngredientsToGramm();
           this.changeNutritionsToGramm();
-          this.getForkedFromRecipeName();
           this.isCurrentUserOwner();
           this.orderNutritions();
-          if (this.recipe.forkedRecipes.length > 0) {
-            this.hasForkedRecipes = true;
-          }
           this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
           this.onPageChange(1);
 
 
         },
         error: error => {
-          console.error('Error fetching recipe', error);
-          this.notification.error('Rezepte können nicht abgerufen werden.', "Backend Fehler - Rezepte");
-          this.router.navigate([''])
+          this.router.navigate(['not-found']);
         }
       });
     });
@@ -164,6 +161,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   ngOnDestroy(): void {
     this.titleService.setTitle("Fork & Flavour");
+  }
+
+  getCategoryList(): string {
+    return this.recipe.categories.map(category => category.name).join(', ');
   }
 
   updateMenuOptions() {
@@ -199,39 +200,20 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     return Math.round(value * factor) / factor;
   }
 
-  onPortionsInput(portionInput: HTMLInputElement): void {
-    let value = portionInput.value;
-    if (value === '') {
-      // Allow empty value temporarily
-      this.selectedPortions = null;
-    } else {
-      let numericValue = parseInt(value, 10);
-      if (!isNaN(numericValue)) {
-        if (numericValue <= 0) {
-          numericValue = 1;
-        } else if (numericValue >= 11) {
-          numericValue = 10;
-        }
-        portionInput.value = numericValue.toString();
-        this.selectedPortions = numericValue;
-        if(this.selectedPortions >= 1 && this.selectedPortions <= 10) {
-          this.onPortionsChange();
-        }
-      }
+  increment() {
+    if (this.selectedPortions < 10) {
+      this.selectedPortions++;
+      this.onPortionsChange();
     }
   }
 
-  onPortionsBlur(portionInput: HTMLInputElement): void {
-    let value = parseInt(portionInput.value, 10);
-    if (isNaN(value) || value <= 0) {
-      value = 1;
-    } else if (value >= 11) {
-      value = 10;
+  decrement() {
+    if (this.selectedPortions > 1) {
+      this.selectedPortions--;
+      this.onPortionsChange();
     }
-    portionInput.value = value.toString();
-    this.selectedPortions = value;
-    this.onPortionsChange();
   }
+
   onPortionsChange(): void {
     this.adjustIngredientsAndNutritions();
     this.changeIngredientsToGramm();
@@ -265,34 +247,19 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     return this.recipe.allergens.length != 0;
   }
 
-  isForkedFromRecipe(): boolean{
-    if (this.recipe.id == this.recipe.forkedFromId) {
-      return false;
-    }
-    return this.recipe.forkedFromId != 0 && this.recipe.forkedFromId != null;
-  }
-
-  getForkedFromRecipeName(){
-    if (this.recipe.forkedFromId == 0 || this.recipe.forkedFromId == null) {
-      return;
-    }
-    this.service.getRecipeDetailsBy(this.recipe.forkedFromId).subscribe({
-      next: data => {
-        this.recipeForkedFrom = data.name;
-      },
-      error: error => {
-        console.error('Error forking recipe.', error);
-        const errorMessage = error.message.message;
-        this.notification.error('Fork Rezepte ist nicht möglich.' + errorMessage, "Backend Fehler - Rezepte");
-        return;
-      }
-    })
-    return this.recipeForkedFrom;
-  }
-
   openSpoonModal(spoonModal: TemplateRef<any>) {
     this.currentRecipeBook = null;
     this.modalService.open(spoonModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  openForkedRecipesModal() {
+    this.showForkedRecipesModalModal = true;
+    this.modalService.open(this.showForkedRecipesModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  closeForkedRecipes() {
+    this.showForkedRecipesModalModal = false;
+    this.modalService.dismissAll();
   }
 
   fork() {
@@ -406,6 +373,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         this.notification.success(`Ratings loaded successfully.`);
         this.ratings = data;
         this.areRatingsLoaded = true;
+        // @ts-ignore
+        this.hasRated = this.ratings.some(rating => rating.user.name === localStorage.getItem("username"));
+        console.log(this.hasRated);
       },
       error: error => {
         this.notification.error(error);
@@ -422,6 +392,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
         this.modalService.dismissAll();
         this.currentRecipeBook=null;
         this.loadRatings();
+        this.hasRated = true;
       },
       error: error => {
         this.notification.error(error);
@@ -505,6 +476,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   addRecipe() {
     this.router.navigate(['recipe/create']);
+  }
+
+  goToRecipe(id: number) {
+    this.router.navigate(['/recipe/details', id]);
   }
 
 }

@@ -66,7 +66,7 @@ class RatingEndpointTest implements TestData {
         RatingListDto[] ratings = objectMapper.readValue(response.getContentAsString(),
             RatingListDto[].class);
         Assertions.assertNotNull(ratings);
-        assertEquals(4, ratings.length);
+        assertEquals(6, ratings.length);
     }
 
     @Test
@@ -128,10 +128,11 @@ class RatingEndpointTest implements TestData {
     }
 
     @Test
-    void getRatingFromUserByIdThrowsNotFoundExceptionWhenUserDoesNotExist() throws Exception {
+    void getRatingFromUserByIdReturnsEmptyArray() throws Exception {
         long userId = 9999L;
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/ratings/user/" + userId)
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.status().isNotFound());
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(0));
     }
 }
