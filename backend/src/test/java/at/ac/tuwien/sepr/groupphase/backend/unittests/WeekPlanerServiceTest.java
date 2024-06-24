@@ -57,4 +57,37 @@ class WeekPlanerServiceTest implements TestData {
                     new WeekDayDto(Weekday.Sunday, List.of())));
         Assertions.assertThrows(DuplicateObjectException.class, () -> weekPlanService.create(secondPlan));
     }
+
+    @Test
+    void weekPlannerSuccessfulyyCreatedContainsTwentyOneRecipes() throws ValidationException {
+        userAuthenticationByEmail("admin@email.com");
+        WeekPlanCreateDto createThis = new WeekPlanCreateDto(
+            10L,
+            LocalDate.of(2025, 1, 1),
+            LocalDate.of(2025, 5, 31),
+            List.of(new WeekDayDto(Weekday.Monday, List.of(DayTime.Breakfast)),
+                new WeekDayDto(Weekday.Tuesday, List.of()),
+                new WeekDayDto(Weekday.Wednesday, List.of()),
+                new WeekDayDto(Weekday.Thursday, List.of()),
+                new WeekDayDto(Weekday.Friday, List.of()),
+                new WeekDayDto(Weekday.Saturday, List.of()),
+                new WeekDayDto(Weekday.Sunday, List.of())));
+
+        WeekPlanDetailDto[] weekPlanerResponse = weekPlanService.create(createThis);
+
+        int count = 0;
+        for (WeekPlanDetailDto dto : weekPlanerResponse) {
+            if (dto.breakfast.getRecipeId() > 0) {
+                count++;
+            }
+            if (dto.lunch.getRecipeId() > 0) {
+                count++;
+            }
+            if (dto.dinner.getRecipeId() > 0) {
+                count++;
+            }
+        }
+        Assertions.assertEquals(21, count);
+
+    }
 }

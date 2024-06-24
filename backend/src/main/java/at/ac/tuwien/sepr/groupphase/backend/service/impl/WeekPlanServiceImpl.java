@@ -144,6 +144,8 @@ public class WeekPlanServiceImpl implements WeekPlanService {
         Map<Nutrition, Double> recommendedNutritionMax = getDailyRecommendedNutritionsMax();
         List<List<WeeklyPlanner>> bestWeekPlan = new ArrayList<>();
         double bestAttemptRate = Double.MAX_VALUE;
+        Map<Recipe, Map<Nutrition, BigDecimal>> nutritionPerRecipe = calculateNutritionForRecipes(new ArrayList<>(recipes.keySet()));
+
         for (int attempt = 0; attempt < 10; attempt++) {
             List<List<WeeklyPlanner>> currentWeekPlan = copyWeekPlan(weeklyPlannerItems);
 
@@ -167,9 +169,9 @@ public class WeekPlanServiceImpl implements WeekPlanService {
                 for (WeeklyPlanner planner : dayPlan) {
                     Recipe selectedRecipe;
                     if (planner.getDaytime() == WeeklyPlanner.EatingTime.Frühstück) {
-                        selectedRecipe = getBestRecipe(breakfastRecipes, dailyNutrition, recommendedNutritionMin, recommendedNutritionMax);
+                        selectedRecipe = getBestRecipe(breakfastRecipes, dailyNutrition, recommendedNutritionMin, recommendedNutritionMax, nutritionPerRecipe);
                     } else {
-                        selectedRecipe = getBestRecipe(lunchOrDinnerRecipes, dailyNutrition, recommendedNutritionMin, recommendedNutritionMax);
+                        selectedRecipe = getBestRecipe(lunchOrDinnerRecipes, dailyNutrition, recommendedNutritionMin, recommendedNutritionMax, nutritionPerRecipe);
                     }
                     planner.setRecipe(selectedRecipe);
 
@@ -191,10 +193,10 @@ public class WeekPlanServiceImpl implements WeekPlanService {
         }
     }
 
-    private Recipe getBestRecipe(List<Recipe> recipes, Map<Nutrition, BigDecimal> dailyNutrition, Map<Nutrition, Double> recommendedMin, Map<Nutrition, Double> recommendedMax) {
+    private Recipe getBestRecipe(List<Recipe> recipes, Map<Nutrition, BigDecimal> dailyNutrition, Map<Nutrition, Double> recommendedMin, Map<Nutrition, Double> recommendedMax, Map<Recipe,
+        Map<Nutrition, BigDecimal>> nutritionPerRecipe) {
         Recipe bestRecipe = null;
         double bestScore = Double.MAX_VALUE;
-        Map<Recipe, Map<Nutrition, BigDecimal>> nutritionPerRecipe = calculateNutritionForRecipes(recipes);
 
         for (Recipe recipe : recipes) {
             double score = 0.0;
@@ -227,6 +229,8 @@ public class WeekPlanServiceImpl implements WeekPlanService {
         recommendedNutrition.put(nutritionRepository.findByName("Cholesterin").orElseThrow(NotFoundException::new), 1200d);
         recommendedNutrition.put(nutritionRepository.findByName("Ballaststoffe").orElseThrow(NotFoundException::new), 20000d);
         recommendedNutrition.put(nutritionRepository.findByName("Kohlenhydrate total").orElseThrow(NotFoundException::new), 200000d);
+        recommendedNutrition.put(nutritionRepository.findByName("Salz").orElseThrow(NotFoundException::new), 1000d);
+        recommendedNutrition.put(nutritionRepository.findByName("Fett total").orElseThrow(NotFoundException::new), 10000d);
         recommendedNutrition.put(nutritionRepository.findByName("Eiweiß").orElseThrow(NotFoundException::new), 55000d);
 
         return recommendedNutrition;
@@ -237,6 +241,7 @@ public class WeekPlanServiceImpl implements WeekPlanService {
         recommendedNutrition.put(nutritionRepository.findByName("Kalorien").orElseThrow(NotFoundException::new), 2500d);
         recommendedNutrition.put(nutritionRepository.findByName("Cholesterin").orElseThrow(NotFoundException::new), 3000d);
         recommendedNutrition.put(nutritionRepository.findByName("Ballaststoffe").orElseThrow(NotFoundException::new), 60000d);
+        recommendedNutrition.put(nutritionRepository.findByName("Kohlenhydrate total").orElseThrow(NotFoundException::new), 1000000d);
         recommendedNutrition.put(nutritionRepository.findByName("Salz").orElseThrow(NotFoundException::new), 6000d);
         recommendedNutrition.put(nutritionRepository.findByName("Fett total").orElseThrow(NotFoundException::new), 80000d);
         recommendedNutrition.put(nutritionRepository.findByName("Eiweiß").orElseThrow(NotFoundException::new), 120000d);
