@@ -84,6 +84,12 @@ export class WeekplanCreateComponent implements OnInit {
   }
 
   onSubmit(form:Form){
+    this.createDto = {
+      startDate: null,
+      endDate: null,
+      weekdays: [],
+      recipeBookId: 0
+    };
     if(!this.isFormValid()){
       return;
     }
