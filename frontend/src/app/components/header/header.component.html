@@ -1,12 +1,14 @@
-<div ngbDropdown class="container">
+<div class="container">
   <nav class="navbar navbar-expand-lg navbar-light bg-light px-3">
     <img src="assets/images/icon_black.png" height="50px" alt="logo" class="logo">
     <a class="navbar-brand ml-lg-5" href="/">Fork & Flavour</a>
-    <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" ngbDropdownToggle>
+    <div class="navbar-brand ml-lg-5" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed"
+         aria-controls="collapseExample">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-    <div ngbDropdownMenu class="collapse navbar-collapse" id="navbarSupportedContent">
+    </div>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent"  #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
       <ul class="navbar-nav">
         <li class="nav-item">
           <div class="col nav-link">
