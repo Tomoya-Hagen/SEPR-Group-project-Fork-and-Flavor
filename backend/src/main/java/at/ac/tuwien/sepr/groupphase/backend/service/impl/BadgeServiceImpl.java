@@ -63,7 +63,7 @@ public class BadgeServiceImpl implements BadgeService {
 
     private void setRoleForUser(ApplicationUser user, Roles role) {
         Role newRole = roleRepository.findByName(role.name());
-        List<Role> roles = user.getRoles();
+        List<Role> roles = new ArrayList<>(user.getRoles());
         roles.add(newRole);
         user.setRoles(roles);
         userRepository.save(user);

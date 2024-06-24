@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 export class HomeComponent implements OnInit {
   recipes: Recipe[] = [];
   recipeBooks: RecipeBookListDto[] = [];
+  recommended: Recipe[] = [];
 
   constructor(
     private recipeService: RecipeService,
@@ -23,6 +24,14 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.getRecipes();
     this.getRecipeBooks();
+    this.getRecommendedRecipes()
+  }
+
+  getRecommendedRecipes(){
+    this.recipeService.getRecommendedRecipes()
+      .subscribe(data => {
+        this.recommended = data;
+      });
   }
 
   getRecipes(): void {

@@ -4,6 +4,9 @@
       <img src="assets/images/icon_black.png" height="25px" alt="subrecepy" class="subrecepy-icon">
     </span>
     {{ step.name }}
+    <span *ngIf="step.recipe">
+      <i class="bi bi-caret-down-fill right-align"></i>
+    </span>
   </h4>
   <p *ngIf="!step.recipe">{{ step.description }}</p>
   <div *ngIf="step.recipe && expanded">
