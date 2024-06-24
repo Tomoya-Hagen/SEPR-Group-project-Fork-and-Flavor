@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
-import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -110,13 +109,14 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query("SELECT r FROM Recipe r WHERE r.forkedFrom.id = :id")
     List<Recipe> findAllForkedRecipesById(@Param("id") long id);
 
-    @Query("SELECT r FROM Recipe r Join fetch r.ratings rat Where r.owner = :owner OR (rat.user = :owner AND rat.taste >= 3)")
-    List<Recipe> findAllRecipesByGoodInteraction(@Param("owner") ApplicationUser owner);
 
-    @Query("SELECT r FROM Recipe r Join fetch r.ratings rat Where r.owner.id = :owner OR rat.user.id = :owner ORDER BY RAND()")
-    List<Recipe> findRandomRecipeByInteraction(@Param("owner") long owner, Pageable pageable);
-
-    @Query("SELECT r FROM Recipe r")
-    List<Recipe> findAllRecipes();
-
+    /**
+     * requests a verify based on the user and the recipe id.
+     *
+     * @param recipeId id of the recipe.
+     * @param userId   id of the user.
+     * @return return a Optional of a recipe.
+     */
+    @Query("SELECT distinct i FROM Recipe i join FETCH i.verifiers rc WHERE i.id = :recipeId AND rc.id = :userId")
+    Optional<Recipe> getVerifysByRecipeIdAndUserId(@Param("recipeId") long recipeId, @Param("userId") long userId);
 }

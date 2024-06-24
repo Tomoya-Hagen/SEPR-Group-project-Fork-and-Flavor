@@ -36,7 +36,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 /**
  * Security is a cross-cutting concern, however for the sake of simplicity it is tested against the message endpoint
  */
-@Disabled
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")

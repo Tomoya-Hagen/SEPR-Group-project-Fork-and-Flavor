@@ -17,15 +17,16 @@ import { NgForm } from '@angular/forms';
 import {AuthService} from "../../../services/auth.service";
 import {tap} from "rxjs/operators";
 import {catchError, of} from "rxjs";
+import {Role} from "../../../dtos/role";
+import {userDto} from "../../../dtos/user";
 
 @Component({
   selector: 'app-recipe-detail',
   templateUrl: './recipe-detail.component.html',
   styleUrl: './recipe-detail.component.scss',
 })
-export class RecipeDetailComponent implements OnInit, OnDestroy{
-  @ViewChild('spoonRecipeModal', { static: true }) spoonRecipeModal: TemplateRef<any>;
-  @ViewChild('showForkedRecipesModal', { static: true }) showForkedRecipesModal: TemplateRef<any>;
+export class RecipeDetailComponent implements OnInit, OnDestroy {
+  @ViewChild('spoonRecipeModal', {static: true}) spoonRecipeModal: TemplateRef<any>;
 
   recipe: RecipeDetailDto = {
     id: 0,
@@ -33,7 +34,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     name: "",
     description: "",
     numberOfServings: 0,
-    forkedFrom: null,
+    forkedFromId: 0,
     ownerId: 0,
     categories: [],
     isDraft: false,
@@ -42,6 +43,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     allergens: [],
     nutritions: [],
     forkedRecipes: [],
+    isVerified: false,
+    verifications: 0,
   };
 
   ratings: RatingListDto[] = [];
@@ -57,13 +60,16 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     "slidesToShow": 1,
     "slidesToScroll": 1,
     "dots": true,
-    "arrows" : true,
-    "infinite" : false
+    "arrows": true,
+    "infinite": false
   }
   recipeForkedFrom: string;
   showNutrition: boolean = false;
   screenWidth: number;
   isOwner: boolean = false;
+  isVerified: boolean = false;
+  isStarcook: boolean = false;
+  role: Role[] = [];
   areRatingsLoaded: boolean = false;
   rating: RatingCreateDto = {
     review: "",
@@ -83,32 +89,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   size: number = 3;
   loggedIn: boolean = false;
   hasRated: boolean = false;
-  showForkedRecipesModalModal: boolean = false;
-  menuOptions = [
-    {
-      label: 'Neues Rezept erstellen',
-      action: () => this.addRecipe()
-    },
-    {
-      label: 'Rezept bearbeiten',
-      action: () => this.editRecipe(),
-      disabled: !this.isOwner
-    },
-    {
-      label: 'Rezept forken',
-      action: () => this.fork()
-    },
-    {
-      label: 'Rezept spoonen', buttonClass: 'info-box-3',
-      iconClass: 'info-box-3',
-      action: () => this.openSpoonModal(this.spoonRecipeModal)
-    },
-    {
-      label: 'Rezepte die gut dazupassen bearbeiten',
-      action: () => this.openRecipeGoesWellWithModal(),
-      disabled: !this.isOwner
-    }
-  ];
+  menuOptions = [];
+  currentUser: userDto = null;
 
   constructor(
     private ratingService: RatingService,
@@ -138,12 +120,19 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
           this.selectedPortions = this.recipe.numberOfServings;
           this.changeIngredientsToGramm();
           this.changeNutritionsToGramm();
+          this.getForkedFromRecipeName();
           this.isCurrentUserOwner();
           this.orderNutritions();
+          if (this.loggedIn) {
+            this.getBadgesUser();
+            this.hasVerified();
+          }
+
+          if (this.recipe.forkedRecipes.length > 0) {
+            this.hasForkedRecipes = true;
+          }
           this.titleService.setTitle("Fork & Flavour | " + this.recipe.name);
           this.onPageChange(1);
-
-
         },
         error: error => {
           this.router.navigate(['not-found']);
@@ -159,6 +148,34 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
       .subscribe();
   }
 
+  getBadgesUser() {
+    let observable4 = this.userService.getBadgesOfCurrentUser();
+    observable4.subscribe({
+      next: data => {
+        this.role = data;
+        for (let i = 0; i < this.role.length; i++) {
+          if (this.role[i].length === Role.starcook.length) {
+            this.isStarcook = true;
+          }
+        }
+      },
+      error: error => {
+        console.error('Error fetching badges by user id', error);
+      }
+    });
+  }
+
+  hasVerified() {
+    this.service.getHasVerified(this.recipe.id).subscribe({
+      next: data => {
+        this.isVerified = data;
+        this.updateMenuOptions();
+      },
+      error: error => {
+        console.error('Error fetching badges by user id', error);
+    }});
+  }
+
   ngOnDestroy(): void {
     this.titleService.setTitle("Fork & Flavour");
   }
@@ -168,31 +185,38 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   }
 
   updateMenuOptions() {
-    this.menuOptions = [
-      {
-        label: 'Neues Rezept erstellen',
-        action: () => this.addRecipe()
-      },
-      {
-        label: 'Rezept bearbeiten',
-        action: () => this.editRecipe(),
-        disabled: !this.isOwner
-      },
-      {
-        label: 'Rezept forken',
-        action: () => this.fork()
-      },
-      {
-        label: 'Rezept spoonen', buttonClass: 'info-box-3',
-        iconClass: 'info-box-3',
-        action: () => this.openSpoonModal(this.spoonRecipeModal)
-      },
-      {
-        label: 'Rezepte die gut dazupassen bearbeiten',
-        action: () => this.openRecipeGoesWellWithModal(),
-        disabled: !this.isOwner
-      }
-    ];
+    if (this.loggedIn) {
+      this.menuOptions = [
+        {
+          label: 'Neues Rezept erstellen',
+          action: () => this.addRecipe()
+        },
+        {
+          label: 'Rezept bearbeiten',
+          action: () => this.editRecipe(),
+          disabled: !this.isOwner
+        },
+        {
+          label: 'Rezept forken',
+          action: () => this.fork()
+        },
+        {
+          label: 'Rezept spoonen', buttonClass: 'info-box-3',
+          iconClass: 'info-box-3',
+          action: () => this.openSpoonModal(this.spoonRecipeModal)
+        },
+        {
+          label: 'Rezept verifizieren',
+          action: () => this.addVerfication(),
+          disabled: this.isOwner || this.isVerified
+        },
+        {
+          label: 'Rezepte die gut dazupassen bearbeiten',
+          action: () => this.openRecipeGoesWellWithModal(),
+          disabled: !this.isOwner
+        }
+      ];
+    }
   }
 
   roundTo(value: number): number {
@@ -247,19 +271,34 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     return this.recipe.allergens.length != 0;
   }
 
+  isForkedFromRecipe(): boolean{
+    if (this.recipe.id == this.recipe.forkedFromId) {
+      return false;
+    }
+    return this.recipe.forkedFromId != 0 && this.recipe.forkedFromId != null;
+  }
+
+  getForkedFromRecipeName(){
+    if (this.recipe.forkedFromId == 0 || this.recipe.forkedFromId == null) {
+      return;
+    }
+    this.service.getRecipeDetailsBy(this.recipe.forkedFromId).subscribe({
+      next: data => {
+        this.recipeForkedFrom = data.name;
+      },
+      error: error => {
+        console.error('Error forking recipe.', error);
+        const errorMessage = error.message.message;
+        this.notification.error('Fork Rezepte ist nicht möglich.' + errorMessage, "Backend Fehler - Rezepte");
+        return;
+      }
+    })
+    return this.recipeForkedFrom;
+  }
+
   openSpoonModal(spoonModal: TemplateRef<any>) {
     this.currentRecipeBook = null;
     this.modalService.open(spoonModal, {ariaLabelledBy: 'modal-basic-title'});
-  }
-
-  openForkedRecipesModal() {
-    this.showForkedRecipesModalModal = true;
-    this.modalService.open(this.showForkedRecipesModal, {ariaLabelledBy: 'modal-basic-title'});
-  }
-
-  closeForkedRecipes() {
-    this.showForkedRecipesModalModal = false;
-    this.modalService.dismissAll();
   }
 
   fork() {
@@ -360,6 +399,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
 
   isCurrentUserOwner() {
     this.userService.getCurrentUser().subscribe(currentUser => {
+      this.currentUser = currentUser;
       if (currentUser && this.recipe.ownerId === currentUser.id) {
         this.isOwner = true;
       }
@@ -433,6 +473,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
   public selectTaste(value: number | null) {
     this.rating.taste = value;
   }
+
   async getRecipesGoingWellTogether(): Promise<void> {
     const data = this.service.getGoesWellWith(this.recipe.id, this.page - 1, this.size)
       .subscribe( {
@@ -478,8 +519,18 @@ export class RecipeDetailComponent implements OnInit, OnDestroy{
     this.router.navigate(['recipe/create']);
   }
 
-  goToRecipe(id: number) {
-    this.router.navigate(['/recipe/details', id]);
-  }
-
+  addVerfication() {
+     this.service.verifyRecipe(this.recipe.id).subscribe({
+        next: () => {
+          this.notification.success(`Rezept verifiziert.`);
+          this.isVerified = true;
+          this.updateMenuOptions();
+          this.recipe.verifications++;
+        },
+        error: error => {
+          this.notification.error(error);
+          this.defaultServiceErrorHandling(error);
+        }
+    });
+   }
 }

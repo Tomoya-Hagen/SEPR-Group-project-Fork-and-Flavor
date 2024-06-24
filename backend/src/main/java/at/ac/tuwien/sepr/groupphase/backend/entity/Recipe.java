@@ -43,7 +43,6 @@ public class Recipe {
     @JoinColumn(name = "forked_from")
     private Recipe forkedFrom;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private ApplicationUser owner;
@@ -54,9 +53,9 @@ public class Recipe {
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(
-        name = "recipe_category",
-        joinColumns = @JoinColumn(name = "recipe_id"),
-        inverseJoinColumns = @JoinColumn(name = "category_id")
+            name = "recipe_category",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private List<Category> categories = new ArrayList<>();
 
@@ -66,15 +65,15 @@ public class Recipe {
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(
-        name = "recipe_recipe_book",
-        joinColumns = @JoinColumn(name = "recipe_id"),
-        inverseJoinColumns = @JoinColumn(name = "recipe_book_id")
+            name = "recipe_recipe_book",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_book_id")
     )
     private List<RecipeBook> recipeBooks;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<Rating> ratings;
+    private List<Rating> ratings = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
@@ -86,16 +85,11 @@ public class Recipe {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
-    private List<RecipeVerified> recipesVerified = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<WeeklyPlanner> weeklyPlanner = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private List<RecipeIngredient> ingredients;
-
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "forked_from", referencedColumnName = "id")
@@ -218,11 +212,17 @@ public class Recipe {
         }
         Recipe recipe = (Recipe) o;
         return Objects.equals(id, recipe.id)
-            && Objects.equals(name, recipe.name)
-            && Objects.equals(description, recipe.description)
-            && Objects.equals(numberOfServings, recipe.numberOfServings)
-            && Objects.equals(forkedFrom, recipe.forkedFrom) && Objects.equals(owner, recipe.owner) && Objects.equals(isDraft, recipe.isDraft);
+                && Objects.equals(name, recipe.name)
+                && Objects.equals(description, recipe.description)
+                && Objects.equals(numberOfServings, recipe.numberOfServings)
+                && Objects.equals(forkedFrom, recipe.forkedFrom) && Objects.equals(owner, recipe.owner) && Objects.equals(isDraft, recipe.isDraft);
     }
+
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "recipe_verified",
+            joinColumns = {@JoinColumn(name = "recipe_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    private List<ApplicationUser> verifiers = new ArrayList<>();
 
     @Override
     public int hashCode() {
@@ -241,6 +241,40 @@ public class Recipe {
         return "Recipe(id=" + this.getId() + ", name=" + this.getName() + ", description=" + this.getDescription() + ", numberOfServings=" + this.getNumberOfServings() + ", owner=" + this.getOwner().getUsername() + ")";
     }
 
+    public List<ApplicationUser> getVerifiers() {
+        return verifiers;
+    }
+
+    public void setVerifiers(List<ApplicationUser> verifiers) {
+        this.verifiers = verifiers;
+    }
+
+    public void addVerifier(ApplicationUser user) {
+        if (this.verifiers == null) {
+            this.verifiers = new ArrayList<>();
+        }
+        this.verifiers.add(user);
+    }
+
+    public boolean hasVerified(ApplicationUser user) {
+        if (this.verifiers == null) {
+            return false;
+        }
+        return this.verifiers.contains(user);
+    }
+
+    @Basic
+    @Column(name = "is_verified")
+    private Boolean isVerfied;
+
+    public void setIsVerfied(Boolean verfied) {
+        isVerfied = verfied;
+    }
+
+    public Boolean getVerfied() {
+        return isVerfied;
+    }
+
     public static final class RecipeBuilder {
         private long id;
         private String name;
@@ -255,7 +289,6 @@ public class Recipe {
         private List<Rating> ratings;
         private List<RecipeStep> recipeSteps;
         private List<RecipeStep> recipeRecipeSteps;
-        private List<RecipeVerified> recipesVerified;
         private List<WeeklyPlanner> weeklyPlanner;
         private List<RecipeIngredient> ingredients;
         private List<Recipe> recipesForkedFromThis;
@@ -331,11 +364,6 @@ public class Recipe {
             return this;
         }
 
-        public RecipeBuilder withRecipesVerified(List<RecipeVerified> recipesVerified) {
-            this.recipesVerified = recipesVerified;
-            return this;
-        }
-
         public RecipeBuilder withWeeklyPlanner(List<WeeklyPlanner> weeklyPlanner) {
             this.weeklyPlanner = weeklyPlanner;
             return this;
@@ -374,7 +402,6 @@ public class Recipe {
             recipe.ratings = this.ratings;
             recipe.recipeBooks = this.recipeBooks;
             recipe.weeklyPlanner = this.weeklyPlanner;
-            recipe.recipesVerified = this.recipesVerified;
             recipe.goesWellWithRecipes = this.goesWellWithRecipes;
             return recipe;
         }

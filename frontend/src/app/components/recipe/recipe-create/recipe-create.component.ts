@@ -308,18 +308,6 @@ export class RecipeCreateComponent implements OnInit {
     temp = this.recipe.recipeSteps[i].description;
     this.recipe.recipeSteps[i].description = this.recipe.recipeSteps[i-1].description ;
     this.recipe.recipeSteps[i-1].description  = temp ;
-
-    let btemp = this.recipe.recipeSteps[i].whichstep;
-    this.recipe.recipeSteps[i].whichstep = this.recipe.recipeSteps[i-1].whichstep ;
-    this.recipe.recipeSteps[i-1].whichstep  = btemp ;
-
-    let rtemp = this.recipe.recipeSteps[i].recipeId;
-    this.recipe.recipeSteps[i].recipeId = this.recipe.recipeSteps[i-1].recipeId ;
-    this.recipe.recipeSteps[i-1].recipeId  = rtemp ;
-
-    let rname = this.input.recipestep[i]
-    this.input.recipestep[i] = this.input.recipestep[i-1] ;
-    this.input.recipestep[i-1] = rname ;
   }
 
   public stepdown(i: number){
@@ -330,18 +318,6 @@ export class RecipeCreateComponent implements OnInit {
     temp = this.recipe.recipeSteps[i].description;
     this.recipe.recipeSteps[i].description = this.recipe.recipeSteps[i+1].description ;
     this.recipe.recipeSteps[i+1].description  = temp ;
-
-    let btemp = this.recipe.recipeSteps[i].whichstep;
-    this.recipe.recipeSteps[i].whichstep = this.recipe.recipeSteps[i+1].whichstep ;
-    this.recipe.recipeSteps[i+1].whichstep  = btemp ;
-
-    let rtemp = this.recipe.recipeSteps[i].recipeId;
-    this.recipe.recipeSteps[i].recipeId = this.recipe.recipeSteps[i+1].recipeId ;
-    this.recipe.recipeSteps[i+1].recipeId  = rtemp ;
-
-    let rname = this.input.recipestep[i]
-    this.input.recipestep[i] = this.input.recipestep[i+1] ;
-    this.input.recipestep[i+1] = rname ;
   }
 
   public stepdel(i: number){

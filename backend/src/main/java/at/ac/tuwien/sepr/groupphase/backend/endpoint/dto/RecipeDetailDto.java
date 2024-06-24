@@ -18,6 +18,11 @@ import java.util.ArrayList;
  * @param ingredients ingredients of the recipe
  * @param forkedFromId indicates which recipe this one was forked from
  * @param recipeSteps steps that the recipe requires
+ * @param forkedRecipes forked recipe that the recipe requires
+ * @param ownerId indicates which recipe this one was from owner id
+ * @param allergens allergens the recipe belongs to
+ * @param nutritions nutritions the recipe belongs to
+ * @param rating rating of the recipe
  */
 public record RecipeDetailDto(
 
@@ -36,7 +41,8 @@ public record RecipeDetailDto(
     @Min(1)
     Short numberOfServings,
 
-    RecipeListDto forkedFrom,
+    @NotNull
+    Long forkedFromId,
 
     @NotNull
     Long ownerId,
@@ -59,8 +65,10 @@ public record RecipeDetailDto(
     ArrayList<NutritionDetailDto> nutritions,
 
     @NotNull
-    ArrayList<RecipeListDto> forkedRecipes,
+    ArrayList<String> forkedRecipes,
 
-    long rating
+    long rating,
+    int verifications
+
 ) {
 }

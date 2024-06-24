@@ -1,8 +1,10 @@
-<form #form="ngForm" (ngSubmit)="onSubmit(form)">
+<form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
   <div class="container mt-5">
     <div>
       <h1 class="text-center mb-4">{{ heading }}</h1>
     </div>
+
+
       <div class="form-group" *ngIf="isOwner">
         <label for="name">Name</label>
           <input  type="text"
@@ -11,6 +13,7 @@
                   class="form-control"
                   placeholder="Choose a name"
                   [(ngModel)]="recipeBook.name"
+                  #nameModel="ngModel"
                   required
           >
           <div class="invalid-feedback">
@@ -23,12 +26,8 @@
                     class="form-control desc"
                     placeholder="Enter a description for the recipe book"
                     [(ngModel)]="recipeBook.description"
-                    name="description"
-                    required >
+                    name="description" >
           </textarea>
-          <div class="invalid-feedback">
-            Description is required.
-          </div>
       </div>
 
       <div>
@@ -67,9 +66,6 @@
               </tbody>
             </table>
           </div>
-        </div>
-        <div class="invalid-feedback">
-          Description is required.
         </div>
       </div>
 
@@ -115,8 +111,8 @@
       <div class="submit">
         <button [disabled]="!form.valid || !isFormValid()" type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
       </div>
-      <div style="text-align: right;">
-        <button *ngIf="!isOwner" (click)="removeContributor()" type="button" class="btn btn-warning">Rezeptbuch verlassen</button>
+      <div class="removecont">
+        <button *ngIf="!isOwner" (click)="removeContributor()" type="button" class="btn btn-danger">Rezeptbuch verlassen</button>
       </div>
   </div>
 </form>

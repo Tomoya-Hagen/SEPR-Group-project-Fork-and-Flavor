@@ -7,6 +7,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepNotParsableException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.RecipeStepSelfReferenceException;
@@ -100,6 +101,7 @@ public class RecipeEndpoint {
         }
     }
 
+    @Secured("ROLE_USER")
     @PutMapping("/{id}/goesWellWith")
     @Operation(summary = "Add a recipes that go well with the recipe with the given id")
     public RecipeDetailDto addGoesWellWith(@PathVariable(name = "id") Long id, @RequestBody List<RecipeListDto> goWellWith) {
@@ -119,6 +121,7 @@ public class RecipeEndpoint {
      * @param recipeUpdatedto DTO holding values to update
      * @return ResponseEntity of Recipe with the HTTP status of "No Content"
      */
+    @Secured("ROLE_USER")
     @PutMapping("/{id}")
     public ResponseEntity<DetailedRecipeDto> updateRecipe(@PathVariable("id") Long id, @RequestBody RecipeUpdateDto recipeUpdatedto) {
         LOGGER.info("PUT /api/v1/recipe/ + {} + {}", id, recipeUpdatedto);
@@ -144,6 +147,7 @@ public class RecipeEndpoint {
             return recipeService.byname(name, limit);
         }
     }
+
 
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
@@ -191,16 +195,39 @@ public class RecipeEndpoint {
         }
     }
 
+    @PutMapping("/verify/{id}")
     @Secured("ROLE_USER")
-    @GetMapping("/recommended")
-    @Operation(summary = "Get a list of recommended recipes")
-    public List<RecipeListDto> getRecipesByRecommendation() {
-        LOGGER.info("GET /api/v1/recipes");
-        return recipeService.getRecipesByRecommendation();
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "verify a recipe")
+    public void verifyRecipe(@PathVariable("id") long id) {
+        try {
+            recipeService.verifyRecipe(id);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        } catch (ForbiddenException e) {
+            HttpStatus status = HttpStatus.FORBIDDEN;
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        } catch (ValidationException e) {
+            HttpStatus status = HttpStatus.BAD_REQUEST;
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
+    }
+
+    @GetMapping("/hasVerified/{id}")
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Check if a recipe has been verified by a user")
+    public boolean hasVerified(@PathVariable("id") long id) {
+        try {
+            return recipeService.hasVerified(id);
+        } catch (NotFoundException e) {
+            HttpStatus status = HttpStatus.NOT_FOUND;
+            throw new ResponseStatusException(status, e.getMessage(), e);
+        }
     }
 
     private void logClientError(HttpStatus status, String message, Exception e) {
         LOGGER.warn("{} {}: {}: {}", status.value(), message, e.getClass().getSimpleName(), e.getMessage());
     }
-
 }

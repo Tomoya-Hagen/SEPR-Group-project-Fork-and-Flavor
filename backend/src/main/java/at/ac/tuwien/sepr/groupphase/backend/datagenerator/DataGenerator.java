@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
-import at.ac.tuwien.sepr.groupphase.backend.config.MailProperties;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
@@ -29,7 +28,6 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeStepRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.WeeklyPlannerRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
@@ -67,23 +65,21 @@ public class DataGenerator implements CommandLineRunner {
     private final RecipeIngredientRepository recipeIngredientRepository;
     private final RecipeStepRepository recipeStepRepository;
     private final RatingRepository ratingRepository;
-    private final EmailService emailService;
+
     private final ResourceLoader resourceLoader;
     private final WeeklyPlannerRepository weeklyPlannerRepository;
-    private final MailProperties mailProperties; // Add this line
 
     private HashMap<Long, Long> idMap;
     private List<Long> skippedRecipes = new ArrayList<>();
-    private boolean testData = true;
 
     public DataGenerator(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder,
                          CategoryRepository categoryRepository, IngredientRepository ingredientRepository,
                          AllergenRepository allergenRepository, NutritionRepository nutritionRepository,
                          RecipeBookRepository recipeBookRepository, RecipeRepository recipeRepository,
                          RecipeIngredientRepository recipeIngredientRepository,
-                         RecipeStepRepository recipeStepRepository, EmailService emailService, ResourceLoader resourceLoader,
-                         RatingRepository ratingRepository, WeeklyPlannerRepository weeklyPlannerRepository,
-                         MailProperties mailProperties) {
+                         RecipeStepRepository recipeStepRepository, ResourceLoader resourceLoader,
+                         RatingRepository ratingRepository,
+                         WeeklyPlannerRepository weeklyPlannerRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -95,12 +91,10 @@ public class DataGenerator implements CommandLineRunner {
         this.recipeRepository = recipeRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.recipeStepRepository = recipeStepRepository;
-        this.emailService = emailService;
         this.resourceLoader = resourceLoader;
         this.ratingRepository = ratingRepository;
         this.idMap = new HashMap<>();
         this.weeklyPlannerRepository = weeklyPlannerRepository;
-        this.mailProperties = mailProperties;
     }
 
     @Transactional
@@ -117,11 +111,13 @@ public class DataGenerator implements CommandLineRunner {
         generateRecipeSteps();
         generateRecipeBooks();
         generateRatings();
+        generateVerifications();
         generateGoesWellWidth();
         generateWeekPlan();
     }
 
     private void generateUserData() {
+
         Roles[] roles = Roles.values();
         String[] usernames = {"admin", "user", "contributor", "cook", "starcook", "user1", "user2", "user3", "user4", "user5"};
         String[] emails = {"admin@email.com", "user@email.com", "contributor@email.com", "cook@email.com", "starcook@email.com",
@@ -137,55 +133,30 @@ public class DataGenerator implements CommandLineRunner {
             savedRoles.add(roleRepository.save(role));
         }
 
-        // Use the injected mailProperties instance
-        if (mailProperties.getAdminEmail() != null) {
-            testData = false;
-            String adminEmail = mailProperties.getAdminEmail();
-            if (userRepository.existsByEmail(adminEmail)) {
-                return;
-            }
-            String password = passwordGenerator();
-            ApplicationUser admin = new ApplicationUser.ApplicationUserBuilder()
-                .withEmail(adminEmail)
-                .withPassword(passwordEncoder.encode(password))
-                .withUsername("admin")
-                .withhasProfilePicture(false)
-                .withRoles(savedRoles)
-                .build();
-            userRepository.save(admin);
-
-            emailService.sendSimpleEmail(adminEmail, "Initial Setup", "Die Admin-Daten sind: \n"
-                + "Username: admin\n"
-                + "Email: " + adminEmail + "\n"
-                + "Password: " + password + "\n"
-                + "Bitte ändern Sie das Passwort nach dem ersten Login.");
-        } else {
-
-            // Create and save users and their roles
-            for (int i = 0; i < usernames.length; i++) {
-                // Check if a user with the same username already exists
-                if (!userRepository.existsByUsername(usernames[i])) {
-                    List<Role> userRoles = new ArrayList<>();
-                    if (usernames[i] == "admin") {
-                        userRoles = savedRoles;
-                    } else if (usernames[i].contains("user")) {
-                        userRoles.add(savedRoles.get(1));
-                    } else {
-                        for (int j = 1; j <= i; j++) {
-                            userRoles.add(savedRoles.get(j));
-                        }
+        // Create and save users and their roles
+        for (int i = 0; i < usernames.length; i++) {
+            // Check if a user with the same username already exists
+            if (!userRepository.existsByUsername(usernames[i])) {
+                List<Role> userRoles = new ArrayList<>();
+                if (usernames[i] == "admin") {
+                    userRoles = savedRoles;
+                } else if (usernames[i].contains("user")) {
+                    userRoles.add(savedRoles.get(1));
+                } else {
+                    for (int j = 1; j <= i; j++) {
+                        userRoles.add(savedRoles.get(j));
                     }
+                }
 
-                    ApplicationUser user = new ApplicationUser.ApplicationUserBuilder()
+                ApplicationUser user = new ApplicationUser.ApplicationUserBuilder()
                         .withEmail(emails[i])
                         .withPassword(passwordEncoder.encode("password"))
                         .withUsername(usernames[i])
                         .withhasProfilePicture(false)
                         .withRoles(userRoles)
                         .build();
-                    userRepository.save(user);
+                userRepository.save(user);
 
-                }
             }
         }
         userRepository.flush();
@@ -203,9 +174,9 @@ public class DataGenerator implements CommandLineRunner {
                     Optional<Category> existingCategory = categoryRepository.findByNameAndType(name, type);
                     if (existingCategory.isEmpty()) {
                         Category category = Category.CategoryBuilder.aCategory()
-                            .withName(name)
-                            .withType(type)
-                            .build();
+                                .withName(name)
+                                .withType(type)
+                                .build();
                         categoryRepository.save(category);
                     }
                 }
@@ -227,10 +198,10 @@ public class DataGenerator implements CommandLineRunner {
                     Optional<Allergen> existingAllergen = allergenRepository.findByType(type);
                     if (existingAllergen.isEmpty()) {
                         Allergen allergen = Allergen.AllergenBuilder.anAllergen()
-                            .withType(type)
-                            .withName(fields.get(1).trim())
-                            .withDescription(fields.get(2).trim().isEmpty() ? null : fields.get(2).trim())
-                            .build();
+                                .withType(type)
+                                .withName(fields.get(1).trim())
+                                .withDescription(fields.get(2).trim().isEmpty() ? null : fields.get(2).trim())
+                                .build();
                         allergenRepository.save(allergen);
                     }
                 }
@@ -253,10 +224,10 @@ public class DataGenerator implements CommandLineRunner {
                     Optional<Nutrition> existingNutrition = nutritionRepository.findByName(name);
                     if (existingNutrition.isEmpty()) {
                         Nutrition nutrition = Nutrition.NutritionBuilder.aNutrition()
-                            .withName(fields.get(0).trim())
-                            .withDescription(fields.get(1).trim())
-                            .withUnit(fields.get(2).trim())
-                            .build();
+                                .withName(fields.get(0).trim())
+                                .withDescription(fields.get(1).trim())
+                                .withUnit(fields.get(2).trim())
+                                .build();
                         nutritionRepository.save(nutrition);
                     }
                 }
@@ -268,9 +239,7 @@ public class DataGenerator implements CommandLineRunner {
     }
 
     protected void generateIngredientData() {
-        String[] nutritionNames = {
-            "Kalorien", "Fett total", "-davon gesättigt", "Eiweiß", "Kohlenhydrate total", "-davon Zucker", "Salz",
-            "Kalcium", "Cholesterol", "Ballaststoffe"
+        String[] nutritionNames = {"Kalorien", "Fett total", "-davon gesättigt", "Eiweiß", "Kohlenhydrate total", "-davon Zucker", "Salz", "Kalcium", "Cholesterol", "Ballaststoffe"
         };
 
         Map<String, Nutrition> nutritionMap = new HashMap<>();
@@ -289,9 +258,9 @@ public class DataGenerator implements CommandLineRunner {
                 if (!existingIngredient.isPresent()) {
                     long id = Long.parseLong(fields.get(0).trim());
                     Ingredient ingredient = Ingredient.IngredientBuilder.anIngredient()
-                        .withName(name)
-                        .withId(id)
-                        .build();
+                            .withName(name)
+                            .withId(id)
+                            .build();
 
                     // Handle allergens if any
                     if (!fields.get(2).trim().isEmpty()) {
@@ -344,12 +313,12 @@ public class DataGenerator implements CommandLineRunner {
                 }
                 ApplicationUser user = userRepository.findFirstById(Long.parseLong(fields.get(5)));
                 Recipe recipe = Recipe.RecipeBuilder.aRecipe()
-                    .withName(fields.get(1))
-                    .withDescription(fields.get(2))
-                    .withNumberOfServings(Short.parseShort(fields.get(3)))
-                    .withOwner(user)
-                    .withForkedFrom(forkedFrom)
-                    .build();
+                        .withName(fields.get(1))
+                        .withDescription(fields.get(2))
+                        .withNumberOfServings(Short.parseShort(fields.get(3)))
+                        .withOwner(user)
+                        .withForkedFrom(forkedFrom)
+                        .build();
                 recipeRepository.save(recipe);
                 idMap.put(id, recipe.getId());
             }
@@ -389,17 +358,17 @@ public class DataGenerator implements CommandLineRunner {
                 RecipeIngredient recipeIngredient;
                 if (amountGiven) {
                     recipeIngredient = RecipeIngredient.RecipeIngredientBuilder.aRecipeIngredient()
-                        .withRecipe(recipe)
-                        .withIngredient(ingredient)
-                        .withAmount(amount)
-                        .withUnit(unit)
-                        .build();
+                            .withRecipe(recipe)
+                            .withIngredient(ingredient)
+                            .withAmount(amount)
+                            .withUnit(unit)
+                            .build();
                 } else {
                     recipeIngredient = RecipeIngredient.RecipeIngredientBuilder.aRecipeIngredient()
-                        .withRecipe(recipe)
-                        .withIngredient(ingredient)
-                        .withUnit(unit)
-                        .build();
+                            .withRecipe(recipe)
+                            .withIngredient(ingredient)
+                            .withUnit(unit)
+                            .build();
                 }
                 recipeIngredientRepository.save(recipeIngredient);
             }
@@ -455,21 +424,21 @@ public class DataGenerator implements CommandLineRunner {
                 if (fields.size() == 4) {
                     // Beschreibungsschritt
                     recipeStep = RecipeDescriptionStep.RecipeDescriptionStepBuilder.aRecipeDescriptionStep()
-                        .withRecipe(recipe)
-                        .withStepNumber(Integer.parseInt(fields.get(1)))
-                        .withName(fields.get(2))
-                        .withDescription(fields.get(3))
-                        .build();
+                            .withRecipe(recipe)
+                            .withStepNumber(Integer.parseInt(fields.get(1)))
+                            .withName(fields.get(2))
+                            .withDescription(fields.get(3))
+                            .build();
                 } else {
                     // Unterrezept
                     Long unterrezeptId = idMap.get(Long.parseLong(fields.get(4)));
                     Recipe unterrezept = recipeRepository.findFirstById(unterrezeptId);
                     recipeStep = RecipeRecipeStep.RecipeRecipeStepBuilder.aRecipeRecipeStep()
-                        .withRecipe(recipe)
-                        .withStepNumber(Integer.parseInt(fields.get(1)))
-                        .withName(fields.get(2))
-                        .withRecipeRecipe(unterrezept)
-                        .build();
+                            .withRecipe(recipe)
+                            .withStepNumber(Integer.parseInt(fields.get(1)))
+                            .withName(fields.get(2))
+                            .withRecipeRecipe(unterrezept)
+                            .build();
                 }
                 recipeStepRepository.save(recipeStep);
             }
@@ -480,9 +449,6 @@ public class DataGenerator implements CommandLineRunner {
     }
 
     protected void generateRecipeBooks() {
-        if (!testData) {
-            return;
-        }
         Resource resource = resourceLoader.getResource("classpath:recipebook.csv");
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
             String line;
@@ -513,11 +479,11 @@ public class DataGenerator implements CommandLineRunner {
                     }
                     ApplicationUser user = userRepository.findFirstById(userid);
                     RecipeBook recipeBook = RecipeBook.RecipeBookBuilder.aRecipeBook()
-                        .withName(name)
-                        .withDescription(description)
-                        .withOwner(user)
-                        .withRecipes(recipes)
-                        .build();
+                            .withName(name)
+                            .withDescription(description)
+                            .withOwner(user)
+                            .withRecipes(recipes)
+                            .build();
                     recipeBookRepository.save(recipeBook);
                 }
             }
@@ -529,9 +495,6 @@ public class DataGenerator implements CommandLineRunner {
 
 
     protected void generateWeekPlan() {
-        if (!testData) {
-            return;
-        }
         Resource resource = resourceLoader.getResource("classpath:weekplan.csv");
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
             String line;
@@ -586,43 +549,6 @@ public class DataGenerator implements CommandLineRunner {
         }
     }
 
-    protected void generateRatings() {
-        if (!testData) {
-            return;
-        }
-        Resource resource = resourceLoader.getResource("classpath:rating.csv");
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
-            String line = reader.readLine();
-            while ((line = reader.readLine()) != null) {
-                List<String> fields = parseCsvLine(line, ',');
-                if (fields.size() == 6) {
-                    long recipeId = Long.parseLong(fields.get(0).trim());
-                    long userId = Long.parseLong(fields.get(1).trim());
-                    long cost = Long.parseLong(fields.get(2).trim());
-                    long taste = Long.parseLong(fields.get(3).trim());
-                    long easeOfPrep = Long.parseLong(fields.get(4).trim());
-                    String review = fields.get(5).trim();
-                    Optional<Rating> existingRating = ratingRepository.findByAllAttributes(
-                        userId, recipeId, taste, cost, easeOfPrep, review);
-                    if (existingRating.isEmpty()) {
-                        Rating rating = new Rating();
-                        rating.setCost(BigDecimal.valueOf(cost));
-                        rating.setRecipe(recipeRepository.getRecipeById(recipeId).orElseThrow(NotFoundException::new));
-                        rating.setUser(userRepository.findFirstById(userId));
-                        rating.setTaste(BigInteger.valueOf(taste));
-                        rating.setReview(review);
-                        rating.setEaseOfPrep(BigInteger.valueOf(easeOfPrep));
-                        ratingRepository.save(rating);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        categoryRepository.flush();
-    }
-
-
     private List<String> parseCsvLine(String line, char separator) {
         List<String> fields = new ArrayList<>();
         StringBuilder field = new StringBuilder();
@@ -645,6 +571,62 @@ public class DataGenerator implements CommandLineRunner {
         return fields;
     }
 
+    protected void generateRatings() {
+        Resource resource = resourceLoader.getResource("classpath:rating.csv");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+            String line = reader.readLine();
+            while ((line = reader.readLine()) != null) {
+                List<String> fields = parseCsvLine(line, ',');
+                if (fields.size() == 6) {
+                    long recipeId = Long.parseLong(fields.get(0).trim());
+                    long userId = Long.parseLong(fields.get(1).trim());
+                    long cost = Long.parseLong(fields.get(2).trim());
+                    long taste = Long.parseLong(fields.get(3).trim());
+                    long easeOfPrep = Long.parseLong(fields.get(4).trim());
+                    String review = fields.get(5).trim();
+                    Optional<Rating> existingRating = ratingRepository.findByAllAttributes(
+                            userId, recipeId, taste, cost, easeOfPrep, review);
+                    if (existingRating.isEmpty()) {
+                        Rating rating = new Rating();
+                        rating.setCost(BigDecimal.valueOf(cost));
+                        rating.setRecipe(recipeRepository.getRecipeById(recipeId).orElseThrow(NotFoundException::new));
+                        rating.setUser(userRepository.findFirstById(userId));
+                        rating.setTaste(BigInteger.valueOf(taste));
+                        rating.setReview(review);
+                        rating.setEaseOfPrep(BigInteger.valueOf(easeOfPrep));
+                        ratingRepository.save(rating);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        categoryRepository.flush();
+    }
+
+    public void generateVerifications() {
+        Resource resource = resourceLoader.getResource("classpath:verifications.csv");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+            String line = reader.readLine();
+            while ((line = reader.readLine()) != null) {
+                List<String> fields = parseCsvLine(line, ',');
+                if (fields.size() == 2) {
+                    long recipeId = Long.parseLong(fields.get(0).trim());
+                    if (skippedRecipes.contains(recipeId)) {
+                        continue;
+                    }
+                    long userId = Long.parseLong(fields.get(1).trim());
+                    Recipe recipe = recipeRepository.getRecipeById(idMap.get(recipeId)).orElseThrow(NotFoundException::new);
+                    ApplicationUser user = userRepository.findFirstById(userId);
+                    recipe.addVerifier(user);
+                    userRepository.save(user);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Set<Allergen> findAllergensByCodes(String codes) {
         Set<Allergen> allergens = new HashSet<>();
         for (char code : codes.toCharArray()) {
@@ -662,14 +644,6 @@ public class DataGenerator implements CommandLineRunner {
         List<IngredientNutrition> nutritions = ingredient.getNutritions();
         nutritions.add(newNutrition);
         ingredient.setNutritions(nutritions);
-    }
-
-    private String passwordGenerator() {
-        StringBuilder password = new StringBuilder();
-        for (int i = 0; i < 16; i++) {
-            password.append((char) ((int) (Math.random() * 26) + 97));
-        }
-        return password.toString();
     }
 
 }

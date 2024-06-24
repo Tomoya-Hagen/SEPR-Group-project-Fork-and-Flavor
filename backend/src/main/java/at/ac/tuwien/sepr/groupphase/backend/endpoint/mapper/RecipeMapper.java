@@ -53,9 +53,9 @@ public interface RecipeMapper {
     @Mapping(source = "owner.id", target = "ownerId")
     @Mapping(source = "recipe.id", target = "id")
     @Mapping(source = "recipe.isDraft", target = "isDraft")
-    @Mapping(source = "recipe.forkedFrom", target = "forkedFrom")
+    @Mapping(source = "recipe.forkedFrom.id", target = "forkedFromId")
     RecipeDetailDto recipeToRecipeDetailDto(Recipe recipe, HashMap<Ingredient,
-        RecipeIngredient> ingredients, HashMap<Nutrition, BigDecimal> nutritions, ArrayList<Allergen> allergens, ApplicationUser owner, long rating);
+        RecipeIngredient> ingredients, HashMap<Nutrition, BigDecimal> nutritions, ArrayList<Allergen> allergens, ApplicationUser owner, long rating, int verifications);
 
     default ArrayList<RecipeListDto> recipeListAndRatingListToListOfRecipeRatingDto(ArrayList<Recipe> recipes, ArrayList<Long> ratings) {
         ArrayList<RecipeListDto> recipeListDtos = new ArrayList<>();
