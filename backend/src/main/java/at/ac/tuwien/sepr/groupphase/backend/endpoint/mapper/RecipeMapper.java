@@ -55,7 +55,7 @@ public interface RecipeMapper {
     @Mapping(source = "recipe.isDraft", target = "isDraft")
     @Mapping(source = "recipe.forkedFrom", target = "forkedFrom")
     RecipeDetailDto recipeToRecipeDetailDto(Recipe recipe, HashMap<Ingredient,
-      RecipeIngredient> ingredients, HashMap<Nutrition, BigDecimal> nutritions, ArrayList<Allergen> allergens, ApplicationUser owner, long rating);
+      RecipeIngredient> ingredients, HashMap<Nutrition, BigDecimal> nutritions, ArrayList<Allergen> allergens, ApplicationUser owner, long rating, int verifications);
 
     /**
      * Converts a list of Recipe entities and their corresponding ratings to a list of RecipeListDto objects.

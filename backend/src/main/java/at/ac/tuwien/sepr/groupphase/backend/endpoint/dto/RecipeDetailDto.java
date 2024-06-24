@@ -44,9 +44,6 @@ public record RecipeDetailDto(
     RecipeListDto forkedFrom,
 
     @NotNull
-    Long forkedFromId,
-
-    @NotNull
     Long ownerId,
 
     @NotNull
