@@ -189,4 +189,11 @@ class RecipeServiceTest implements TestData {
         Assertions.assertFalse(user.getRoles().contains(roleRepository.findByName(Roles.StarCook.name())));
         Assertions.assertThrows(ForbiddenException.class, () -> recipeService.verifyRecipe(1L));
     }
+
+    @Test
+    void verifyFindBestRecipeBy() {
+        userAuthenticationByEmail("user@email.com");
+    }
+
+
 }
