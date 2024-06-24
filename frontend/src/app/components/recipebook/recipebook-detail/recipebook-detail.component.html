@@ -19,6 +19,14 @@
     </span>
       </div>
     </div>
+    <div class="info-box">
+      <h4 class="fs-4">Rezepte:</h4>
+      <span class="number">{{ recipeBook.recipes.length }}</span>
+    </div>
+    <div class="info-box" (click)="gotoWeekPlan()">
+      <h4 class="fs-4">zum</h4>
+      <h4 class="fs-4">Wochenplan</h4>
+    </div>
   </div>
   <h4 class="mt-4">Rezepte:</h4>
   <div class="row">

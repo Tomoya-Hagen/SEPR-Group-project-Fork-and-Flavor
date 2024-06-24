@@ -7,10 +7,33 @@
   height: 4rem;
 }
 
+.breakfast {
+  background-color: var(--box-2);
+}
+
+.lunch {
+  background-color: var(--box-3);
+}
+
+.dinner {
+  background-color: var(--box-4);
+}
+
 .m-recipe-btn{
   height: 8rem;
 }
 
 .weekplan1 {
   min-width: 300px;
+}
+
+.erstellen-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.erstellen {
+  margin: auto;
+  font-size: 20px;
 }
