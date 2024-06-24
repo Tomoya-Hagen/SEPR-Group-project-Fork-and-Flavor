@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
+import at.ac.tuwien.sepr.groupphase.backend.config.MailProperties;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
@@ -28,6 +29,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeStepRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.WeeklyPlannerRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
@@ -65,21 +67,23 @@ public class DataGenerator implements CommandLineRunner {
     private final RecipeIngredientRepository recipeIngredientRepository;
     private final RecipeStepRepository recipeStepRepository;
     private final RatingRepository ratingRepository;
-
+    private final EmailService emailService;
     private final ResourceLoader resourceLoader;
     private final WeeklyPlannerRepository weeklyPlannerRepository;
+    private final MailProperties mailProperties; // Add this line
 
     private HashMap<Long, Long> idMap;
     private List<Long> skippedRecipes = new ArrayList<>();
+    private boolean testData = true;
 
     public DataGenerator(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder,
                          CategoryRepository categoryRepository, IngredientRepository ingredientRepository,
                          AllergenRepository allergenRepository, NutritionRepository nutritionRepository,
                          RecipeBookRepository recipeBookRepository, RecipeRepository recipeRepository,
                          RecipeIngredientRepository recipeIngredientRepository,
-                         RecipeStepRepository recipeStepRepository, ResourceLoader resourceLoader,
-                         RatingRepository ratingRepository,
-                         WeeklyPlannerRepository weeklyPlannerRepository) {
+                         RecipeStepRepository recipeStepRepository, EmailService emailService, ResourceLoader resourceLoader,
+                         RatingRepository ratingRepository, WeeklyPlannerRepository weeklyPlannerRepository,
+                         MailProperties mailProperties) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -91,10 +95,12 @@ public class DataGenerator implements CommandLineRunner {
         this.recipeRepository = recipeRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.recipeStepRepository = recipeStepRepository;
+        this.emailService = emailService;
         this.resourceLoader = resourceLoader;
         this.ratingRepository = ratingRepository;
         this.idMap = new HashMap<>();
         this.weeklyPlannerRepository = weeklyPlannerRepository;
+        this.mailProperties = mailProperties;
     }
 
     @Transactional
@@ -116,10 +122,10 @@ public class DataGenerator implements CommandLineRunner {
     }
 
     private void generateUserData() {
-
         Roles[] roles = Roles.values();
-        String[] usernames = {"admin", "user", "contributor", "cook", "starcook"};
-        String[] emails = {"admin@email.com", "user@email.com", "contributor@email.com", "cook@email.com", "starcook@email.com"};
+        String[] usernames = {"admin", "user", "contributor", "cook", "starcook", "user1", "user2", "user3", "user4", "user5"};
+        String[] emails = {"admin@email.com", "user@email.com", "contributor@email.com", "cook@email.com", "starcook@email.com",
+          "user1@email.com", "user2@email.com", "user3@email.com", "user4@email.com", "user5@email.com"};
 
         // Create and save roles
         List<Role> savedRoles = new ArrayList<>();
@@ -131,21 +137,55 @@ public class DataGenerator implements CommandLineRunner {
             savedRoles.add(roleRepository.save(role));
         }
 
-        // Create and save users and their roles
-        for (int i = 0; i < usernames.length; i++) {
-            // Check if a user with the same username already exists
-            if (!userRepository.existsByUsername(usernames[i])) {
-                List<Role> userRoles = new ArrayList<>();
-                userRoles.add(savedRoles.get(i));
-                ApplicationUser user = new ApplicationUser.ApplicationUserBuilder()
-                  .withEmail(emails[i])
-                  .withPassword(passwordEncoder.encode("password"))
-                  .withUsername(usernames[i])
-                  .withhasProfilePicture(false)
-                  .withRoles(userRoles)
-                  .build();
-                userRepository.save(user);
+        // Use the injected mailProperties instance
+        if (mailProperties.getAdminEmail() != null) {
+            testData = false;
+            String adminEmail = mailProperties.getAdminEmail();
+            if (userRepository.existsByEmail(adminEmail)) {
+                return;
+            }
+            String password = passwordGenerator();
+            ApplicationUser admin = new ApplicationUser.ApplicationUserBuilder()
+              .withEmail(adminEmail)
+              .withPassword(passwordEncoder.encode(password))
+              .withUsername("admin")
+              .withhasProfilePicture(false)
+              .withRoles(savedRoles)
+              .build();
+            userRepository.save(admin);
 
+            emailService.sendSimpleEmail(adminEmail, "Initial Setup", "Die Admin-Daten sind: \n"
+              + "Username: admin\n"
+              + "Email: " + adminEmail + "\n"
+              + "Password: " + password + "\n"
+              + "Bitte ändern Sie das Passwort nach dem ersten Login.");
+        } else {
+
+            // Create and save users and their roles
+            for (int i = 0; i < usernames.length; i++) {
+                // Check if a user with the same username already exists
+                if (!userRepository.existsByUsername(usernames[i])) {
+                    List<Role> userRoles = new ArrayList<>();
+                    if (usernames[i] == "admin") {
+                        userRoles = savedRoles;
+                    } else if (usernames[i].contains("user")) {
+                        userRoles.add(savedRoles.get(1));
+                    } else {
+                        for (int j = 1; j <= i; j++) {
+                            userRoles.add(savedRoles.get(j));
+                        }
+                    }
+
+                    ApplicationUser user = new ApplicationUser.ApplicationUserBuilder()
+                      .withEmail(emails[i])
+                      .withPassword(passwordEncoder.encode("password"))
+                      .withUsername(usernames[i])
+                      .withhasProfilePicture(false)
+                      .withRoles(userRoles)
+                      .build();
+                    userRepository.save(user);
+
+                }
             }
         }
         userRepository.flush();
@@ -230,7 +270,7 @@ public class DataGenerator implements CommandLineRunner {
     protected void generateIngredientData() {
         String[] nutritionNames = {
           "Kalorien", "Fett total", "-davon gesättigt", "Eiweiß", "Kohlenhydrate total", "-davon Zucker", "Salz",
-          "Kalcium", "Cholesterol", "Ballaststoffe"
+          "Kalzium", "Cholesterol", "Ballaststoffe"
         };
 
         Map<String, Nutrition> nutritionMap = new HashMap<>();
@@ -440,6 +480,9 @@ public class DataGenerator implements CommandLineRunner {
     }
 
     protected void generateRecipeBooks() {
+        if (!testData) {
+            return;
+        }
         Resource resource = resourceLoader.getResource("classpath:recipebook.csv");
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
             String line;
@@ -486,6 +529,9 @@ public class DataGenerator implements CommandLineRunner {
 
 
     protected void generateWeekPlan() {
+        if (!testData) {
+            return;
+        }
         Resource resource = resourceLoader.getResource("classpath:weekplan.csv");
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
             String line;
@@ -540,29 +586,10 @@ public class DataGenerator implements CommandLineRunner {
         }
     }
 
-    private List<String> parseCsvLine(String line, char separator) {
-        List<String> fields = new ArrayList<>();
-        StringBuilder field = new StringBuilder();
-        boolean inQuotes = false;
-        char[] chars = line.toCharArray();
-
-        for (int i = 0; i < chars.length; i++) {
-            char ch = chars[i];
-
-            if (ch == '"' && (i == 0 || chars[i - 1] != '\\')) {
-                inQuotes = !inQuotes;
-            } else if (ch == separator && !inQuotes) {
-                fields.add(field.toString());
-                field.setLength(0);
-            } else {
-                field.append(ch);
-            }
-        }
-        fields.add(field.toString());
-        return fields;
-    }
-
     protected void generateRatings() {
+        if (!testData) {
+            return;
+        }
         Resource resource = resourceLoader.getResource("classpath:rating.csv");
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
             String line = reader.readLine();
@@ -595,6 +622,29 @@ public class DataGenerator implements CommandLineRunner {
         categoryRepository.flush();
     }
 
+
+    private List<String> parseCsvLine(String line, char separator) {
+        List<String> fields = new ArrayList<>();
+        StringBuilder field = new StringBuilder();
+        boolean inQuotes = false;
+        char[] chars = line.toCharArray();
+
+        for (int i = 0; i < chars.length; i++) {
+            char ch = chars[i];
+
+            if (ch == '"' && (i == 0 || chars[i - 1] != '\\')) {
+                inQuotes = !inQuotes;
+            } else if (ch == separator && !inQuotes) {
+                fields.add(field.toString());
+                field.setLength(0);
+            } else {
+                field.append(ch);
+            }
+        }
+        fields.add(field.toString());
+        return fields;
+    }
+
     private Set<Allergen> findAllergensByCodes(String codes) {
         Set<Allergen> allergens = new HashSet<>();
         for (char code : codes.toCharArray()) {
@@ -612,6 +662,14 @@ public class DataGenerator implements CommandLineRunner {
         List<IngredientNutrition> nutritions = ingredient.getNutritions();
         nutritions.add(newNutrition);
         ingredient.setNutritions(nutritions);
+    }
+
+    private String passwordGenerator() {
+        StringBuilder password = new StringBuilder();
+        for (int i = 0; i < 16; i++) {
+            password.append((char) ((int) (Math.random() * 26) + 97));
+        }
+        return password.toString();
     }
 
 }
