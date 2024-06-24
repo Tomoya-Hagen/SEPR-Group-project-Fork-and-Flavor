@@ -33,8 +33,7 @@ import java.util.List;
  * This mapper is used to map recipes zu all kinds of different dto types.
  */
 
-@Mapper(uses = {RecipeStepMapper.class, CategoryMapper.class, AllergenMapper.class,
-  IngredientMapper.class, NutritionMapper.class})
+@Mapper(uses = {RecipeStepMapper.class, CategoryMapper.class, AllergenMapper.class, IngredientMapper.class, NutritionMapper.class})
 public interface RecipeMapper {
     /**
      * This method creates a RecipeDetailDto out of the data of the recipe.
@@ -54,8 +53,7 @@ public interface RecipeMapper {
     @Mapping(source = "recipe.id", target = "id")
     @Mapping(source = "recipe.isDraft", target = "isDraft")
     @Mapping(source = "recipe.forkedFrom", target = "forkedFrom")
-    RecipeDetailDto recipeToRecipeDetailDto(Recipe recipe, HashMap<Ingredient,
-      RecipeIngredient> ingredients, HashMap<Nutrition, BigDecimal> nutritions, ArrayList<Allergen> allergens, ApplicationUser owner, long rating, int validations);
+    RecipeDetailDto recipeToRecipeDetailDto(Recipe recipe, HashMap<Ingredient, RecipeIngredient> ingredients, HashMap<Nutrition, BigDecimal> nutritions, ArrayList<Allergen> allergens, ApplicationUser owner, long rating, int validations);
 
     /**
      * Converts a list of Recipe entities and their corresponding ratings to a list of RecipeListDto objects.
@@ -111,7 +109,7 @@ public interface RecipeMapper {
      *
      * @param recipeUpdateDto The RecipeUpdateDto object.
      * @return A Recipe entity.
-     * @throws RecipeStepNotParsableException If the steps in the Recipe are not formatted correctly.
+     * @throws RecipeStepNotParsableException   If the steps in the Recipe are not formatted correctly.
      * @throws RecipeStepSelfReferenceException If a step references its own recipe.
      */
     default Recipe recipeUpdateDtoToRecipe(RecipeUpdateDto recipeUpdateDto) throws RecipeStepNotParsableException, RecipeStepSelfReferenceException {
@@ -143,7 +141,7 @@ public interface RecipeMapper {
         for (RecipeIngredientDto recipeIngredient : recipeUpdateDto.ingredients()) {
             Ingredient ingredient = new Ingredient();
             ingredient.setId(recipeIngredient.getId());
-            RecipeIngredient.Unit u =  RecipeIngredient.getUnitFromString(recipeIngredient.getUnit());
+            RecipeIngredient.Unit u = RecipeIngredient.getUnitFromString(recipeIngredient.getUnit());
             RecipeIngredient recipeIngr = new RecipeIngredient(current, ingredient, recipeIngredient.getAmount(), u);
             recipeIngredientList.add(recipeIngr);
         }
@@ -192,9 +190,9 @@ public interface RecipeMapper {
      * Converts a RecipeCreateDto object and an id to a Recipe entity.
      *
      * @param recipeCreateDto The RecipeCreateDto object.
-     * @param id The id.
+     * @param id              The id.
      * @return A Recipe entity.
-     * @throws RecipeStepNotParsableException If the steps in the Recipe are not formatted correctly.
+     * @throws RecipeStepNotParsableException   If the steps in the Recipe are not formatted correctly.
      * @throws RecipeStepSelfReferenceException If a step references its own recipe.
      */
     default Recipe recipeCreateDtoToRecipe(RecipeCreateDto recipeCreateDto, long id) throws RecipeStepNotParsableException, RecipeStepSelfReferenceException {

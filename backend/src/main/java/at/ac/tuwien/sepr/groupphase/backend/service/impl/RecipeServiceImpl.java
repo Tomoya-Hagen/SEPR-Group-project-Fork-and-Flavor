@@ -105,7 +105,7 @@ public class RecipeServiceImpl implements RecipeService {
         this.badgeService = badgeService;
         this.emailService = emailService;
         this.userRepository = userRepository;
-      this.ratingRepository = ratingRepository;
+        this.ratingRepository = ratingRepository;
     }
 
     @Override
@@ -129,12 +129,12 @@ public class RecipeServiceImpl implements RecipeService {
         ArrayList<RecipeListDto> forkedRecipeNames = new ArrayList<>();
         for (Recipe forkedRecipe : forkedRecipes) {
             forkedRecipeNames.add(
-              new RecipeListDto(
-                forkedRecipe.getId(),
-                forkedRecipe.getName(),
-                forkedRecipe.getDescription(),
-                calculateAverageTasteRating(forkedRecipe.getRatings())
-              )
+                    new RecipeListDto(
+                            forkedRecipe.getId(),
+                            forkedRecipe.getName(),
+                            forkedRecipe.getDescription(),
+                            calculateAverageTasteRating(forkedRecipe.getRatings())
+                    )
             );
         }
 
@@ -407,7 +407,7 @@ public class RecipeServiceImpl implements RecipeService {
             for (Ingredient ing : ings.keySet()) {
                 RecommendEvaluation r = new RecommendEvaluation();
                 r.setIngredient(ing);
-                int  t = ings.get(ing);
+                int t = ings.get(ing);
                 r.setScore((float) t / count);
                 r.setMultiplicator(1);
                 recommendEvaluation.add(r);
@@ -429,8 +429,8 @@ public class RecipeServiceImpl implements RecipeService {
         while (recommends.size() < 6) {
             var their = compareMap.get(bestguess.get(current));
             List<Recipe> result = their.stream()
-              .filter(item -> !mine.contains(item))
-              .toList();
+                    .filter(item -> !mine.contains(item))
+                    .toList();
             for (int i = 0; i < result.toArray().length; i++) {
                 Recipe possible = result.get(i);
                 if (!recommends.contains(possible)) {
@@ -450,26 +450,25 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
 
-
     public List<ApplicationUser> findMostSimilarUser(
-      ApplicationUser targetUser,
-      List<RecommendEvaluation> targetEvaluations,
-      Map<ApplicationUser, List<RecommendEvaluation>> allUsersEvaluations) {
+            ApplicationUser targetUser,
+            List<RecommendEvaluation> targetEvaluations,
+            Map<ApplicationUser, List<RecommendEvaluation>> allUsersEvaluations) {
 
         List<Map.Entry<ApplicationUser, Double>> userDistances = new ArrayList<>();
 
         allUsersEvaluations.entrySet().parallelStream()
-          .filter(entry -> !entry.getKey().equals(targetUser)) // Exclude the target user itself
-          .forEach(entry -> {
-              double distance = SimilarityUtils.calculateDistance(targetEvaluations, entry.getValue());
-              userDistances.add(new AbstractMap.SimpleEntry<>(entry.getKey(), distance));
-          });
+                .filter(entry -> !entry.getKey().equals(targetUser)) // Exclude the target user itself
+                .forEach(entry -> {
+                    double distance = SimilarityUtils.calculateDistance(targetEvaluations, entry.getValue());
+                    userDistances.add(new AbstractMap.SimpleEntry<>(entry.getKey(), distance));
+                });
 
         userDistances.sort(Comparator.comparingDouble(Map.Entry::getValue));
 
         List<ApplicationUser> sortedUsers = userDistances.stream()
-          .map(Map.Entry::getKey)
-          .collect(Collectors.toList());
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
 
         return sortedUsers;
     }
@@ -516,15 +515,15 @@ public class RecipeServiceImpl implements RecipeService {
 
     private void updateMapOfNutritions(RecipeIngredient recipeIngredient, Map<Nutrition, BigDecimal> nutritions) {
         LOGGER.trace("updateMapOfNutritions({}, {})",
-            recipeIngredient, nutritions);
+                recipeIngredient, nutritions);
 
         for (IngredientNutrition nutrition : recipeIngredient.getIngredient().getNutritions()) {
             BigDecimal nutritionValue = nutrition.getValue()
-                .multiply((recipeIngredient.getAmount())
-                    .divide(BigDecimal.valueOf(100), RoundingMode.DOWN));
+                    .multiply((recipeIngredient.getAmount())
+                            .divide(BigDecimal.valueOf(100), RoundingMode.DOWN));
             if (nutritions.containsKey(nutrition.getNutrition())) {
                 nutritions.put(nutrition.getNutrition(), nutritionValue
-                    .add(nutritions.get(nutrition.getNutrition())));
+                        .add(nutritions.get(nutrition.getNutrition())));
             } else {
                 nutritions.put(nutrition.getNutrition(), nutritionValue);
             }
