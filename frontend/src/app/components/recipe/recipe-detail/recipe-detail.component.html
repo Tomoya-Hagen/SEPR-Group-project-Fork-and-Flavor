@@ -40,11 +40,11 @@
   </ng-template>
   <br>
   <div class="RecipeInfos">
-    <div class="info-box info-box-1">
+    <div class="info-box">
       <h4>Bewertung:</h4>
       <app-star-rating [disabled]="true" [value]="recipe.rating"></app-star-rating>
     </div>
-    <div class="info-box info-box-2">
+    <div class="info-box">
       <h4>Portionen:</h4>
       <div class="custom-number-input">
         <button (click)="decrement()">-</button>
@@ -52,11 +52,11 @@
         <button (click)="increment()">+</button>
       </div>
     </div>
-    <div class="info-box info-box-3" *ngIf="isCategoriesNotEmpty()">
+    <div class="info-box" *ngIf="isCategoriesNotEmpty()">
       <h4>Kategorien:</h4>
       <div>{{ getCategoryList() }}</div>
     </div>
-    <div class="info-box info-box-4" *ngIf="isAllergensNotEmpty()">
+    <div class="info-box" *ngIf="isAllergensNotEmpty()">
       <h4>Allergene: </h4>
       <div>
         <span *ngFor="let allergen of recipe.allergens; let isLast=last">
@@ -67,12 +67,11 @@
         none
       </div>
     </div>
-    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: var(--acent-color);"
-         *ngIf="isForkedFromRecipe()">
+    <div class="info-box" *ngIf="isForkedFromRecipe()">
       <h4>Geforkt von:</h4>
       <span>{{ recipeForkedFrom }}</span>
     </div>
-    <div class="info-box" style="box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: #08688e;" *ngIf="hasForkedRecipes">
+    <div class="info-box" *ngIf="hasForkedRecipes">
       <h4>Geforkt:</h4>
       <div>
         <span *ngFor="let forkedFrom of recipeForkedFrom; let isLast=last">
@@ -84,12 +83,12 @@
         </span>
       </div>
     </div>
-    <div class="info-box info-box-5 clickable" *ngIf="screenWidth <= 767" style="box-shadow: 0 0 10px rgba(111, 66, 193, 0); background-color: rgba(111, 66, 193, 1);" (click)="toggleNutrition()">
+    <div class="info-box clickable" *ngIf="screenWidth <= 767" (click)="toggleNutrition()">
       <h4>Nährwerte:</h4>
         <span *ngIf="!showNutrition">Zeigen</span>
         <span *ngIf="showNutrition">Verstecken</span>
     </div>
-    <div class="info-box info-box-6" *ngIf="recipe.verifications !== 0">
+    <div class="info-box" *ngIf="recipe.verifications !== 0">
       <h4>Verifikationen:</h4>
       <span class="number">{{ recipe.verifications }}</span>
     </div>

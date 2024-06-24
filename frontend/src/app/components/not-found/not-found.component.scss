@@ -1,0 +1,32 @@
+.not-found-container {
+  text-align: center;
+  border: 1px solid #ddd;
+  width: 50rem;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+.not-found-container h1 {
+  font-size: 3rem;
+  color: var(--acent-color);
+  margin: 3rem;
+  margin-top: 6rem;
+}
+
+.not-found-container p {
+  font-size: 1.5rem;
+  margin: 3rem;
+  margin-bottom: 5rem;
+}
+
+@media (max-width: 992px) {
+  .not-found-container {
+    width: 40rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .not-found-container {
+    width: 90%;
+  }
+}
