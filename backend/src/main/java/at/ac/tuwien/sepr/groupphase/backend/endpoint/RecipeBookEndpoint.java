@@ -158,6 +158,7 @@ public class RecipeBookEndpoint {
         }
     }
 
+    @PermitAll
     @GetMapping("{id}/getUserId")
     public long getUserIdForRecipeBookId(@PathVariable(name = "id") Long id) {
         LOGGER.info("PATCH /api/v1/users/{}/getUserId", id);
