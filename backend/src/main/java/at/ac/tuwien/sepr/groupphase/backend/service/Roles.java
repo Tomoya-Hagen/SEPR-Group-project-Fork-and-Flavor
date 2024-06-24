@@ -5,5 +5,5 @@ public enum Roles {
     User,
     Contributor,
     Cook,
-    StarCook
+    StarCook,
 }

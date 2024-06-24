@@ -76,12 +76,17 @@ class UserServiceTest {
         userRepository.save(user2);
         userRepository.save(user3);
         userRepository.save(user4);
-        List<UserListDto> results = userService.findUsersByName("u", 5);
+        List<UserListDto> results = userService.findUsersByName("u", 20);
 
-        assertEquals(4, results.size());
+        assertEquals(9, results.size());
         assertEquals("user", results.get(0).name());
         assertEquals("contributor", results.get(1).name());
-        assertEquals("uber", results.get(2).name());
-        assertEquals("klimakleber-u", results.get(3).name());
+        assertEquals("user1", results.get(2).name());
+        assertEquals("user2", results.get(3).name());
+        assertEquals("user3", results.get(4).name());
+        assertEquals("user4", results.get(5).name());
+        assertEquals("user5", results.get(6).name());
+        assertEquals("uber", results.get(7).name());
+        assertEquals("klimakleber-u", results.get(8).name());
     }
 }

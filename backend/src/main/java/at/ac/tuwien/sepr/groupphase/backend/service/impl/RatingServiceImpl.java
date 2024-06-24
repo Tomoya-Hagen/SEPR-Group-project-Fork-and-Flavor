@@ -79,6 +79,9 @@ public class RatingServiceImpl implements RatingService {
         if (ratingRepository.getRatingsByRecipeIdAndUserId(recipe.getId(), user.getId()).isPresent()) {
             throw new DuplicateObjectException("A rating to this recipe already exists");
         }
+        if (user.equals(recipe.getOwner())) {
+            throw new ValidationException("Owner can not rate recipe", List.of());
+        }
         Rating rating = ratingMapper.mapRatingCreateDtoToRating(ratingCreateDto);
         rating.setRecipe(recipe);
         rating.setUser(user);
@@ -87,6 +90,7 @@ public class RatingServiceImpl implements RatingService {
         emailService.sendSimpleEmail(recipe.getOwner().getEmail(), "Neue Bewertung!", "Neue Bewertung für das Rezept " + recipe.getName() + " erhalten.\n\n"
             + rating.toEmailString() + "\n");
         badgeService.addRoleToUser(user, Roles.Contributor);
+        badgeService.addRoleToUser(recipe.getOwner(), Roles.StarCook);
         return ratingMapper.mapRatingToRatingListDto(rating);
     }
 

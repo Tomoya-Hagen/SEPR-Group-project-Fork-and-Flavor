@@ -108,4 +108,15 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     @Query("SELECT r FROM Recipe r WHERE r.forkedFrom.id = :id")
     List<Recipe> findAllForkedRecipesById(@Param("id") long id);
+
+
+    /**
+     * requests a verify based on the user and the recipe id.
+     *
+     * @param recipeId id of the recipe.
+     * @param userId   id of the user.
+     * @return return a Optional of a recipe.
+     */
+    @Query("SELECT distinct i FROM Recipe i join FETCH i.verifiers rc WHERE i.id = :recipeId AND rc.id = :userId")
+    Optional<Recipe> getVerifysByRecipeIdAndUserId(@Param("recipeId") long recipeId, @Param("userId") long userId);
 }

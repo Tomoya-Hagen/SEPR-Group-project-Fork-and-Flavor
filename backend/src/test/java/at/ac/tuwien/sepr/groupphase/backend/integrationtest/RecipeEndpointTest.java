@@ -5,9 +5,6 @@ import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingCreateDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
@@ -16,11 +13,13 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDescriptionDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
-import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Role;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
@@ -38,7 +37,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -53,8 +51,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -78,6 +74,13 @@ class RecipeEndpointTest implements TestData {
 
     @Autowired
     private SecurityProperties securityProperties;
+
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private RecipeRepository recipeRepository;
 
     @Test
     void ReturnARecipeDetailDtoIfARecipeExistsByRecipeId() throws Exception {
@@ -133,7 +136,7 @@ class RecipeEndpointTest implements TestData {
 
     @Test
     void EndpointCheckCreateRecipeSimpleReturningLightRecipe() throws Exception {
-        String jwttoken = LoginHelper();
+        String jwttoken = LoginHelper("admin@email.com");
 
         List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
         recipeCategoryDtoList.add(new RecipeCategoryDto(1));
@@ -212,7 +215,7 @@ class RecipeEndpointTest implements TestData {
 
     @Test
     void EndpointCheckCreateRecipeSimpleWithoutavailableCategory() throws Exception {
-        String jwttoken = LoginHelper();
+        String jwttoken = LoginHelper("admin@email.com");
 
         List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
         recipeCategoryDtoList.add(new RecipeCategoryDto(1000));
@@ -249,7 +252,7 @@ class RecipeEndpointTest implements TestData {
 
     @Test
     void EndpointCheckCreateRecipeSimpleWithoutAnythingPossibleAvailable() throws Exception {
-        String jwttoken = LoginHelper();
+        String jwttoken = LoginHelper("admin@email.com");
 
         List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
         recipeCategoryDtoList.add(new RecipeCategoryDto(1000));
@@ -305,7 +308,7 @@ class RecipeEndpointTest implements TestData {
 
     @Test
     void EndpointCheckCreateRecipeSimpleWithoutEachNeededInput() throws Exception {
-        String jwttoken = LoginHelper();
+        String jwttoken = LoginHelper("admin@email.com");
 
         List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
         recipeCategoryDtoList.add(new RecipeCategoryDto(1));
@@ -371,9 +374,9 @@ class RecipeEndpointTest implements TestData {
         return mvcResult.getResponse();
     }
 
-    private String LoginHelper() throws Exception {
+    private String LoginHelper(String email) throws Exception {
         UserLoginDto userLoginDto = new UserLoginDto();
-        userLoginDto.setEmail("admin@email.com");
+        userLoginDto.setEmail(email);
         userLoginDto.setPassword("password");
 
         String requestBody = objectMapper.writeValueAsString(userLoginDto);
@@ -427,7 +430,7 @@ class RecipeEndpointTest implements TestData {
 
     @Test
     void addGoesWellWith() throws Exception {
-        String jwttoken = LoginHelper();
+        String jwttoken = LoginHelper("admin@email.com");
 
         List<RecipeListDto> recipeListDtos = new ArrayList<>();
         recipeListDtos.add(new RecipeListDto(1, "Kartoffeln plain", "Unterrezept für Kartoffelgerichte", 0));
@@ -457,23 +460,23 @@ class RecipeEndpointTest implements TestData {
 
     @Test
     public void forkRecipeReturnsShortRecipeandCreated() throws Exception {
-        String jwttoken = LoginHelper();
+        String jwttoken = LoginHelper("admin@email.com");
 
         List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
         recipeCategoryDtoList.add(new RecipeCategoryDto(1));
 
         List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
-        recipeIngredientDtos.add(new RecipeIngredientDto(1,new BigDecimal(6),"g"));
-        recipeIngredientDtos.add(new RecipeIngredientDto(132,new BigDecimal(12.5),"g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(1, new BigDecimal(6), "g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132, new BigDecimal(12.5), "g"));
 
         List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
-        recipeStepDtoList.add(new RecipeStepDto("Step eins","Beschreibung von Step 1",0,true ));
-        recipeStepDtoList.add(new RecipeStepDto("Step zwei","Beschreibung von Step 2",0,true ));
+        recipeStepDtoList.add(new RecipeStepDto("Step eins", "Beschreibung von Step 1", 0, true));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei", "Beschreibung von Step 2", 0, true));
 
         RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
         recipeCreateDto.setName("Name");
         recipeCreateDto.setDescription("Beschreibung");
-        recipeCreateDto.setNumberOfServings((short)42);
+        recipeCreateDto.setNumberOfServings((short) 42);
 
         recipeCreateDto.setIngredients(recipeIngredientDtos);
         recipeCreateDto.setRecipeSteps(recipeStepDtoList);
@@ -484,5 +487,31 @@ class RecipeEndpointTest implements TestData {
                 .header(securityProperties.getAuthHeader(), jwttoken)
                 .content(new ObjectMapper().writeValueAsString(recipeCreateDto)))
             .andExpect(status().isCreated());
+    }
+
+    @Test
+    void verifyRecipeAsANonStarCook() throws Exception {
+        String jwttoken = LoginHelper("user@email.com");
+        mockMvc.perform(put(RECIPE_BASE_URI + "/verify/1")
+                .header(securityProperties.getAuthHeader(), jwttoken)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden())
+            .andReturn();
+    }
+
+    @Test
+    void verifyRecipeAsStarCook() throws Exception {
+        ApplicationUser user = userRepository.findById(2L).get();
+        List<Role> roles = user.getRoles();
+        roles.add(roleRepository.findByName(Roles.StarCook.name()));
+        user.setRoles(roles);
+        userRepository.save(user);
+        String jwttoken = LoginHelper("user@email.com");
+        mockMvc.perform(put(RECIPE_BASE_URI + "/verify/1")
+                .header(securityProperties.getAuthHeader(), jwttoken)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andReturn();
+
     }
 }

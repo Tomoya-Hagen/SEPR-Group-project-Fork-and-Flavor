@@ -7,10 +7,11 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserPasswordChangeDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.service.BadgeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import jakarta.annotation.security.PermitAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -31,11 +32,13 @@ import java.util.List;
 @RequestMapping(value = "/api/v1/users")
 public class UserEndPoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    UserService userService;
+    private final UserService userService;
+    private final BadgeService badgeService;
 
-    @Autowired
-    public UserEndPoint(UserService userService) {
+    public UserEndPoint(UserService userService,
+                        BadgeService badgeService) {
         this.userService = userService;
+        this.badgeService = badgeService;
     }
 
     @GetMapping
@@ -81,6 +84,17 @@ public class UserEndPoint {
         }
     }
 
+    @GetMapping("/badge")
+    public List<String> getBadgesOfCurrentUser() {
+        return badgeService.getBadgesOfCurrentUser();
+    }
+
+    @PermitAll
+    @GetMapping("{id}/badge")
+    public List<String> getBadgesOfUser(@PathVariable(name = "id") Long id) {
+        return badgeService.getBadgesOfUser(id);
+    }
+
     @Secured("ROLE_USER")
     @PatchMapping("/changePassword/{id}")
     public void changePassword(@PathVariable(name = "id") Long id, @RequestBody UserPasswordChangeDto userPasswordChangeDto) {
@@ -101,9 +115,9 @@ public class UserEndPoint {
     /**
      * This method logs client errors.
      *
-     * @param status The HTTP status of the error.
+     * @param status  The HTTP status of the error.
      * @param message The error message.
-     * @param e The exception that caused the error.
+     * @param e       The exception that caused the error.
      */
     private void logClientError(HttpStatus status, String message, Exception e) {
         LOGGER.warn("{} {}: {}: {}", status.value(), message, e.getClass().getSimpleName(), e.getMessage());
