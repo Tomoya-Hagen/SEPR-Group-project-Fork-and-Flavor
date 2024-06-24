@@ -54,6 +54,7 @@ public class WeekPlannerValidator {
         } else {
             int breakfastCount = 0;
             int nonBreakfastCount = 0;
+            Category main = categoryRepository.findFirstByName("Hauptspeise");
             Category breakfast = categoryRepository.findFirstByName("Frühstück");
             Category dessert = categoryRepository.findFirstByName("Dessert");
             Category vorspeise = categoryRepository.findFirstByName("Vorspeise");
@@ -62,7 +63,8 @@ public class WeekPlannerValidator {
             for (Recipe recipe : rb.getRecipes()) {
                 if (recipe.getCategories().contains(breakfast)) {
                     breakfastCount++;
-                } else if (!recipe.getCategories().contains(dessert)
+                } else if (recipe.getCategories().contains(main)
+                    && !recipe.getCategories().contains(dessert)
                     && !recipe.getCategories().contains(beilage)
                     && !recipe.getCategories().contains(vorspeise)
                     && !recipe.getCategories().contains(jause)) {
