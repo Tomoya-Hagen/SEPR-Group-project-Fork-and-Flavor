@@ -1,12 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Allergen;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -32,7 +33,6 @@ import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
-import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.RecipeValidator;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -51,6 +51,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,8 +71,8 @@ public class RecipeServiceImpl implements RecipeService {
     private final UserManager userManager;
     private final BadgeService badgeService;
     private final EmailService emailService;
+    private Map<RecipeIngredient.Unit, BigDecimal> unitValue;
 
-    private final UserService userRepository;
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
                              RecipeMapper recipeMapper,
@@ -79,8 +80,7 @@ public class RecipeServiceImpl implements RecipeService {
                              RecipeValidator recipeValidator,
                              UserManager userManager,
                              BadgeService badgeService,
-                             EmailService emailService,
-                             UserService userRepository) {
+                             EmailService emailService) {
         this.recipeRepository = recipeRepository;
         this.recipeMapper = recipeMapper;
         this.categoryRepository = categoryRepository;
@@ -88,7 +88,27 @@ public class RecipeServiceImpl implements RecipeService {
         this.userManager = userManager;
         this.badgeService = badgeService;
         this.emailService = emailService;
-        this.userRepository = userRepository;
+        fillUnitValue();
+    }
+
+    private void fillUnitValue() {
+        unitValue = new EnumMap<>(RecipeIngredient.Unit.class);
+        unitValue.put(RecipeIngredient.Unit.mg, BigDecimal.valueOf(0.001));
+        unitValue.put(RecipeIngredient.Unit.g, BigDecimal.valueOf(1));
+        unitValue.put(RecipeIngredient.Unit.kg, BigDecimal.valueOf(1000));
+        unitValue.put(RecipeIngredient.Unit.L, BigDecimal.valueOf(1000));
+        unitValue.put(RecipeIngredient.Unit.el, BigDecimal.valueOf(15));
+        unitValue.put(RecipeIngredient.Unit.tl, BigDecimal.valueOf(5));
+        unitValue.put(RecipeIngredient.Unit.ml, BigDecimal.valueOf(1));
+        unitValue.put(RecipeIngredient.Unit.Priese, BigDecimal.valueOf(0.04));
+        unitValue.put(RecipeIngredient.Unit.Stück, BigDecimal.valueOf(0));
+        unitValue.put(RecipeIngredient.Unit.Dose, BigDecimal.valueOf(250));
+        unitValue.put(RecipeIngredient.Unit.Packung, BigDecimal.valueOf(0));
+        unitValue.put(RecipeIngredient.Unit.Zehe, BigDecimal.valueOf(2));
+        unitValue.put(RecipeIngredient.Unit.Flasche, BigDecimal.valueOf(0));
+        unitValue.put(RecipeIngredient.Unit.Becher, BigDecimal.valueOf(250));
+        unitValue.put(RecipeIngredient.Unit.Tasse, BigDecimal.valueOf(250));
+        unitValue.put(RecipeIngredient.Unit.EMPTY, BigDecimal.valueOf(0));
     }
 
     @Override
@@ -107,13 +127,11 @@ public class RecipeServiceImpl implements RecipeService {
         getRecipeDetails(recipe, ingredients, nutritions, allergens, recursive);
         long rating = calculateAverageTasteRating(recipe.getRatings());
         RecipeDetailDto result = recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating, verifications);
-
         List<Recipe> forkedRecipes = recipeRepository.findAllForkedRecipesById(id);
         ArrayList<String> forkedRecipeNames = new ArrayList<>();
         for (Recipe forkedRecipe : forkedRecipes) {
             forkedRecipeNames.add(forkedRecipe.getName());
         }
-
         return new RecipeDetailDto(
                 result.id(),
                 result.name(),
@@ -124,7 +142,7 @@ public class RecipeServiceImpl implements RecipeService {
                 result.categories(),
                 result.isDraft(),
                 result.recipeSteps(),
-                result.ingredients(),
+                result.ingredients().stream().sorted(Comparator.comparing(IngredientDetailDto::name)).toList(),
                 result.allergens(),
                 result.nutritions(),
                 forkedRecipeNames,
@@ -387,15 +405,15 @@ public class RecipeServiceImpl implements RecipeService {
 
     private void updateMapOfNutritions(RecipeIngredient recipeIngredient, Map<Nutrition, BigDecimal> nutritions) {
         LOGGER.trace("updateMapOfNutritions({}, {})",
-            recipeIngredient, nutritions);
+                recipeIngredient, nutritions);
 
         for (IngredientNutrition nutrition : recipeIngredient.getIngredient().getNutritions()) {
             BigDecimal nutritionValue = nutrition.getValue()
-                .multiply((recipeIngredient.getAmount())
-                    .divide(BigDecimal.valueOf(100), RoundingMode.DOWN));
+                    .multiply((recipeIngredient.getAmount().multiply(unitValue.get(recipeIngredient.getUnit())))
+                            .divide(BigDecimal.valueOf(100), RoundingMode.DOWN));
             if (nutritions.containsKey(nutrition.getNutrition())) {
                 nutritions.put(nutrition.getNutrition(), nutritionValue
-                    .add(nutritions.get(nutrition.getNutrition())));
+                        .add(nutritions.get(nutrition.getNutrition())));
             } else {
                 nutritions.put(nutrition.getNutrition(), nutritionValue);
             }
