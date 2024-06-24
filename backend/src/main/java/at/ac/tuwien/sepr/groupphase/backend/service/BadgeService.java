@@ -2,6 +2,9 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 
+/**
+ * The BadgeService interface provides a method for adding a role to a user.
+ */
 public interface BadgeService {
     /**
      * Gives the given user the Role Contributor.
