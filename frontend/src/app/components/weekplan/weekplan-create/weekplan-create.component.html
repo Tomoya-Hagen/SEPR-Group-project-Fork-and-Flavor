@@ -1,58 +1,68 @@
 <form class="create-height" #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
-    <div class="container mt-5">
-      <h1 class="text-center mb-4">Wochenplaner Erstellen</h1>
-      <div class="row rec-create">
-        <div class="col-md-6 border inner-create-height">
-          <div class="row">
-            <div class="col-md-9">
-              <div class="form-group">
-                <label for="name">Rezeptbuch</label>
-                <app-autocomplete
-                    name="recipeBookSelection"
-                    textInputClass="form-control"
-                    [suggestions]="recipeBookSuggestions"
-                    [formatModel]="formatRecipeBook"
-                    valueNeedsToMatchSuggestion="true"
-                    [(ngModel)]="dummyRecipeBookSelectionModel"
-                    (ngModelChange)="selectRecipeBook($event)"
-              >
-              </app-autocomplete>           
-              </div>
-            </div>
-                <div class="ms-1">
-                    <label class="col-form-label">
-                      Von:
-                    </label>
-                    <input type="date" id="fromDate" name="fromDate"
-                           pattern="\d{4}-\d{2}-\d{2}"
-                           placeholder="yyyy-mm-dd"
-                           class="form-control"
-                           [(ngModel)]="fromDate"
-                           >
-            </div>
-            <div class="ms-1">
-                <label class="col-form-label">
-                  Bis:
-                </label>
-                <input type="date" id="toDate" name="toDate"
-                       pattern="\d{4}-\d{2}-\d{2}"
-                       placeholder="yyyy-mm-dd"
-                       class="form-control"
-                       [(ngModel)]="toDate"
-                       >
-            </div>
-            <div *ngFor="let day of weekdays">
-                <p>
-                    {{day.weekday}}
-                </p>
-                Frühstück: <input type="checkbox" (change)="onCheckboxChange($event, day, Daytime.Breakfast)">
-                Mittagessen: <input type="checkbox" (change)="onCheckboxChange($event, day, Daytime.Lunch)">
-                Abendessen: <input type="checkbox" (change)="onCheckboxChange($event, day, Daytime.Dinner)">
-            </div>
-            <button type="submit" class="btn btn-primary">Erstellen</button>
-          </div>
-        </div>  
-      </div>
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Wochenplaner Erstellen</h1>
+    <div class="createContainer row">
+      <table>
+        <thead>
+          <th class="day-header">Rezeptbuch:</th>
+        </thead>
+        <tbody>
+          <td>
+            {{ currentRecipeBook.name }}
+          </td>
+        </tbody>
+      </table>
+      <table>
+        <thead>
+          <tr>
+            <th>
+              <label class="col-form-label">
+                Von:
+              </label>
+            </th>
+            <th>
+              <label class="col-form-label">
+                Bis:
+              </label>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <td>
+            <input type="date" id="fromDate" name="fromDate"
+                   pattern="\d{4}-\d{2}-\d{2}"
+                   placeholder="yyyy-mm-dd"
+                   class="form-control"
+                   [(ngModel)]="fromDate"
+            >
+          </td>
+        <td>
+          <input type="date" id="toDate" name="toDate"
+                 pattern="\d{4}-\d{2}-\d{2}"
+                 placeholder="yyyy-mm-dd"
+                 class="form-control"
+                 [(ngModel)]="toDate"
+          >
+        </td>
+        </tbody>
+      </table>
+      <table>
+        <tbody>
+          <tr>
+            <th class="day-header">Tag</th>
+            <th class="meal-header">Frühstück</th>
+            <th class="meal-header">Mittagessen</th>
+            <th class="meal-header">Abendessen</th>
+          </tr>
+          <tr *ngFor="let day of weekdays" class="line">
+            <td class="day">{{day.weekday}}</td>
+            <td><input type="checkbox" (change)="onCheckboxChange($event, day, Daytime.Breakfast)"></td>
+            <td><input type="checkbox" (change)="onCheckboxChange($event, day, Daytime.Lunch)"></td>
+            <td><input type="checkbox" (change)="onCheckboxChange($event, day, Daytime.Dinner)"></td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="submit" class="btn btn-primary">Erstellen</button>
     </div>
+  </div>
 </form>
-  

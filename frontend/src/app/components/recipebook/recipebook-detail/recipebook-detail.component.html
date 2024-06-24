@@ -1,17 +1,17 @@
 <div class="jumbotron mt-5">
   <h1 class="display-4 text-center mb-5">{{ recipeBook.name }}</h1>
   <div class="RecipeInfos">
-    <div class="info-box info-box-1">
-      <h4>Beschreibung:</h4>
-      <p>{{ recipeBook.description }}</p>
+    <div class="info-box">
+      <h4 class="fs-4">Rezepte:</h4>
+      <span class="number">{{ recipeBook.recipes.length }}</span>
     </div>
-    <div class="info-box info-box-2" >
+    <div class="info-box" >
       <h4 class="fs-4">Besitzer:</h4>
       <div>
         <span (click)="openUserPage()">{{ recipeBook.owner.name }}</span>
       </div>
     </div>
-    <div class="info-box info-box-3" *ngIf="recipeBook.users.length !== 0">
+    <div class="info-box" *ngIf="recipeBook.users.length !== 0">
       <h4 class="fs-4" *ngIf="recipeBook.users.length !== 0">Bearbeiter:</h4>
       <div class="list-style-none" *ngIf="recipeBook.users.length !== 0">
     <span *ngFor="let user of recipeBook.users; let i = index">
@@ -19,7 +19,15 @@
     </span>
       </div>
     </div>
+    <div class="info-box" (click)="gotoWeekPlan()">
+      <h4 class="fs-4">zum</h4>
+      <h4 class="fs-4">Wochenplan</h4>
+    </div>
   </div>
+  <hr>
+  <h4>Beschreibung:</h4>
+  <p>{{ recipeBook.description }}</p>
+  <hr>
   <h4 class="mt-4">Rezepte:</h4>
   <div class="row">
     <div class="col-lg-4 p-2" *ngFor="let item of recipeBook.recipes">

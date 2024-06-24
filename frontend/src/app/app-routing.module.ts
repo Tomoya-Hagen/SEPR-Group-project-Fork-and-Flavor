@@ -39,7 +39,7 @@ const routes: Routes = [
       {path: 'edit/:id', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.edit}}
   ]},
   {path: 'weekplan/:id', component: WeekplanComponent},
-  {path: 'weekplancreate',component:WeekplanCreateComponent},
+  {path: 'weekplan/:id/create',component:WeekplanCreateComponent},
   {path: 'userpage', children:[
       {path: ':id', component: UserpageComponent},
       {path: ':id/edit', component: UserpageEditComponent},

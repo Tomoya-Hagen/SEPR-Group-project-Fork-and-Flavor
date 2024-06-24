@@ -34,6 +34,7 @@ export class WeekplanComponent implements OnInit, AfterViewInit {
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
   weekplan:any[]
+  id: number
 
   ngOnInit(): void {
 
@@ -71,6 +72,7 @@ export class WeekplanComponent implements OnInit, AfterViewInit {
       console.log(start.getDate());
       console.log(end.getDate());
       this.offset+=8;
+      this.id = this.route.snapshot.params["id"]
       this.weekplanService.getWeekplanDetail(parseInt(this.route.snapshot.params["id"]),start,end ).subscribe(weekplan => {
         console.log(weekplan)
         if(this.weekplan){
@@ -111,5 +113,9 @@ export class WeekplanComponent implements OnInit, AfterViewInit {
   }
   test(){
     console.log(this.weekplan)
+  }
+
+  goToCreateWeekplan() {
+    this.router.navigate(['/weekplan/' + this.id + '/create']);
   }
 }
