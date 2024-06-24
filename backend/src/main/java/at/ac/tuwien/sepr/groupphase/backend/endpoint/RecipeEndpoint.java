@@ -191,14 +191,6 @@ public class RecipeEndpoint {
         }
     }
 
-    @Secured("ROLE_USER")
-    @GetMapping("/recommended")
-    @Operation(summary = "Get a list of recommended recipes")
-    public List<RecipeListDto> getRecipesByRecommendation() {
-        LOGGER.info("GET /api/v1/recipes");
-        return recipeService.getRecipesByRecommendation();
-    }
-
     private void logClientError(HttpStatus status, String message, Exception e) {
         LOGGER.warn("{} {}: {}: {}", status.value(), message, e.getClass().getSimpleName(), e.getMessage());
     }

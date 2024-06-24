@@ -8,10 +8,6 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-/**
- * This interface provides methods to map between Rating, RatingListDto, and RatingCreateDto objects.
- * It uses UserMapper to perform any necessary user-related mapping.
- */
 @Mapper(uses = {UserMapper.class})
 public interface RatingMapper {
 

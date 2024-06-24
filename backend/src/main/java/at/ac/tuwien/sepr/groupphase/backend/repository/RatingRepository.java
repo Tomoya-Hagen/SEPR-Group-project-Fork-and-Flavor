@@ -1,15 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
-import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Rating;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -62,14 +59,4 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
      */
     @Query("select r from Rating r where r.user.id = :userId ORDER BY r.id LIMIT 10")
     Collection<Rating> getRatingsByUserId(@Param("userId") long userId);
-
-    /**
-     * Retrieves a list of ApplicationUser entities who have rated a specific recipe.
-     *
-     * @param recipe The Recipe entity for which the owners are to be retrieved.
-     * @return A list of ApplicationUser entities who have rated the given recipe.
-     */
-    @Query("select r.user from Rating r where r.recipe = :recipe")
-    List<ApplicationUser> getOwnersbyRecipe(@Param("recipe") Recipe recipe);
 }
-
