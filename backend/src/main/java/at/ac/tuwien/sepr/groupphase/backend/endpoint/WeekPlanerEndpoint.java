@@ -53,7 +53,7 @@ public class WeekPlanerEndpoint {
         return weekPlanService.getWeekplanDetail(id, from, to);
     }
 
-    @Secured("USER_ROLE")
+    @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "create a new week planner", security = @SecurityRequirement(name = "apiKey"))

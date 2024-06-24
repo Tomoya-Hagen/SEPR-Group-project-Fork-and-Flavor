@@ -105,7 +105,7 @@ export class WeekplanCreateComponent implements OnInit {
       error: error => {
         {
           console.error('Error creating weekplan.', error);
-          this.notification.error('Wochenplan könnte nicht erstellt werden.', 'Backend Fehler - Wochenplan');
+          this.notification.error('Wochenplan konnte nicht erstellt werden.', 'Backend Fehler - Wochenplan');
         }
       }
     }
