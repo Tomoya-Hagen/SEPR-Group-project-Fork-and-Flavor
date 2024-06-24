@@ -39,7 +39,7 @@ public class WeekPlannerValidator {
             validationErrors.add("start date cannot be before today");
         }
         if (weekPlanCreateDto.endDate().isAfter(LocalDate.now().plusYears(1))) {
-            validationErrors.add("end date has to be in the next year");
+            validationErrors.add("end date cannot be further in future than 1 year from today");
         }
         if (weekPlanCreateDto.weekdays().size() != 7) {
             validationErrors.add("every day has to be filled");

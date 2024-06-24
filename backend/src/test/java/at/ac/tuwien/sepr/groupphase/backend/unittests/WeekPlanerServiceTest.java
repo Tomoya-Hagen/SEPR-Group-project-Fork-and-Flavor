@@ -35,7 +35,7 @@ class WeekPlanerServiceTest implements TestData {
         WeekPlanCreateDto firstPlan =
             new WeekPlanCreateDto(10L,
                 LocalDate.of(2025, 1, 1),
-                LocalDate.of(2025, 12, 31),
+                LocalDate.of(2025, 5, 31),
                 List.of(new WeekDayDto(Weekday.Monday, List.of(DayTime.Breakfast)),
                     new WeekDayDto(Weekday.Tuesday, List.of()),
                     new WeekDayDto(Weekday.Wednesday, List.of()),
@@ -46,8 +46,8 @@ class WeekPlanerServiceTest implements TestData {
         WeekPlanDetailDto[] weekPlanerResponse = weekPlanService.create(firstPlan);
         WeekPlanCreateDto secondPlan =
             new WeekPlanCreateDto(10L,
-                LocalDate.of(2025, 10, 1),
-                LocalDate.of(2025, 12, 31),
+                LocalDate.of(2025, 1, 1),
+                LocalDate.of(2025, 5, 31),
                 List.of(new WeekDayDto(Weekday.Monday, List.of(DayTime.Breakfast)),
                     new WeekDayDto(Weekday.Tuesday, List.of()),
                     new WeekDayDto(Weekday.Wednesday, List.of()),
