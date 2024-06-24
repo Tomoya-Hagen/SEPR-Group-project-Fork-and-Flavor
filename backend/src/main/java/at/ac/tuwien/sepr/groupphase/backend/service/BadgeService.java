@@ -5,6 +5,9 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 
 import java.util.List;
 
+/**
+ * The BadgeService interface provides a method for adding a role to a user.
+ */
 public interface BadgeService {
     /**
      * Gives the given user the Role Contributor.

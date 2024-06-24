@@ -175,7 +175,7 @@ class RecipeRepositoryTest {
         user.setId(1L);
 
         List<Recipe> result = recipeRepository.findRecipesByOwnerId(1L);
-        assertEquals(82, result.size());
+        assertEquals(86, result.size());
         assertEquals(user.getId(), result.get(0).getOwner().getId());
         assertEquals(user.getId(), result.get(1).getOwner().getId());
     }

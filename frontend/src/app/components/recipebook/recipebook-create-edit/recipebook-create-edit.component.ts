@@ -121,6 +121,7 @@ export class RecipebookCreateEditComponent implements OnInit {
   }
 
   public onSubmit(form: NgForm): void {
+    this.isFormValid();
     console.log('is form valid?', form.valid, this.recipeBook);
     if (form.valid && this.isFormValid()) {
       let observable: Observable<any>;

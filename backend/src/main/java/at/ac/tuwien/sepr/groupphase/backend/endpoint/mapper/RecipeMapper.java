@@ -33,8 +33,7 @@ import java.util.List;
  * This mapper is used to map recipes zu all kinds of different dto types.
  */
 
-@Mapper(uses = {RecipeStepMapper.class, CategoryMapper.class, AllergenMapper.class,
-    IngredientMapper.class, NutritionMapper.class})
+@Mapper(uses = {RecipeStepMapper.class, CategoryMapper.class, AllergenMapper.class, IngredientMapper.class, NutritionMapper.class})
 public interface RecipeMapper {
     /**
      * This method creates a RecipeDetailDto out of the data of the recipe.
@@ -53,10 +52,16 @@ public interface RecipeMapper {
     @Mapping(source = "owner.id", target = "ownerId")
     @Mapping(source = "recipe.id", target = "id")
     @Mapping(source = "recipe.isDraft", target = "isDraft")
-    @Mapping(source = "recipe.forkedFrom.id", target = "forkedFromId")
-    RecipeDetailDto recipeToRecipeDetailDto(Recipe recipe, HashMap<Ingredient,
-        RecipeIngredient> ingredients, HashMap<Nutrition, BigDecimal> nutritions, ArrayList<Allergen> allergens, ApplicationUser owner, long rating, int verifications);
+    @Mapping(source = "recipe.forkedFrom", target = "forkedFrom")
+    RecipeDetailDto recipeToRecipeDetailDto(Recipe recipe, HashMap<Ingredient, RecipeIngredient> ingredients, HashMap<Nutrition, BigDecimal> nutritions, ArrayList<Allergen> allergens, ApplicationUser owner, long rating, int validations);
 
+    /**
+     * Converts a list of Recipe entities and their corresponding ratings to a list of RecipeListDto objects.
+     *
+     * @param recipes The list of Recipe entities.
+     * @param ratings The list of corresponding ratings for each Recipe.
+     * @return A list of RecipeListDto objects.
+     */
     default ArrayList<RecipeListDto> recipeListAndRatingListToListOfRecipeRatingDto(ArrayList<Recipe> recipes, ArrayList<Long> ratings) {
         ArrayList<RecipeListDto> recipeListDtos = new ArrayList<>();
         for (int i = 0; i < recipes.size(); i++) {
@@ -65,6 +70,12 @@ public interface RecipeMapper {
         return recipeListDtos;
     }
 
+    /**
+     * Converts a list of RecipeListDto objects to a list of Recipe entities.
+     *
+     * @param recipeListDto The list of RecipeListDto objects.
+     * @return A list of Recipe entities.
+     */
     @Mapping(source = "recipeListDto.id", target = "id")
     default List<Recipe> listOfRecipeListDtoToRecipeList(List<RecipeListDto> recipeListDto) {
         List<Recipe> recipeList = new ArrayList<>();
@@ -85,8 +96,22 @@ public interface RecipeMapper {
     @Mapping(source = "recipe.description", target = "description")
     RecipeListDto recipeAndAverageRatingToRecipeListDto(Recipe recipe, long rating);
 
+    /**
+     * Converts a Recipe entity to a DetailedRecipeDto object.
+     *
+     * @param recipe The Recipe entity.
+     * @return A DetailedRecipeDto object.
+     */
     DetailedRecipeDto recipeToDetailedRecipeDto(Recipe recipe);
 
+    /**
+     * Converts a RecipeUpdateDto object to a Recipe entity.
+     *
+     * @param recipeUpdateDto The RecipeUpdateDto object.
+     * @return A Recipe entity.
+     * @throws RecipeStepNotParsableException   If the steps in the Recipe are not formatted correctly.
+     * @throws RecipeStepSelfReferenceException If a step references its own recipe.
+     */
     default Recipe recipeUpdateDtoToRecipe(RecipeUpdateDto recipeUpdateDto) throws RecipeStepNotParsableException, RecipeStepSelfReferenceException {
         Recipe current = new Recipe();
         Long id = recipeUpdateDto.id();
@@ -116,7 +141,7 @@ public interface RecipeMapper {
         for (RecipeIngredientDto recipeIngredient : recipeUpdateDto.ingredients()) {
             Ingredient ingredient = new Ingredient();
             ingredient.setId(recipeIngredient.getId());
-            RecipeIngredient.Unit u =  RecipeIngredient.getUnitFromString(recipeIngredient.getUnit());
+            RecipeIngredient.Unit u = RecipeIngredient.getUnitFromString(recipeIngredient.getUnit());
             RecipeIngredient recipeIngr = new RecipeIngredient(current, ingredient, recipeIngredient.getAmount(), u);
             recipeIngredientList.add(recipeIngr);
         }
@@ -139,6 +164,12 @@ public interface RecipeMapper {
         return ret;
     }
 
+    /**
+     * Converts a Recipe entity to a SimpleRecipeResultDto object.
+     *
+     * @param r The Recipe entity.
+     * @return A SimpleRecipeResultDto object.
+     */
     default SimpleRecipeResultDto recipeToRecipeResultDto(Recipe r) {
         SimpleRecipeResultDto result = new SimpleRecipeResultDto();
         result.setRecipeId(r.getId());
@@ -147,8 +178,23 @@ public interface RecipeMapper {
         return result;
     }
 
+    /**
+     * Converts a list of Recipe entities to a list of RecipeListDto objects.
+     *
+     * @param recipes The list of Recipe entities.
+     * @return A list of RecipeListDto objects.
+     */
     List<RecipeListDto> recipesToRecipeListDto(List<Recipe> recipes);
 
+    /**
+     * Converts a RecipeCreateDto object and an id to a Recipe entity.
+     *
+     * @param recipeCreateDto The RecipeCreateDto object.
+     * @param id              The id.
+     * @return A Recipe entity.
+     * @throws RecipeStepNotParsableException   If the steps in the Recipe are not formatted correctly.
+     * @throws RecipeStepSelfReferenceException If a step references its own recipe.
+     */
     default Recipe recipeCreateDtoToRecipe(RecipeCreateDto recipeCreateDto, long id) throws RecipeStepNotParsableException, RecipeStepSelfReferenceException {
         Recipe current = new Recipe();
         current.setId(id);
@@ -198,6 +244,12 @@ public interface RecipeMapper {
         return ret;
     }
 
+    /**
+     * Converts a RecipeCreateDto object to a Recipe entity.
+     *
+     * @param recipeCreateDto The RecipeCreateDto object.
+     * @return A Recipe entity.
+     */
     default Recipe recipeparsesimple(RecipeCreateDto recipeCreateDto) {
         Recipe ret = new Recipe();
         ret.setName(recipeCreateDto.getName());
@@ -208,9 +260,28 @@ public interface RecipeMapper {
         return ret;
     }
 
+    /**
+     * Converts a list of Recipe entities to a list of RecipeListDto objects.
+     *
+     * @param recipe The list of Recipe entities.
+     * @return A list of RecipeListDto objects.
+     */
     List<RecipeListDto> recipeListToRecipeListDto(List<Recipe> recipe);
 
+    /**
+     * Converts a RecipeListDto object to a Recipe entity.
+     *
+     * @param recipeListDto The RecipeListDto object.
+     * @return A Recipe entity.
+     */
     Recipe recipeListDtoToRecipe(RecipeListDto recipeListDto);
 
+    /**
+     * Converts a Recipe entity and a rating to a RecipeListDto object.
+     *
+     * @param recipe The Recipe entity.
+     * @param rating The rating.
+     * @return A RecipeListDto object.
+     */
     RecipeListDto recipeToRecipeListDto(Recipe recipe, Long rating);
 }

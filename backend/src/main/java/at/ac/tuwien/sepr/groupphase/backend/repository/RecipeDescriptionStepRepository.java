@@ -11,6 +11,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RecipeDescriptionStepRepository extends JpaRepository<RecipeDescriptionStep, Long> {
 
+    /**
+     * Finds the maximum id value among all RecipeDescriptionStep entities.
+     *
+     * @return The maximum id value if it exists, otherwise 0.
+     */
     @Query("SELECT COALESCE(MAX(id), 0) FROM RecipeDescriptionStep")
     Long findMaxId();
 }
