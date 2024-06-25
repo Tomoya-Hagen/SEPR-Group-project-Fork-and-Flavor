@@ -176,7 +176,7 @@ public class RecipeServiceImpl implements RecipeService {
                 result.nutritions(),
                 forkedRecipeNames,
                 result.rating(),
-                result.verifications()
+                recipe.getVerifiers().size()
         );
     }
 

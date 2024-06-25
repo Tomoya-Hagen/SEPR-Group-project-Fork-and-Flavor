@@ -35,7 +35,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     name: "",
     description: "",
     numberOfServings: 0,
-    forkedFromId: 0,
+    forkedFrom: null,
     ownerId: 0,
     categories: [],
     isDraft: false,
@@ -122,7 +122,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
           this.selectedPortions = this.recipe.numberOfServings;
           this.changeIngredientsToGramm();
           this.changeNutritionsToGramm();
-          this.getForkedFromRecipeName();
           this.isCurrentUserOwner();
           this.orderNutritions();
           if (this.loggedIn) {
@@ -271,31 +270,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   }
   isAllergensNotEmpty(): boolean{
     return this.recipe.allergens.length != 0;
-  }
-
-  isForkedFromRecipe(): boolean{
-    if (this.recipe.id == this.recipe.forkedFromId) {
-      return false;
-    }
-    return this.recipe.forkedFromId != 0 && this.recipe.forkedFromId != null;
-  }
-
-  getForkedFromRecipeName(){
-    if (this.recipe.forkedFromId == 0 || this.recipe.forkedFromId == null) {
-      return;
-    }
-    this.service.getRecipeDetailsBy(this.recipe.forkedFromId).subscribe({
-      next: data => {
-        this.recipeForkedFrom = data.name;
-      },
-      error: error => {
-        console.error('Error forking recipe.', error);
-        const errorMessage = error.message.message;
-        this.notification.error('Fork Rezepte ist nicht möglich.' + errorMessage, "Backend Fehler - Rezepte");
-        return;
-      }
-    })
-    return this.recipeForkedFrom;
   }
 
   openSpoonModal(spoonModal: TemplateRef<any>) {
