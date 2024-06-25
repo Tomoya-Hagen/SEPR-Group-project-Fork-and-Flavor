@@ -48,6 +48,7 @@
       </ul>
       <ul class="navbar-nav user">
         <li class="nav-item">
+          <a *ngIf="!authService.isLoggedIn()" class="btn btn-primary btn-lg nav-item" routerLink="/login" routerLinkActive="active" role="button">Login</a>
           <div ngbDropdown class="d-inline-block" *ngIf="authService.isLoggedIn()">
             <button type="button" class="btn" id="dropdownBasic4" ngbDropdownToggle>
               {{ getUser() }}
