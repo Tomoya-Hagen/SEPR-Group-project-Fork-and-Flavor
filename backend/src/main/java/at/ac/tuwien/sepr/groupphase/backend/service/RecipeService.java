@@ -28,7 +28,6 @@ import java.util.stream.Stream;
 @Service
 public interface RecipeService {
 
-
     /**
      * Creates a new recipe entry.
      *

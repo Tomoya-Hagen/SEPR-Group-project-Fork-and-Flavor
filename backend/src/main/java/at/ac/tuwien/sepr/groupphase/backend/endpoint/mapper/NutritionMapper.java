@@ -13,6 +13,7 @@ import java.util.HashMap;
  */
 @Mapper
 public interface NutritionMapper {
+
     /**
      * This method creates a NutritionDetailDto out of a nutrition entity and a value.
      *

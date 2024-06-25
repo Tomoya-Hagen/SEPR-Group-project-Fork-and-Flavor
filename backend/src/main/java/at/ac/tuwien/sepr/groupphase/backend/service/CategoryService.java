@@ -4,7 +4,11 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryResultDto;
 
 import java.util.stream.Stream;
 
+/**
+ * This is the interface for the categoryService.
+ */
 public interface CategoryService {
+
     /**
      * Find all categories having a name like name.
      *

@@ -8,11 +8,14 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
+/**
+ * This mapper is used to map an rating entity to a dto and reverse.
+ */
 @Mapper(uses = {UserMapper.class})
 public interface RatingMapper {
 
     /**
-     * Maps a list of ratings to a  list of rating list dto.
+     * Maps a list of ratings to a list of rating list dto.
      *
      * @param list that contains the items that should be mapped.
      * @return the list of the mapped objects.

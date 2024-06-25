@@ -17,11 +17,10 @@ import java.util.List;
 @Repository
 public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
 
-
     /**
      * Find first User entry via email.
      *
-     * @return ordered list of al message entries
+     * @return ordered list of all message entries
      */
     @Query("SELECT DISTINCT ApplicationUser FROM ApplicationUser ApplicationUser "
         + "JOIN FETCH ApplicationUser.roles "
@@ -49,14 +48,32 @@ public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
      */
     Long findFirstByEmail(String email);
 
+    /**
+     * find list of user via username.
+     *
+     * @param name username represents
+     * @param limit limit user id represents
+     * @return the details of list of recipe that match the user.
+     */
     @Query("SELECT u FROM ApplicationUser u WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :username, '%')) ORDER BY u.id LIMIT :limit")
     List<ApplicationUser> findByNamesContainingIgnoreCase(@Param("username") String name, @Param("limit") int limit);
 
+    /**
+     * Find first User entry via id.
+     *
+     * @return ordered list of al message entries
+     */
     ApplicationUser findFirstById(long id);
 
     @Query("SELECT u FROM ApplicationUser u WHERE u.id = :id")
     ApplicationUser findFirstByIdWithEagerLoading(@Param("id") Long id);
 
+    /**
+     * Update user to id and from password.
+     *
+     * @param id user id represents
+     * @param password user password represents
+     */
     @Transactional
     @Modifying
     @Query("UPDATE ApplicationUser u SET u.password = :password where u.id = :id")

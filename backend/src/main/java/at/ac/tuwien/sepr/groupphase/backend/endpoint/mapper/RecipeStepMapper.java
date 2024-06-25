@@ -18,6 +18,7 @@ import java.util.List;
  */
 @Mapper
 public interface RecipeStepMapper {
+
     /**
      * This method creates a list of RecipeStepDto out of a list of RecipeStep.
      *
@@ -54,6 +55,13 @@ public interface RecipeStepMapper {
     @Mapping(source = "recipeRecipe", target = "recipe")
     RecipeStepRecipeDetailDto recipeStepToRecipeStepDetailDto(RecipeRecipeStep recipeRecipeStep);
 
+
+    /**
+     * This method converts a recipeDescriptionStep to a RecipeStepDto.
+     *
+     * @param recipeDescriptionStep that should be converted to a dto
+     * @return the converted dto based on the given entity
+     */
     default RecipeStepDto recipeDescriptionStepToRecipeStepDto(RecipeDescriptionStep recipeDescriptionStep) {
         return new RecipeStepDto(
             recipeDescriptionStep.getName(),
@@ -63,6 +71,12 @@ public interface RecipeStepMapper {
         );
     }
 
+    /**
+     * This method converts a recipeRecipeStep to a RecipeStepDto.
+     *
+     * @param recipeRecipeStep that should be converted to a dto
+     * @return the converted dto based on the given entity
+     */
     default RecipeStepDto recipeRecipeStepToRecipeStepDto(RecipeRecipeStep recipeRecipeStep) {
         return new RecipeStepDto(
             recipeRecipeStep.getName(),
@@ -72,6 +86,13 @@ public interface RecipeStepMapper {
         );
     }
 
+
+    /**
+     * This method converts a recipeStep entity to a RecipeStepDto.
+     *
+     * @param recipeStep that should be converted to a dto
+     * @return the converted dto based on the given entity
+     */
     default RecipeStepDto recipeStepToRecipeStepDto(RecipeStep recipeStep) {
         if (recipeStep instanceof RecipeRecipeStep) {
             return recipeRecipeStepToRecipeStepDto((RecipeRecipeStep) recipeStep);

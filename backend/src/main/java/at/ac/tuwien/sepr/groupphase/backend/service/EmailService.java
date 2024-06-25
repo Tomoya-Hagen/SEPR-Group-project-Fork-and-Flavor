@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+/**
+ * This is the interface for the emailService.
+ */
 public interface EmailService {
 
     /**

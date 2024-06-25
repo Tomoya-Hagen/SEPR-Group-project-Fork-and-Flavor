@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RecipeRecipeStepRepository extends JpaRepository<RecipeRecipeStep, Long> {
 
-
     @Query("SELECT COALESCE(MAX(id), 0) FROM RecipeDescriptionStep")
     Long findMaxId();
 }

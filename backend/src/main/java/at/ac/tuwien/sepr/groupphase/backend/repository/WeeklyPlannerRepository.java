@@ -18,7 +18,11 @@ public interface WeeklyPlannerRepository extends JpaRepository<WeeklyPlanner, Lo
 
     WeeklyPlanner findWeeklyPlannerById(Long id);
 
-
+    /**
+     * Find weekPlanner via id, from, to.
+     *
+     * @return array of weekPlanner
+     */
     @Query("SELECT i FROM WeeklyPlanner i WHERE i.recipeBook.id = :id AND i.date <= :to AND i.date >= :from order by i.date ASC")
     WeeklyPlanner[] findWeeklyPlannerByDate(@Param("id") long id, @Param("from") Date from, @Param("to")Date to);
 }

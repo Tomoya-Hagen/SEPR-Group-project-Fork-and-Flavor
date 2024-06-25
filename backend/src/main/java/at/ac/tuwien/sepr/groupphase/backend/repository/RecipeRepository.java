@@ -29,6 +29,12 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      */
     Optional<Recipe> getRecipeById(@Param("id") long id);
 
+    /**
+     * gets a list recipe entities by the given range from to.
+     *
+     * @param ids list of recipe ids.
+     * @return a list of recipes which hava ids.
+     */
     @Query("select r from Recipe r where r.id in :ids")
     List<Recipe> getRecipeByIds(@Param("ids") List<Long> ids);
 
@@ -44,13 +50,28 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query("SELECT COALESCE(MAX(i.id),0) FROM Recipe i")
     Long findMaxId();
 
+    /**
+     * This method is responsible for finding for recipe by name.
+     *
+     * @param name The name of the recipe.
+     * @param pageable The page information.
+     * @return A Pageable object that contains the details of recipe that match the search criteria.
+     */
     Page<Recipe> findByNameContainingIgnoreCaseOrderByName(String name, Pageable pageable);
 
+    /**
+     * This method is responsible for finding for recipe by name or category id.
+     *
+     * @param name The name of the recipe.
+     * @param ids The ids of the category.
+     * @param pageable The page information.
+     * @return A Pageable object that contains the details of recipe that match the search criteria.
+     */
     @Query("SELECT distinct i FROM Recipe i join FETCH i.categories rc WHERE LOWER(i.name) LIKE LOWER(CONCAT('%', :name, '%')) AND rc.id = :id")
     Page<Recipe> findByCategoryIdContainingIgnoreCaseOrderByName(@Param("name") String name, @Param("id") long ids, Pageable pageable);
 
     /**
-     * Search for recipes in the persistent data store matching  provided field.
+     * Search for recipes in the persistent data store matching provided field.
      * The name is considered a match, if the search string is a substring of the field in recipes.
      *
      * @param name the recipe name to use in filtering.
@@ -62,9 +83,24 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query("SELECT r FROM Recipe r WHERE LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%')) ORDER BY r.id LIMIT :limit")
     List<Recipe> findByNamesContainingIgnoreCase(@Param("name") String name, @Param("limit") int limit);
 
+    /**
+     * gets a list recipe entities by the given name.
+     *
+     * @param name represents name which will be returned.
+     * @param pageable The page information.
+     * @return A Pageable object that contains the details of list of recipe that match the name.
+     */
     @Query("SELECT i FROM Recipe i WHERE i.name LIKE %:name%")
     List<Recipe> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
 
+    /**
+     * gets a list of recipe entities by the given range from name and category id.
+     *
+     * @param name represents name which will be returned.
+     * @param ids represents ids of category which will be returned.
+     * @param pageable The page information.
+     * @return A Pageable object that contains the details of list of recipe that match the name.
+     */
     @Query("SELECT distinct i FROM Recipe i join FETCH i.categories rc WHERE i.name LIKE %:name% AND rc.id = :id")
     List<Recipe> findByNameContainingWithLimit(@Param("name") String name, @Param("id") long ids, Pageable pageable);
 
@@ -103,15 +139,26 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      */
     Recipe findFirstById(long id);
 
+    /**
+     * gets a list of recipe entities by the given range from ownerId.
+     *
+     * @param ownerId represents ids of recipe owner which will be returned.
+     * @return the details of list of recipe that match the id.
+     */
     @Query("SELECT r FROM Recipe r WHERE r.owner.id = :ownerId ")
     List<Recipe> findRecipesByOwnerId(@Param("ownerId") long ownerId);
 
+    /**
+     * gets a list of recipe entities by the given range from id.
+     *
+     * @param id represents ids of recipe forked from which will be returned.
+     * @return the details of list of recipe that match the id.
+     */
     @Query("SELECT r FROM Recipe r WHERE r.forkedFrom.id = :id")
     List<Recipe> findAllForkedRecipesById(@Param("id") long id);
 
-
     /**
-     * requests a verify based on the user and the recipe id.
+     * requests a verified recipe based on the user and the recipe id.
      *
      * @param recipeId id of the recipe.
      * @param userId   id of the user.

@@ -4,6 +4,9 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientResultDto;
 
 import java.util.stream.Stream;
 
+/**
+ * This is the interface for the ingredientService.
+ */
 public interface IngredientService {
 
     /**

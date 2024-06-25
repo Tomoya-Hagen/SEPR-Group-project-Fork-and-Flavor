@@ -5,7 +5,11 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 
 import java.util.List;
 
+/**
+ * This is the interface for the badgeService.
+ */
 public interface BadgeService {
+
     /**
      * Gives the given user the Role Contributor.
      *
@@ -27,5 +31,4 @@ public interface BadgeService {
      * @return a list of string that represent the names of the badges a user has.
      */
     List<String> getBadgesOfUser(Long userId);
-
 }

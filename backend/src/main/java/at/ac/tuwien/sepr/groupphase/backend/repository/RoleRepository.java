@@ -10,7 +10,18 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
+
+    /**
+     * Find first Role entries via name.
+     *
+     * @return role if name found
+     */
     Role findByName(String name);
 
+    /**
+     * Find first Role entries via name.
+     *
+     * @return boolean if role name exists
+     */
     Boolean existsByName(String name);
 }
