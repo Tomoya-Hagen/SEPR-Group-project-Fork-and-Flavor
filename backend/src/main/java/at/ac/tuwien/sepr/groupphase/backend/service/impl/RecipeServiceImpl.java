@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeSearchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleRecipeResultDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecommendEvaluation;
@@ -60,6 +62,7 @@ import java.util.AbstractMap;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -87,6 +90,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final EmailService emailService;
     private final UserRepository userRepository;
     private final RatingRepository ratingRepository;
+    private Map<RecipeIngredient.Unit, BigDecimal> unitValue;
 
     public RecipeServiceImpl(RecipeRepository recipeRepository,
                              RecipeMapper recipeMapper,
@@ -106,6 +110,27 @@ public class RecipeServiceImpl implements RecipeService {
         this.emailService = emailService;
         this.userRepository = userRepository;
         this.ratingRepository = ratingRepository;
+        fillUnitValue();
+    }
+
+    private void fillUnitValue() {
+        unitValue = new EnumMap<>(RecipeIngredient.Unit.class);
+        unitValue.put(RecipeIngredient.Unit.mg, BigDecimal.valueOf(0.001));
+        unitValue.put(RecipeIngredient.Unit.g, BigDecimal.valueOf(1));
+        unitValue.put(RecipeIngredient.Unit.kg, BigDecimal.valueOf(1000));
+        unitValue.put(RecipeIngredient.Unit.L, BigDecimal.valueOf(1000));
+        unitValue.put(RecipeIngredient.Unit.el, BigDecimal.valueOf(15));
+        unitValue.put(RecipeIngredient.Unit.tl, BigDecimal.valueOf(5));
+        unitValue.put(RecipeIngredient.Unit.ml, BigDecimal.valueOf(1));
+        unitValue.put(RecipeIngredient.Unit.Priese, BigDecimal.valueOf(0.04));
+        unitValue.put(RecipeIngredient.Unit.Stück, BigDecimal.valueOf(0));
+        unitValue.put(RecipeIngredient.Unit.Dose, BigDecimal.valueOf(250));
+        unitValue.put(RecipeIngredient.Unit.Packung, BigDecimal.valueOf(0));
+        unitValue.put(RecipeIngredient.Unit.Zehe, BigDecimal.valueOf(2));
+        unitValue.put(RecipeIngredient.Unit.Flasche, BigDecimal.valueOf(0));
+        unitValue.put(RecipeIngredient.Unit.Becher, BigDecimal.valueOf(250));
+        unitValue.put(RecipeIngredient.Unit.Tasse, BigDecimal.valueOf(250));
+        unitValue.put(RecipeIngredient.Unit.EMPTY, BigDecimal.valueOf(0));
     }
 
     @Override
@@ -124,7 +149,6 @@ public class RecipeServiceImpl implements RecipeService {
         getRecipeDetails(recipe, ingredients, nutritions, allergens, recursive);
         long rating = calculateAverageTasteRating(recipe.getRatings());
         RecipeDetailDto result = recipeMapper.recipeToRecipeDetailDto(recipe, ingredients, nutritions, allergens, recipe.getOwner(), rating, verifications);
-
         List<Recipe> forkedRecipes = recipeRepository.findAllForkedRecipesById(id);
         ArrayList<RecipeListDto> forkedRecipeNames = new ArrayList<>();
         for (Recipe forkedRecipe : forkedRecipes) {
@@ -137,7 +161,6 @@ public class RecipeServiceImpl implements RecipeService {
                     )
             );
         }
-
         return new RecipeDetailDto(
                 result.id(),
                 result.name(),
@@ -148,7 +171,7 @@ public class RecipeServiceImpl implements RecipeService {
                 result.categories(),
                 result.isDraft(),
                 result.recipeSteps(),
-                result.ingredients(),
+                result.ingredients().stream().sorted(Comparator.comparing(IngredientDetailDto::name)).toList(),
                 result.allergens(),
                 result.nutritions(),
                 forkedRecipeNames,
@@ -519,7 +542,7 @@ public class RecipeServiceImpl implements RecipeService {
 
         for (IngredientNutrition nutrition : recipeIngredient.getIngredient().getNutritions()) {
             BigDecimal nutritionValue = nutrition.getValue()
-                    .multiply((recipeIngredient.getAmount())
+                    .multiply((recipeIngredient.getAmount().multiply(unitValue.get(recipeIngredient.getUnit())))
                             .divide(BigDecimal.valueOf(100), RoundingMode.DOWN));
             if (nutritions.containsKey(nutrition.getNutrition())) {
                 nutritions.put(nutrition.getNutrition(), nutritionValue

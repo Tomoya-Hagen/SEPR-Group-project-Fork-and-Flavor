@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.WeekPlanCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.WeekPlanDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

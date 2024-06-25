@@ -17,11 +17,10 @@ import java.util.List;
 @Repository
 public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
 
-
     /**
      * Find first User entry via email.
      *
-     * @return ordered list of al message entries
+     * @return ordered list of all message entries
      */
     @Query("SELECT DISTINCT ApplicationUser FROM ApplicationUser ApplicationUser "
         + "JOIN FETCH ApplicationUser.roles "

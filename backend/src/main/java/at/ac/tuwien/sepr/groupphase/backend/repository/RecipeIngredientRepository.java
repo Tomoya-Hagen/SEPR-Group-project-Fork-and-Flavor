@@ -16,6 +16,7 @@ import java.util.List;
 @DynamicUpdate
 @Repository
 public interface RecipeIngredientRepository extends JpaRepository<RecipeIngredient, Long> {
+
     /**
      * This method searches for a RecipeIngredients by the given recipe id.
      *

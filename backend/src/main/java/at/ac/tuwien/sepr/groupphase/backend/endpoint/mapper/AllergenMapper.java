@@ -11,6 +11,7 @@ import java.util.List;
  */
 @Mapper
 public interface AllergenMapper {
+
     /** This method creates an AllergenDetailDto from an allergen entity.
      *
      * @param allergen represents the entity that should be converted to a dto.

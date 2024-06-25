@@ -13,8 +13,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * This is the interface for the persistence layer of Categories.
- *
+ * This is the interface for the persistence layer of Categories.It is a Spring Data JPA repository for Category entities.
+ * It extends JpaRepository, which provides methods for CRUD operations.
+ * It also includes custom methods for finding Categories by name and getting a range of categories by Id.
  */
 @DynamicInsert
 @DynamicUpdate

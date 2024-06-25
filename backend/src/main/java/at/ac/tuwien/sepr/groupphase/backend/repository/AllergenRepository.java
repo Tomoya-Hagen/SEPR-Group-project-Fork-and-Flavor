@@ -10,7 +10,7 @@ import java.util.Optional;
 
 /**
  * This is the interface for the persistence layer of Allergens.
- *
+ * It also includes custom methods for finding allergens by type.
  */
 @DynamicInsert
 @DynamicUpdate

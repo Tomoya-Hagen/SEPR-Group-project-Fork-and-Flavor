@@ -22,6 +22,7 @@ public class RecipeIngredient {
     public enum Unit {
         mg,
         g,
+        kg,
         L,
         el,
         tl,

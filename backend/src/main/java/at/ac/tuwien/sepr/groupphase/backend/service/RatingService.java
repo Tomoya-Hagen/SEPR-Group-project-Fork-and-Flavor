@@ -13,6 +13,7 @@ import java.util.List;
  * It includes methods for retrieving ratings by recipe id, creating a new rating, and retrieving ratings by user id.
  */
 public interface RatingService {
+
     /**
      * return all ratings based on the given recipe id.
      *

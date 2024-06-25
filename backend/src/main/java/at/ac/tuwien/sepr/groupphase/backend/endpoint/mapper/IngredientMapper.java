@@ -13,9 +13,9 @@ import java.util.HashMap;
 /**
  * This mapper is used to map an ingredient entity to a dto and reverse.
  */
-
 @Mapper
 public interface IngredientMapper {
+
     /**
      * This method creates a list of IngredientDetailDto from a hashmap.
      *
@@ -31,7 +31,6 @@ public interface IngredientMapper {
         }
         return result;
     }
-
 
     /**
      * This method creates a IngredientDetailDto an ingredient entity and a recipeIngredient entity.

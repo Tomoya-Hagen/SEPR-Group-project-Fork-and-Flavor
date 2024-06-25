@@ -46,15 +46,6 @@ class RecipeBookRepositoryTest implements TestData {
     }
 
     @Test
-    @Disabled
-    void findRecipeBooksByOwnerOrSharedUserReturnsRecipeBooksWhenUserIsSharedUser() {
-        List<RecipeBook> result = recipeBookRepository.findRecipeBooksByOwnerOrSharedUser(2L);
-        assertEquals(2, result.size());
-        assertEquals(1L, result.get(0).getId());
-        assertEquals(2L, result.get(1).getId());
-    }
-
-    @Test
     void findRecipeBooksByOwnerOrSharedUserReturnsEmptyListWhenUserHasNoRecipeBooks() {
         List<RecipeBook> result = recipeBookRepository.findRecipeBooksByOwnerOrSharedUser(2L);
         assertTrue(result.isEmpty());

@@ -28,6 +28,10 @@ import org.springframework.web.server.ResponseStatusException;
 import java.lang.invoke.MethodHandles;
 import java.util.Date;
 
+/**
+ * This is the WeekPlanerEndpoint class. It is a REST controller that handles HTTP requests related to weekPlaner.
+ * It uses the WeekPlanerService to perform operations related to weekPlaner.
+ */
 @RestController
 @RequestMapping(value = "/api/v1/weekplaner")
 public class WeekPlanerEndpoint {

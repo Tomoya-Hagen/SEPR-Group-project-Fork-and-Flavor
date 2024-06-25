@@ -9,8 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 /**
- * This is the interface for the persistence layer of Nutrition's.
- *
+ * This is the interface for the persistence layer of Nutrition's. It is a Spring Data JPA repository for Nutrition entities.
+ * It extends JpaRepository, which provides methods for CRUD operations.
+ * It also includes custom methods for finding nutrition by name.
  */
 @DynamicInsert
 @DynamicUpdate

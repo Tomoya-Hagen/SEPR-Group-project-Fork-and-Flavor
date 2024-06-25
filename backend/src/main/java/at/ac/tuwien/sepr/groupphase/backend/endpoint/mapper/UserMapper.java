@@ -10,10 +10,10 @@ import java.util.List;
 
 /**
  * This is the interface for the User entities and related DTOs.
- *
  */
 @Mapper
 public interface UserMapper {
+
     /**
      * Converts a list of ApplicationUser entities to a list of UserListDto objects.
      *

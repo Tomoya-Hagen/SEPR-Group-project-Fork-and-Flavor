@@ -9,6 +9,7 @@ import java.util.List;
  * The BadgeService interface provides a method for adding a role to a user.
  */
 public interface BadgeService {
+
     /**
      * Gives the given user the Role Contributor.
      *
@@ -30,5 +31,4 @@ public interface BadgeService {
      * @return a list of string that represent the names of the badges a user has.
      */
     List<String> getBadgesOfUser(Long userId);
-
 }
