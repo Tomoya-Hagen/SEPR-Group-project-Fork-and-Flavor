@@ -22,6 +22,7 @@ import java.util.ArrayList;
  * @param allergens allergens the recipe belongs to
  * @param nutritions nutritions the recipe belongs to
  * @param rating rating of the recipe
+ * @param verifications verifications of the recipe
  */
 public record RecipeDetailDto(
 
@@ -67,6 +68,7 @@ public record RecipeDetailDto(
     ArrayList<String> forkedRecipes,
 
     long rating,
+
     int verifications
 
 ) {
