@@ -201,6 +201,17 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public Page<RecipeListDto> byBest(int limit) {
+        PageRequest p = PageRequest.of(0, limit);
+        Page<Recipe> recipePage = recipeRepository.findByBest(p);
+
+        return recipePage.map(recipe -> {
+            Long rating = calculateAverageTasteRating(recipe.getRatings());
+            return recipeMapper.recipeToRecipeListDto(recipe, rating);
+        });
+    }
+
+    @Override
     public void verifyRecipe(long recipeId) throws ValidationException {
         LOGGER.trace("verifyRecipe({})", recipeId);
         ApplicationUser user = userManager.getCurrentUser();

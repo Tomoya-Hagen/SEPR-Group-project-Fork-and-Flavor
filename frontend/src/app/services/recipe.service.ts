@@ -85,6 +85,13 @@ export class RecipeService {
     return this.http.get<Page<Recipe>>(this.baseUri, { params });
   }
 
+  getBestRecipes(size: number): Observable<Page<Recipe>> {
+    let params = new HttpParams()
+      .set('size', size.toString());
+
+    return this.http.get<Page<Recipe>>(this.baseUri+"/best", { params });
+  }
+
   public getRecipeDetailsBy(recipeId: number): Observable<RecipeDetailDto> {
     return this.http.get<RecipeDetailDto>(
       this.baseUri + "/details/" + recipeId

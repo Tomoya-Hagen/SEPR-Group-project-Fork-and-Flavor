@@ -51,6 +51,13 @@ export class RecipeBookService {
     return this.http.get<any>(this.baseUri + '', { params });
   }
 
+  public getBestRecipeBooks(size: number): Observable<any> {
+    const params = {  // Ensure zero-based page indexing
+      size: size.toString()
+    };
+    return this.http.get<any>(this.baseUri + '/best', { params });
+  }
+
   createRecipeBook(recipeBook: RecipeBookCreateDto): Observable<RecipeBook> {
     return this.http.post<RecipeBook>(this.baseUri, recipeBook)
       .pipe(

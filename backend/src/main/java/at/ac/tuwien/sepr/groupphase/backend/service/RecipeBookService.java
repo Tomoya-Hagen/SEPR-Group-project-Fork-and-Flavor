@@ -30,12 +30,14 @@ public interface RecipeBookService {
      */
     RecipeBookDetailDto getRecipeBookDetailDtoById(long id) throws NotFoundException;
 
+
     /**
      * This method is responsible for getting a list of all recipe books.
      *
      * @return A list of RecipeBookListDto objects that contain the details of all recipe books.
      */
     Page<RecipeBookListDto> getRecipeBooksPageable(Pageable pageable);
+
 
     /**
      * This method is responsible for searching for recipe books by name.
@@ -44,6 +46,16 @@ public interface RecipeBookService {
      * @return A list of RecipeBookListDto objects that contain the details of recipe books that match the search criteria.
      */
     Page<RecipeBookListDto> searchRecipeBooksByName(String name, Pageable pageable);
+
+
+    /**
+     * This method is responsible for searching for the best recipe books.
+     *
+     * @param pageable The page of the recipe book.
+     * @return A list of RecipeBookListDto objects that contain the details of recipe books that match the search criteria.
+     */
+    Page<RecipeBookListDto> searchBestRecipeBooks(Pageable pageable);
+
 
     /**
      * This method represents spooning which simply adds a new recipe to a recipe book.

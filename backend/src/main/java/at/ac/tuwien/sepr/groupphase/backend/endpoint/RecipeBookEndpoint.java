@@ -88,6 +88,15 @@ public class RecipeBookEndpoint {
         }
     }
 
+    @PermitAll
+    @GetMapping("/best")
+    @Operation(summary = "Get a list of recipe books")
+    public Page<RecipeBookListDto> getListByBest(@RequestParam(name = "size", defaultValue = "5") int size) {
+        LOGGER.info("GET /api/v1/recipebook/best?size={}", size);
+        Pageable pageable = PageRequest.of(0, size);
+        return recipeBookService.searchBestRecipeBooks(pageable);
+    }
+
     @Secured("ROLE_USER")
     @PatchMapping("{recipeBookId}/spoon/{recipeId}")
     public RecipeBookDetailDto spoon(@PathVariable(name = "recipeBookId") Long recipeBookId,

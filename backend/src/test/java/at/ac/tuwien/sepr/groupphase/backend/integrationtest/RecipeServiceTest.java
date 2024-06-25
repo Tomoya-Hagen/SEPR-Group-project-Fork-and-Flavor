@@ -4,21 +4,27 @@ import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CategoryDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.DetailedRecipeDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCategoryDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeIngredientDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeStepDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserRegisterDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
+import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeDescriptionStep;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RoleRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RecipeService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Roles;
+import at.ac.tuwien.sepr.groupphase.backend.service.impl.CustomUserDetailService;
+import at.ac.tuwien.sepr.groupphase.backend.service.impl.RatingServiceImpl;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -37,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.L;
@@ -45,6 +52,7 @@ import static at.ac.tuwien.sepr.groupphase.backend.entity.RecipeIngredient.Unit.
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @ActiveProfiles({"test"})
@@ -63,6 +71,10 @@ class RecipeServiceTest implements TestData {
 
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private RatingServiceImpl ratingServiceImpl;
+    @Autowired
+    private CustomUserDetailService customUserDetailService;
 
     @Test
     void ReturnARecipeDetailDtoIfARecipeWithTheGivenRecipeIdExists() {
@@ -188,4 +200,56 @@ class RecipeServiceTest implements TestData {
         Assertions.assertFalse(user.getRoles().contains(roleRepository.findByName(Roles.StarCook.name())));
         Assertions.assertThrows(ForbiddenException.class, () -> recipeService.verifyRecipe(1L));
     }
+
+    @Test
+    void verifyFindBestRecipeBy() throws ValidationException {
+        Random r = new Random();
+        userAuthenticationByEmail("user@email.com");
+
+        List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
+        recipeCategoryDtoList.add(new RecipeCategoryDto(1));
+
+        List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
+        recipeIngredientDtos.add(new RecipeIngredientDto(1, new BigDecimal(6), "g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132, new BigDecimal(12.5), "g"));
+
+        List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
+        recipeStepDtoList.add(new RecipeStepDto("Step eins", "Beschreibung von Step 1", 0, true));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei", "Beschreibung von Step 2", 0, true));
+
+        RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
+        recipeCreateDto.setName("TEST REZEPT WAS ALLES KANN");
+        recipeCreateDto.setDescription("Beschreibung");
+        recipeCreateDto.setNumberOfServings((short) 42);
+
+        recipeCreateDto.setIngredients(recipeIngredientDtos);
+        recipeCreateDto.setRecipeSteps(recipeStepDtoList);
+        recipeCreateDto.setCategories(recipeCategoryDtoList);
+
+        var recipe = recipeService.createRecipe(recipeCreateDto);
+        long recipeid = recipe.getId();
+
+        for(int i = 0; i <= 10; i++){
+            simpleNewRate(r.nextInt(),recipeid);
+        }
+
+
+        Page<RecipeListDto> res = recipeService.byBest(5);
+        RecipeListDto searched = recipeService.getRecipesByName("TEST REZEPT WAS ALLES KANN",PageRequest.of(0,1)).getContent().getFirst();
+        assertTrue(res.getContent().contains(searched));
+
+
+
+    }
+
+    private void simpleNewRate(int user, long id) throws ValidationException {
+        String email = user + "@mail.com";
+        UserRegisterDto userRegisterDto = new UserRegisterDto(email,"password",user + "");
+        customUserDetailService.register(userRegisterDto);
+        userAuthenticationByEmail(email);
+        RatingCreateDto ratin = new RatingCreateDto(id,5,5,5,"BESTE");
+        ratingServiceImpl.createRating(ratin);
+    }
+
+
 }

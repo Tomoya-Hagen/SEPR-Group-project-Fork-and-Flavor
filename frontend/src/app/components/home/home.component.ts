@@ -22,8 +22,8 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getRecipes();
-    this.getRecipeBooks();
+    this.getBestRecipes();
+    this.getBestRecipeBooks();
     this.getRecommendedRecipes()
   }
 
@@ -46,6 +46,20 @@ export class HomeComponent implements OnInit {
       .subscribe(data => {
       this.recipeBooks = data.content;
     });
+  }
+
+  getBestRecipes(): void {
+    this.recipeService.getBestRecipes(6)
+      .subscribe(data => {
+        this.recipes = data.content;
+      });
+  }
+
+  getBestRecipeBooks(): void {
+    this.recipeBookService.getBestRecipeBooks( 6)
+      .subscribe(data => {
+        this.recipeBooks = data.content;
+      });
   }
 
   navigateToRecipeSearch(): void {

@@ -64,6 +64,15 @@ public interface RecipeService {
     Stream<SimpleRecipeResultDto> byname(String name, int limit);
 
     /**
+     * Find all the best recipes.
+     *
+     * @param  limit max amount of recipe to return
+     * @return limit amount of recipes found
+     */
+    Page<RecipeListDto> byBest(int limit);
+
+
+    /**
      * finds a recipeDetailDto based on the given recipe id.
      *
      * @param id represents the id of a recipe.

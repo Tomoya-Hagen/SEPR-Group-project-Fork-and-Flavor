@@ -128,22 +128,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe> findRecipeByCategoryId(@Param("categoryId") long ids, Pageable pageable);
 
     /**
-     * Gets a recipe by id.
-     *
-     * @param id represents the id of a recipe.
-     * @return a recipe entity.
-     */
-    Recipe findById(long id);
-
-    /**
-     * Checks if a recipe with the given id exists.
-     *
-     * @param id represents the id of the recipe.
-     * @return true if a recipe with the given name exists, false otherwise.
-     */
-    Boolean existsById(long id);
-
-    /**
      * returns all names as list.
      *
      * @return a list of recipe names.
@@ -186,6 +170,27 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      */
     @Query("SELECT distinct i FROM Recipe i join FETCH i.verifiers rc WHERE i.id = :recipeId AND rc.id = :userId")
     Optional<Recipe> getVerifysByRecipeIdAndUserId(@Param("recipeId") long recipeId, @Param("userId") long userId);
+
+    /**
+     * Gets a recipe by id.
+     *
+     * @param id represents the id of a recipe.
+     * @return a recipe entity.
+     */
+    Recipe findById(long id);
+
+    /**
+     * Checks if a recipe with the given id exists.
+     *
+     * @param id represents the id of the recipe.
+     * @return true if a recipe with the given name exists, false otherwise.
+     */
+    Boolean existsById(long id);
+
+
+    @Query("SELECT r FROM Recipe r ORDER BY (SELECT AVG((ra.taste + ra.easeOfPrep + ra.cost) / 3.0) FROM Rating ra WHERE ra.recipe = r) DESC")
+    Page<Recipe> findByBest(Pageable pageable);
+
 
     /**
      * Retrieves a list of Recipe entities that are either owned by the given user or have been rated by the given user with a taste rating of 3 or more.

@@ -266,14 +266,14 @@ public class Recipe {
 
     @Basic
     @Column(name = "is_verified")
-    private Boolean isVerfied;
+    private Boolean isVerified;
 
-    public void setIsVerfied(Boolean verfied) {
-        isVerfied = verfied;
+    public void setIsVerified(Boolean verfied) {
+        isVerified = verfied;
     }
 
     public Boolean getVerfied() {
-        return isVerfied;
+        return isVerified;
     }
 
     public static final class RecipeBuilder {
