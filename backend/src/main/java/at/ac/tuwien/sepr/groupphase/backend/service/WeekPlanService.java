@@ -26,6 +26,7 @@ public interface WeekPlanService {
 
 
     WeekPlanDetailDto[] getextendedWeekplanDetail(Long id, Date from, int limit);
+
     /**
      * creates a new weekly planer for a given time and a given recipe book.
      *
