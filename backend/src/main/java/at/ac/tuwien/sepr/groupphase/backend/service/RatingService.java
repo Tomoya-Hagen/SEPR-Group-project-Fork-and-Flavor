@@ -9,8 +9,8 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import java.util.List;
 
 /**
- * This is the RatingService interface. It is a service in the Spring framework that handles operations related to ratings.
- * It defines methods for getting rating details by ID, getting a list of all rating and getting a list of ratings.
+ * The RatingService interface provides methods for managing ratings in the application.
+ * It includes methods for retrieving ratings by recipe id, creating a new rating, and retrieving ratings by user id.
  */
 public interface RatingService {
 

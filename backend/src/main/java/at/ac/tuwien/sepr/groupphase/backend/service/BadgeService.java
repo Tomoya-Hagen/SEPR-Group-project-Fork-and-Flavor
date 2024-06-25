@@ -6,7 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import java.util.List;
 
 /**
- * This is the interface for the badgeService.
+ * The BadgeService interface provides a method for adding a role to a user.
  */
 public interface BadgeService {
 

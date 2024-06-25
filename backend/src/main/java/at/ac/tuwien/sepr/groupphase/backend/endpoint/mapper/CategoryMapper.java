@@ -19,10 +19,10 @@ public interface CategoryMapper {
     CategoryDetailDto categoryToCategoryDetailDto(Category category);
 
     /**
-     * This method creates a categoryResultDto from category entity.
+     * Converts a Category entity to a CategoryResultDto object.
      *
-     * @param category category represents the entity that should be converted to a dto.
-     * @return an CategoryResultDto which contains all important fields of a category entity.
+     * @param category The Category entity.
+     * @return A CategoryResultDto object with the ID and name fields set to the values from the Category entity.
      */
     default CategoryResultDto categoryToCategoryResultDto(Category category) {
         CategoryResultDto categoryResultDto = new CategoryResultDto();

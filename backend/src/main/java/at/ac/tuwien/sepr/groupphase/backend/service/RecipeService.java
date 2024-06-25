@@ -142,4 +142,11 @@ public interface RecipeService {
       * @return true if the user has verified the recipe, false otherwise
      */
     boolean hasVerified(long recipeId);
+
+    /**
+     * This method finds some recipes by Recommendation.
+     *
+     * @return A list of Recommended RecipeListDto
+     */
+    List<RecipeListDto> getRecipesByRecommendation();
 }

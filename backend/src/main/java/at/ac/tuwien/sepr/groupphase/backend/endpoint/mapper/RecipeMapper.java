@@ -52,11 +52,16 @@ public interface RecipeMapper {
     @Mapping(source = "owner.id", target = "ownerId")
     @Mapping(source = "recipe.id", target = "id")
     @Mapping(source = "recipe.isDraft", target = "isDraft")
-    @Mapping(source = "recipe.forkedFrom.id", target = "forkedFromId")
-    RecipeDetailDto recipeToRecipeDetailDto(Recipe recipe, HashMap<Ingredient,
-            RecipeIngredient> ingredients, HashMap<Nutrition, BigDecimal> nutritions, ArrayList<Allergen> allergens, ApplicationUser owner, long rating, int verifications);
+    @Mapping(source = "recipe.forkedFrom", target = "forkedFrom")
+    RecipeDetailDto recipeToRecipeDetailDto(Recipe recipe, HashMap<Ingredient, RecipeIngredient> ingredients, HashMap<Nutrition, BigDecimal> nutritions, ArrayList<Allergen> allergens, ApplicationUser owner, long rating, int validations);
 
-
+    /**
+     * Converts a list of Recipe entities and their corresponding ratings to a list of RecipeListDto objects.
+     *
+     * @param recipes The list of Recipe entities.
+     * @param ratings The list of corresponding ratings for each Recipe.
+     * @return A list of RecipeListDto objects.
+     */
     default ArrayList<RecipeListDto> recipeListAndRatingListToListOfRecipeRatingDto(ArrayList<Recipe> recipes, ArrayList<Long> ratings) {
         ArrayList<RecipeListDto> recipeListDtos = new ArrayList<>();
         for (int i = 0; i < recipes.size(); i++) {
@@ -66,10 +71,10 @@ public interface RecipeMapper {
     }
 
     /**
-     * This method creates a list of recipe out of a list of recipeListDto.
+     * Converts a list of RecipeListDto objects to a list of Recipe entities.
      *
-     * @param recipeListDto represents the recipeListDto that should be converted to a list of recipe.
-     * @return the list of recipeLiatDto
+     * @param recipeListDto The list of RecipeListDto objects.
+     * @return A list of Recipe entities.
      */
     @Mapping(source = "recipeListDto.id", target = "id")
     default List<Recipe> listOfRecipeListDtoToRecipeList(List<RecipeListDto> recipeListDto) {
@@ -92,18 +97,20 @@ public interface RecipeMapper {
     RecipeListDto recipeAndAverageRatingToRecipeListDto(Recipe recipe, long rating);
 
     /**
-     * This method creates a DetailedRecipeDto out of a recipe entity.
+     * Converts a Recipe entity to a DetailedRecipeDto object.
      *
-     * @param recipe represents the recipe that should be converted to DetailedRecipeDto.
-     * @return a DetailedRecipe
+     * @param recipe The Recipe entity.
+     * @return A DetailedRecipeDto object.
      */
     DetailedRecipeDto recipeToDetailedRecipeDto(Recipe recipe);
 
     /**
-     * This method creates a list of recipe out of a list of recipeListDto.
+     * Converts a RecipeUpdateDto object to a Recipe entity.
      *
-     * @param recipeUpdateDto represents the recipeUpdateDto that should be converted to a recipe.
-     * @return the updated recipe
+     * @param recipeUpdateDto The RecipeUpdateDto object.
+     * @return A Recipe entity.
+     * @throws RecipeStepNotParsableException   If the steps in the Recipe are not formatted correctly.
+     * @throws RecipeStepSelfReferenceException If a step references its own recipe.
      */
     default Recipe recipeUpdateDtoToRecipe(RecipeUpdateDto recipeUpdateDto) throws RecipeStepNotParsableException, RecipeStepSelfReferenceException {
         Recipe current = new Recipe();
@@ -134,7 +141,7 @@ public interface RecipeMapper {
         for (RecipeIngredientDto recipeIngredient : recipeUpdateDto.ingredients()) {
             Ingredient ingredient = new Ingredient();
             ingredient.setId(recipeIngredient.getId());
-            RecipeIngredient.Unit u =  RecipeIngredient.getUnitFromString(recipeIngredient.getUnit());
+            RecipeIngredient.Unit u = RecipeIngredient.getUnitFromString(recipeIngredient.getUnit());
             RecipeIngredient recipeIngr = new RecipeIngredient(current, ingredient, recipeIngredient.getAmount(), u);
             recipeIngredientList.add(recipeIngr);
         }
@@ -158,10 +165,10 @@ public interface RecipeMapper {
     }
 
     /**
-     * This method creates a simpleRecipeResultDto out of recipe.
+     * Converts a Recipe entity to a SimpleRecipeResultDto object.
      *
-     * @param r represents the recipe that should be converted to a simpleRecipeResultDto.
-     * @return the simpleRecipeResultDto
+     * @param r The Recipe entity.
+     * @return A SimpleRecipeResultDto object.
      */
     default SimpleRecipeResultDto recipeToRecipeResultDto(Recipe r) {
         SimpleRecipeResultDto result = new SimpleRecipeResultDto();
@@ -172,19 +179,21 @@ public interface RecipeMapper {
     }
 
     /**
-     * This method creates a list of recipeListDto out of a list of recipe.
+     * Converts a list of Recipe entities to a list of RecipeListDto objects.
      *
-     * @param recipes represents the list of recipe that should be converted to a list of recipeListDto.
-     * @return the list of recipeLiatDto
+     * @param recipes The list of Recipe entities.
+     * @return A list of RecipeListDto objects.
      */
     List<RecipeListDto> recipesToRecipeListDto(List<Recipe> recipes);
 
     /**
-     * This method creates a recipe out of a recipeCreateDto and id.
+     * Converts a RecipeCreateDto object and an id to a Recipe entity.
      *
-     * @param recipeCreateDto represents the recipeCreateDto that should be converted to recipe
-     * @param id represents the recipe id that should be converted to new recipe
-     * @return a created recipe
+     * @param recipeCreateDto The RecipeCreateDto object.
+     * @param id              The id.
+     * @return A Recipe entity.
+     * @throws RecipeStepNotParsableException   If the steps in the Recipe are not formatted correctly.
+     * @throws RecipeStepSelfReferenceException If a step references its own recipe.
      */
     default Recipe recipeCreateDtoToRecipe(RecipeCreateDto recipeCreateDto, long id) throws RecipeStepNotParsableException, RecipeStepSelfReferenceException {
         Recipe current = new Recipe();
@@ -236,10 +245,10 @@ public interface RecipeMapper {
     }
 
     /**
-     * This method creates a recipe out of a recipeCreateDto.
+     * Converts a RecipeCreateDto object to a Recipe entity.
      *
-     * @param recipeCreateDto represents the recipeCreateDto that should be converted to a recipe.
-     * @return a simple recipe
+     * @param recipeCreateDto The RecipeCreateDto object.
+     * @return A Recipe entity.
      */
     default Recipe recipeparsesimple(RecipeCreateDto recipeCreateDto) {
         Recipe ret = new Recipe();
@@ -251,22 +260,28 @@ public interface RecipeMapper {
         return ret;
     }
 
+    /**
+     * Converts a list of Recipe entities to a list of RecipeListDto objects.
+     *
+     * @param recipe The list of Recipe entities.
+     * @return A list of RecipeListDto objects.
+     */
     List<RecipeListDto> recipeListToRecipeListDto(List<Recipe> recipe);
 
     /**
-     * This method creates a recipe out of a recipeListDto.
+     * Converts a RecipeListDto object to a Recipe entity.
      *
-     * @param recipeListDto represents the recipeListDto that should be converted to a recipe.
-     * @return a recipe
+     * @param recipeListDto The RecipeListDto object.
+     * @return A Recipe entity.
      */
     Recipe recipeListDtoToRecipe(RecipeListDto recipeListDto);
 
     /**
-     * This method creates a recipeListDto out of a recipe and a rating.
+     * Converts a Recipe entity and a rating to a RecipeListDto object.
      *
-     * @param recipe represents the recipe that should be converted to a recipeListDto
-     * @param rating represents the rating that should be converted to a recipeListDto
-     * @return a recipeListDto
+     * @param recipe The Recipe entity.
+     * @param rating The rating.
+     * @return A RecipeListDto object.
      */
     RecipeListDto recipeToRecipeListDto(Recipe recipe, Long rating);
 }

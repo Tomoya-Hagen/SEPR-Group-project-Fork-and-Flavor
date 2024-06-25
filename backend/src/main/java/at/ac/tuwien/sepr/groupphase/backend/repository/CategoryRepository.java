@@ -21,50 +21,55 @@ import java.util.Optional;
 @DynamicUpdate
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-
     /**
-     * gets a category by its name and type.
+     * Finds a Category entity by its name and type.
      *
-     * @param name represents the name of a category.
-     * @param type represents the type of a category.
-     * @return an Optional object which contains the category if one exists by the given name and type.
+     * @param name The name of the Category.
+     * @param type The type of the Category.
+     * @return An Optional that may contain the Category if one with the given name and type exists.
      */
     Optional<Category> findByNameAndType(String name, String type);
 
     /**
-     * gets a list category entities by the given range from name.
+     * Finds Category entities by a part of their name, ignoring case.
      *
-     * @param name represents name which will be returned.
-     * @param pageable The page information.
-     * @return A Pageable object that contains the details of category that match the name.
+     * @param name The part of the name to search for.
+     * @param pageable The pagination information.
+     * @return A list of Category entities that have the given part in their name, ignoring case.
      */
     List<Category> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
-
+    /**
+     * Finds Category entities by a part of their name with a limit on the number of results.
+     *
+     * @param name The part of the name to search for.
+     * @param pageable The pagination information.
+     * @return A list of Category entities that have the given part in their name. The number of results is limited by the pageable parameter.
+     */
     @Query("SELECT i FROM Category i WHERE i.name LIKE %:name%")
     List<Category> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
 
     /**
-     * gets a list category entities by the given range from name.
+     * Finds Category entities by their name.
      *
-     * @param name represents name which will be returned.
-     * @return A list of category that match the name.
+     * @param name The name of the Category.
+     * @return A list of Category entities with the given name.
      */
     List<Category> findByName(String name);
 
     /**
-     * gets a category by its name and type.
+     * Finds the first Category entity by its name.
      *
-     * @param name represents the name of a category.
-     * @return category exists by the given name.
+     * @param name The name of the Category.
+     * @return The first Category entity with the given name.
      */
     Category findFirstByName(String name);
 
     /**
-     * gets a category by its ids.
+     * Finds a Category entity by its id.
      *
-     * @param ids represents the name of a category.
-     * @return an Optional object which contains the category if one exists by the given ids.
+     * @param ids The id of the Category.
+     * @return An Optional that may contain the Category if one with the given id exists.
      */
     Optional<Category> findById(long ids);
 }

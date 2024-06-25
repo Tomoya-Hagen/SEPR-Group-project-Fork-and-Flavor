@@ -16,12 +16,11 @@ import java.util.Optional;
 @DynamicUpdate
 @Repository
 public interface AllergenRepository extends JpaRepository<Allergen, Long> {
-
     /**
-     * gets a allergen by its type.
+     * Finds an Allergen entity by its type.
      *
-     * @param type represents the type of a allergen.
-     * @return an Optional object which contains the allergen if one exists by the given type.
+     * @param type The type of the Allergen.
+     * @return An Optional that may contain the Allergen if one with the given type exists.
      */
     Optional<Allergen> findByType(String type);
 

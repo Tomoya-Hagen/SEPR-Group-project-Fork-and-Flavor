@@ -110,7 +110,7 @@ class RecipeEndpointTest implements TestData {
                 recipeStepDescriptionDetailDto.setDescription(String.valueOf(StandardCharsets.ISO_8859_1.encode(recipeStepDescriptionDetailDto.getDescription())));
             }
         }
-        ArrayList<IngredientDetailDto> actualIngredients = recipeDetailDto.ingredients();
+        List<IngredientDetailDto> actualIngredients = recipeDetailDto.ingredients();
         actualIngredients.sort(Comparator.comparing(IngredientDetailDto::id));
         Assertions.assertAll(
             () -> Assertions.assertEquals("Kartoffeln plain", recipeDetailDto.name()),
@@ -288,21 +288,19 @@ class RecipeEndpointTest implements TestData {
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 
         String[] requiredLines = {
-            "Validation of Recipe to create failed.",
-            "Category 1000 not found",
-            "Ingredient 10000 not found",
-            "Step Step eins is not valid",
-            "Step Step zwei is not valid",
-            "Step Step drei is not valid",
-            "Step Step vier is not valid"
+                "Validation of Recipe to create failed.",
+                "Category 1000 not found",
+                "Ingredient 10000 not found",
+                "Step Step eins is not valid",
+                "Step Step zwei not found",
+                "Step Step drei is not valid",
+                "Step Step vier not found"
         };
 
         // Check each required line
-
-        System.out.println(response);
+        var lines = response.getContentAsString();;
         for (String requiredLine : requiredLines) {
-            System.out.println(requiredLine);
-            assertTrue(response.getContentAsString().contains(requiredLine));
+            assertTrue(response.getContentAsString().contains(requiredLine),requiredLine);
         }
     }
 

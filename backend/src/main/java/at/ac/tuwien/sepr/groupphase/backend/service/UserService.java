@@ -40,7 +40,7 @@ public interface UserService extends UserDetailsService {
      * Find an application user based on the email address.
      *
      * @param email the email address
-     * @return a application user
+     * @return an application user
      */
     ApplicationUser findApplicationUserByEmail(String email);
 

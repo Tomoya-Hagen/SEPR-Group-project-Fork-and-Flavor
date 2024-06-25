@@ -22,24 +22,32 @@ import org.springframework.data.domain.Pageable;
 public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
 
     /**
-     * gets a ingredients by its name.
+     * Finds an Ingredient entity by its name.
      *
-     * @param name represents the type of a ingredient.
-     * @return an Optional object which contains the ingredient if one exists by the given name.
+     * @param name The name of the Ingredient.
+     * @return An Optional that may contain the Ingredient if one with the given name exists.
      */
     Optional<Ingredient> findByName(String name);
 
+
     /**
-     * gets a list ingredients entities by the given range from name.
+     * Finds Ingredient entities by a part of their name with a limit on the number of results.
      *
-     * @param name represents name which will be returned.
-     * @param pageable The page information.
-     * @return A Pageable object that contains the details of ingredient that match the name.
+     * @param name The part of the name to search for.
+     * @param pageable The pagination information.
+     * @return A list of Ingredient entities that have the given part in their name. The number of results is limited by the pageable parameter.
      */
     @Query("SELECT i FROM Ingredient i WHERE i.name LIKE %:name%")
     List<Ingredient> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
 
 
+    /**
+     * Finds Ingredient entities by a part of their name, ignoring case.
+     *
+     * @param name The part of the name to search for.
+     * @param pageable The pagination information.
+     * @return A list of Ingredient entities that have the given part in their name, ignoring case.
+     */
     List<Ingredient> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
 }

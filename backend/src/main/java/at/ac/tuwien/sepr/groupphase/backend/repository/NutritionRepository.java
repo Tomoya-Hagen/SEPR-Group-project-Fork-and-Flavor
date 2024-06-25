@@ -17,12 +17,11 @@ import java.util.Optional;
 @DynamicUpdate
 @Repository
 public interface NutritionRepository extends JpaRepository<Nutrition, Long> {
-
     /**
-     * requests a nutrition based on the name.
+     * Finds a Nutrition entity by its name.
      *
-     * @param name name of the nutrition.
-     * @return return an Optional of a nutrition.
+     * @param name The name of the Nutrition.
+     * @return An Optional that may contain the Nutrition if one with the given name exists.
      */
     Optional<Nutrition> findByName(String name);
 

@@ -49,30 +49,37 @@ public interface UserRepository  extends JpaRepository<ApplicationUser, Long> {
     Long findFirstByEmail(String email);
 
     /**
-     * find list of user via username.
+     * Retrieves a list of ApplicationUser entities whose usernames contain the given string, ignoring case. The results are ordered by id and limited by the given limit.
      *
-     * @param name username represents
-     * @param limit limit user id represents
-     * @return the details of list of recipe that match the user.
+     * @param name The string to search for in the usernames of the ApplicationUser entities.
+     * @param limit The maximum number of results to return.
+     * @return A list of ApplicationUser entities whose usernames contain the given string, ordered by id and limited by the given limit.
      */
     @Query("SELECT u FROM ApplicationUser u WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :username, '%')) ORDER BY u.id LIMIT :limit")
     List<ApplicationUser> findByNamesContainingIgnoreCase(@Param("username") String name, @Param("limit") int limit);
 
     /**
-     * Find first User entry via id.
+     * Retrieves an ApplicationUser entity by its id.
      *
-     * @return ordered list of al message entries
+     * @param id The id of the ApplicationUser entity to be retrieved.
+     * @return The ApplicationUser entity with the given id if it exists, otherwise null.
      */
     ApplicationUser findFirstById(long id);
 
+    /**
+     * Retrieves an ApplicationUser entity by its id with eager loading.
+     *
+     * @param id The id of the ApplicationUser entity to be retrieved.
+     * @return The ApplicationUser entity with the given id if it exists, otherwise null.
+     */
     @Query("SELECT u FROM ApplicationUser u WHERE u.id = :id")
     ApplicationUser findFirstByIdWithEagerLoading(@Param("id") Long id);
 
     /**
-     * Update user to id and from password.
+     * Updates the password of the ApplicationUser entity with the given id.
      *
-     * @param id user id represents
-     * @param password user password represents
+     * @param id The id of the ApplicationUser entity to be updated.
+     * @param password The new password for the ApplicationUser entity.
      */
     @Transactional
     @Modifying

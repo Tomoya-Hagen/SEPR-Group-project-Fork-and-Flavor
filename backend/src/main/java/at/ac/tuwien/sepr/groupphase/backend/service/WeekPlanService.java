@@ -7,18 +7,18 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 /**
- * This is the interface for the weekPlanService.
+ * The WeekPlanService interface provides methods for retrieving week plan details.
  */
 @Service
 public interface WeekPlanService {
 
     /**
-     * gets a Array of WeekPlanDetailDto based on the given id, date from and date to.
+     * Retrieves an array of WeekPlanDetailDto entities for a given id and date range.
      *
-     * @param id represents the id.
-     * @param from get date from.
-     * @param to get date to.
-     * @return a Array of WeekPlanDetailDto if a weekPlan with the given id exists.
+     * @param id The id of the week plan to retrieve details for.
+     * @param from The start date of the range.
+     * @param to The end date of the range.
+     * @return An array of WeekPlanDetailDto entities.
      */
     WeekPlanDetailDto[] getWeekplanDetail(Long id, Date from, Date to);
 }
