@@ -29,9 +29,9 @@
         </div>
       </div>
     </div>
-    <hr class="my-4">
+    <hr class="my-4" *ngIf="recommended.length">
     <!-- Könnte dir auch gefallen -->
-    <div class="row mb-3 justify-content-center d-flex align-items-center" *ngIf="recipes.length">
+    <div class="row mb-3 justify-content-center d-flex align-items-center" *ngIf="recommended.length">
       <h2 class="display-5 mr-2">Könnte dir auch gefallen:</h2>
       <div class="row">
         <div class="col-lg-4 p-2" *ngFor="let item of recommended; let last = last">
