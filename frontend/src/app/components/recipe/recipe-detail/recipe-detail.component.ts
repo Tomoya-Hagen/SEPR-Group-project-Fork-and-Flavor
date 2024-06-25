@@ -25,6 +25,7 @@ import {userDto} from "../../../dtos/user";
   templateUrl: './recipe-detail.component.html',
   styleUrl: './recipe-detail.component.scss',
 })
+/*test*/
 export class RecipeDetailComponent implements OnInit, OnDestroy {
   @ViewChild('spoonRecipeModal', {static: true}) spoonRecipeModal: TemplateRef<any>;
 
