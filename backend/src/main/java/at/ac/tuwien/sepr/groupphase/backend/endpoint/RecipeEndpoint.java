@@ -42,7 +42,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * class in charge of REST requests for Recipes.
+ * This is the RecipeEndpoint class. It is a REST controller that handles HTTP requests related to recipes.
+ * It uses the RecipeService to perform operations related to recipes.
  */
 @RestController
 @RequestMapping(value = "/api/v1/recipes")
@@ -101,6 +102,7 @@ public class RecipeEndpoint {
         }
     }
 
+    @Secured("ROLE_USER")
     @PutMapping("/{id}/goesWellWith")
     @Operation(summary = "Add a recipes that go well with the recipe with the given id")
     public RecipeDetailDto addGoesWellWith(@PathVariable(name = "id") Long id, @RequestBody List<RecipeListDto> goWellWith) {
@@ -120,6 +122,7 @@ public class RecipeEndpoint {
      * @param recipeUpdatedto DTO holding values to update
      * @return ResponseEntity of Recipe with the HTTP status of "No Content"
      */
+    @Secured("ROLE_USER")
     @PutMapping("/{id}")
     public ResponseEntity<DetailedRecipeDto> updateRecipe(@PathVariable("id") Long id, @RequestBody RecipeUpdateDto recipeUpdatedto) {
         LOGGER.info("PUT /api/v1/recipe/ + {} + {}", id, recipeUpdatedto);
@@ -223,6 +226,14 @@ public class RecipeEndpoint {
             HttpStatus status = HttpStatus.NOT_FOUND;
             throw new ResponseStatusException(status, e.getMessage(), e);
         }
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/recommended")
+    @Operation(summary = "Get a list of recommended recipes")
+    public List<RecipeListDto> getRecipesByRecommendation() {
+        LOGGER.info("GET /api/v1/recipes");
+        return recipeService.getRecipesByRecommendation();
     }
 
     private void logClientError(HttpStatus status, String message, Exception e) {

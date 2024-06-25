@@ -77,8 +77,7 @@ class RecipeServiceTest implements TestData {
             new IngredientDetailDto(147, "Sesamöl", new BigDecimal("7.00"), g.name())));
         ingredientDetailDtos.sort(Comparator.comparing(IngredientDetailDto::id));
         RecipeDetailDto recipe = recipeService.getRecipeDetailDtoById(recipeId);
-        ArrayList<IngredientDetailDto> actualIngredients = recipe.ingredients();
-        actualIngredients.sort(Comparator.comparing(IngredientDetailDto::id));
+        List<IngredientDetailDto> actualIngredients = recipe.ingredients();
         Assertions.assertNotNull(recipe);
         Assertions.assertAll(
             () -> Assertions.assertEquals("Kartoffeln plain", recipe.name()),

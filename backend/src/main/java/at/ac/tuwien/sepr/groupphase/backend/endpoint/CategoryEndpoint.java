@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.lang.invoke.MethodHandles;
 import java.util.stream.Stream;
 
+/**
+ * This is the CategoryEndpoint class. It is a REST controller that handles HTTP requests related to categories.
+ * It uses the CategoryService to perform operations related to categories.
+ */
 @RestController
 @RequestMapping(value = "/api/v1/category")
 public class CategoryEndpoint {

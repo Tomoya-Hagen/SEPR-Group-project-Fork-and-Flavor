@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+/**
+ * The EmailService interface provides a method for sending a simple email.
+ */
 public interface EmailService {
 
     /**

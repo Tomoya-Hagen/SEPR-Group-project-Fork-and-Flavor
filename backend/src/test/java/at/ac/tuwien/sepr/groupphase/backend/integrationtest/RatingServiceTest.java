@@ -27,18 +27,19 @@ class RatingServiceTest implements TestData {
     @Test
     void GetAllRatingsForARecipeByRecipeId() {
         List<RatingListDto> ratings = ratingService.getRatingsByRecipeId(1);
-        Assertions.assertEquals(4, ratings.size());
+        Assertions.assertEquals(6, ratings.size());
     }
 
     @Test
     void CreateNewRatingForRecipe() throws ValidationException {
         List<RatingListDto> ratings = ratingService.getRatingsByRecipeId(1);
-        Assertions.assertEquals(4,ratings.size());
+        Assertions.assertEquals(6,ratings.size());
+        Assertions.assertEquals(6,ratings.size());
         userAuthenticationByEmail("admin@email.com");
         RatingCreateDto ratingCreateDto = new RatingCreateDto(1,2,3,4,"test review");
         RatingListDto newRating = ratingService.createRating(ratingCreateDto);
         ratings = ratingService.getRatingsByRecipeId(1);
-        Assertions.assertEquals(5,ratings.size());
+        Assertions.assertEquals(7,ratings.size());
         Assertions.assertAll(
             () -> Assertions.assertEquals(ratingCreateDto.cost(), newRating.cost()),
             () -> Assertions.assertEquals(ratingCreateDto.recipeId(), newRating.recipeId()),

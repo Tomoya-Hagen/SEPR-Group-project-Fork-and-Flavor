@@ -25,9 +25,9 @@ import {userDto} from "../../../dtos/user";
   templateUrl: './recipe-detail.component.html',
   styleUrl: './recipe-detail.component.scss',
 })
-/*test*/
 export class RecipeDetailComponent implements OnInit, OnDestroy {
   @ViewChild('spoonRecipeModal', {static: true}) spoonRecipeModal: TemplateRef<any>;
+  @ViewChild('showForkedRecipesModal', { static: true }) showForkedRecipesModal: TemplateRef<any>;
 
   recipe: RecipeDetailDto = {
     id: 0,
@@ -92,6 +92,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   hasRated: boolean = false;
   menuOptions = [];
   currentUser: userDto = null;
+  showForkedRecipesModalModal: boolean = false;
 
   constructor(
     private ratingService: RatingService,
@@ -300,6 +301,16 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   openSpoonModal(spoonModal: TemplateRef<any>) {
     this.currentRecipeBook = null;
     this.modalService.open(spoonModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  openForkedRecipesModal() {
+    this.showForkedRecipesModalModal = true;
+    this.modalService.open(this.showForkedRecipesModal, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
+  closeForkedRecipes() {
+    this.showForkedRecipesModalModal = false;
+    this.modalService.dismissAll();
   }
 
   fork() {
@@ -518,6 +529,10 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   addRecipe() {
     this.router.navigate(['recipe/create']);
+  }
+
+  goToRecipe(id: number) {
+    this.router.navigate(['/recipe/details', id]);
   }
 
   addVerfication() {

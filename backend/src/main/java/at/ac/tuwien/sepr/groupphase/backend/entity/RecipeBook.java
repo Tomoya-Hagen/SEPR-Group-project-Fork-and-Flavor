@@ -125,6 +125,14 @@ public class RecipeBook {
         this.editors = editors;
     }
 
+    public List<WeeklyPlanner> getWeeklyPlanner() {
+        return weeklyPlanner;
+    }
+
+    public void setWeeklyPlanner(List<WeeklyPlanner> weeklyPlanner) {
+        this.weeklyPlanner = weeklyPlanner;
+    }
+
     public static final class RecipeBookBuilder {
         private long id;
         private String name;

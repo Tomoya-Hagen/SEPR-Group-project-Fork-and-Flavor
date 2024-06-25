@@ -38,7 +38,7 @@ export interface RecipeDetailDto {
   name: string,
   description: string,
   numberOfServings: number,
-  forkedFromId: number,
+  forkedFrom: RecipeListDto,
   ownerId: number,
   categories: CategoryDetailDto[],
   isDraft: boolean,
@@ -46,7 +46,7 @@ export interface RecipeDetailDto {
   ingredients: IngredientDetailDto[],
   allergens: AllergenDetailDto[],
   nutritions: NutritionDetailDto[],
-  forkedRecipes: string[],
+  forkedRecipes: RecipeListDto[]
   isVerified: boolean,
   verifications: number,
 }

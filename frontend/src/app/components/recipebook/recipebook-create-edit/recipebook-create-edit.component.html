@@ -1,5 +1,5 @@
-<form #form="ngForm" [class.was-validated]="form.submitted" (ngSubmit)="onSubmit(form)">
-  <div class="container mt-5">
+<form #form="ngForm" (ngSubmit)="onSubmit(form)">
+<div class="container mt-5">
     <div>
       <h1 class="text-center mb-4">{{ heading }}</h1>
     </div>
@@ -109,7 +109,7 @@
       </div>
 
       <div class="submit">
-        <button [disabled]="!form.valid || !isFormValid()" type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
+        <button type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
       </div>
       <div class="removecont">
         <button *ngIf="!isOwner" (click)="removeContributor()" type="button" class="btn btn-danger">Rezeptbuch verlassen</button>

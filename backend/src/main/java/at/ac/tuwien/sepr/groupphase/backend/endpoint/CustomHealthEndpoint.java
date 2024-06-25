@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * This endpoint is used for kubernetes health checks.
+ This endpoint is used for kubernetes health checks. This is the CustomHealthEndpoint class.
  */
 @RestController
 @RequestMapping("/health")

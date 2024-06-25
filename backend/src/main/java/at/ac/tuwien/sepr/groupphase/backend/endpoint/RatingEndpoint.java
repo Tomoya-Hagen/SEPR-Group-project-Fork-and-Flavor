@@ -28,6 +28,10 @@ import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This is the RatingEndpoint class. It is a REST controller that handles HTTP requests related to ratings.
+ * It uses the RatingService to perform operations related to ratings.
+ */
 @RestController
 @RequestMapping(value = "/api/v1/ratings")
 public class RatingEndpoint {
