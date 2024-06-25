@@ -28,7 +28,7 @@ export class WeekplanService {
   }
 
   createWeekplan(createDto: WeekPlanCreateDto) : Observable<any> {
-   return this.http.post<any>(this.baseUri,createDto); 
+   return this.http.post<any>(this.baseUri,createDto);
   }
 
   getWeekplanDetail(id: number,start: Date, end: Date): Observable<any> {
@@ -38,4 +38,11 @@ export class WeekplanService {
     return this.http.get<any>(this.baseUri +  "/" +id,{params: params} );
   }
 
+
+  getWeekplanExtendDetail(id: number,start: Date, limit: number): Observable<any> {
+    let params = new HttpParams()
+      .set('from', start.toISOString().split('T')[0])
+      .set('limit', limit);
+    return this.http.get<any>(this.baseUri +  "/extend/" +id,{params: params} );
+  }
 }

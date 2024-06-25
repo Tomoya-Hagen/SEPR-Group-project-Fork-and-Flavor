@@ -53,6 +53,17 @@ public class WeekPlanerEndpoint {
         return weekPlanService.getWeekplanDetail(id, from, to);
     }
 
+    @PermitAll
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/extend/{id}")
+    @Operation(summary = "Getting categories", security = @SecurityRequirement(name = "apiKey"))
+    public WeekPlanDetailDto[] get(@PathVariable(name = "id") Long id,
+                                   @RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date from,
+                                   @RequestParam("limit") int limit) {
+        LOGGER.info("POST /api/v1/weekplaner/extend params: {}", id);
+        return weekPlanService.getextendedWeekplanDetail(id, from, limit);
+    }
+
     @Secured("ROLE_USER")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
