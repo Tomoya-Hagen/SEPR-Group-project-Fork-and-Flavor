@@ -31,6 +31,7 @@ export class WeekplanComponent implements OnInit{
 
   offset = 0;
   more = true;
+  start: Date = new Date();
 
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
@@ -70,13 +71,12 @@ export class WeekplanComponent implements OnInit{
 
   generateDates() {
     if(this.more){
-      let start = new Date()
       let end = new Date()
-      start.setDate(start.getDate() + this.offset);
+      this.start.setDate(this.start.getDate() + this.offset);
       end.setDate(end.getDate() + 7 + this.offset);
       this.offset+=8;
       this.id = this.route.snapshot.params["id"]
-      this.weekplanService.getWeekplanDetail(parseInt(this.route.snapshot.params["id"]),start,end ).subscribe(weekplan => {
+      this.weekplanService.getWeekplanDetail(parseInt(this.route.snapshot.params["id"]),this.start,end ).subscribe(weekplan => {
         if(this.weekplan){
           if(weekplan.length === 0){
             this.more = false;
@@ -88,7 +88,10 @@ export class WeekplanComponent implements OnInit{
           if(this.weekplan.length < 7){
             this.weekplanService.getWeekplanExtendDetail(parseInt(this.route.snapshot.params["id"]),end,7 ).subscribe(weekplan => {
               this.weekplan.push(...this.convertWeekplanDates(weekplan));
+              this.start = {...this.weekplan[this.weekplan.length-1].date};
+              console.log(this.weekplan[this.weekplan.length-1].date);
             })
+
           }
         }
       })
