@@ -114,6 +114,8 @@ export class WeekplanCreateComponent implements OnInit {
 
     this.weekplanService.createWeekplan(this.createDto).subscribe({
       next: (data: any) => {
+        this.router.navigate(['/weekplan/' + this.createDto.recipeBookId]);
+        this.notification.success('Wochenplan erfolgreich erstellt!', 'Erfolg');
       },
       error: error => {
         {

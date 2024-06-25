@@ -20,6 +20,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.NutritionRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.WeeklyPlannerRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.DayTime;
+import at.ac.tuwien.sepr.groupphase.backend.service.EmailService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserManager;
 import at.ac.tuwien.sepr.groupphase.backend.service.WeekPlanService;
 import at.ac.tuwien.sepr.groupphase.backend.service.Weekday;
@@ -54,6 +55,7 @@ public class WeekPlanServiceImpl implements WeekPlanService {
     private final WeekPlannerValidator weekPlannerValidator;
     private final CategoryRepository categoryRepository;
     private final NutritionRepository nutritionRepository;
+    private final EmailService emailService;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 
@@ -63,7 +65,7 @@ public class WeekPlanServiceImpl implements WeekPlanService {
                                UserManager userManager,
                                WeekPlannerValidator weekPlannerValidator,
                                CategoryRepository categoryRepository,
-                               NutritionRepository nutritionRepository) {
+                               NutritionRepository nutritionRepository, EmailService emailService) {
         this.weeklyPlannerRepository = weeklyPlannerRepository;
         this.weeklyPlannerMapper = weeklyPlannerMapper;
         this.recipeBookRepository = recipeBookRepository;
@@ -71,6 +73,7 @@ public class WeekPlanServiceImpl implements WeekPlanService {
         this.weekPlannerValidator = weekPlannerValidator;
         this.categoryRepository = categoryRepository;
         this.nutritionRepository = nutritionRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -122,6 +125,7 @@ public class WeekPlanServiceImpl implements WeekPlanService {
         synchronized (lock) {
             currentCreators.remove(user);
         }
+        this.emailService.sendSimpleEmail(user.getEmail(), "Dein Wochenplan ist da!", "Dein Wochenplan wurde erfolgreich erstellt!");
         return getWeekplanDetail(weekPlanCreateDto.recipeBookId(),
                 java.sql.Date.valueOf(weekPlanCreateDto.startDate()),
                 java.sql.Date.valueOf(weekPlanCreateDto.endDate()));
