@@ -204,25 +204,50 @@ class RecipeServiceTest implements TestData {
     @Test
     void verifyFindBestRecipeBy() throws ValidationException {
         Random r = new Random();
+        userAuthenticationByEmail("user@email.com");
 
-        for(int i = 0; i <= 20; i++){
-            simpleNewRate(r.nextInt());
+        List<RecipeCategoryDto> recipeCategoryDtoList = new ArrayList<>();
+        recipeCategoryDtoList.add(new RecipeCategoryDto(1));
+
+        List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
+        recipeIngredientDtos.add(new RecipeIngredientDto(1, new BigDecimal(6), "g"));
+        recipeIngredientDtos.add(new RecipeIngredientDto(132, new BigDecimal(12.5), "g"));
+
+        List<RecipeStepDto> recipeStepDtoList = new ArrayList<>();
+        recipeStepDtoList.add(new RecipeStepDto("Step eins", "Beschreibung von Step 1", 0, true));
+        recipeStepDtoList.add(new RecipeStepDto("Step zwei", "Beschreibung von Step 2", 0, true));
+
+        RecipeCreateDto recipeCreateDto = new RecipeCreateDto();
+        recipeCreateDto.setName("TEST REZEPT WAS ALLES KANN");
+        recipeCreateDto.setDescription("Beschreibung");
+        recipeCreateDto.setNumberOfServings((short) 42);
+
+        recipeCreateDto.setIngredients(recipeIngredientDtos);
+        recipeCreateDto.setRecipeSteps(recipeStepDtoList);
+        recipeCreateDto.setCategories(recipeCategoryDtoList);
+
+        var recipe = recipeService.createRecipe(recipeCreateDto);
+        long recipeid = recipe.getId();
+
+        for(int i = 0; i <= 10; i++){
+            simpleNewRate(r.nextInt(),recipeid);
         }
 
+
         Page<RecipeListDto> res = recipeService.byBest(5);
-        RecipeListDto searched = recipeService.getRecipesByName("Spagehtti plain",PageRequest.of(0,1)).getContent().getFirst();
+        RecipeListDto searched = recipeService.getRecipesByName("TEST REZEPT WAS ALLES KANN",PageRequest.of(0,1)).getContent().getFirst();
         assertTrue(res.getContent().contains(searched));
 
 
 
     }
 
-    private void simpleNewRate(int user) throws ValidationException {
+    private void simpleNewRate(int user, long id) throws ValidationException {
         String email = user + "@mail.com";
         UserRegisterDto userRegisterDto = new UserRegisterDto(email,"password",user + "");
         customUserDetailService.register(userRegisterDto);
         userAuthenticationByEmail(email);
-        RatingCreateDto ratin = new RatingCreateDto(3,5,5,5,"BESTE");
+        RatingCreateDto ratin = new RatingCreateDto(id,5,5,5,"BESTE");
         ratingServiceImpl.createRating(ratin);
     }
 
