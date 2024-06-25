@@ -3,8 +3,12 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RecipeBookListDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
+import jakarta.validation.groups.Default;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
@@ -42,6 +46,6 @@ public interface RecipeBookMapper {
      * @param recipeBook A RecipeBook object that needs to be mapped to a RecipeBookDetailDto object.
      * @return A RecipeBookDetailDto object that has been mapped from the provided RecipeBook object.
      */
-    @Mapping(source = "editors", target = "users")
-    RecipeBookDetailDto recipeBookToRecipeBookDetailDto(RecipeBook recipeBook);
+    @Mapping(source = "recipeBook.editors", target = "users")
+    RecipeBookDetailDto recipeBookToRecipeBookDetailDto(RecipeBook recipeBook, boolean canBeMadeWeekPlan);
 }

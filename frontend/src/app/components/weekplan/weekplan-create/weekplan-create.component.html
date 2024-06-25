@@ -34,6 +34,7 @@
                    placeholder="yyyy-mm-dd"
                    class="form-control"
                    [(ngModel)]="fromDate"
+                   [min]="todayDate"
             >
           </td>
         <td>
@@ -42,6 +43,7 @@
                  placeholder="yyyy-mm-dd"
                  class="form-control"
                  [(ngModel)]="toDate"
+                 [min]="todayDate"
           >
         </td>
         </tbody>

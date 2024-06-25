@@ -17,6 +17,7 @@ export class WeekplanCreateComponent implements OnInit {
   public Daytime = Daytime;
   fromDate: string | null = null;
   toDate: string | null = null;
+  todayDate: string;
   createDto: WeekPlanCreateDto = {
     startDate: null,
     endDate: null,
@@ -66,7 +67,13 @@ export class WeekplanCreateComponent implements OnInit {
     private weekplanService: WeekplanService,
     private router: Router,
     private notification: ToastrService,
-    private route: ActivatedRoute){}
+    private route: ActivatedRoute){
+      const today = new Date();
+      const dd = String(today.getDate()).padStart(2, '0');
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const yyyy = today.getFullYear();
+      this.todayDate = `${yyyy}-${mm}-${dd}`;
+    }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {

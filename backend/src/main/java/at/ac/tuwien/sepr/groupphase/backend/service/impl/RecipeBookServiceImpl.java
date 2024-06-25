@@ -8,12 +8,15 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeBookMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.RecipeMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Category;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeBook;
+import at.ac.tuwien.sepr.groupphase.backend.entity.RecipeStep;
 import at.ac.tuwien.sepr.groupphase.backend.exception.DuplicateObjectException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ForbiddenException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.CategoryRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeBookRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RecipeRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
@@ -25,6 +28,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +49,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserManager userManager;
     private final EmailService emailService;
+    private final CategoryRepository categoryRepository;
 
     public RecipeBookServiceImpl(RecipeBookRepository recipeBookRepository,
                                  RecipeMapper recipeMapper,
@@ -53,7 +58,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
                                  UserRepository userRepository,
                                  RecipeBookValidator recipeBookValidator,
                                  UserManager userManager,
-                                 EmailService emailService) {
+                                 EmailService emailService, CategoryRepository categoryRepository) {
         this.recipeBookRepository = recipeBookRepository;
         this.recipeBookMapper = recipeBookMapper;
         this.recipeRepository = recipeRepository;
@@ -62,12 +67,13 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         this.recipeBookValidator = recipeBookValidator;
         this.userManager = userManager;
         this.emailService = emailService;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
     public RecipeBookDetailDto getRecipeBookDetailDtoById(long id) throws NotFoundException {
         RecipeBook recipeBook = recipeBookRepository.findById(id).orElseThrow(NotFoundException::new);
-        return recipeBookMapper.recipeBookToRecipeBookDetailDto(recipeBook);
+        return recipeBookMapper.recipeBookToRecipeBookDetailDto(recipeBook, checkIfCanBeMadeWeekplan(recipeBook));
     }
 
     @Override
@@ -100,7 +106,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         recipes.add(recipe);
         recipeBook.setRecipes(recipes);
         recipeBookRepository.save(recipeBook);
-        return recipeBookMapper.recipeBookToRecipeBookDetailDto(recipeBook);
+        return recipeBookMapper.recipeBookToRecipeBookDetailDto(recipeBook, checkIfCanBeMadeWeekplan(recipeBook));
     }
 
     @Override
@@ -131,7 +137,7 @@ public class RecipeBookServiceImpl implements RecipeBookService {
         recipeBook.setEditors(users);
         recipeBook.setRecipes(recipeBookRecipeMapper.listOfRecipeListDtoToRecipeList(recipeBookCreateDto.recipes()));
         recipeBookRepository.save(recipeBook);
-        return recipeBookMapper.recipeBookToRecipeBookDetailDto(recipeBook);
+        return recipeBookMapper.recipeBookToRecipeBookDetailDto(recipeBook, checkIfCanBeMadeWeekplan(recipeBook));
     }
 
     @Override
@@ -184,5 +190,28 @@ public class RecipeBookServiceImpl implements RecipeBookService {
     @Override
     public long getUserIdByRecipeBookId(Long id) throws NotFoundException {
         return recipeBookRepository.findById(id).orElseThrow(NotFoundException::new).getOwnerId();
+    }
+
+    /**
+     * Checks if the recipebook could be made into a weekplan.
+     * Needs to contain at least one breakfast and main dish.
+     *
+     * @param recipeBook The recipebook to check
+     * @return true or false
+     */
+    private boolean checkIfCanBeMadeWeekplan(RecipeBook recipeBook) {
+        boolean containsBreakfast = false;
+        boolean containsMainDish = false;
+        Category breakfast = categoryRepository.findByNameContainingIgnoreCase("Frühstück", PageRequest.of(0, 1)).getFirst();
+        Category mainDish = categoryRepository.findByNameContainingIgnoreCase("Hauptspeise", PageRequest.of(0, 1)).getFirst();
+        for (Recipe recipe : recipeBook.getRecipes()) {
+            if (recipe.getCategories().contains(breakfast)) {
+                containsBreakfast = true;
+            }
+            if (recipe.getCategories().contains(mainDish)) {
+                containsMainDish = true;
+            }
+        }
+        return containsBreakfast && containsMainDish;
     }
 }
