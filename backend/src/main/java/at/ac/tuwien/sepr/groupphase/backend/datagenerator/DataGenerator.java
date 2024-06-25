@@ -270,7 +270,7 @@ public class DataGenerator implements CommandLineRunner {
     protected void generateIngredientData() {
         String[] nutritionNames = {
             "Kalorien", "Fett total", "-davon gesättigt", "Eiweiß", "Kohlenhydrate total", "-davon Zucker", "Salz",
-            "Kalzium", "Cholesterol", "Ballaststoffe"
+            "Kalzium", "Cholesterin", "Ballaststoffe"
         };
 
         Map<String, Nutrition> nutritionMap = new HashMap<>();

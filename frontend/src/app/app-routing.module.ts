@@ -14,6 +14,7 @@ import { RecipebookDetailComponent } from "./components/recipebook/recipebook-de
 import { RecipeEditComponent } from './components/recipe/recipe-edit/recipe-edit.component';
 import {UserpageComponent} from "./components/userpage/userpage.component";
 import {UserpageEditComponent} from "./components/userpage/userpage-edit/userpage-edit.component";
+import { WeekplanCreateComponent } from './components/weekplan/weekplan-create/weekplan-create.component';
 import {NotFoundComponent} from "./components/not-found/not-found.component";
 import {DisclamerComponent} from "./components/disclamer/disclamer.component";
 
@@ -38,6 +39,7 @@ const routes: Routes = [
       {path: 'edit/:id', component: RecipebookCreateEditComponent, data: {mode: RecipeBookCreateEditMode.edit}}
   ]},
   {path: 'weekplan/:id', component: WeekplanComponent},
+  {path: 'weekplan/:id/create',component:WeekplanCreateComponent},
   {path: 'userpage', children:[
       {path: ':id', component: UserpageComponent},
       {path: ':id/edit', component: UserpageEditComponent},

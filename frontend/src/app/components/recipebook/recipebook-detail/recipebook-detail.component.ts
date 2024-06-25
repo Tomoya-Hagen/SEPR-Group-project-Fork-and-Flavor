@@ -22,7 +22,8 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy {
       name: ""
     },
     recipes: [],
-    users: []
+    users: [],
+    canBeMadeWeekPlan: false
   }
   canEdit: boolean = false;
   menuOptions = [
@@ -39,7 +40,7 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy {
     {
       label: 'Wochenplan',
       action: () => this.gotoWeekPlan(),
-      disabled: false
+      disabled: !this.recipeBook.canBeMadeWeekPlan
     }
   ];
 
@@ -60,6 +61,7 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy {
           this.recipeBook = data;
           this.titleService.setTitle("Fork & Flavour | " + this.recipeBook.name);
           this.isCurrentUserOwner();
+          console.log(this.recipeBook.canBeMadeWeekPlan);
         },
         error: error => {
           this.router.navigate(['not-found']);
@@ -111,7 +113,7 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy {
       {
         label: 'Wochenplan',
         action: () => this.gotoWeekPlan(),
-        disabled: false
+        disabled: !this.recipeBook.canBeMadeWeekPlan
       }
     ];
   }
@@ -124,6 +126,10 @@ export class RecipebookDetailComponent implements OnInit, OnDestroy {
     this.router.navigate(['/recipebook/create']);
   }
   gotoWeekPlan(){
-    this.router.navigate(['/weekplan/'+ this.recipeBook.id])
+    if (this.recipeBook.canBeMadeWeekPlan) {
+      this.router.navigate(['/weekplan/' + this.recipeBook.id])
+    } else {
+      this.notification.error("Um einen Wochenplan erstellen zu können wird mindestens ein Rezept aus der Kategorie Frühstück und Hauptspeise enthalten sein.", "Wochenplan kann nicht erstellt werden");
+    }
   }
 }

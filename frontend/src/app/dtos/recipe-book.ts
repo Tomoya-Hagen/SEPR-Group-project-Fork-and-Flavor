@@ -8,7 +8,8 @@ export interface RecipeBookDetailDto {
   ownerId: number,
   owner: userDto,
   users: userListDto[],
-  recipes: RecipeListDto[]
+  recipes: RecipeListDto[],
+  canBeMadeWeekPlan: boolean
 }
 
 export interface RecipeBook {

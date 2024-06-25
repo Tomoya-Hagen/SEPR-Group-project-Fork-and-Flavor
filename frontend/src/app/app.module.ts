@@ -40,6 +40,7 @@ import { StarRatingComponent } from './components/star-rating/star-rating.compon
 import {UserpageComponent} from "./components/userpage/userpage.component";
 import {RecipebookDetailComponent} from "./components/recipebook/recipebook-detail/recipebook-detail.component";
 import {RecipeStepComponent} from "./components/recipe/recipe-detail/recipe-step/recipe-step.component";
+import { WeekplanCreateComponent } from './components/weekplan/weekplan-create/weekplan-create.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import {RecipeStepComponent} from "./components/recipe/recipe-detail/recipe-step
     StarRatingComponent,
     RecipebookDetailComponent,
     RecipeStepComponent,
+    WeekplanCreateComponent,
     UserpageComponent
   ],
   imports: [

@@ -39,6 +39,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query("select r from Recipe r where r.id in :ids")
     List<Recipe> getRecipeByIds(@Param("ids") List<Long> ids);
 
+    Optional<Recipe> findRecipeByName(String name);
+
     /**
      * gets a list recipe entities by the given range from to.
      *

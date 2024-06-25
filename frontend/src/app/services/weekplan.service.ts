@@ -11,6 +11,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import {Globals} from '../global/globals';
 import {RecipeSearch} from "../dtos/recipe";
 import { Page } from '../models/page.model';
+import { WeekPlanCreateDto } from '../dtos/weekplan';
 
 /**
  * Service for handling recipe books.
@@ -26,7 +27,9 @@ export class WeekplanService {
     private http: HttpClient, private globals: Globals) {
   }
 
-
+  createWeekplan(createDto: WeekPlanCreateDto) : Observable<any> {
+   return this.http.post<any>(this.baseUri,createDto);
+  }
 
   getWeekplanDetail(id: number,start: Date, end: Date): Observable<any> {
     let params = new HttpParams()
@@ -35,4 +38,11 @@ export class WeekplanService {
     return this.http.get<any>(this.baseUri +  "/" +id,{params: params} );
   }
 
+
+  getWeekplanExtendDetail(id: number,start: Date, limit: number): Observable<any> {
+    let params = new HttpParams()
+      .set('from', start.toISOString().split('T')[0])
+      .set('limit', limit);
+    return this.http.get<any>(this.baseUri +  "/extend/" +id,{params: params} );
+  }
 }
