@@ -23,6 +23,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 
+/**
+ * This is the LoginEndpoint class. It is a REST controller that handles HTTP requests related to login.
+ * It uses the LoginService to perform operations related to login.
+ */
 @RestController
 @RequestMapping(value = "/api/v1/authentication")
 public class LoginEndpoint {

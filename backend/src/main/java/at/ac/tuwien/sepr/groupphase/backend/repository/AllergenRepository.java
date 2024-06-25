@@ -10,12 +10,18 @@ import java.util.Optional;
 
 /**
  * This is the interface for the persistence layer of Allergens.
- *
+ * It also includes custom methods for finding allergens by type.
  */
 @DynamicInsert
 @DynamicUpdate
 @Repository
 public interface AllergenRepository extends JpaRepository<Allergen, Long> {
+    /**
+     * Finds an Allergen entity by its type.
+     *
+     * @param type The type of the Allergen.
+     * @return An Optional that may contain the Allergen if one with the given type exists.
+     */
     Optional<Allergen> findByType(String type);
 
 }

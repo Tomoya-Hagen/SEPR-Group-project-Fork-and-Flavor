@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Recipe;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -29,6 +30,12 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      */
     Optional<Recipe> getRecipeById(@Param("id") long id);
 
+    /**
+     * gets a list recipe entities by the given range from to.
+     *
+     * @param ids list of recipe ids.
+     * @return a list of recipes which hava ids.
+     */
     @Query("select r from Recipe r where r.id in :ids")
     List<Recipe> getRecipeByIds(@Param("ids") List<Long> ids);
 
@@ -41,16 +48,36 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      */
     List<Recipe> findByIdBetweenOrderById(Long from, Long to);
 
+    /**
+     * Finds the maximum id value among all Recipe entities.
+     *
+     * @return The maximum id value if it exists, otherwise 0.
+     */
     @Query("SELECT COALESCE(MAX(i.id),0) FROM Recipe i")
     Long findMaxId();
 
+    /**
+     * Retrieves a page of Recipe entities whose names contain the given string, ignoring case. The results are ordered by name.
+     *
+     * @param name The string to search for in the names of the Recipe entities.
+     * @param pageable The pagination information.
+     * @return A page of Recipe entities whose names contain the given string, ordered by name.
+     */
     Page<Recipe> findByNameContainingIgnoreCaseOrderByName(String name, Pageable pageable);
 
+    /**
+     * Retrieves a page of distinct Recipe entities whose names contain the given string, ignoring case, and belong to the given category. The results are ordered by name.
+     *
+     * @param name The string to search for in the names of the Recipe entities.
+     * @param ids The id of the category to which the Recipe entities should belong.
+     * @param pageable The pagination information.
+     * @return A page of distinct Recipe entities that meet the given criteria, ordered by name.
+     */
     @Query("SELECT distinct i FROM Recipe i join FETCH i.categories rc WHERE LOWER(i.name) LIKE LOWER(CONCAT('%', :name, '%')) AND rc.id = :id")
     Page<Recipe> findByCategoryIdContainingIgnoreCaseOrderByName(@Param("name") String name, @Param("id") long ids, Pageable pageable);
 
     /**
-     * Search for recipes in the persistent data store matching  provided field.
+     * Search for recipes in the persistent data store matching provided field.
      * The name is considered a match, if the search string is a substring of the field in recipes.
      *
      * @param name the recipe name to use in filtering.
@@ -59,15 +86,44 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query("select Recipe from Recipe Recipe where (?1 is null or UPPER(Recipe.name) like UPPER('%'||?1||'%'))")
     List<Recipe> search(@Param("name") String name);
 
+    /**
+     * Retrieves a list of Recipe entities whose names contain the given string, ignoring case. The results are ordered by id and limited by the given limit.
+     *
+     * @param name The string to search for in the names of the Recipe entities.
+     * @param limit The maximum number of results to return.
+     * @return A list of Recipe entities whose names contain the given string, ordered by id and limited by the given limit.
+     */
     @Query("SELECT r FROM Recipe r WHERE LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%')) ORDER BY r.id LIMIT :limit")
     List<Recipe> findByNamesContainingIgnoreCase(@Param("name") String name, @Param("limit") int limit);
 
+    /**
+     * Retrieves a list of Recipe entities whose names contain the given string. The results are limited by the given pageable object.
+     *
+     * @param name The string to search for in the names of the Recipe entities.
+     * @param pageable The pagination information.
+     * @return A list of Recipe entities whose names contain the given string, limited by the given pageable object.
+     */
     @Query("SELECT i FROM Recipe i WHERE i.name LIKE %:name%")
     List<Recipe> findByNameContainingWithLimit(@Param("name") String name, Pageable pageable);
 
+    /**
+     * Retrieves a list of distinct Recipe entities whose names contain the given string and belong to the given category. The results are limited by the given pageable object.
+     *
+     * @param name The string to search for in the names of the Recipe entities.
+     * @param ids The id of the category to which the Recipe entities should belong.
+     * @param pageable The pagination information.
+     * @return A list of distinct Recipe entities that meet the given criteria, limited by the given pageable object.
+     */
     @Query("SELECT distinct i FROM Recipe i join FETCH i.categories rc WHERE i.name LIKE %:name% AND rc.id = :id")
     List<Recipe> findByNameContainingWithLimit(@Param("name") String name, @Param("id") long ids, Pageable pageable);
 
+    /**
+     * Retrieves a list of Recipe entities that belong to the given category. The results are limited by the given pageable object.
+     *
+     * @param ids The id of the category to which the Recipe entities should belong.
+     * @param pageable The pagination information.
+     * @return A list of Recipe entities that belong to the given category, limited by the given pageable object.
+     */
     @Query("SELECT r FROM Recipe r WHERE r.category.id = :categoryId ")
     List<Recipe> findRecipeByCategoryId(@Param("categoryId") long ids, Pageable pageable);
 
@@ -79,14 +135,34 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query("SELECT r.name FROM Recipe r")
     List<String> getAllNames();
 
+    /**
+     * Returns the first recipe by id.
+     *
+     * @param id represents the id of a recipe.
+     * @return a recipe entity.
+     */
+    Recipe findFirstById(long id);
+
+    /**
+     * Retrieves a list of Recipe entities that are owned by the user with the given id.
+     *
+     * @param ownerId The id of the owner for which the recipes are to be retrieved.
+     * @return A list of Recipe entities that are owned by the user with the given id.
+     */
     @Query("SELECT r FROM Recipe r WHERE r.owner.id = :ownerId ")
     List<Recipe> findRecipesByOwnerId(@Param("ownerId") long ownerId);
 
+    /**
+     * Retrieves a list of Recipe entities that were forked from the recipe with the given id.
+     *
+     * @param id The id of the recipe from which the recipes were forked.
+     * @return A list of Recipe entities that were forked from the recipe with the given id.
+     */
     @Query("SELECT r FROM Recipe r WHERE r.forkedFrom.id = :id")
     List<Recipe> findAllForkedRecipesById(@Param("id") long id);
 
     /**
-     * requests a verify based on the user and the recipe id.
+     * requests a verified recipe based on the user and the recipe id.
      *
      * @param recipeId id of the recipe.
      * @param userId   id of the user.
@@ -111,15 +187,35 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      */
     Boolean existsById(long id);
 
-    /**
-     * Returns the first recipe by id.
-     *
-     * @param id represents the id of a recipe.
-     * @return a recipe entity.
-     */
-    Recipe findFirstById(long id);
 
     @Query("SELECT r FROM Recipe r ORDER BY (SELECT AVG((ra.taste + ra.easeOfPrep + ra.cost) / 3.0) FROM Rating ra WHERE ra.recipe = r) DESC")
     Page<Recipe> findByBest(Pageable pageable);
 
+
+    /**
+     * Retrieves a list of Recipe entities that are either owned by the given user or have been rated by the given user with a taste rating of 3 or more.
+     *
+     * @param owner The ApplicationUser for which the recipes are to be retrieved.
+     * @return A list of Recipe entities that meet the given criteria.
+     */
+    @Query("SELECT r FROM Recipe r Join fetch r.ratings rat Where r.owner = :owner OR (rat.user = :owner AND rat.taste >= 3)")
+    List<Recipe> findAllRecipesByGoodInteraction(@Param("owner") ApplicationUser owner);
+
+    /**
+     * Retrieves a list of Recipe entities that are either owned by the user with the given id or have been rated by the user with the given id. The results are ordered randomly and limited by the given pageable object.
+     *
+     * @param owner The id of the user for which the recipes are to be retrieved.
+     * @param pageable The pagination information.
+     * @return A list of Recipe entities that meet the given criteria, ordered randomly and limited by the given pageable object.
+     */
+    @Query("SELECT r FROM Recipe r Join fetch r.ratings rat Where r.owner.id = :owner OR rat.user.id = :owner ORDER BY RAND()")
+    List<Recipe> findRandomRecipeByInteraction(@Param("owner") long owner, Pageable pageable);
+
+    /**
+     * Retrieves a list of all Recipe entities.
+     *
+     * @return A list of all Recipe entities.
+     */
+    @Query("SELECT r FROM Recipe r")
+    List<Recipe> findAllRecipes();
 }

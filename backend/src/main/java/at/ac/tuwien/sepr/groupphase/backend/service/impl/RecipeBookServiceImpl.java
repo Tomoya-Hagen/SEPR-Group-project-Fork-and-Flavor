@@ -168,23 +168,21 @@ public class RecipeBookServiceImpl implements RecipeBookService {
                 newUsers.add(userRepository.findFirstById(editors.id()));
             }
         }
-        RecipeBook recipeBook = new RecipeBook();
-        recipeBook.setName(recipeBookUpdateDto.name());
-        recipeBook.setDescription(recipeBookUpdateDto.description());
+        oldRecipeBook.setName(recipeBookUpdateDto.name());
+        oldRecipeBook.setDescription(recipeBookUpdateDto.description());
 
         ApplicationUser owner = userRepository.findFirstById(recipeBookUpdateDto.ownerId());
-        recipeBook.setOwner(owner);
+        oldRecipeBook.setOwner(owner);
         List<Long> userIds = recipeBookUpdateDto.users().stream().map(UserListDto::id).toList();
         List<ApplicationUser> users = userRepository.findAllById(userIds);
 
-        recipeBook.setId(id);
-        recipeBook.setEditors(users);
-        recipeBook.setRecipes(recipeBookRecipeMapper.listOfRecipeListDtoToRecipeList(recipeBookUpdateDto.recipes()));
-        recipeBookRepository.save(recipeBook);
+        oldRecipeBook.setEditors(users);
+        oldRecipeBook.setRecipes(recipeBookRecipeMapper.listOfRecipeListDtoToRecipeList(recipeBookUpdateDto.recipes()));
+        recipeBookRepository.save(oldRecipeBook);
 
         for (var editors : newUsers) {
             LOGGER.trace("name {}", editors.getUsername());
-            emailService.sendSimpleEmail(editors.getEmail(), "Zum neuen Rezeptbuch hinzugefügt: " + recipeBook.getName(), "Sie wurden zu einem neuen Rezeptbuch" + recipeBook.getName() + " hinzugefügt.");
+            emailService.sendSimpleEmail(editors.getEmail(), "Zum neuen Rezeptbuch hinzugefügt: " + oldRecipeBook.getName(), "Sie wurden zu einem neuen Rezeptbuch" + oldRecipeBook.getName() + " hinzugefügt.");
         }
     }
 

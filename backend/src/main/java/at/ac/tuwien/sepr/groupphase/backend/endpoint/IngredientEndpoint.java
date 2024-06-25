@@ -19,13 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.lang.invoke.MethodHandles;
 import java.util.stream.Stream;
 
+/**
+ * This is the IngredientEndpoint class. It is a REST controller that handles HTTP requests related to ingredients.
+ * It uses the IngredientService to perform operations related to ingredients.
+ */
 @RestController
 @RequestMapping(value = "/api/v1/ingredients")
 public class IngredientEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final IngredientService ingredientService;
-
 
     @Autowired
     public IngredientEndpoint(IngredientService ingredientService) {

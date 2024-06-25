@@ -4,6 +4,9 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.IngredientResultDto;
 
 import java.util.stream.Stream;
 
+/**
+ * The IngredientService interface provides methods for retrieving ingredients.
+ */
 public interface IngredientService {
 
     /**

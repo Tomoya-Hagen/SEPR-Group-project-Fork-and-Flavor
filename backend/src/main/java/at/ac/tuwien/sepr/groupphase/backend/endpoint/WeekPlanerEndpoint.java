@@ -25,6 +25,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.stream.Stream;
 
+/**
+ * This is the WeekPlanerEndpoint class. It is a REST controller that handles HTTP requests related to weekPlaner.
+ * It uses the WeekPlanerService to perform operations related to weekPlaner.
+ */
 @RestController
 @RequestMapping(value = "/api/v1/weekplaner")
 public class WeekPlanerEndpoint {
