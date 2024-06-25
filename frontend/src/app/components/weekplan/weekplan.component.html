@@ -1,13 +1,13 @@
 <div class="jumbotron mt-5">
   <h1 class="display-4">Wochenplaner</h1>
 
-  <div class="d-flex justify-content-center m-5" *ngIf="weekplan.length === 0">
+  <div class="d-flex justify-content-center m-5" *ngIf="weekplan && weekplan.length === 0">
     <div>
       <button type="button" (click)="goToCreateWeekplan()" class="btn btn-primary erstellen">+ Wochenplan Erstellen</button>
     </div>
   </div>
 
-  <div *ngIf="weekplan.length !== 0 && !mobile" class="row w-100">
+  <div *ngIf="weekplan && weekplan.length !== 0 && !mobile" class="row w-100">
     <div class="col-sm-1 col-md-2 g-0 px-0  mx-0 border py-3" >
       <div class="info-day-card py-3 px-0  mx-0 my-1 w-100" >
         <div class="d-flex justify-content-center">
@@ -20,7 +20,7 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-11 col-md-10 d-flex overflow-x-auto border p-3" #scrollContainer>
+    <div class="col-sm-11 col-md-10 d-flex overflow-x-auto border p-3" (scroll)="onScroll($event)">
       <div class="day-card p-3 m-1 border rounded-2" *ngFor="let dayplan of weekplan; index as i">
         <div class="">
           <strong>{{ dayplan.date.toLocaleDateString()}}:</strong> {{ dayplan.day}}
@@ -43,7 +43,7 @@
 
   </div>
 
-  <div *ngIf="weekplan.length !== 0 && mobile" class="w-100">
+  <div *ngIf="weekplan && weekplan.length !== 0 && mobile" class="w-100">
     <div class="col-12 overflow-auto py-3">
       <div class="">
         <div class="w-100 p-3 my-1 border rounded-2 weekplan1" *ngFor="let dayplan of weekplan; index as i">

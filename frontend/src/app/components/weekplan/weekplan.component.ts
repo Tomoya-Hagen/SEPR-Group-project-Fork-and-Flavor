@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, NgZone, OnInit, ViewChild} from '@angular/core';
 import {ToastrService} from "ngx-toastr";
 import {ActivatedRoute, Route, Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
@@ -17,14 +17,15 @@ import {WeekplanService} from "../../services/weekplan.service";
   templateUrl: './weekplan.component.html',
   styleUrl: './weekplan.component.scss'
 })
-export class WeekplanComponent implements OnInit, AfterViewInit {
+export class WeekplanComponent implements OnInit{
 
   constructor(
     private notification: ToastrService,
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private weekplanService: WeekplanService
+    private weekplanService: WeekplanService,
+    private ngZone: NgZone
   ) { }
   mobile = false;
 
@@ -59,8 +60,12 @@ export class WeekplanComponent implements OnInit, AfterViewInit {
     this.generateDates();
   }
 
-  ngAfterViewInit() {
-    this.scrollContainer.nativeElement.addEventListener('scroll', this.onScroll.bind(this));
+
+  onScroll(event: any) {
+    const element = event.target;
+    if (element.scrollLeft + element.clientWidth >= element.scrollWidth - 10) {
+      this.generateDates(); // Load new dates when scrolled to the end
+    }
   }
 
   generateDates() {
@@ -69,12 +74,9 @@ export class WeekplanComponent implements OnInit, AfterViewInit {
       let end = new Date()
       start.setDate(start.getDate() + this.offset);
       end.setDate(end.getDate() + 7 + this.offset);
-      console.log(start.getDate());
-      console.log(end.getDate());
       this.offset+=8;
       this.id = this.route.snapshot.params["id"]
       this.weekplanService.getWeekplanDetail(parseInt(this.route.snapshot.params["id"]),start,end ).subscribe(weekplan => {
-        console.log(weekplan)
         if(this.weekplan){
           if(weekplan.length === 0){
             this.more = false;
@@ -83,6 +85,11 @@ export class WeekplanComponent implements OnInit, AfterViewInit {
           this.weekplan.push(...this.convertWeekplanDates(weekplan));
         } else {
           this.weekplan = this.convertWeekplanDates(weekplan);
+          if(this.weekplan.length < 7){
+            this.weekplanService.getWeekplanExtendDetail(parseInt(this.route.snapshot.params["id"]),end,7 ).subscribe(weekplan => {
+              this.weekplan.push(...this.convertWeekplanDates(weekplan));
+            })
+          }
         }
       })
     }
@@ -99,23 +106,14 @@ export class WeekplanComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onScroll() {
-    const element = this.scrollContainer.nativeElement;
-    if (element.scrollLeft + element.clientWidth >= element.scrollWidth - 10) {
-      this.generateDates(); // Load new dates when scrolled to the end
-    }
-  }
-  check(){
-    console.log(this.weekplan)
-  }
+
   redirect(id: number){
     this.router.navigate(["/recipe/details/"+id]);
-  }
-  test(){
-    console.log(this.weekplan)
   }
 
   goToCreateWeekplan() {
     this.router.navigate(['/weekplan/' + this.id + '/create']);
   }
+
+  protected readonly event = event;
 }

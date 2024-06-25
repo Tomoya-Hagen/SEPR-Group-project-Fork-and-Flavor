@@ -27,6 +27,7 @@ import at.ac.tuwien.sepr.groupphase.backend.service.validators.WeekPlannerValida
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -78,6 +79,16 @@ public class WeekPlanServiceImpl implements WeekPlanService {
         var dfrom = new java.sql.Date(from.getTime());
         var dto = new java.sql.Date(to.getTime());
         var result = weeklyPlannerRepository.findWeeklyPlannerByDate(id, dfrom, dto);
+
+        return weeklyPlannerMapper.weeklyPlannerArrtoWeekPlanDetailDtoArr(result);
+    }
+
+    @Override
+    public WeekPlanDetailDto[] getextendedWeekplanDetail(Long id, Date from, int limit) {
+        var dfrom = new java.sql.Date(from.getTime());
+        PageRequest pageRequest = PageRequest.of(0, limit);
+        List<java.sql.Date> filledDates = weeklyPlannerRepository.findNextFilledDates(id, dfrom, pageRequest);
+        var result = weeklyPlannerRepository.findByDates(id, filledDates);
 
         return weeklyPlannerMapper.weeklyPlannerArrtoWeekPlanDetailDtoArr(result);
     }
