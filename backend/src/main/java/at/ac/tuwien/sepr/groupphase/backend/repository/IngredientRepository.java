@@ -22,7 +22,7 @@ import org.springframework.data.domain.Pageable;
 public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
 
     /**
-     * gets a ingredients by its name
+     * gets a ingredients by its name.
      *
      * @param name represents the type of a ingredient.
      * @return an Optional object which contains the ingredient if one exists by the given name.

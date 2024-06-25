@@ -18,7 +18,7 @@ import java.util.Optional;
 public interface AllergenRepository extends JpaRepository<Allergen, Long> {
 
     /**
-     * gets a allergen by its type
+     * gets a allergen by its type.
      *
      * @param type represents the type of a allergen.
      * @return an Optional object which contains the allergen if one exists by the given type.
