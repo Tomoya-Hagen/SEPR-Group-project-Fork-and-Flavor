@@ -91,6 +91,10 @@
       <h4>Geforkte Rezepte:</h4>
       <span class="number">{{ recipe.forkedRecipes.length }}</span>
     </div>
+    <div class="info-box" *ngIf="recipe.verifications !== 0">
+      <h4>Verifikationen:</h4>
+      <span class="number">{{ recipe.verifications }}</span>
+    </div>
     <div class="info-box info-box-5 clickable" *ngIf="screenWidth <= 767" style="box-shadow: 0 0 10px rgba(111, 66, 193, 0); background-color: rgba(111, 66, 193, 1);" (click)="toggleNutrition()">
       <h4>Nährwerte:</h4>
       <span *ngIf="!showNutrition">Zeigen</span>
