@@ -30,6 +30,12 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      */
     Optional<Recipe> getRecipeById(@Param("id") long id);
 
+    /**
+     * gets a list recipe entities by the given range from to.
+     *
+     * @param ids list of recipe ids.
+     * @return a list of recipes which hava ids.
+     */
     @Query("select r from Recipe r where r.id in :ids")
     List<Recipe> getRecipeByIds(@Param("ids") List<Long> ids);
 
@@ -71,7 +77,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     Page<Recipe> findByCategoryIdContainingIgnoreCaseOrderByName(@Param("name") String name, @Param("id") long ids, Pageable pageable);
 
     /**
-     * Search for recipes in the persistent data store matching  provided field.
+     * Search for recipes in the persistent data store matching provided field.
      * The name is considered a match, if the search string is a substring of the field in recipes.
      *
      * @param name the recipe name to use in filtering.
@@ -171,9 +177,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query("SELECT r FROM Recipe r WHERE r.forkedFrom.id = :id")
     List<Recipe> findAllForkedRecipesById(@Param("id") long id);
 
-
     /**
-     * requests a verify based on the user and the recipe id.
+     * requests a verified recipe based on the user and the recipe id.
      *
      * @param recipeId id of the recipe.
      * @param userId   id of the user.

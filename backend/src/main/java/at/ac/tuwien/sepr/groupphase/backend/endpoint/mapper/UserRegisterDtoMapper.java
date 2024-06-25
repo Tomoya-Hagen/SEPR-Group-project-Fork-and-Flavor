@@ -6,7 +6,6 @@ import org.mapstruct.Mapper;
 
 /**
  * This is the interface for the UserRegisterDto and UserLoginDto.
- *
  */
 @Mapper
 public interface UserRegisterDtoMapper {

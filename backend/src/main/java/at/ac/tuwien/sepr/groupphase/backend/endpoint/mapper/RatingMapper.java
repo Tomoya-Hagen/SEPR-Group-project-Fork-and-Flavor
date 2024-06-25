@@ -16,7 +16,7 @@ import java.util.List;
 public interface RatingMapper {
 
     /**
-     * Maps a list of ratings to a  list of rating list dto.
+     * Maps a list of ratings to a list of rating list dto.
      *
      * @param list that contains the items that should be mapped.
      * @return the list of the mapped objects.

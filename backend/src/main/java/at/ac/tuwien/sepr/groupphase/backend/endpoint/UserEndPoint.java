@@ -28,6 +28,10 @@ import org.springframework.web.server.ResponseStatusException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
+/**
+ * This is the UserEndpoint class. It is a REST controller that handles HTTP requests related to users.
+ * It uses the UserService to perform operations related to users.
+ */
 @RestController
 @RequestMapping(value = "/api/v1/users")
 public class UserEndPoint {

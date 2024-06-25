@@ -32,9 +32,9 @@ import java.util.List;
 /**
  * This mapper is used to map recipes zu all kinds of different dto types.
  */
-
 @Mapper(uses = {RecipeStepMapper.class, CategoryMapper.class, AllergenMapper.class, IngredientMapper.class, NutritionMapper.class})
 public interface RecipeMapper {
+
     /**
      * This method creates a RecipeDetailDto out of the data of the recipe.
      *

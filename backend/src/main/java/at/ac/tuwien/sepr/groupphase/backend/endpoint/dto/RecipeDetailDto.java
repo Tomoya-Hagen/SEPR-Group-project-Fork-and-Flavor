@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Record to hold RecipeDetails.
  *
@@ -24,6 +23,7 @@ import java.util.List;
  * @param allergens allergens the recipe belongs to
  * @param nutritions nutritions the recipe belongs to
  * @param rating rating of the recipe
+ * @param verifications verifications of the recipe
  */
 public record RecipeDetailDto(
 
@@ -68,6 +68,7 @@ public record RecipeDetailDto(
     ArrayList<RecipeListDto> forkedRecipes,
 
     long rating,
+
     int verifications
 
 ) {

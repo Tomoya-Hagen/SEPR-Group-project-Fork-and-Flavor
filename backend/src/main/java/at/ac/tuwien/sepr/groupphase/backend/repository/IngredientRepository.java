@@ -12,8 +12,9 @@ import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 
 /**
- * This is the interface for the persistence layer of Ingredients.
- *
+ * This is the interface for the persistence layer of Ingredients.It is a Spring Data JPA repository for Ingredient entities.
+ * It extends JpaRepository, which provides methods for CRUD operations.
+ * It also includes custom methods for finding Ingredients by name and getting a range of ingredients by Id.
  */
 @DynamicInsert
 @DynamicUpdate

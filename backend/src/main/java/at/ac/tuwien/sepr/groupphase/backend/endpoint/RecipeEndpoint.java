@@ -42,7 +42,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * class in charge of REST requests for Recipes.
+ * This is the RecipeEndpoint class. It is a REST controller that handles HTTP requests related to recipes.
+ * It uses the RecipeService to perform operations related to recipes.
  */
 @RestController
 @RequestMapping(value = "/api/v1/recipes")

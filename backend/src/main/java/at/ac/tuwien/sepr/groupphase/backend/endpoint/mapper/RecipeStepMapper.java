@@ -18,6 +18,7 @@ import java.util.List;
  */
 @Mapper
 public interface RecipeStepMapper {
+
     /**
      * This method creates a list of RecipeStepDto out of a list of RecipeStep.
      *

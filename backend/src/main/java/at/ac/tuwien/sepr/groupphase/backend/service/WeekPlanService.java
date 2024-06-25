@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.WeekPlanDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -20,6 +21,4 @@ public interface WeekPlanService {
      * @return An array of WeekPlanDetailDto entities.
      */
     WeekPlanDetailDto[] getWeekplanDetail(Long id, Date from, Date to);
-
-
 }

@@ -20,6 +20,7 @@ import java.util.List;
  */
 @Service
 public interface RecipeBookService {
+
     /**
      * This method is responsible for getting the details of a recipe book by its ID.
      *

@@ -12,6 +12,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This is the interface for the persistence layer of Rating's.It is a Spring Data JPA repository for Rating entities.
+ * It extends JpaRepository, which provides methods for CRUD operations.
+ * It also includes custom methods for getting for rating by params and getting a range of rating by ID.
+ */
 @Repository
 public interface RatingRepository extends JpaRepository<Rating, Long> {
 
